@@ -35,4 +35,18 @@ describe("Users", () => {
       },
     ])
   })
+
+  it("responds with the logged in user data", async () => {
+    const response = await fetch("http://localhost:3080/api/user/me", {
+      headers: {
+        Authorization: "Bearer " + authToken,
+      },
+    })
+    expect(response.status).toEqual(200)
+    expect(await response.json()).toEqual({
+      id: 1,
+      username: "john-doe",
+      password: "$2b$10$h/JNwLghT1FZHjXWIPPO7OMBw5TKr3JExRhWZv4ERZ.YeDmgoBs0i",
+    })
+  })
 })
