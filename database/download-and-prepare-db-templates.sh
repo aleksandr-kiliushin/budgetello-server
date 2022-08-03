@@ -37,5 +37,18 @@ psql personal_app_testing_template postgres << EOF
   "user"
   CASCADE;
 EOF
+# Reset tables primary key sequence.
+psql personal_app_testing_template postgres << EOF
+  ALTER SEQUENCE finance_category_id_seq RESTART WITH 1;
+  ALTER SEQUENCE finance_category_type_id_seq RESTART WITH 1;
+  ALTER SEQUENCE finance_record_id_seq RESTART WITH 1;
+  ALTER SEQUENCE user_id_seq RESTART WITH 1;
+EOF
+# Registers a couple of users.
+psql personal_app_testing_template postgres << EOF
+  INSERT INTO "user" (username,        password                                                         )
+  VALUES             ('john-doe',      '\$2b\$10\$h/JNwLghT1FZHjXWIPPO7OMBw5TKr3JExRhWZv4ERZ.YeDmgoBs0i'),
+                     ('jessica-stark', '\$2b\$10\$7IiBG7wqNoYzokw2ZOXF2uy1iHrDDaNge.de67g1n7TNTIY4iI6jC');
+EOF
 
 psql -U postgres -c "CREATE DATABASE personal_app_db WITH TEMPLATE personal_app_dev_template ENCODING 'UTF-8';";
