@@ -7,7 +7,9 @@ const config = {
     // "^#utils(.*)$": "<rootDir>/src/utils$1",
   },
   modulePathIgnorePatterns: ["<rootDir>/dist", "<rootDir>/node_modules"],
+  preset: "ts-jest",
   setupFilesAfterEnv: ["./jest.setup.ts"],
+  testEnvironment: "node",
 }
 
 export default config

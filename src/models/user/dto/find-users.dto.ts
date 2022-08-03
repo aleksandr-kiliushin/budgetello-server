@@ -1,6 +1,6 @@
 import { IUser } from "#interfaces/user"
 
-export class GetUserDto {
-  id?: IUser["id"]
+export class FindUsersDto {
+  id?: string
   username?: IUser["username"]
 }

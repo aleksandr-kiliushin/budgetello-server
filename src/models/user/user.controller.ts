@@ -1,22 +1,37 @@
-import { Body, Controller, Get, Post, Query, Request, UseGuards } from "@nestjs/common"
+import { Body, Controller, Get, Param, Post, Query, Request, UseGuards } from "@nestjs/common"
 
 import { UserService } from "./user.service"
-import { GetUserDto } from "./dto/get-user.dto"
 import { AuthGuard } from "#models/auth/auth.guard"
 import { CreateUserDto } from "./dto/create-user.dto"
+import { IUser } from "#interfaces/user"
+import { FindUsersDto } from "./dto/find-users.dto"
 
-@Controller("user")
+@Controller("users")
 export class UserController {
   constructor(private readonly userService: UserService) {}
 
-  @Get()
+  @Get("search")
   @UseGuards(AuthGuard)
-  getUser(@Query() query: GetUserDto) {
-    return this.userService.getUser(query)
+  findUsers(@Query() query: FindUsersDto) {
+    return this.userService.findUsers(query)
+  }
+
+  @Get(":userIdentifier")
+  @UseGuards(AuthGuard)
+  findUser(
+    @Request()
+    req: { userId: IUser["id"] },
+    @Param("userIdentifier")
+    userIdentifier: string
+  ) {
+    return this.userService.findUser({ loggedInUserId: req.userId, userIdentifier })
   }
 
   @Post()
-  createUser(@Body() createUserDto: CreateUserDto) {
+  createUser(
+    @Body()
+    createUserDto: CreateUserDto
+  ) {
     return this.userService.createUser(createUserDto)
   }
 
@@ -39,12 +54,12 @@ export class UserController {
   // 	return this.userService.getUser({ id })
   // }
 
-  @Get("me")
-  @UseGuards(AuthGuard)
-  getCurrentUserData(
-    @Request()
-    req: any // eslint-disable-line @typescript-eslint/no-explicit-any
-  ) {
-    return this.userService.getUser({ id: req.userId })
-  }
+  // @Get("me")
+  // @UseGuards(AuthGuard)
+  // getCurrentUserData(
+  //   @Request()
+  //   req: any // eslint-disable-line @typescript-eslint/no-explicit-any
+  // ) {
+  //   return this.userService.getUser({ id: req.userId })
+  // }
 }

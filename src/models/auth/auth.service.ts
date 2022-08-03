@@ -1,9 +1,8 @@
-import { Injectable, UnauthorizedException } from "@nestjs/common"
+import { Injectable, NotFoundException, UnauthorizedException } from "@nestjs/common"
 import * as jwt from "jsonwebtoken"
 import * as bcrypt from "bcrypt"
 
 import { UserService } from "#models/user/user.service"
-import { UserEntity } from "#models/user/entities/user.entity"
 import { LoginDto } from "./dto/login.dto"
 
 @Injectable()
@@ -13,13 +12,13 @@ export class AuthService {
   async createToken(loginDto: LoginDto): Promise<{ authToken: string }> {
     const { password, username } = loginDto
 
-    const user = (await this.userService.getUser({ username })) as UserEntity
+    const user = await this.userService.findUser({ userIdentifier: username })
 
-    if (!user) throw new UnauthorizedException()
+    if (user === null) throw new NotFoundException({})
 
     const isPasswordValid = await bcrypt.compare(password, user.password)
 
-    if (!isPasswordValid) throw new UnauthorizedException()
+    if (!isPasswordValid) throw new UnauthorizedException({ message: "Invalid password." })
 
     return {
       authToken: jwt.sign({ id: user.id, username: user.username }, process.env.JWT_SECRET, {

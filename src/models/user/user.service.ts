@@ -1,12 +1,12 @@
 import { Injectable, NotFoundException } from "@nestjs/common"
 import { InjectRepository } from "@nestjs/typeorm"
-import { Repository } from "typeorm"
+import { Like, Repository } from "typeorm"
 import * as bcrypt from "bcrypt"
 
 import { UserEntity } from "./entities/user.entity"
 import { CreateUserDto } from "./dto/create-user.dto"
-import { GetUserDto } from "./dto/get-user.dto"
-// import { UpdateUserDto } from './dto/update-user.dto'
+import { IUser } from "#interfaces/user"
+import { FindUsersDto } from "./dto/find-users.dto"
 
 @Injectable()
 export class UserService {
@@ -15,16 +15,36 @@ export class UserService {
     private userRepository: Repository<UserEntity>
   ) {}
 
-  async getUser(query: GetUserDto): Promise<UserEntity | UserEntity[]> {
-    const { id, username } = query
+  async findUser({
+    loggedInUserId,
+    userIdentifier,
+  }: {
+    loggedInUserId?: IUser["id"]
+    userIdentifier: string
+  }): Promise<UserEntity> {
+    const isRequestForLoggedInUserData = userIdentifier === "0"
+    const isUsernameProvided = isNaN(parseInt(userIdentifier))
+    const isIdProvided = !isNaN(parseInt(userIdentifier))
 
-    if (id === undefined && username === undefined) return this.userRepository.find()
+    let user: UserEntity | null = null
+    if (isRequestForLoggedInUserData) {
+      user = await this.userRepository.findOneBy({ id: loggedInUserId })
+    } else if (isUsernameProvided) {
+      user = await this.userRepository.findOneBy({ username: userIdentifier })
+    } else if (isIdProvided) {
+      user = await this.userRepository.findOneBy({ id: parseInt(userIdentifier) })
+    }
 
-    const user = (await this.userRepository.findOne({ where: query })) as UserEntity
-
-    if (!user) throw new NotFoundException("User not found.")
-
+    if (user === null) throw new NotFoundException({})
     return user
+  }
+
+  findUsers(query: FindUsersDto): Promise<UserEntity[]> {
+    const { id, username } = query
+    return this.userRepository.findBy({
+      ...(id === undefined ? {} : { id: parseInt(id) }),
+      ...(username === undefined ? {} : { username: Like(`%${username}%`) }),
+    })
   }
 
   async createUser(createUserInput: CreateUserDto): Promise<UserEntity> {

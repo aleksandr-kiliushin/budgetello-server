@@ -12,11 +12,7 @@ describe("Login", () => {
     })
 
     expect(response.status).toEqual(404)
-    expect(await response.json()).toEqual({
-      error: "Not Found",
-      message: "User not found.",
-      statusCode: 404,
-    })
+    expect(await response.json()).toEqual({})
   })
 
   it("responds 'unauthorized' if the user is found but password is invalid", async () => {
@@ -32,10 +28,7 @@ describe("Login", () => {
     })
 
     expect(response.status).toEqual(401)
-    expect(await response.json()).toEqual({
-      message: "Unauthorized",
-      statusCode: 401,
-    })
+    expect(await response.json()).toEqual({ message: "Invalid password." })
   })
 
   it("returns an auth token if cretendials are valid", async () => {
