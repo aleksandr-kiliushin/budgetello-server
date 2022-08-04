@@ -73,7 +73,6 @@ export class UserService {
   }
 
   async deleteUser(id: UserEntity["id"]): Promise<UserEntity> {
-    // return this.userRepository.delete(id)
     const user = await this.findUser({ id })
     await this.userRepository.delete(id)
     return user

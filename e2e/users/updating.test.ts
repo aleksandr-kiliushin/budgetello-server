@@ -22,7 +22,7 @@ describe("User updating", () => {
       body: JSON.stringify({ username: "jessica-stark-is-stupid" }),
       headers: {
         Authorization: "Bearer " + authToken,
-        // "Content-Type": "application/json",
+        "Content-Type": "application/json",
       },
       method: "PATCH",
     })
@@ -41,21 +41,26 @@ describe("User updating", () => {
     })
   })
 
-  // it("allows the logged in user to delete themselves", async () => {
-  //   const userToBeDeletedAuthToken = await logIn({ username: "john-doe", password: "john-doe-password" })
-  //   const deleteMeResponse = await fetch("http://localhost:3080/api/users/1", {
-  //     headers: {
-  //       Authorization: "Bearer " + userToBeDeletedAuthToken,
-  //     },
-  //     method: "DELETE",
-  //   })
-  //   expect(deleteMeResponse.status).toEqual(200)
-  //   expect(await deleteMeResponse.json()).toEqual<IUser>({
-  //     id: 1,
-  //     username: "john-doe",
-  //     password: "$2b$10$h/JNwLghT1FZHjXWIPPO7OMBw5TKr3JExRhWZv4ERZ.YeDmgoBs0i",
-  //   })
-  // })
+  it("allows the logged in user to updated themselves", async () => {
+    const userToBeUpdatedAuthToken = await logIn({ username: "john-doe", password: "john-doe-password" })
+    const updateMeResponse = await fetch("http://localhost:3080/api/users/1", {
+      body: JSON.stringify({
+        username: "john-doe-is-cool",
+        password: "john-doe-new-password",
+      }),
+      headers: {
+        Authorization: "Bearer " + userToBeUpdatedAuthToken,
+        "Content-Type": "application/json",
+      },
+      method: "PATCH",
+    })
+    expect(updateMeResponse.status).toEqual(200)
+    expect(await updateMeResponse.json()).toEqual<IUser>({
+      id: 1,
+      username: "john-doe-is-cool",
+      password: expect.stringMatching(".+"),
+    })
+  })
 
   // it("the deleted user doesn't exist in all users list", async () => {
   //   const userToBeDeletedAuthToken = await logIn({ username: "john-doe", password: "john-doe-password" })
