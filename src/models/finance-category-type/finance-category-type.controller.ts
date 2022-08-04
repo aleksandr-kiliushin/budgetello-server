@@ -1,10 +1,10 @@
 import { Body, Controller, Delete, Get, Param, Patch, Post, Query, UseGuards } from "@nestjs/common"
 
-import { FinanceCategoryTypeService } from "./finance-category-type.service"
-
 import { AuthGuard } from "#models/auth/auth.guard"
+
 import { CreateFinanceCategoryTypeDto } from "./dto/create-finance-category-type.dto"
 import { UpdateFinanceCategoryTypeDto } from "./dto/update-finance-category-type.dto"
+import { FinanceCategoryTypeService } from "./finance-category-type.service"
 
 @Controller("finance-category-type")
 @UseGuards(AuthGuard)

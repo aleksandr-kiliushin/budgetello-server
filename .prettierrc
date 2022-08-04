@@ -1,6 +1,10 @@
 {
   "arrowParens": "always",
   "bracketSpacing": true,
+  "importOrder": ["^#models", "^#interfaces", "\\."],
+  "importOrderParserPlugins": ["decorators-legacy", "typescript"],
+  "importOrderSeparation": true,
+  "importOrderSortSpecifiers": true,
   "printWidth": 120,
   "semi": false,
   "singleQuote": false,

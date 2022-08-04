@@ -1,7 +1,9 @@
-import { FinanceCategoryTypeService } from "#models/finance-category-type/finance-category-type.service"
 import { Injectable } from "@nestjs/common"
 import { InjectRepository } from "@nestjs/typeorm"
 import { In, Repository } from "typeorm"
+
+import { FinanceCategoryTypeService } from "#models/finance-category-type/finance-category-type.service"
+
 import { CreateFinanceCategoryDto } from "./dto/create-finance-category.dto"
 import { UpdateFinanceCategoryDto } from "./dto/update-finance-category.dto"
 import { FinanceCategoryEntity } from "./entities/finance-category.entity"

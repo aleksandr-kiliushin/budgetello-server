@@ -1,5 +1,5 @@
-import { IFinanceRecord } from "#interfaces/finance"
 import { IOrdering } from "#interfaces/common"
+import { IFinanceRecord } from "#interfaces/finance"
 
 export class GetFinanceRecordsDto {
   isTrashed?: IFinanceRecord["isTrashed"]

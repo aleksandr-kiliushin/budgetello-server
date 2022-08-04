@@ -1,4 +1,5 @@
-import { Entity, Column, PrimaryGeneratedColumn, ManyToOne } from "typeorm"
+import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm"
+
 import { FinanceCategoryEntity } from "#models/finance-category/entities/finance-category.entity"
 
 import { IFinanceRecord } from "#interfaces/finance"

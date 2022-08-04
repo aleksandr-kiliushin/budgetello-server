@@ -12,12 +12,14 @@ import {
   UseGuards,
 } from "@nestjs/common"
 
-import { UserService } from "./user.service"
 import { AuthGuard } from "#models/auth/auth.guard"
-import { CreateUserDto } from "./dto/create-user.dto"
+
 import { IUser } from "#interfaces/user"
+
+import { CreateUserDto } from "./dto/create-user.dto"
 import { FindUsersDto } from "./dto/find-users.dto"
 import { UpdateUserDto } from "./dto/update-user.dto"
+import { UserService } from "./user.service"
 
 @Controller("users")
 export class UserController {
