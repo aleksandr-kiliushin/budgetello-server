@@ -41,7 +41,7 @@ describe("User updating", () => {
     })
   })
 
-  it("allows the logged in user to updated themselves", async () => {
+  it("allows the logged in user to update themselves", async () => {
     const userToBeUpdatedAuthToken = await logIn({ username: "john-doe", password: "john-doe-password" })
     const updateMeResponse = await fetch("http://localhost:3080/api/users/1", {
       body: JSON.stringify({
@@ -62,7 +62,34 @@ describe("User updating", () => {
     })
   })
 
-  // it("the deleted user doesn't exist in all users list", async () => {
+  it("user cannot login with the old credentials", async () => {
+    const userToBeUpdatedAuthToken = await logIn({ username: "john-doe", password: "john-doe-password" })
+    await fetch("http://localhost:3080/api/users/1", {
+      body: JSON.stringify({
+        username: "john-doe-is-cool",
+        password: "john-doe-new-password",
+      }),
+      headers: {
+        Authorization: "Bearer " + userToBeUpdatedAuthToken,
+        "Content-Type": "application/json",
+      },
+      method: "PATCH",
+    })
+    const loginWithTheOldCredentialsResponse = await fetch("http://localhost:3080/api/login", {
+      body: JSON.stringify({
+        username: "john-doe",
+        password: "john-doe-password",
+      }),
+      headers: {
+        "Content-Type": "application/json",
+      },
+      method: "POST",
+    })
+    expect(loginWithTheOldCredentialsResponse.status).toEqual(404)
+    expect(await loginWithTheOldCredentialsResponse.json()).toEqual({})
+  })
+
+  // it("all users list contains the updated user", async () => {
   //   const userToBeDeletedAuthToken = await logIn({ username: "john-doe", password: "john-doe-password" })
   //   await fetch("http://localhost:3080/api/users/1", {
   //     headers: {
