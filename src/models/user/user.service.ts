@@ -61,15 +61,15 @@ export class UserService {
 
   async updateUser(id: UserEntity["id"], updateUserDto: UpdateUserDto): Promise<UserEntity> {
     const { password, username } = updateUserDto
-    const updatedUserData = { ...(await this.findUser({ id })) }
+    const newUserData = { ...(await this.findUser({ id })) }
     if (username !== undefined) {
-      updatedUserData.username = username
+      newUserData.username = username
     }
     if (password !== undefined && password !== "") {
       const salt = await bcrypt.genSalt()
-      updatedUserData.password = await bcrypt.hash(password, salt)
+      newUserData.password = await bcrypt.hash(password, salt)
     }
-    return this.userRepository.save(updatedUserData)
+    return this.userRepository.save(newUserData)
   }
 
   async deleteUser(id: UserEntity["id"]): Promise<UserEntity> {

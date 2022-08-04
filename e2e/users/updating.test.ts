@@ -121,24 +121,40 @@ describe("User updating", () => {
     })
   })
 
-  // it("all users list contains the updated user", async () => {
-  //   const userToBeDeletedAuthToken = await logIn({ username: "john-doe", password: "john-doe-password" })
-  //   await fetch("http://localhost:3080/api/users/1", {
-  //     headers: {
-  //       Authorization: "Bearer " + userToBeDeletedAuthToken,
-  //     },
-  //     method: "DELETE",
-  //   })
-  //   const anotherUserAuthToken = await logIn({ username: "jessica-stark", password: "jessica-stark-password" })
-  //   const fetchAllUsersResponse = await fetch("http://localhost:3080/api/users/search", {
-  //     headers: {
-  //       Authorization: "Bearer " + anotherUserAuthToken,
-  //     },
-  //   })
-  //   expect(await fetchAllUsersResponse.json()).not.toContainEqual<IUser>({
-  //     id: 1,
-  //     username: "john-doe",
-  //     password: "$2b$10$h/JNwLghT1FZHjXWIPPO7OMBw5TKr3JExRhWZv4ERZ.YeDmgoBs0i",
-  //   })
-  // })
+  it("all users list is updated after a user is updated", async () => {
+    const userToBeUpdatedAuthToken = await logIn({ username: "john-doe", password: "john-doe-password" })
+    const updateMeResponse = await fetch("http://localhost:3080/api/users/1", {
+      body: JSON.stringify({
+        username: "john-doe-is-cool",
+        password: "john-doe-new-password",
+      }),
+      headers: {
+        Authorization: "Bearer " + userToBeUpdatedAuthToken,
+        "Content-Type": "application/json",
+      },
+      method: "PATCH",
+    })
+    const loginWithTheNewCredentialsAuthToken = await logIn({
+      username: "john-doe-is-cool",
+      password: "john-doe-new-password",
+    })
+    const fetchAllUsersResponse = await fetch("http://localhost:3080/api/users/search", {
+      headers: {
+        Authorization: "Bearer " + loginWithTheNewCredentialsAuthToken,
+      },
+    })
+    expect(fetchAllUsersResponse.status).toEqual(200)
+    const allUsers = await fetchAllUsersResponse.json()
+    expect(allUsers).toHaveLength(2)
+    expect(allUsers).toContainEqual({
+      id: 1,
+      username: "john-doe-is-cool",
+      password: (await updateMeResponse.json()).password,
+    })
+    expect(allUsers).toContainEqual({
+      id: 2,
+      username: "jessica-stark",
+      password: "$2b$10$7IiBG7wqNoYzokw2ZOXF2uy1iHrDDaNge.de67g1n7TNTIY4iI6jC",
+    })
+  })
 })
