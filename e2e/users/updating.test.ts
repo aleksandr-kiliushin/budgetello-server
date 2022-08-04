@@ -1,11 +1,14 @@
 import { IUser } from "../../src/interfaces/user"
 
-const logIn = async ({}: { username: IUser["username"]; password: IUser["password"] }): Promise<string> => {
+const logIn = async ({
+  username,
+  password,
+}: {
+  username: IUser["username"]
+  password: IUser["password"]
+}): Promise<string> => {
   const loginResponse = await fetch("http://localhost:3080/api/login", {
-    body: JSON.stringify({
-      username: "john-doe",
-      password: "john-doe-password",
-    }),
+    body: JSON.stringify({ username, password }),
     headers: {
       "Content-Type": "application/json",
     },
@@ -87,6 +90,35 @@ describe("User updating", () => {
     })
     expect(loginWithTheOldCredentialsResponse.status).toEqual(404)
     expect(await loginWithTheOldCredentialsResponse.json()).toEqual({})
+  })
+
+  it("user can login with the new credentials", async () => {
+    const userToBeUpdatedAuthToken = await logIn({ username: "john-doe", password: "john-doe-password" })
+    await fetch("http://localhost:3080/api/users/1", {
+      body: JSON.stringify({
+        username: "john-doe-is-cool",
+        password: "john-doe-new-password",
+      }),
+      headers: {
+        Authorization: "Bearer " + userToBeUpdatedAuthToken,
+        "Content-Type": "application/json",
+      },
+      method: "PATCH",
+    })
+    const loginWithTheNewCredentialsResponse = await fetch("http://localhost:3080/api/login", {
+      body: JSON.stringify({
+        username: "john-doe-is-cool",
+        password: "john-doe-new-password",
+      }),
+      headers: {
+        "Content-Type": "application/json",
+      },
+      method: "POST",
+    })
+    expect(loginWithTheNewCredentialsResponse.status).toEqual(201)
+    expect(await loginWithTheNewCredentialsResponse.json()).toEqual({
+      authToken: expect.stringMatching(".+"),
+    })
   })
 
   // it("all users list contains the updated user", async () => {
