@@ -18,7 +18,7 @@ describe("User registration process", () => {
 
 describe("Registered user data and functions", () => {
   let newlyRegisteredUser = {
-    id: NaN,
+    id: 0,
     username: "",
     password: "",
     hashedPassword: "",
