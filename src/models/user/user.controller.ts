@@ -68,22 +68,4 @@ export class UserController {
     }
     return this.userService.deleteUser(userToBeDeletedId)
   }
-
-  // @Query(() => UserDto)
-  // @UseGuards(new AuthGuard())
-  // me(
-  // 	@Context('user')
-  // 	{ id }: IUser,
-  // ) {
-  // 	return this.userService.getUser({ id })
-  // }
-
-  // @Get("me")
-  // @UseGuards(AuthGuard)
-  // getCurrentUserData(
-  //   @Request()
-  //   req: any // eslint-disable-line @typescript-eslint/no-explicit-any
-  // ) {
-  //   return this.userService.getUser({ id: req.userId })
-  // }
 }
