@@ -1,7 +1,7 @@
 import { IUser } from "../../src/interfaces/user"
 
 describe("User registration process", () => {
-  it("cat register and get correct data response after registration", async () => {
+  it("can register and get correct data response after registration", async () => {
     const registerUserResponse = await fetch("http://localhost:3080/api/users", {
       body: JSON.stringify({ username: "andrew-smith", password: "andrew-smith-password" }),
       headers: { "Content-Type": "application/json" },
