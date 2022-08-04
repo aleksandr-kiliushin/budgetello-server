@@ -26,8 +26,8 @@ export class FinanceRecordService {
   }: GetFinanceRecordsDto): Promise<FinanceRecordEntity[]> {
     return this.financeRecordRepository.find({
       order: {
-        date: orderingByDate,
-        id: orderingById,
+        ...(orderingByDate === undefined ? {} : { date: orderingByDate }),
+        ...(orderingById === undefined ? {} : { id: orderingById }),
       },
       relations: ["category", "category.type"],
       skip: skip ?? 0,

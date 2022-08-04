@@ -18,7 +18,7 @@ export class FinanceCategoryController {
 
   @Get(":id")
   getFinanceCategory(@Param("id") id: string) {
-    return this.financeCategoryService.getFinanceCategory(+id)
+    return this.financeCategoryService.getFinanceCategory(parseInt(id))
   }
 
   @Post()
@@ -28,11 +28,11 @@ export class FinanceCategoryController {
 
   @Patch(":id")
   updateFinanceCategory(@Param("id") id: string, @Body() updateFinanceCategoryDto: UpdateFinanceCategoryDto) {
-    return this.financeCategoryService.updateFinanceCategory(+id, updateFinanceCategoryDto)
+    return this.financeCategoryService.updateFinanceCategory(parseInt(id), updateFinanceCategoryDto)
   }
 
   @Delete(":id")
   deleteFinanceCategory(@Param("id") id: string) {
-    return this.financeCategoryService.deleteFinanceCategory(+id)
+    return this.financeCategoryService.deleteFinanceCategory(parseInt(id))
   }
 }

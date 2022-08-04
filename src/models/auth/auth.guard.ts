@@ -1,4 +1,4 @@
-import { Injectable, UnauthorizedException } from "@nestjs/common"
+import { Injectable, ServiceUnavailableException, UnauthorizedException } from "@nestjs/common"
 import * as jwt from "jsonwebtoken"
 
 import { CanActivate, ExecutionContext } from "@nestjs/common"
@@ -14,11 +14,16 @@ export class AuthGuard implements CanActivate {
 
     const [, token] = authorizationHeader.split(" ")
 
+    const jwtSecret = process.env.JWT_SECRET
+    if (jwtSecret === undefined) {
+      throw new ServiceUnavailableException({ message: "Server has no JWT secret." })
+    }
+
     try {
-      jwt.verify(token, process.env.JWT_SECRET)
-
-      const { id } = jwt.decode(token, { json: true })
-
+      jwt.verify(token, jwtSecret)
+      const decodingResult = jwt.decode(token, { json: true })
+      if (decodingResult === null) throw new Error()
+      const { id } = decodingResult
       request.userId = id
     } catch (err) {
       throw new UnauthorizedException("Invalid token.")

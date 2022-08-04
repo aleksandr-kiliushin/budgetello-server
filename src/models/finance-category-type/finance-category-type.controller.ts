@@ -19,7 +19,7 @@ export class FinanceCategoryTypeController {
 
   @Get(":id")
   getFinanceCategoryType(@Param("id") id: string) {
-    return this.financeCategoryTypeService.getFinanceCategoryType(+id)
+    return this.financeCategoryTypeService.getFinanceCategoryType(parseInt(id))
   }
 
   @Post()
@@ -32,11 +32,11 @@ export class FinanceCategoryTypeController {
     @Param("id") id: string,
     @Body() updateFinanceCategoryTypeDto: UpdateFinanceCategoryTypeDto
   ) {
-    return this.financeCategoryTypeService.updateFinanceCategoryType(+id, updateFinanceCategoryTypeDto)
+    return this.financeCategoryTypeService.updateFinanceCategoryType(parseInt(id), updateFinanceCategoryTypeDto)
   }
 
   @Delete(":id")
   deleteFinanceCategoryType(@Param("id") id: string) {
-    return this.financeCategoryTypeService.deleteFinanceCategoryType(+id)
+    return this.financeCategoryTypeService.deleteFinanceCategoryType(parseInt(id))
   }
 }

@@ -18,7 +18,7 @@ export class FinanceRecordController {
 
   @Get(":id")
   getFinanceRecord(@Param("id") id: string) {
-    return this.financeRecordService.getFinanceRecord(+id)
+    return this.financeRecordService.getFinanceRecord(parseInt(id))
   }
 
   @Post()
@@ -28,11 +28,11 @@ export class FinanceRecordController {
 
   @Patch(":id")
   updateFinanceRecord(@Param("id") id: string, @Body() updateFinanceRecordDto: UpdateFinanceRecordDto) {
-    return this.financeRecordService.updateFinanceRecord(+id, updateFinanceRecordDto)
+    return this.financeRecordService.updateFinanceRecord(parseInt(id), updateFinanceRecordDto)
   }
 
   @Delete(":id")
   deleteFinanceRecord(@Param("id") id: string) {
-    return this.financeRecordService.deleteFinanceRecord(+id)
+    return this.financeRecordService.deleteFinanceRecord(parseInt(id))
   }
 }

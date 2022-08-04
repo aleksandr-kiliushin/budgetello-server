@@ -1,4 +1,15 @@
-import { Body, Controller, Get, Param, Post, Query, Request, UseGuards } from "@nestjs/common"
+import {
+  Body,
+  Controller,
+  Delete,
+  ForbiddenException,
+  Get,
+  Param,
+  Post,
+  Query,
+  Request,
+  UseGuards,
+} from "@nestjs/common"
 
 import { UserService } from "./user.service"
 import { AuthGuard } from "#models/auth/auth.guard"
@@ -24,7 +35,10 @@ export class UserController {
     @Param("userIdentifier")
     userIdentifier: string
   ) {
-    return this.userService.findUser({ loggedInUserId: req.userId, userIdentifier })
+    if (isNaN(parseInt(userIdentifier))) {
+      return this.userService.findUser({ loggedInUserId: req.userId, username: userIdentifier })
+    }
+    return this.userService.findUser({ loggedInUserId: req.userId, id: parseInt(userIdentifier) })
   }
 
   @Post()
@@ -37,13 +51,20 @@ export class UserController {
 
   // @Patch(':id')
   // updateUser(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
-  // 	return this.userService.updateUser(+id, updateUserDto)
+  // 	return this.userService.updateUser(parseInt(id), updateUserDto)
   // }
 
-  // @Delete(':id')
-  // deleteUser(@Param('id') id: string) {
-  // 	return this.userService.deleteUser(+id)
-  // }
+  @Delete(":id")
+  @UseGuards(AuthGuard)
+  deleteUser(
+    @Param("id")
+    id: string,
+    @Request()
+    req: any // eslint-disable-line @typescript-eslint/no-explicit-any
+  ) {
+    if (req.userId !== id) throw new ForbiddenException({ message: "You are not allowed to delete another user." })
+    return this.userService.deleteUser(parseInt(id))
+  }
 
   // @Query(() => UserDto)
   // @UseGuards(new AuthGuard())

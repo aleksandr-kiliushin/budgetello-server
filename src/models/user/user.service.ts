@@ -15,24 +15,21 @@ export class UserService {
     private userRepository: Repository<UserEntity>
   ) {}
 
-  async findUser({
-    loggedInUserId,
-    userIdentifier,
-  }: {
-    loggedInUserId?: IUser["id"]
-    userIdentifier: string
-  }): Promise<UserEntity> {
-    const isRequestForLoggedInUserData = userIdentifier === "0"
-    const isUsernameProvided = isNaN(parseInt(userIdentifier))
-    const isIdProvided = !isNaN(parseInt(userIdentifier))
-
+  async findUser(
+    params:
+      | { loggedInUserId?: IUser["id"]; id: IUser["id"] }
+      | { loggedInUserId?: IUser["id"]; username: IUser["username"] }
+  ): Promise<UserEntity> {
     let user: UserEntity | null = null
-    if (isRequestForLoggedInUserData) {
-      user = await this.userRepository.findOneBy({ id: loggedInUserId })
-    } else if (isUsernameProvided) {
-      user = await this.userRepository.findOneBy({ username: userIdentifier })
-    } else if (isIdProvided) {
-      user = await this.userRepository.findOneBy({ id: parseInt(userIdentifier) })
+
+    if ("id" in params && params.id === 0 && params.loggedInUserId !== undefined) {
+      user = await this.userRepository.findOneBy({ id: params.loggedInUserId })
+    }
+    if ("id" in params && params.id !== 0) {
+      user = await this.userRepository.findOneBy({ id: params.id })
+    }
+    if ("username" in params) {
+      user = await this.userRepository.findOneBy({ username: params.username })
     }
 
     if (user === null) throw new NotFoundException({})
@@ -63,26 +60,21 @@ export class UserService {
 
   // async updateUser(id: UserEntity['id'], updateUserDto: UpdateUserDto): Promise<UserEntity> {
   // 	const { password, username } = updateUserDto
-
   // 	const user = (await this.getUser({ id })) as UserEntity
-
   // 	if (username) {
   // 		user.username = username
   // 	}
-
   // 	if (password) {
   // 		const salt = await bcrypt.genSalt()
   // 		user.password = await bcrypt.hash(password, salt)
   // 	}
-
   // 	return this.userRepository.save(user)
   // }
 
-  // async deleteUser(id: UserEntity['id']): Promise<UserEntity> {
-  // 	const user = (await this.getUser({ id })) as UserEntity
-
-  // 	await this.userRepository.delete(id)
-
-  // 	return user
-  // }
+  async deleteUser(id: UserEntity["id"]): Promise<UserEntity> {
+    // return this.userRepository.delete(id)
+    const user = await this.findUser({ id })
+    await this.userRepository.delete(id)
+    return user
+  }
 }
