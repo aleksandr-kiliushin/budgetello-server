@@ -1,7 +1,6 @@
 import { IUser } from "../../src/interfaces/user"
 
-let authToken = ""
-beforeEach(async () => {
+const logIn = async ({}: { username: IUser["username"]; password: IUser["password"] }): Promise<string> => {
   const loginResponse = await fetch("http://localhost:3080/api/login", {
     body: JSON.stringify({
       username: "john-doe",
@@ -12,11 +11,13 @@ beforeEach(async () => {
     },
     method: "POST",
   })
-  ;({ authToken } = await loginResponse.json())
-})
+  const loginResponseData = await loginResponse.json()
+  return loginResponseData.authToken
+}
 
 describe("User deletion", () => {
   it("doesn't allow delete another user", async () => {
+    const authToken = await logIn({ username: "john-doe", password: "john-doe-password" })
     const deleteAnotherUserResponse = await fetch("http://localhost:3080/api/users/2", {
       headers: {
         Authorization: "Bearer " + authToken,
