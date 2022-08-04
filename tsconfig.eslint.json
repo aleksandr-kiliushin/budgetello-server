@@ -4,17 +4,28 @@
     "baseUrl": ".",
     "declaration": true,
     "emitDecoratorMetadata": true,
+    "exactOptionalPropertyTypes": true,
     "experimentalDecorators": true,
     "incremental": true,
     "module": "commonjs",
+    "noUnusedLocals": true,
+    "noUnusedParameters": false,
+    "noEmitOnError": true,
+    "noImplicitAny": true,
     "outDir": "./dist",
-    "removeComments": true,
+    "removeComments": false,
+    "resolveJsonModule": true,
+    "skipLibCheck": true,
+    "strict": true,
+    "strictFunctionTypes": true,
+    "strictNullChecks": true,
+    "strictPropertyInitialization": false,
     "sourceMap": true,
     "paths": {
       "#interfaces/*": ["src/interfaces/*"],
       "#models/*": ["src/models/*"]
     },
-    "target": "es2017"
+    "target": "es6"
   },
   "include": ["./**/*.ts"] // Only this option differs from the main `tsconfig.json` and includes all project files. So that eslint does not claim in e2e/ dir files.
 }
