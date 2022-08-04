@@ -7,6 +7,7 @@ import { UserEntity } from "./entities/user.entity"
 import { CreateUserDto } from "./dto/create-user.dto"
 import { IUser } from "#interfaces/user"
 import { FindUsersDto } from "./dto/find-users.dto"
+import { UpdateUserDto } from "./dto/update-user.dto"
 
 @Injectable()
 export class UserService {
@@ -58,18 +59,18 @@ export class UserService {
     return this.userRepository.save(user)
   }
 
-  // async updateUser(id: UserEntity['id'], updateUserDto: UpdateUserDto): Promise<UserEntity> {
-  // 	const { password, username } = updateUserDto
-  // 	const user = (await this.getUser({ id })) as UserEntity
-  // 	if (username) {
-  // 		user.username = username
-  // 	}
-  // 	if (password) {
-  // 		const salt = await bcrypt.genSalt()
-  // 		user.password = await bcrypt.hash(password, salt)
-  // 	}
-  // 	return this.userRepository.save(user)
-  // }
+  async updateUser(id: UserEntity["id"], updateUserDto: UpdateUserDto): Promise<UserEntity> {
+    const { password, username } = updateUserDto
+    const updatedUserData = { ...(await this.findUser({ id })) }
+    if (username !== undefined) {
+      updatedUserData.username = username
+    }
+    if (password !== undefined && password !== "") {
+      const salt = await bcrypt.genSalt()
+      updatedUserData.password = await bcrypt.hash(password, salt)
+    }
+    return this.userRepository.save(updatedUserData)
+  }
 
   async deleteUser(id: UserEntity["id"]): Promise<UserEntity> {
     // return this.userRepository.delete(id)

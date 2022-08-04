@@ -5,6 +5,7 @@ import {
   ForbiddenException,
   Get,
   Param,
+  Patch,
   Post,
   Query,
   Request,
@@ -16,6 +17,7 @@ import { AuthGuard } from "#models/auth/auth.guard"
 import { CreateUserDto } from "./dto/create-user.dto"
 import { IUser } from "#interfaces/user"
 import { FindUsersDto } from "./dto/find-users.dto"
+import { UpdateUserDto } from "./dto/update-user.dto"
 
 @Controller("users")
 export class UserController {
@@ -49,10 +51,22 @@ export class UserController {
     return this.userService.createUser(createUserDto)
   }
 
-  // @Patch(':id')
-  // updateUser(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
-  // 	return this.userService.updateUser(parseInt(id), updateUserDto)
-  // }
+  @Patch(":id")
+  @UseGuards(AuthGuard)
+  updateUser(
+    @Param("id")
+    id: string,
+    @Body()
+    updateUserDto: UpdateUserDto,
+    @Request()
+    req: any // eslint-disable-line @typescript-eslint/no-explicit-any
+  ) {
+    const userToBeUpdatedId = parseInt(id)
+    if (req.userId !== userToBeUpdatedId) {
+      throw new ForbiddenException({ message: "You are not allowed to update another user." })
+    }
+    return this.userService.updateUser(userToBeUpdatedId, updateUserDto)
+  }
 
   @Delete(":id")
   @UseGuards(AuthGuard)
