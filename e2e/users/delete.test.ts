@@ -54,4 +54,25 @@ describe("User deletion", () => {
       password: "$2b$10$h/JNwLghT1FZHjXWIPPO7OMBw5TKr3JExRhWZv4ERZ.YeDmgoBs0i",
     })
   })
+
+  it("the deleted user doesn't exist in all users list", async () => {
+    const userToBeDeletedAuthToken = await logIn({ username: "john-doe", password: "john-doe-password" })
+    await fetch("http://localhost:3080/api/users/1", {
+      headers: {
+        Authorization: "Bearer " + userToBeDeletedAuthToken,
+      },
+      method: "DELETE",
+    })
+    const anotherUserAuthToken = await logIn({ username: "jessica-stark", password: "jessica-stark-password" })
+    const fetchAllUsersResponse = await fetch("http://localhost:3080/api/users/search", {
+      headers: {
+        Authorization: "Bearer " + anotherUserAuthToken,
+      },
+    })
+    expect(await fetchAllUsersResponse.json()).not.toContainEqual<IUser>({
+      id: 1,
+      username: "john-doe",
+      password: "$2b$10$h/JNwLghT1FZHjXWIPPO7OMBw5TKr3JExRhWZv4ERZ.YeDmgoBs0i",
+    })
+  })
 })
