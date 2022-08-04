@@ -38,4 +38,20 @@ describe("User deletion", () => {
       password: "$2b$10$7IiBG7wqNoYzokw2ZOXF2uy1iHrDDaNge.de67g1n7TNTIY4iI6jC",
     })
   })
+
+  it("allows the logged in user to delete themselves", async () => {
+    const userToBeDeletedAuthToken = await logIn({ username: "john-doe", password: "john-doe-password" })
+    const deleteMeResponse = await fetch("http://localhost:3080/api/users/1", {
+      headers: {
+        Authorization: "Bearer " + userToBeDeletedAuthToken,
+      },
+      method: "DELETE",
+    })
+    expect(deleteMeResponse.status).toEqual(200)
+    expect(await deleteMeResponse.json()).toEqual<IUser>({
+      id: 1,
+      username: "john-doe",
+      password: "$2b$10$h/JNwLghT1FZHjXWIPPO7OMBw5TKr3JExRhWZv4ERZ.YeDmgoBs0i",
+    })
+  })
 })

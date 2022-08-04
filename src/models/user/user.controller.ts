@@ -62,8 +62,11 @@ export class UserController {
     @Request()
     req: any // eslint-disable-line @typescript-eslint/no-explicit-any
   ) {
-    if (req.userId !== id) throw new ForbiddenException({ message: "You are not allowed to delete another user." })
-    return this.userService.deleteUser(parseInt(id))
+    const userToBeDeletedId = parseInt(id)
+    if (req.userId !== userToBeDeletedId) {
+      throw new ForbiddenException({ message: "You are not allowed to delete another user." })
+    }
+    return this.userService.deleteUser(userToBeDeletedId)
   }
 
   // @Query(() => UserDto)
