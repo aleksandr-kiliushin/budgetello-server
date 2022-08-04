@@ -3,14 +3,14 @@
 # After the database container has started, run this script to initialize database.
 
 # Variant 1:
-# From your host machine execute: `echo "bash /app/init.sh" | docker exec -i personal-app-database bash;`.
+# From your host machine execute: `echo "bash /app/download-and-prepare-db-templates.sh" | docker exec -i personal-app-database bash;`.
 
 # Variant 2:
 # From your host machine execute: `docker exec -it personal-app-database /bin/sh`.
-# Inside the database container execute: `bash /app/init.sh`.
+# Inside the database container execute: `bash /app/download-and-prepare-db-templates.sh`.
 
 # Variant 3:
-# From your host machine execute: `make init-database`.
+# From your host machine execute: `npm run download-and-prepare-db-templates`.
 
 # Loading dump list from remote server to the container.
 curl -u :$REMOTE_API_KEY --output /var/app/dumps/dumps.json https://api.elephantsql.com/api/backup?db=$REMOTE_DATABASE_NAME;
