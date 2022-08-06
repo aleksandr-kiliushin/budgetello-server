@@ -27,24 +27,27 @@ describe("Finance record creating", () => {
     })
   })
 
-  // it("a newly created category is presented in all categories list", async () => {
-  //   await fetch("http://localhost:3080/api/finances/categories", {
-  //     body: JSON.stringify({ name: "food", typeId: 1 }),
-  //     headers: {
-  //       Authorization: authToken,
-  //       "Content-Type": "application/json",
-  //     },
-  //     method: "POST",
-  //   })
-  //   const getAllCategoriesResponse = await fetch("http://localhost:3080/api/finances/categories/search", {
-  //     headers: { Authorization: authToken },
-  //   })
-  //   expect(await getAllCategoriesResponse.json()).toContainEqual<IFinanceCategory>({
-  //     id: 6,
-  //     name: "food",
-  //     type: { id: 1, name: "expense" },
-  //   })
-  // })
+  it("a newly created record is presented in all records list", async () => {
+    await fetch("http://localhost:3080/api/finances/records", {
+      body: JSON.stringify({ amount: 2000, categoryId: 5, date: "2022-08-05" }),
+      headers: { Authorization: authToken, "Content-Type": "application/json" },
+      method: "POST",
+    })
+    const getAllCategoriesResponse = await fetch("http://localhost:3080/api/finances/records/search", {
+      headers: { Authorization: authToken },
+    })
+    expect(await getAllCategoriesResponse.json()).toContainEqual<IFinanceRecord>({
+      amount: 2000,
+      category: {
+        id: 5,
+        name: "salary",
+        type: { id: 2, name: "income" },
+      },
+      date: "2022-08-05",
+      id: 7,
+      isTrashed: false,
+    })
+  })
 
   // it("a newly created category can be found by id", async () => {
   //   await fetch("http://localhost:3080/api/finances/categories", {
