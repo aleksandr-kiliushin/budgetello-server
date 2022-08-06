@@ -1,6 +1,6 @@
 import { Injectable } from "@nestjs/common"
 import { InjectRepository } from "@nestjs/typeorm"
-import { In, Repository } from "typeorm"
+import { Repository } from "typeorm"
 
 import { CreateFinanceCategoryTypeDto } from "./dto/create-finance-category-type.dto"
 import { UpdateFinanceCategoryTypeDto } from "./dto/update-finance-category-type.dto"
@@ -13,12 +13,8 @@ export class FinanceCategoryTypeService {
     private financeCategoryTypeRepository: Repository<FinanceCategoryTypeEntity>
   ) {}
 
-  getFinanceCategoryTypes(query: { ids: string }): Promise<FinanceCategoryTypeEntity[]> {
-    const { ids } = query
-    const where = {
-      ...(ids && { id: In(ids.split(",")) }),
-    }
-    return this.financeCategoryTypeRepository.find({ where })
+  getAll(): Promise<FinanceCategoryTypeEntity[]> {
+    return this.financeCategoryTypeRepository.find()
   }
 
   getFinanceCategoryType(id: FinanceCategoryTypeEntity["id"]): Promise<FinanceCategoryTypeEntity> {

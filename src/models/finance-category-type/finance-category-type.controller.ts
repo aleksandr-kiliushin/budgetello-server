@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Param, Patch, Post, Query, UseGuards } from "@nestjs/common"
+import { Body, Controller, Delete, Get, Param, Patch, Post, UseGuards } from "@nestjs/common"
 
 import { AuthGuard } from "#models/auth/auth.guard"
 
@@ -6,15 +6,14 @@ import { CreateFinanceCategoryTypeDto } from "./dto/create-finance-category-type
 import { UpdateFinanceCategoryTypeDto } from "./dto/update-finance-category-type.dto"
 import { FinanceCategoryTypeService } from "./finance-category-type.service"
 
-@Controller("finance-category-type")
+@Controller("finances/category-type")
 @UseGuards(AuthGuard)
 export class FinanceCategoryTypeController {
   constructor(private readonly financeCategoryTypeService: FinanceCategoryTypeService) {}
 
   @Get()
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  getFinanceCategoryTypes(@Query() query: any) {
-    return this.financeCategoryTypeService.getFinanceCategoryTypes(query)
+  getAll() {
+    return this.financeCategoryTypeService.getAll()
   }
 
   @Get(":id")

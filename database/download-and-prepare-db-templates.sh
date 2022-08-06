@@ -50,5 +50,11 @@ psql personal_app_testing_template postgres << EOF
   VALUES             ('john-doe',      '\$2b\$10\$h/JNwLghT1FZHjXWIPPO7OMBw5TKr3JExRhWZv4ERZ.YeDmgoBs0i'),
                      ('jessica-stark', '\$2b\$10\$7IiBG7wqNoYzokw2ZOXF2uy1iHrDDaNge.de67g1n7TNTIY4iI6jC');
 EOF
+# Adds two finance category types.
+psql personal_app_testing_template postgres << EOF
+  INSERT INTO finance_category_type (name     )
+  VALUES                            ('expense'),
+                                    ('income' );
+EOF
 
 psql -U postgres -c "CREATE DATABASE personal_app_db WITH TEMPLATE personal_app_dev_template ENCODING 'UTF-8';";
