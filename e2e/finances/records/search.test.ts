@@ -6,7 +6,7 @@ beforeEach(async () => {
   authToken = await logIn({ username: "john-doe", password: "john-doe-password" })
 })
 
-describe("Get finance record by id", () => {
+describe("Get finance record by ID", () => {
   test.each<
     | { url: string; responseStatus: 200; responseData: IFinanceRecord }
     | { url: string; responseStatus: 404; responseData: { message: string } }
@@ -28,11 +28,7 @@ describe("Get finance record by id", () => {
       responseData: { message: "Record with ID '666' not found." },
     },
   ])("find record for: $url", async ({ url, responseStatus, responseData }) => {
-    const response = await fetch(url, {
-      headers: {
-        Authorization: authToken,
-      },
-    })
+    const response = await fetch(url, { headers: { Authorization: authToken } })
     expect(response.status).toEqual(responseStatus)
     expect(await response.json()).toEqual(responseData)
   })
@@ -87,9 +83,47 @@ describe("Finance records search", () => {
         },
       ],
     },
+    {
+      url: "http://localhost:3080/api/finances/records/search?orderingByDate=DESC&orderingById=DESC&isTrashed=false&skip=1&take=2",
+      searchResult: [
+        {
+          amount: 10,
+          category: { id: 3, name: "gifts", type: { id: 1, name: "expense" } },
+          date: "2022-08-02",
+          id: 5,
+          isTrashed: false,
+        },
+        {
+          amount: 30,
+          category: { id: 3, name: "gifts", type: { id: 1, name: "expense" } },
+          date: "2022-08-02",
+          id: 4,
+          isTrashed: false,
+        },
+      ],
+    },
   ])("user search for: $url", async ({ url, searchResult }) => {
     const response = await fetch(url, { headers: { Authorization: authToken } })
     expect(response.status).toEqual(200)
     expect(await response.json()).toEqual(searchResult)
   })
 })
+
+// search({
+//   orderingByDate,
+//   orderingById,
+//   skip = 0,
+//   take,
+//   ...where
+// }: GetFinanceRecordsDto): Promise<FinanceRecordEntity[]> {
+//   return this.financeRecordRepository.find({
+//     order: {
+//       ...(orderingByDate === undefined ? {} : { date: orderingByDate }),
+//       ...(orderingById === undefined ? {} : { id: orderingById }),
+//     },
+//     relations: ["category", "category.type"],
+//     skip,
+//     ...(take ? { take } : {}),
+//     where,
+//   })
+// }
