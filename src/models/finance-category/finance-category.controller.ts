@@ -6,14 +6,14 @@ import { CreateFinanceCategoryDto } from "./dto/create-finance-category.dto"
 import { UpdateFinanceCategoryDto } from "./dto/update-finance-category.dto"
 import { FinanceCategoryService } from "./finance-category.service"
 
-@Controller("finance-category")
+@Controller("finances/categories")
 @UseGuards(AuthGuard)
 export class FinanceCategoryController {
   constructor(private financeCategoryService: FinanceCategoryService) {}
 
   @Get()
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  getFinanceCategories(@Query() query: any) {
+  getAll(@Query() query: any) {
     return this.financeCategoryService.getFinanceCategories(query)
   }
 

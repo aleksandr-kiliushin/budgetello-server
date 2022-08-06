@@ -56,5 +56,14 @@ psql personal_app_testing_template postgres << EOF
   VALUES                            ('expense'),
                                     ('income' );
 EOF
+# Adds two finance category types.
+psql personal_app_testing_template postgres << EOF
+  INSERT INTO finance_category (name,        "typeId")
+  VALUES                       ('clothes'  , 1       ),
+                               ('education', 1       ),
+                               ('gifts'    , 1       ),
+                               ('gifts'    , 2       ),
+                               ('salary'   , 2       );
+EOF
 
 psql -U postgres -c "CREATE DATABASE personal_app_db WITH TEMPLATE personal_app_dev_template ENCODING 'UTF-8';";
