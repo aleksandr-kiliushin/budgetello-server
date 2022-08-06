@@ -1,4 +1,4 @@
-import { Injectable } from "@nestjs/common"
+import { Injectable, NotFoundException } from "@nestjs/common"
 import { InjectRepository } from "@nestjs/typeorm"
 import { In, Repository } from "typeorm"
 
@@ -32,11 +32,10 @@ export class FinanceCategoryService {
     })
   }
 
-  getFinanceCategory(id: FinanceCategoryEntity["id"]): Promise<FinanceCategoryEntity> {
-    return this.financeCategoryRepository.findOneOrFail({
-      relations: ["type"],
-      where: { id },
-    })
+  async findById(id: FinanceCategoryEntity["id"]): Promise<FinanceCategoryEntity> {
+    const category = await this.financeCategoryRepository.findOne({ relations: ["type"], where: { id } })
+    if (category === null) throw new NotFoundException({})
+    return category
   }
 
   async createFinanceCategory(createFinanceCategoryDto: CreateFinanceCategoryDto): Promise<FinanceCategoryEntity> {
@@ -55,7 +54,7 @@ export class FinanceCategoryService {
   ): Promise<FinanceCategoryEntity> {
     const { typeId, name } = updateFinanceCategoryDto
 
-    const category = await this.getFinanceCategory(id)
+    const category = await this.findById(id)
 
     if (typeId) {
       const type = await this.financeCategoryTypeService.getFinanceCategoryType(typeId)
@@ -70,10 +69,8 @@ export class FinanceCategoryService {
   }
 
   async deleteFinanceCategory(id: FinanceCategoryEntity["id"]): Promise<FinanceCategoryEntity> {
-    const category = await this.getFinanceCategory(id)
-
+    const category = await this.findById(id)
     await this.financeCategoryRepository.delete(id)
-
     return category
   }
 }

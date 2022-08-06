@@ -46,11 +46,8 @@ export class FinanceRecordService {
 
   async createFinanceRecord(createFinanceRecordDto: CreateFinanceRecordDto): Promise<FinanceRecordEntity> {
     const { categoryId } = createFinanceRecordDto
-
     const record = this.financeRecordRepository.create(createFinanceRecordDto)
-
-    record.category = await this.financeCategoryService.getFinanceCategory(categoryId)
-
+    record.category = await this.financeCategoryService.findById(categoryId)
     return this.financeRecordRepository.save(record)
   }
 
@@ -64,8 +61,8 @@ export class FinanceRecordService {
 
     const updatedRecord = { ...record, ...rest }
 
-    if (categoryId) {
-      updatedRecord.category = await this.financeCategoryService.getFinanceCategory(categoryId)
+    if (categoryId !== undefined) {
+      updatedRecord.category = await this.financeCategoryService.findById(categoryId)
     }
 
     return this.financeRecordRepository.save(updatedRecord)

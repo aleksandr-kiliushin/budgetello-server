@@ -18,8 +18,8 @@ export class FinanceCategoryController {
   }
 
   @Get(":id")
-  getFinanceCategory(@Param("id") id: string) {
-    return this.financeCategoryService.getFinanceCategory(parseInt(id))
+  findById(@Param("id") id: string) {
+    return this.financeCategoryService.findById(parseInt(id))
   }
 
   @Post()
