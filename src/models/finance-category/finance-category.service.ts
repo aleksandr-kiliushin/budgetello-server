@@ -25,7 +25,7 @@ export class FinanceCategoryService {
       },
       relations: ["type"],
       where: {
-        ...(query.id && { id: In(query.id.split(",")) }),
+        ...(query.id === undefined ? {} : { id: In(query.id.split(",")) }),
       },
     })
   }
