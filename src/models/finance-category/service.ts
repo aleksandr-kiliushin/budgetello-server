@@ -2,7 +2,7 @@ import { BadRequestException, Injectable, NotFoundException } from "@nestjs/comm
 import { InjectRepository } from "@nestjs/typeorm"
 import { In, Repository } from "typeorm"
 
-import { FinanceCategoryTypeService } from "#models/finance-category-type/finance-category-type.service"
+import { FinanceCategoryTypeService } from "#models/finance-category-type/service"
 
 import { CreateFinanceCategoryDto } from "./dto/create-finance-category.dto"
 import { UpdateFinanceCategoryDto } from "./dto/update-finance-category.dto"

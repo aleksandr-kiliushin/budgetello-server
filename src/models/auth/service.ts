@@ -2,7 +2,7 @@ import { Injectable, NotFoundException, ServiceUnavailableException, Unauthorize
 import * as bcrypt from "bcrypt"
 import * as jwt from "jsonwebtoken"
 
-import { UserService } from "#models/user/user.service"
+import { UserService } from "#models/user/service"
 
 import { LoginDto } from "./dto/login.dto"
 

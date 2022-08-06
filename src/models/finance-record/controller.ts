@@ -1,10 +1,10 @@
 import { Body, Controller, Delete, Get, Param, Patch, Post, Query, UseGuards } from "@nestjs/common"
 
-import { AuthGuard } from "#models/auth/auth.guard"
+import { AuthGuard } from "#models/auth/guard"
 
 import { CreateFinanceRecordDto } from "./dto/create-finance-record.dto"
 import { UpdateFinanceRecordDto } from "./dto/update-finance-record.dto"
-import { FinanceRecordService } from "./finance-record.service"
+import { FinanceRecordService } from "./service"
 
 @Controller("finance-record")
 @UseGuards(AuthGuard)

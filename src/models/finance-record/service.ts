@@ -2,7 +2,7 @@ import { Injectable } from "@nestjs/common"
 import { InjectRepository } from "@nestjs/typeorm"
 import { Repository } from "typeorm"
 
-import { FinanceCategoryService } from "#models/finance-category/finance-category.service"
+import { FinanceCategoryService } from "#models/finance-category/service"
 
 import { CreateFinanceRecordDto } from "./dto/create-finance-record.dto"
 import { GetFinanceRecordsDto } from "./dto/get-finance-records.dto"

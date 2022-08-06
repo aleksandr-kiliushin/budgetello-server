@@ -1,8 +1,8 @@
 import { Controller, Get, Param, UseGuards } from "@nestjs/common"
 
-import { AuthGuard } from "#models/auth/auth.guard"
+import { AuthGuard } from "#models/auth/guard"
 
-import { FinanceCategoryTypeService } from "./finance-category-type.service"
+import { FinanceCategoryTypeService } from "./service"
 
 @Controller("finances/category-types")
 @UseGuards(AuthGuard)

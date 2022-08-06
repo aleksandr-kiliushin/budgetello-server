@@ -1,11 +1,11 @@
 import { Module } from "@nestjs/common"
 import { TypeOrmModule } from "@nestjs/typeorm"
 
-import { FinanceCategoryTypeModule } from "#models/finance-category-type/finance-category-type.module"
+import { FinanceCategoryTypeModule } from "#models/finance-category-type/module"
 
+import { FinanceCategoryController } from "./controller"
 import { FinanceCategoryEntity } from "./entities/finance-category.entity"
-import { FinanceCategoryController } from "./finance-category.controller"
-import { FinanceCategoryService } from "./finance-category.service"
+import { FinanceCategoryService } from "./service"
 
 @Module({
   exports: [FinanceCategoryService],
