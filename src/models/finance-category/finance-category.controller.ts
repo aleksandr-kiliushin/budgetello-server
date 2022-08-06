@@ -11,10 +11,10 @@ import { FinanceCategoryService } from "./finance-category.service"
 export class FinanceCategoryController {
   constructor(private financeCategoryService: FinanceCategoryService) {}
 
-  @Get()
+  @Get("search")
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  getAll(@Query() query: any) {
-    return this.financeCategoryService.getFinanceCategories(query)
+  searchCategories(@Query() query: any) {
+    return this.financeCategoryService.searchCategories(query)
   }
 
   @Get(":id")

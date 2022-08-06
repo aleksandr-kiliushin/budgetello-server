@@ -17,18 +17,16 @@ export class FinanceCategoryService {
     private financeCategoryTypeService: FinanceCategoryTypeService
   ) {}
 
-  getFinanceCategories(query: { ids: string }): Promise<FinanceCategoryEntity[]> {
-    const { ids } = query
-    const where = {
-      ...(ids && { id: In(ids.split(",")) }),
-    }
+  searchCategories(query: { id: string }): Promise<FinanceCategoryEntity[]> {
     return this.financeCategoryRepository.find({
       order: {
         id: "ASC",
         name: "ASC",
       },
       relations: ["type"],
-      where,
+      where: {
+        ...(query.id && { id: In(query.id.split(",")) }),
+      },
     })
   }
 
