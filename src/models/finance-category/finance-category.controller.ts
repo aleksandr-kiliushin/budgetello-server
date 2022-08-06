@@ -1,9 +1,9 @@
-import { Body, Controller, Delete, Get, Param, Patch, Post, Query, UseGuards } from "@nestjs/common"
+import { Body, Controller, Get, Param, Post, Query, UseGuards } from "@nestjs/common"
 
 import { AuthGuard } from "#models/auth/auth.guard"
 
 import { CreateFinanceCategoryDto } from "./dto/create-finance-category.dto"
-import { UpdateFinanceCategoryDto } from "./dto/update-finance-category.dto"
+// import { UpdateFinanceCategoryDto } from "./dto/update-finance-category.dto"
 import { FinanceCategoryService } from "./finance-category.service"
 
 @Controller("finances/categories")
@@ -27,13 +27,13 @@ export class FinanceCategoryController {
     return this.financeCategoryService.createFinanceCategory(createFinanceCategoryDto)
   }
 
-  @Patch(":id")
-  updateFinanceCategory(@Param("id") id: string, @Body() updateFinanceCategoryDto: UpdateFinanceCategoryDto) {
-    return this.financeCategoryService.updateFinanceCategory(parseInt(id), updateFinanceCategoryDto)
-  }
+  // @Patch(":id")
+  // updateFinanceCategory(@Param("id") id: string, @Body() updateFinanceCategoryDto: UpdateFinanceCategoryDto) {
+  //   return this.financeCategoryService.updateFinanceCategory(parseInt(id), updateFinanceCategoryDto)
+  // }
 
-  @Delete(":id")
-  deleteFinanceCategory(@Param("id") id: string) {
-    return this.financeCategoryService.deleteFinanceCategory(parseInt(id))
-  }
+  // @Delete(":id")
+  // deleteFinanceCategory(@Param("id") id: string) {
+  //   return this.financeCategoryService.deleteFinanceCategory(parseInt(id))
+  // }
 }
