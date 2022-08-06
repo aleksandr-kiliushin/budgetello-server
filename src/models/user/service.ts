@@ -38,7 +38,7 @@ export class UserService {
     return user
   }
 
-  findUsers(query: FindUsersDto): Promise<UserEntity[]> {
+  searchUsers(query: FindUsersDto): Promise<UserEntity[]> {
     const { id, username } = query
     return this.userRepository.findBy({
       ...(id === undefined ? {} : { id: parseInt(id) }),
@@ -46,7 +46,7 @@ export class UserService {
     })
   }
 
-  async createUser(createUserInput: CreateUserDto): Promise<UserEntity> {
+  async create(createUserInput: CreateUserDto): Promise<UserEntity> {
     const { password, username } = createUserInput
 
     const salt = await bcrypt.genSalt()
@@ -60,7 +60,7 @@ export class UserService {
     return this.userRepository.save(user)
   }
 
-  async updateUser(id: UserEntity["id"], updateUserDto: UpdateUserDto): Promise<UserEntity> {
+  async update(id: UserEntity["id"], updateUserDto: UpdateUserDto): Promise<UserEntity> {
     const { password, username } = updateUserDto
     const newUserData = { ...(await this.findUser({ id })) }
     if (username !== undefined) {
@@ -73,7 +73,7 @@ export class UserService {
     return this.userRepository.save(newUserData)
   }
 
-  async deleteUser(id: UserEntity["id"]): Promise<UserEntity> {
+  async delete(id: UserEntity["id"]): Promise<UserEntity> {
     const user = await this.findUser({ id })
     await this.userRepository.delete(id)
     return user

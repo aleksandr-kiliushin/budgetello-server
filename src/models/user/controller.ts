@@ -27,8 +27,8 @@ export class UserController {
 
   @Get("search")
   @UseGuards(AuthGuard)
-  findUsers(@Query() query: FindUsersDto) {
-    return this.userService.findUsers(query)
+  searchUsers(@Query() query: FindUsersDto) {
+    return this.userService.searchUsers(query)
   }
 
   @Get(":userIdentifier")
@@ -46,16 +46,16 @@ export class UserController {
   }
 
   @Post()
-  createUser(
+  create(
     @Body()
     createUserDto: CreateUserDto
   ) {
-    return this.userService.createUser(createUserDto)
+    return this.userService.create(createUserDto)
   }
 
   @Patch(":id")
   @UseGuards(AuthGuard)
-  updateUser(
+  update(
     @Param("id")
     id: string,
     @Body()
@@ -67,12 +67,12 @@ export class UserController {
     if (req.userId !== userToBeUpdatedId) {
       throw new ForbiddenException({ message: "You are not allowed to update another user." })
     }
-    return this.userService.updateUser(userToBeUpdatedId, updateUserDto)
+    return this.userService.update(userToBeUpdatedId, updateUserDto)
   }
 
   @Delete(":id")
   @UseGuards(AuthGuard)
-  deleteUser(
+  delete(
     @Param("id")
     id: string,
     @Request()
@@ -82,6 +82,6 @@ export class UserController {
     if (req.userId !== userToBeDeletedId) {
       throw new ForbiddenException({ message: "You are not allowed to delete another user." })
     }
-    return this.userService.deleteUser(userToBeDeletedId)
+    return this.userService.delete(userToBeDeletedId)
   }
 }
