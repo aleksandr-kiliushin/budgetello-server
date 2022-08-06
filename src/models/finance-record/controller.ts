@@ -23,8 +23,8 @@ export class FinanceRecordController {
   }
 
   @Post()
-  createFinanceRecord(@Body() createFinanceRecordDto: CreateFinanceRecordDto) {
-    return this.financeRecordService.createFinanceRecord(createFinanceRecordDto)
+  create(@Body() createFinanceRecordDto: CreateFinanceRecordDto) {
+    return this.financeRecordService.create(createFinanceRecordDto)
   }
 
   @Patch(":id")
