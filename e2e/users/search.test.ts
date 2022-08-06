@@ -74,7 +74,7 @@ describe("Returns a user by their identifier", () => {
   ])("user search for: $url", async ({ url, responseStatus, responseData }) => {
     const response = await fetch(url, {
       headers: {
-        Authorization: "Bearer " + authToken,
+        Authorization: authToken,
       },
     })
     expect(response.status).toEqual(responseStatus)
@@ -145,7 +145,7 @@ describe("Users search", () => {
   ])("user search for: $url", async ({ url, searchResult }) => {
     const response = await fetch(url, {
       headers: {
-        Authorization: "Bearer " + authToken,
+        Authorization: authToken,
       },
     })
     expect(response.status).toEqual(200)

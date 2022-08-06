@@ -57,7 +57,7 @@ describe("Registered user data and functions", () => {
   it("a newly registered request their data", async () => {
     const getLoggedInUserDataResponse = await fetch("http://localhost:3080/api/users/0", {
       headers: {
-        Authorization: "Bearer " + newlyRegisteredUser.authToken,
+        Authorization: newlyRegisteredUser.authToken,
       },
     })
     expect(getLoggedInUserDataResponse.status).toEqual(200)
@@ -71,7 +71,7 @@ describe("Registered user data and functions", () => {
   it("finds newly registered user by id", async () => {
     const findNewlyRegisteredUserByIdResponse = await fetch("http://localhost:3080/api/users/3", {
       headers: {
-        Authorization: "Bearer " + newlyRegisteredUser.authToken,
+        Authorization: newlyRegisteredUser.authToken,
       },
     })
     expect(findNewlyRegisteredUserByIdResponse.status).toEqual(200)
@@ -85,7 +85,7 @@ describe("Registered user data and functions", () => {
   it("users list includes newly registered user", async () => {
     const allUsersResponse = await fetch("http://localhost:3080/api/users/search", {
       headers: {
-        Authorization: "Bearer " + newlyRegisteredUser.authToken,
+        Authorization: newlyRegisteredUser.authToken,
       },
     })
     expect(await allUsersResponse.json()).toEqual<IUser[]>([

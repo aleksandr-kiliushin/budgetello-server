@@ -11,7 +11,7 @@ describe("Finance category updating", () => {
     const categoryUpdatingResponse = await fetch("http://localhost:3080/api/finances/categories/2", {
       body: JSON.stringify({ name: "teaching", typeId: 2 }),
       headers: {
-        Authorization: "Bearer " + authToken,
+        Authorization: authToken,
         "Content-Type": "application/json",
       },
       method: "PATCH",
@@ -28,13 +28,13 @@ describe("Finance category updating", () => {
     await fetch("http://localhost:3080/api/finances/categories/2", {
       body: JSON.stringify({ name: "drugs" }),
       headers: {
-        Authorization: "Bearer " + authToken,
+        Authorization: authToken,
         "Content-Type": "application/json",
       },
       method: "PATCH",
     })
     const getAllCategoriesResponse = await fetch("http://localhost:3080/api/finances/categories/search", {
-      headers: { Authorization: "Bearer " + authToken },
+      headers: { Authorization: authToken },
     })
     expect(await getAllCategoriesResponse.json()).toContainEqual<IFinanceCategory>({
       id: 2,
@@ -47,13 +47,13 @@ describe("Finance category updating", () => {
     await fetch("http://localhost:3080/api/finances/categories/2", {
       body: JSON.stringify({ typeId: 2 }),
       headers: {
-        Authorization: "Bearer " + authToken,
+        Authorization: authToken,
         "Content-Type": "application/json",
       },
       method: "PATCH",
     })
     const getAllCategoriesResponse = await fetch("http://localhost:3080/api/finances/categories/2", {
-      headers: { Authorization: "Bearer " + authToken },
+      headers: { Authorization: authToken },
     })
     expect(await getAllCategoriesResponse.json()).toEqual<IFinanceCategory>({
       id: 2,

@@ -11,7 +11,7 @@ describe("Finance category creating", () => {
     const categoryCreatingResponse = await fetch("http://localhost:3080/api/finances/categories", {
       body: JSON.stringify({ name: "food", typeId: 1 }),
       headers: {
-        Authorization: "Bearer " + authToken,
+        Authorization: authToken,
         "Content-Type": "application/json",
       },
       method: "POST",
@@ -28,13 +28,13 @@ describe("Finance category creating", () => {
     await fetch("http://localhost:3080/api/finances/categories", {
       body: JSON.stringify({ name: "food", typeId: 1 }),
       headers: {
-        Authorization: "Bearer " + authToken,
+        Authorization: authToken,
         "Content-Type": "application/json",
       },
       method: "POST",
     })
     const getAllCategoriesResponse = await fetch("http://localhost:3080/api/finances/categories/search", {
-      headers: { Authorization: "Bearer " + authToken },
+      headers: { Authorization: authToken },
     })
     expect(await getAllCategoriesResponse.json()).toContainEqual<IFinanceCategory>({
       id: 6,
@@ -47,13 +47,13 @@ describe("Finance category creating", () => {
     await fetch("http://localhost:3080/api/finances/categories", {
       body: JSON.stringify({ name: "food", typeId: 1 }),
       headers: {
-        Authorization: "Bearer " + authToken,
+        Authorization: authToken,
         "Content-Type": "application/json",
       },
       method: "POST",
     })
     const getAllCategoriesResponse = await fetch("http://localhost:3080/api/finances/categories/6", {
-      headers: { Authorization: "Bearer " + authToken },
+      headers: { Authorization: authToken },
     })
     expect(await getAllCategoriesResponse.json()).toEqual<IFinanceCategory>({
       id: 6,
@@ -69,7 +69,7 @@ describe("Finance category creating", () => {
         typeId: 1,
       }),
       headers: {
-        Authorization: "Bearer " + authToken,
+        Authorization: authToken,
         "Content-Type": "application/json",
       },
       method: "POST",

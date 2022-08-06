@@ -20,7 +20,7 @@ describe("User deletion", () => {
     const authToken = await logIn({ username: "john-doe", password: "john-doe-password" })
     const deleteAnotherUserResponse = await fetch("http://localhost:3080/api/users/2", {
       headers: {
-        Authorization: "Bearer " + authToken,
+        Authorization: authToken,
       },
       method: "DELETE",
     })
@@ -28,7 +28,7 @@ describe("User deletion", () => {
     expect(await deleteAnotherUserResponse.json()).toEqual({ message: "You are not allowed to delete another user." })
     const fetchAnotherUserResponse = await fetch("http://localhost:3080/api/users/2", {
       headers: {
-        Authorization: "Bearer " + authToken,
+        Authorization: authToken,
       },
     })
     expect(fetchAnotherUserResponse.status).toEqual(200)
@@ -43,7 +43,7 @@ describe("User deletion", () => {
     const userToBeDeletedAuthToken = await logIn({ username: "john-doe", password: "john-doe-password" })
     const deleteMeResponse = await fetch("http://localhost:3080/api/users/1", {
       headers: {
-        Authorization: "Bearer " + userToBeDeletedAuthToken,
+        Authorization: userToBeDeletedAuthToken,
       },
       method: "DELETE",
     })
@@ -59,14 +59,14 @@ describe("User deletion", () => {
     const userToBeDeletedAuthToken = await logIn({ username: "john-doe", password: "john-doe-password" })
     await fetch("http://localhost:3080/api/users/1", {
       headers: {
-        Authorization: "Bearer " + userToBeDeletedAuthToken,
+        Authorization: userToBeDeletedAuthToken,
       },
       method: "DELETE",
     })
     const anotherUserAuthToken = await logIn({ username: "jessica-stark", password: "jessica-stark-password" })
     const fetchAllUsersResponse = await fetch("http://localhost:3080/api/users/search", {
       headers: {
-        Authorization: "Bearer " + anotherUserAuthToken,
+        Authorization: anotherUserAuthToken,
       },
     })
     expect(await fetchAllUsersResponse.json()).not.toContainEqual<IUser>({

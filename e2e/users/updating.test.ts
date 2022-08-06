@@ -24,7 +24,7 @@ describe("User updating", () => {
     const updateAnotherUserResponse = await fetch("http://localhost:3080/api/users/2", {
       body: JSON.stringify({ username: "jessica-stark-is-stupid" }),
       headers: {
-        Authorization: "Bearer " + authToken,
+        Authorization: authToken,
         "Content-Type": "application/json",
       },
       method: "PATCH",
@@ -33,7 +33,7 @@ describe("User updating", () => {
     expect(await updateAnotherUserResponse.json()).toEqual({ message: "You are not allowed to update another user." })
     const fetchAnotherUserResponse = await fetch("http://localhost:3080/api/users/2", {
       headers: {
-        Authorization: "Bearer " + authToken,
+        Authorization: authToken,
       },
     })
     expect(fetchAnotherUserResponse.status).toEqual(200)
@@ -52,7 +52,7 @@ describe("User updating", () => {
         password: "john-doe-new-password",
       }),
       headers: {
-        Authorization: "Bearer " + userToBeUpdatedAuthToken,
+        Authorization: userToBeUpdatedAuthToken,
         "Content-Type": "application/json",
       },
       method: "PATCH",
@@ -73,7 +73,7 @@ describe("User updating", () => {
         password: "john-doe-new-password",
       }),
       headers: {
-        Authorization: "Bearer " + userToBeUpdatedAuthToken,
+        Authorization: userToBeUpdatedAuthToken,
         "Content-Type": "application/json",
       },
       method: "PATCH",
@@ -100,7 +100,7 @@ describe("User updating", () => {
         password: "john-doe-new-password",
       }),
       headers: {
-        Authorization: "Bearer " + userToBeUpdatedAuthToken,
+        Authorization: userToBeUpdatedAuthToken,
         "Content-Type": "application/json",
       },
       method: "PATCH",
@@ -129,7 +129,7 @@ describe("User updating", () => {
         password: "john-doe-new-password",
       }),
       headers: {
-        Authorization: "Bearer " + userToBeUpdatedAuthToken,
+        Authorization: userToBeUpdatedAuthToken,
         "Content-Type": "application/json",
       },
       method: "PATCH",
@@ -140,7 +140,7 @@ describe("User updating", () => {
     })
     const fetchAllUsersResponse = await fetch("http://localhost:3080/api/users/search", {
       headers: {
-        Authorization: "Bearer " + loginWithTheNewCredentialsAuthToken,
+        Authorization: loginWithTheNewCredentialsAuthToken,
       },
     })
     expect(fetchAllUsersResponse.status).toEqual(200)

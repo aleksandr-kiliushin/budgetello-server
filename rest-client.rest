@@ -1,50 +1,28 @@
 ### Finance category type #####################################################
-GET http://localhost:3080/api/finance-category-type
-Authorization: Bearer MY_TOKEN
+GET http://localhost:3080/api/finances/category-types
+Authorization: MY_TOKEN
 
 ###
-GET http://localhost:3080/api/finance-category-type?ids=1
-Authorization: Bearer MY_TOKEN
+GET http://localhost:3080/api/finances/category-types?ids=1
+Authorization: MY_TOKEN
 
 ###
-GET http://localhost:3080/api/finance-category-type/3
-Authorization: Bearer MY_TOKEN
-
-###
-POST http://localhost:3080/api/finance-category-type
-Authorization: Bearer MY_TOKEN
-Content-Type: application/json
-
-{
-	"name": "My category type name"
-}
-
-###
-PATCH http://localhost:3080/api/finance-category-type/5
-Authorization: Bearer MY_TOKEN
-Content-Type: application/json
-
-{
-	"name": "My UPDATED category type name"
-}
-
-###
-DELETE http://localhost:3080/api/finance-category-type/7
-Authorization: Bearer MY_TOKEN
+GET http://localhost:3080/api/finances/category-types/2
+Authorization: MY_TOKEN
 
 
 
 ### Finance category ##########################################################
-GET http://localhost:3080/api/finance-category
-Authorization: Bearer MY_TOKEN
+GET http://localhost:3080/api/finances/categories
+Authorization: MY_TOKEN
 
 ###
-GET http://localhost:3080/api/finance-category/10
-Authorization: Bearer MY_TOKEN
+GET http://localhost:3080/api/finances/categories/10
+Authorization: MY_TOKEN
 
 ###
-POST http://localhost:3080/api/finance-category
-Authorization: Bearer MY_TOKEN
+POST http://localhost:3080/api/finances/categories
+Authorization: MY_TOKEN
 Content-Type: application/json
 
 {
@@ -53,8 +31,8 @@ Content-Type: application/json
 }
 
 ###
-PATCH http://localhost:3080/api/finance-category/16
-Authorization: Bearer MY_TOKEN
+PATCH http://localhost:3080/api/finances/categories/16
+Authorization: MY_TOKEN
 Content-Type: application/json
 
 {
@@ -63,22 +41,22 @@ Content-Type: application/json
 }
 
 ###
-DELETE http://localhost:3080/api/finance-category/18
-Authorization: Bearer MY_TOKEN
+DELETE http://localhost:3080/api/finances/categories/18
+Authorization: MY_TOKEN
 
 
 
 ### Finance record ############################################################
 GET http://localhost:3080/api/finance-record?take=4&skip=200
-Authorization: Bearer MY_TOKEN
+Authorization: MY_TOKEN
 
 ###
 GET http://localhost:3080/api/finance-record/250
-Authorization: Bearer MY_TOKEN
+Authorization: MY_TOKEN
 
 ###
 POST http://localhost:3080/api/finance-record
-Authorization: Bearer MY_TOKEN
+Authorization: MY_TOKEN
 Content-Type: application/json
 
 {
@@ -89,7 +67,7 @@ Content-Type: application/json
 
 ###
 PATCH http://localhost:3080/api/finance-record/330
-Authorization: Bearer MY_TOKEN
+Authorization: MY_TOKEN
 Content-Type: application/json
 
 {
@@ -101,24 +79,24 @@ Content-Type: application/json
 
 ###
 DELETE http://localhost:3080/api/finance-record/331
-Authorization: Bearer MY_TOKEN
+Authorization: MY_TOKEN
 
 
 
 ### User ######################################################################
-GET http://localhost:3080/api/user
-Authorization: Bearer MY_TOKEN
+GET http://localhost:3080/api/users
+Authorization: MY_TOKEN
 
 ###
-GET http://localhost:3080/api/user/me
-Authorization: Bearer MY_TOKEN
+GET http://localhost:3080/api/users/0
+Authorization: MY_TOKEN
 
 ###
-GET http://localhost:3080/api/user?id=3&username=sasha
-Authorization: Bearer MY_TOKEN
+GET http://localhost:3080/api/users/search?id=3&username=sasha
+Authorization: MY_TOKEN
 
 ###
-POST http://localhost:3080/api/user
+POST http://localhost:3080/api/users
 Content-Type: application/json
 
 {
@@ -127,8 +105,8 @@ Content-Type: application/json
 }
 
 ###
-PATCH http://localhost:3080/api/user/5
-Authorization: Bearer MY_TOKEN
+PATCH http://localhost:3080/api/users/3
+Authorization: MY_TOKEN
 Content-Type: application/json
 
 {
@@ -137,8 +115,8 @@ Content-Type: application/json
 }
 
 ###
-DELETE http://localhost:3080/api/user/2
-Authorization: Bearer MY_TOKEN
+DELETE http://localhost:3080/api/users/3
+Authorization: MY_TOKEN
 
 
 
@@ -147,6 +125,6 @@ POST http://localhost:3080/api/login
 Content-Type: application/json
 
 {
-	"username": "username",
-	"password": "password"
+	"username": "sasha",
+	"password": "kiber6"
 }

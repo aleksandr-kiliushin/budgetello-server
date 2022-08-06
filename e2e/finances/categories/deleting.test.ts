@@ -9,7 +9,7 @@ beforeEach(async () => {
 describe("Finance category deleting", () => {
   it("returns a correct response after deleting", async () => {
     const categoryCreatingResponse = await fetch("http://localhost:3080/api/finances/categories/2", {
-      headers: { Authorization: "Bearer " + authToken },
+      headers: { Authorization: authToken },
       method: "DELETE",
     })
     expect(categoryCreatingResponse.status).toEqual(200)
@@ -22,11 +22,11 @@ describe("Finance category deleting", () => {
 
   it("the deleted category is not presented in all categories list", async () => {
     await fetch("http://localhost:3080/api/finances/categories/2", {
-      headers: { Authorization: "Bearer " + authToken },
+      headers: { Authorization: authToken },
       method: "DELETE",
     })
     const getAllCategoriesResponse = await fetch("http://localhost:3080/api/finances/categories/search", {
-      headers: { Authorization: "Bearer " + authToken },
+      headers: { Authorization: authToken },
     })
     expect(await getAllCategoriesResponse.json()).toEqual<IFinanceCategory[]>([
       { id: 1, name: "clothes", type: { id: 1, name: "expense" } },

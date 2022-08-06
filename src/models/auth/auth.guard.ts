@@ -6,12 +6,7 @@ import * as jwt from "jsonwebtoken"
 export class AuthGuard implements CanActivate {
   canActivate(context: ExecutionContext) {
     const request = context.switchToHttp().getRequest()
-
-    const authorizationHeader = request.headers.authorization
-
-    if (!authorizationHeader) return false
-
-    const [, token] = authorizationHeader.split(" ")
+    const authToken = request.headers.authorization
 
     const jwtSecret = process.env.JWT_SECRET
     if (jwtSecret === undefined) {
@@ -19,8 +14,8 @@ export class AuthGuard implements CanActivate {
     }
 
     try {
-      jwt.verify(token, jwtSecret)
-      const decodingResult = jwt.decode(token, { json: true })
+      jwt.verify(authToken, jwtSecret)
+      const decodingResult = jwt.decode(authToken, { json: true })
       if (decodingResult === null) throw new Error()
       const { id } = decodingResult
       request.userId = id
