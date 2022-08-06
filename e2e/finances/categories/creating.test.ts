@@ -62,23 +62,21 @@ describe("Finance category creating", () => {
     })
   })
 
-  // it("returns an informative response if required fields not presented in request body", async () => {
-  //   const categoryCreatingResponse = await fetch("http://localhost:3080/api/finances/categories", {
-  //     body: JSON.stringify({
-  //       name_WITH_TYPO: "food", // Incorrect field name.
-  //       typeId: 1,
-  //     }),
-  //     headers: {
-  //       Authorization: "Bearer " + authToken,
-  //       "Content-Type": "application/json",
-  //     },
-  //     method: "POST",
-  //   })
-  //   expect(categoryCreatingResponse.status).toEqual(201)
-  //   expect(await categoryCreatingResponse.json()).toEqual<IFinanceCategory>({
-  //     id: 6,
-  //     N_A_M_E: "food",
-  //     type: { id: 1, name: "expense" },
-  //   })
-  // })
+  it("returns an informative response if required fields not presented in request body", async () => {
+    const categoryCreatingResponse = await fetch("http://localhost:3080/api/finances/categories", {
+      body: JSON.stringify({
+        name_WITH_A_TYPO: "food", // Incorrect field name.
+        typeId: 1,
+      }),
+      headers: {
+        Authorization: "Bearer " + authToken,
+        "Content-Type": "application/json",
+      },
+      method: "POST",
+    })
+    expect(categoryCreatingResponse.status).toEqual(400)
+    expect(await categoryCreatingResponse.json()).toEqual({
+      message: "Field 'name' should be provided.",
+    })
+  })
 })

@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from "@nestjs/common"
+import { BadRequestException, Injectable, NotFoundException } from "@nestjs/common"
 import { InjectRepository } from "@nestjs/typeorm"
 import { In, Repository } from "typeorm"
 
@@ -36,7 +36,9 @@ export class FinanceCategoryService {
   }
 
   async createFinanceCategory(createFinanceCategoryDto: CreateFinanceCategoryDto): Promise<FinanceCategoryEntity> {
-    const { typeId, name } = createFinanceCategoryDto
+    const { name, typeId } = createFinanceCategoryDto
+    if (name === undefined) throw new BadRequestException({ message: "Field 'name' should be provided." })
+    if (typeId === undefined) throw new BadRequestException({ message: "Field 'typeId' should be provided." })
     const type = await this.financeCategoryTypeService.findById(typeId)
     const category = this.financeCategoryRepository.create({ name, type })
     return this.financeCategoryRepository.save(category)
