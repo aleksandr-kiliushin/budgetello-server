@@ -1,9 +1,7 @@
-import { Body, Controller, Delete, Get, Param, Patch, Post, UseGuards } from "@nestjs/common"
+import { Controller, Get, Param, UseGuards } from "@nestjs/common"
 
 import { AuthGuard } from "#models/auth/auth.guard"
 
-import { CreateFinanceCategoryTypeDto } from "./dto/create-finance-category-type.dto"
-import { UpdateFinanceCategoryTypeDto } from "./dto/update-finance-category-type.dto"
 import { FinanceCategoryTypeService } from "./finance-category-type.service"
 
 @Controller("finances/category-type")
@@ -19,23 +17,5 @@ export class FinanceCategoryTypeController {
   @Get(":id")
   getFinanceCategoryType(@Param("id") id: string) {
     return this.financeCategoryTypeService.getFinanceCategoryType(parseInt(id))
-  }
-
-  @Post()
-  createFinanceCategoryType(@Body() createFinanceCategoryTypeDto: CreateFinanceCategoryTypeDto) {
-    return this.financeCategoryTypeService.createFinanceCategoryType(createFinanceCategoryTypeDto)
-  }
-
-  @Patch(":id")
-  updateFinanceCategoryType(
-    @Param("id") id: string,
-    @Body() updateFinanceCategoryTypeDto: UpdateFinanceCategoryTypeDto
-  ) {
-    return this.financeCategoryTypeService.updateFinanceCategoryType(parseInt(id), updateFinanceCategoryTypeDto)
-  }
-
-  @Delete(":id")
-  deleteFinanceCategoryType(@Param("id") id: string) {
-    return this.financeCategoryTypeService.deleteFinanceCategoryType(parseInt(id))
   }
 }
