@@ -23,4 +23,62 @@ describe("Finance category creating", () => {
       type: { id: 1, name: "expense" },
     })
   })
+
+  it("a newly created category is presented in all categories list", async () => {
+    await fetch("http://localhost:3080/api/finances/categories", {
+      body: JSON.stringify({ name: "food", typeId: 1 }),
+      headers: {
+        Authorization: "Bearer " + authToken,
+        "Content-Type": "application/json",
+      },
+      method: "POST",
+    })
+    const getAllCategoriesResponse = await fetch("http://localhost:3080/api/finances/categories/search", {
+      headers: { Authorization: "Bearer " + authToken },
+    })
+    expect(await getAllCategoriesResponse.json()).toContainEqual<IFinanceCategory>({
+      id: 6,
+      name: "food",
+      type: { id: 1, name: "expense" },
+    })
+  })
+
+  it("a newly created category can be found by id", async () => {
+    await fetch("http://localhost:3080/api/finances/categories", {
+      body: JSON.stringify({ name: "food", typeId: 1 }),
+      headers: {
+        Authorization: "Bearer " + authToken,
+        "Content-Type": "application/json",
+      },
+      method: "POST",
+    })
+    const getAllCategoriesResponse = await fetch("http://localhost:3080/api/finances/categories/6", {
+      headers: { Authorization: "Bearer " + authToken },
+    })
+    expect(await getAllCategoriesResponse.json()).toEqual<IFinanceCategory>({
+      id: 6,
+      name: "food",
+      type: { id: 1, name: "expense" },
+    })
+  })
+
+  // it("returns an informative response if required fields not presented in request body", async () => {
+  //   const categoryCreatingResponse = await fetch("http://localhost:3080/api/finances/categories", {
+  //     body: JSON.stringify({
+  //       name_WITH_TYPO: "food", // Incorrect field name.
+  //       typeId: 1,
+  //     }),
+  //     headers: {
+  //       Authorization: "Bearer " + authToken,
+  //       "Content-Type": "application/json",
+  //     },
+  //     method: "POST",
+  //   })
+  //   expect(categoryCreatingResponse.status).toEqual(201)
+  //   expect(await categoryCreatingResponse.json()).toEqual<IFinanceCategory>({
+  //     id: 6,
+  //     N_A_M_E: "food",
+  //     type: { id: 1, name: "expense" },
+  //   })
+  // })
 })
