@@ -6,15 +6,15 @@ import { CreateFinanceRecordDto } from "./dto/create-finance-record.dto"
 import { UpdateFinanceRecordDto } from "./dto/update-finance-record.dto"
 import { FinanceRecordService } from "./service"
 
-@Controller("finance-record")
+@Controller("finances/records")
 @UseGuards(AuthGuard)
 export class FinanceRecordController {
   constructor(private readonly financeRecordService: FinanceRecordService) {}
 
-  @Get()
+  @Get("search")
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  getFinanceRecords(@Query() query: any) {
-    return this.financeRecordService.getFinanceRecords(query)
+  search(@Query() query: any) {
+    return this.financeRecordService.search(query)
   }
 
   @Get(":id")

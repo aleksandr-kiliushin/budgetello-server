@@ -18,10 +18,10 @@ export class FinanceRecordService {
     private financeCategoryService: FinanceCategoryService
   ) {}
 
-  getFinanceRecords({
+  search({
     orderingByDate,
     orderingById,
-    skip,
+    skip = 0,
     take,
     ...where
   }: GetFinanceRecordsDto): Promise<FinanceRecordEntity[]> {
@@ -31,7 +31,7 @@ export class FinanceRecordService {
         ...(orderingById === undefined ? {} : { id: orderingById }),
       },
       relations: ["category", "category.type"],
-      skip: skip ?? 0,
+      skip,
       ...(take ? { take } : {}),
       where,
     })
