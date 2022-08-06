@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, Patch, Post, Query, UseGuards } from "@nestjs/common"
+import { Body, Controller, Delete, Get, Param, Patch, Post, Query, UseGuards } from "@nestjs/common"
 
 import { AuthGuard } from "#models/auth/auth.guard"
 
@@ -37,8 +37,8 @@ export class FinanceCategoryController {
     return this.financeCategoryService.update(parseInt(id), updateFinanceCategoryDto)
   }
 
-  // @Delete(":id")
-  // deleteFinanceCategory(@Param("id") id: string) {
-  //   return this.financeCategoryService.deleteFinanceCategory(parseInt(id))
-  // }
+  @Delete(":id")
+  delete(@Param("id") id: string) {
+    return this.financeCategoryService.delete(parseInt(id))
+  }
 }

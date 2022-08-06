@@ -60,9 +60,9 @@ export class FinanceCategoryService {
     return this.financeCategoryRepository.save(category)
   }
 
-  // async deleteFinanceCategory(id: FinanceCategoryEntity["id"]): Promise<FinanceCategoryEntity> {
-  //   const category = await this.findById(id)
-  //   await this.financeCategoryRepository.delete(id)
-  //   return category
-  // }
+  async delete(id: FinanceCategoryEntity["id"]): Promise<FinanceCategoryEntity> {
+    const category = await this.findById(id)
+    await this.financeCategoryRepository.delete(id)
+    return category
+  }
 }
