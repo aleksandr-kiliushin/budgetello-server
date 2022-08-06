@@ -18,8 +18,8 @@ export class FinanceRecordController {
   }
 
   @Get(":id")
-  getFinanceRecord(@Param("id") id: string) {
-    return this.financeRecordService.getFinanceRecord(parseInt(id))
+  findById(@Param("id") id: string) {
+    return this.financeRecordService.findById(parseInt(id))
   }
 
   @Post()

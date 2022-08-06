@@ -1,4 +1,4 @@
-import { Injectable } from "@nestjs/common"
+import { Injectable, NotFoundException } from "@nestjs/common"
 import { InjectRepository } from "@nestjs/typeorm"
 import { Repository } from "typeorm"
 
@@ -37,11 +37,15 @@ export class FinanceRecordService {
     })
   }
 
-  getFinanceRecord(id: FinanceRecordEntity["id"]): Promise<FinanceRecordEntity> {
-    return this.financeRecordRepository.findOneOrFail({
+  async findById(id: FinanceRecordEntity["id"]): Promise<FinanceRecordEntity> {
+    const financeRecord = await this.financeRecordRepository.findOne({
       relations: ["category", "category.type"],
       where: { id },
     })
+    if (financeRecord === null) {
+      throw new NotFoundException({ message: `Record with ID '${id}' not found.` })
+    }
+    return financeRecord
   }
 
   async createFinanceRecord(createFinanceRecordDto: CreateFinanceRecordDto): Promise<FinanceRecordEntity> {
@@ -57,7 +61,7 @@ export class FinanceRecordService {
   ): Promise<FinanceRecordEntity> {
     const { categoryId, ...rest } = updateFinanceRecordDto
 
-    const record = await this.getFinanceRecord(id)
+    const record = await this.findById(id)
 
     const updatedRecord = { ...record, ...rest }
 
@@ -69,10 +73,8 @@ export class FinanceRecordService {
   }
 
   async deleteFinanceRecord(id: FinanceRecordEntity["id"]): Promise<FinanceRecordEntity> {
-    const record = await this.getFinanceRecord(id)
-
+    const record = await this.findById(id)
     await this.financeRecordRepository.delete(id)
-
     return record
   }
 }
