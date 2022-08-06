@@ -37,7 +37,7 @@ export class FinanceCategoryService {
 
   async createFinanceCategory(createFinanceCategoryDto: CreateFinanceCategoryDto): Promise<FinanceCategoryEntity> {
     const { typeId, name } = createFinanceCategoryDto
-    const type = await this.financeCategoryTypeService.getFinanceCategoryType(typeId)
+    const type = await this.financeCategoryTypeService.findById(typeId)
     const category = this.financeCategoryRepository.create({ name, type })
     return this.financeCategoryRepository.save(category)
   }

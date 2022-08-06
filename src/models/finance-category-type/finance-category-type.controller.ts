@@ -15,7 +15,7 @@ export class FinanceCategoryTypeController {
   }
 
   @Get(":id")
-  getFinanceCategoryType(@Param("id") id: string) {
-    return this.financeCategoryTypeService.getFinanceCategoryType(parseInt(id))
+  findById(@Param("id") id: string) {
+    return this.financeCategoryTypeService.findById(parseInt(id))
   }
 }
