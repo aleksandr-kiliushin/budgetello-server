@@ -10,10 +10,7 @@ describe("Finance category creating", () => {
   it("returns a correct response after creating", async () => {
     const categoryCreatingResponse = await fetch("http://localhost:3080/api/finances/categories", {
       body: JSON.stringify({ name: "food", typeId: 1 }),
-      headers: {
-        Authorization: authToken,
-        "Content-Type": "application/json",
-      },
+      headers: { Authorization: authToken, "Content-Type": "application/json" },
       method: "POST",
     })
     expect(categoryCreatingResponse.status).toEqual(201)
@@ -27,10 +24,7 @@ describe("Finance category creating", () => {
   it("a newly created category is presented in all categories list", async () => {
     await fetch("http://localhost:3080/api/finances/categories", {
       body: JSON.stringify({ name: "food", typeId: 1 }),
-      headers: {
-        Authorization: authToken,
-        "Content-Type": "application/json",
-      },
+      headers: { Authorization: authToken, "Content-Type": "application/json" },
       method: "POST",
     })
     const getAllCategoriesResponse = await fetch("http://localhost:3080/api/finances/categories/search", {
@@ -43,19 +37,16 @@ describe("Finance category creating", () => {
     })
   })
 
-  it("a newly created category can be found by id", async () => {
+  it("a newly created category can be found by ID", async () => {
     await fetch("http://localhost:3080/api/finances/categories", {
       body: JSON.stringify({ name: "food", typeId: 1 }),
-      headers: {
-        Authorization: authToken,
-        "Content-Type": "application/json",
-      },
+      headers: { Authorization: authToken, "Content-Type": "application/json" },
       method: "POST",
     })
-    const getAllCategoriesResponse = await fetch("http://localhost:3080/api/finances/categories/6", {
+    const getNewlyCreatedCategoryResponse = await fetch("http://localhost:3080/api/finances/categories/6", {
       headers: { Authorization: authToken },
     })
-    expect(await getAllCategoriesResponse.json()).toEqual<IFinanceCategory>({
+    expect(await getNewlyCreatedCategoryResponse.json()).toEqual<IFinanceCategory>({
       id: 6,
       name: "food",
       type: { id: 1, name: "expense" },
@@ -68,10 +59,7 @@ describe("Finance category creating", () => {
         name_WITH_A_TYPO: "food", // Incorrect field name.
         typeId: 1,
       }),
-      headers: {
-        Authorization: authToken,
-        "Content-Type": "application/json",
-      },
+      headers: { Authorization: authToken, "Content-Type": "application/json" },
       method: "POST",
     })
     expect(categoryCreatingResponse.status).toEqual(400)

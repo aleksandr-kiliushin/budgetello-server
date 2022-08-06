@@ -9,7 +9,7 @@ export class FinanceRecordEntity {
   @Column({ type: "int" })
   amount: IFinanceRecord["amount"]
 
-  @ManyToOne(() => FinanceCategoryEntity)
+  @ManyToOne(() => FinanceCategoryEntity, { onDelete: "CASCADE" })
   category: FinanceCategoryEntity
 
   @Column({ type: "varchar" })

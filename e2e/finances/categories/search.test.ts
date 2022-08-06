@@ -32,11 +32,7 @@ describe("Responds with a finance category found by provided ID", () => {
       responseData: {},
     },
   ])("user search for: $url", async ({ url, responseStatus, responseData }) => {
-    const response = await fetch(url, {
-      headers: {
-        Authorization: authToken,
-      },
-    })
+    const response = await fetch(url, { headers: { Authorization: authToken } })
     expect(response.status).toEqual(responseStatus)
     expect(await response.json()).toEqual(responseData)
   })
@@ -74,11 +70,7 @@ describe("Finance categoires search", () => {
       ],
     },
   ])("user search for: $url", async ({ url, searchResult }) => {
-    const response = await fetch(url, {
-      headers: {
-        Authorization: authToken,
-      },
-    })
+    const response = await fetch(url, { headers: { Authorization: authToken } })
     expect(response.status).toEqual(200)
     expect(await response.json()).toEqual(searchResult)
   })

@@ -34,13 +34,8 @@ describe("Registered user data and functions", () => {
     const registerUserResponseData = await registerUserResponse.json()
 
     const newlyRegisteredUserLoginResponse = await fetch("http://localhost:3080/api/login", {
-      body: JSON.stringify({
-        username: "andrew-smith",
-        password: "andrew-smith-password",
-      }),
-      headers: {
-        "Content-Type": "application/json",
-      },
+      body: JSON.stringify({ username: "andrew-smith", password: "andrew-smith-password" }),
+      headers: { "Content-Type": "application/json" },
       method: "POST",
     })
     const { authToken } = await newlyRegisteredUserLoginResponse.json()
@@ -56,9 +51,7 @@ describe("Registered user data and functions", () => {
 
   it("a newly registered request their data", async () => {
     const getLoggedInUserDataResponse = await fetch("http://localhost:3080/api/users/0", {
-      headers: {
-        Authorization: newlyRegisteredUser.authToken,
-      },
+      headers: { Authorization: newlyRegisteredUser.authToken },
     })
     expect(getLoggedInUserDataResponse.status).toEqual(200)
     expect(await getLoggedInUserDataResponse.json()).toEqual<IUser>({
@@ -70,9 +63,7 @@ describe("Registered user data and functions", () => {
 
   it("finds newly registered user by id", async () => {
     const findNewlyRegisteredUserByIdResponse = await fetch("http://localhost:3080/api/users/3", {
-      headers: {
-        Authorization: newlyRegisteredUser.authToken,
-      },
+      headers: { Authorization: newlyRegisteredUser.authToken },
     })
     expect(findNewlyRegisteredUserByIdResponse.status).toEqual(200)
     expect(await findNewlyRegisteredUserByIdResponse.json()).toEqual<IUser>({
@@ -84,9 +75,7 @@ describe("Registered user data and functions", () => {
 
   it("users list includes newly registered user", async () => {
     const allUsersResponse = await fetch("http://localhost:3080/api/users/search", {
-      headers: {
-        Authorization: newlyRegisteredUser.authToken,
-      },
+      headers: { Authorization: newlyRegisteredUser.authToken },
     })
     expect(await allUsersResponse.json()).toEqual<IUser[]>([
       { id: 1, username: "john-doe", password: "$2b$10$h/JNwLghT1FZHjXWIPPO7OMBw5TKr3JExRhWZv4ERZ.YeDmgoBs0i" },

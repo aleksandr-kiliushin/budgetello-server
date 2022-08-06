@@ -1,13 +1,8 @@
 describe("Login", () => {
   it("responds that user is not found", async () => {
     const response = await fetch("http://localhost:3080/api/login", {
-      body: JSON.stringify({
-        username: "nonexistent-username",
-        password: "some-password",
-      }),
-      headers: {
-        "Content-Type": "application/json",
-      },
+      body: JSON.stringify({ username: "nonexistent-username", password: "some-password" }),
+      headers: { "Content-Type": "application/json" },
       method: "POST",
     })
 
@@ -17,13 +12,8 @@ describe("Login", () => {
 
   it("responds 'unauthorized' if the user is found but password is invalid", async () => {
     const response = await fetch("http://localhost:3080/api/login", {
-      body: JSON.stringify({
-        username: "john-doe",
-        password: "invalid-password",
-      }),
-      headers: {
-        "Content-Type": "application/json",
-      },
+      body: JSON.stringify({ username: "john-doe", password: "invalid-password" }),
+      headers: { "Content-Type": "application/json" },
       method: "POST",
     })
 
@@ -33,13 +23,8 @@ describe("Login", () => {
 
   it("returns an auth token if cretendials are valid", async () => {
     const response = await fetch("http://localhost:3080/api/login", {
-      body: JSON.stringify({
-        username: "john-doe",
-        password: "john-doe-password",
-      }),
-      headers: {
-        "Content-Type": "application/json",
-      },
+      body: JSON.stringify({ username: "john-doe", password: "john-doe-password" }),
+      headers: { "Content-Type": "application/json" },
       method: "POST",
     })
 

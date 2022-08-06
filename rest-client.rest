@@ -41,7 +41,7 @@ Content-Type: application/json
 }
 
 ###
-DELETE http://localhost:3080/api/finances/categories/18
+DELETE http://localhost:3080/api/finances/categories/4
 Authorization: MY_TOKEN
 
 
@@ -125,6 +125,6 @@ POST http://localhost:3080/api/login
 Content-Type: application/json
 
 {
-	"username": "sasha",
-	"password": "kiber6"
+	"username": "username",
+	"password": "password"
 }

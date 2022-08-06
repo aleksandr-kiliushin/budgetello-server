@@ -3,13 +3,8 @@ import { IUser } from "../../src/interfaces/user"
 let authToken = ""
 beforeEach(async () => {
   const loginResponse = await fetch("http://localhost:3080/api/login", {
-    body: JSON.stringify({
-      username: "john-doe",
-      password: "john-doe-password",
-    }),
-    headers: {
-      "Content-Type": "application/json",
-    },
+    body: JSON.stringify({ username: "john-doe", password: "john-doe-password" }),
+    headers: { "Content-Type": "application/json" },
     method: "POST",
   })
   const loginResponseData = await loginResponse.json()
@@ -72,11 +67,7 @@ describe("Returns a user by their identifier", () => {
       responseData: {},
     },
   ])("user search for: $url", async ({ url, responseStatus, responseData }) => {
-    const response = await fetch(url, {
-      headers: {
-        Authorization: authToken,
-      },
-    })
+    const response = await fetch(url, { headers: { Authorization: authToken } })
     expect(response.status).toEqual(responseStatus)
     expect(await response.json()).toEqual(responseData)
   })
@@ -143,11 +134,7 @@ describe("Users search", () => {
       ],
     },
   ])("user search for: $url", async ({ url, searchResult }) => {
-    const response = await fetch(url, {
-      headers: {
-        Authorization: authToken,
-      },
-    })
+    const response = await fetch(url, { headers: { Authorization: authToken } })
     expect(response.status).toEqual(200)
     expect(await response.json()).toEqual(searchResult)
   })
