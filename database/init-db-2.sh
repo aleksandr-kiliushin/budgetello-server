@@ -1,5 +1,23 @@
 #!/bin/bash
 
+# Create dev database template from current personal_app_db state.
+psql -U postgres -c "DROP DATABASE IF EXISTS personal_app_dev_template WITH (FORCE);";
+psql -U postgres -c "CREATE DATABASE personal_app_dev_template WITH TEMPLATE personal_app_db ENCODING 'UTF-8';";
+
+
+
+# Clear all tables in database.
+psql personal_app_testing_template postgres << EOF
+  TRUNCATE
+  finance_category,
+  finance_category_type,
+  finance_record,
+  "user"
+  CASCADE;
+EOF
+
+
+
 # Fill in database with testing data.
 psql personal_app_db postgres << EOF
   INSERT INTO "user" (username,        password                                                         )
