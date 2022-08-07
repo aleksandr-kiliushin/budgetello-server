@@ -19,8 +19,8 @@ services:
 
   database:
     build:
-      context: ./database
-      dockerfile: ./Dockerfile.dev
+      context: ./
+      dockerfile: ./database/Dockerfile.dev
     container_name: personal-app-database
     env_file:
       - ./dev.env
