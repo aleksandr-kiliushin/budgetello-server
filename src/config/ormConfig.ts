@@ -17,5 +17,6 @@ export const ormConfig: TypeOrmModuleOptions = {
 
 export const dataSource = new DataSource({
   ...ormConfig,
-  host: "localhost", // For TypeORM CLI to be able to run migrations when db is inside a docker container.
+  host:
+    process.env.DATABASE_HOST !== undefined && process.env.MODE === "prod" ? process.env.DATABASE_HOST : "localhost", // For TypeORM CLI to be able to run migrations when db is inside a docker container (not exactly).
 })
