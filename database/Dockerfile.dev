@@ -1,12 +1,9 @@
 FROM postgres:14.4
 
+RUN mkdir /var/app/dumps -p
 RUN apt-get update && apt-get upgrade -y
 RUN apt-get install -y curl jq lzop
 
-RUN mkdir /var/app/dumps -p
-
-COPY ./download-and-prepare-db-templates.sh /var/app/download-and-prepare-db-templates.sh
-COPY ./fill-db-in-with-dev-data.sh /var/app/fill-db-in-with-dev-data.sh
-COPY ./fill-db-in-with-testing-data.sh /var/app/fill-db-in-with-testing-data.sh
+COPY ./database/*.sh /var/app
 
 EXPOSE 5432

@@ -47,15 +47,15 @@ Authorization: MY_TOKEN
 
 
 ### Finance record ############################################################
-GET http://localhost:3080/api/finance-record?take=4&skip=200
+GET http://localhost:3080/api/finances/records/search?take=4&skip=200
 Authorization: MY_TOKEN
 
 ###
-GET http://localhost:3080/api/finance-record/250
+GET http://localhost:3080/api/finances/records/250
 Authorization: MY_TOKEN
 
 ###
-POST http://localhost:3080/api/finance-record
+POST http://localhost:3080/api/finances/records
 Authorization: MY_TOKEN
 Content-Type: application/json
 
@@ -66,7 +66,7 @@ Content-Type: application/json
 }
 
 ###
-PATCH http://localhost:3080/api/finance-record/330
+PATCH http://localhost:3080/api/finances/records/330
 Authorization: MY_TOKEN
 Content-Type: application/json
 
@@ -78,7 +78,7 @@ Content-Type: application/json
 }
 
 ###
-DELETE http://localhost:3080/api/finance-record/331
+DELETE http://localhost:3080/api/finances/records/331
 Authorization: MY_TOKEN
 
 
