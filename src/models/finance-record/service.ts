@@ -18,8 +18,8 @@ export class FinanceRecordService {
   ) {}
 
   search({
-    orderingByDate,
-    orderingById,
+    orderingByDate = "DESC",
+    orderingById = "DESC",
     skip = 0,
     take,
     ...where
