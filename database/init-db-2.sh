@@ -25,7 +25,7 @@ EOF
 
 
 
-# Fill in database with testing data.
+# Seed database with testing data.
 psql personal_app_db postgres << EOF
   INSERT INTO "user" (username,        password                                                         )
   VALUES             ('john-doe',      '\$2b\$10\$h/JNwLghT1FZHjXWIPPO7OMBw5TKr3JExRhWZv4ERZ.YeDmgoBs0i'),

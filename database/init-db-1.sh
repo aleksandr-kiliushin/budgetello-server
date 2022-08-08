@@ -15,5 +15,5 @@ psql -U postgres -c "CREATE DATABASE personal_app_db ENCODING 'UTF-8';";
 
 
 
-# Fill in the database with the downloaded dump data.
+# Seed the database with the downloaded dump data.
 lzop -cd /var/app/dumps/dump.lzo | psql -U postgres personal_app_db;
