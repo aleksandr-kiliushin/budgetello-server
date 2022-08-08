@@ -7,3 +7,5 @@
 - Move my records from another board.
 - Add unit tests for users search service `toHaveBeenCalledWith()`.
 - Add unit tests for records search service `toHaveBeenCalledWith()`.
+- Test finance records updating.
+- Test finance records deleting.
