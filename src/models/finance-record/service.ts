@@ -14,7 +14,6 @@ export class FinanceRecordService {
   constructor(
     @InjectRepository(FinanceRecordEntity)
     private financeRecordRepository: Repository<FinanceRecordEntity>,
-
     private financeCategoryService: FinanceCategoryService
   ) {}
 
@@ -32,7 +31,7 @@ export class FinanceRecordService {
       },
       relations: ["category", "category.type"],
       skip,
-      ...(take ? { take } : {}),
+      ...(take === undefined ? {} : { take }),
       where,
     })
   }
