@@ -6,14 +6,21 @@ psql -U postgres -c "CREATE DATABASE personal_app_dev_template WITH TEMPLATE per
 
 
 
-# Clear all tables in database.
-psql personal_app_testing_template postgres << EOF
+# Clear database tables.
+psql personal_app_db postgres << EOF
   TRUNCATE
   finance_category,
   finance_category_type,
   finance_record,
   "user"
   CASCADE;
+EOF
+# Reset tables primary key sequence.
+psql personal_app_db postgres << EOF
+  ALTER SEQUENCE finance_category_id_seq RESTART WITH 1;
+  ALTER SEQUENCE finance_category_type_id_seq RESTART WITH 1;
+  ALTER SEQUENCE finance_record_id_seq RESTART WITH 1;
+  ALTER SEQUENCE user_id_seq RESTART WITH 1;
 EOF
 
 
