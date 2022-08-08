@@ -1,5 +1,5 @@
 import { IFinanceCategoryType } from "../../../src/interfaces/finance"
-import { logIn } from "../../utils/logIn"
+import { logIn } from "../../helpers/logIn"
 
 describe("get finance category types", () => {
   it("responds with all finance category types list", async () => {

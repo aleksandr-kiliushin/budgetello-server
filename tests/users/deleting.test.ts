@@ -1,5 +1,5 @@
 import { IUser } from "../../src/interfaces/user"
-import { logIn } from "../utils/logIn"
+import { logIn } from "../helpers/logIn"
 
 describe("User deletion", () => {
   it("doesn't allow delete another user", async () => {

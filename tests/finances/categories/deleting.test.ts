@@ -1,5 +1,5 @@
 // import { IFinanceCategory } from "../../../src/interfaces/finance"
-// import { logIn } from "../../utils/logIn"
+// import { logIn } from "../../helpers/logIn"
 
 // let authToken = ""
 // beforeEach(async () => {
