@@ -1,5 +1,6 @@
 declare global {
-  const authToken: string
+  // eslint-disable-next-line no-var
+  var authToken: string
 }
 
 export {}
