@@ -5,4 +5,3 @@
 - Add `board` table (id, name, creatorId, creationDate, users).
 - Add `boardUser` table (id, userId, boardId, userRole: participant | admin)
 - Move my records from another board.
-- Add unit tests for records search service `toHaveBeenCalledWith()` against `FinanceRecordService.prototype.search`.
