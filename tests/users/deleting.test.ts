@@ -1,18 +1,17 @@
 import { IUser } from "../../src/interfaces/user"
-import { logIn } from "../helpers/logIn"
+import { authorize } from "../helpers/authorize"
+import { fetchApi } from "../helpers/fetchApi"
+
+beforeEach(async () => {
+  await authorize("john-doe")
+})
 
 describe("User deletion", () => {
   it("doesn't allow delete another user", async () => {
-    const authToken = await logIn({ username: "john-doe", password: "john-doe-password" })
-    const deleteAnotherUserResponse = await fetch("http://localhost:3080/api/users/2", {
-      headers: { Authorization: authToken },
-      method: "DELETE",
-    })
+    const deleteAnotherUserResponse = await fetchApi("/api/users/2", { method: "DELETE" })
     expect(deleteAnotherUserResponse.status).toEqual(403)
     expect(await deleteAnotherUserResponse.json()).toEqual({ message: "You are not allowed to delete another user." })
-    const fetchAnotherUserResponse = await fetch("http://localhost:3080/api/users/2", {
-      headers: { Authorization: authToken },
-    })
+    const fetchAnotherUserResponse = await fetchApi("/api/users/2")
     expect(fetchAnotherUserResponse.status).toEqual(200)
     expect(await fetchAnotherUserResponse.json()).toEqual<IUser>({
       id: 2,
@@ -22,11 +21,7 @@ describe("User deletion", () => {
   })
 
   it("allows the logged in user to delete themselves", async () => {
-    const userToBeDeletedAuthToken = await logIn({ username: "john-doe", password: "john-doe-password" })
-    const deleteMeResponse = await fetch("http://localhost:3080/api/users/1", {
-      headers: { Authorization: userToBeDeletedAuthToken },
-      method: "DELETE",
-    })
+    const deleteMeResponse = await fetchApi("/api/users/1", { method: "DELETE" })
     expect(deleteMeResponse.status).toEqual(200)
     expect(await deleteMeResponse.json()).toEqual<IUser>({
       id: 1,
@@ -36,15 +31,9 @@ describe("User deletion", () => {
   })
 
   it("the deleted user doesn't exist in all users list", async () => {
-    const userToBeDeletedAuthToken = await logIn({ username: "john-doe", password: "john-doe-password" })
-    await fetch("http://localhost:3080/api/users/1", {
-      headers: { Authorization: userToBeDeletedAuthToken },
-      method: "DELETE",
-    })
-    const anotherUserAuthToken = await logIn({ username: "jessica-stark", password: "jessica-stark-password" })
-    const fetchAllUsersResponse = await fetch("http://localhost:3080/api/users/search", {
-      headers: { Authorization: anotherUserAuthToken },
-    })
+    await fetchApi("/api/users/1", { method: "DELETE" })
+    await authorize("jessica-stark")
+    const fetchAllUsersResponse = await fetchApi("/api/users/search")
     expect(await fetchAllUsersResponse.json()).toEqual<IUser[]>([
       { id: 2, username: "jessica-stark", password: "$2b$10$7IiBG7wqNoYzokw2ZOXF2uy1iHrDDaNge.de67g1n7TNTIY4iI6jC" },
     ])

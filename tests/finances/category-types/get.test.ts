@@ -1,12 +1,14 @@
 import { IFinanceCategoryType } from "../../../src/interfaces/finance"
-import { logIn } from "../../helpers/logIn"
+import { authorize } from "../../helpers/authorize"
+import { fetchApi } from "../../helpers/fetchApi"
+
+beforeEach(async () => {
+  await authorize("john-doe")
+})
 
 describe("get finance category types", () => {
   it("responds with all finance category types list", async () => {
-    const authToken = await logIn({ username: "john-doe", password: "john-doe-password" })
-    const fetchAllFinanceCategoryTypesResponse = await fetch("http://localhost:3080/api/finances/category-types", {
-      headers: { Authorization: authToken },
-    })
+    const fetchAllFinanceCategoryTypesResponse = await fetchApi("/api/finances/category-types")
     expect(await fetchAllFinanceCategoryTypesResponse.json()).toEqual<IFinanceCategoryType[]>([
       { id: 1, name: "expense" },
       { id: 2, name: "income" },
@@ -14,10 +16,7 @@ describe("get finance category types", () => {
   })
 
   it("responds with a finance category type for a given id", async () => {
-    const authToken = await logIn({ username: "john-doe", password: "john-doe-password" })
-    const getFinanceCategoryTypeWithIdOf2 = await fetch("http://localhost:3080/api/finances/category-types/2", {
-      headers: { Authorization: authToken },
-    })
+    const getFinanceCategoryTypeWithIdOf2 = await fetchApi("/api/finances/category-types/2")
     expect(await getFinanceCategoryTypeWithIdOf2.json()).toEqual<IFinanceCategoryType>({ id: 2, name: "income" })
   })
 })

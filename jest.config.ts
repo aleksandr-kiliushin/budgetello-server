@@ -1,4 +1,6 @@
-const config = {
+import type { Config } from "@jest/types"
+
+const config: Config.InitialOptions = {
   moduleNameMapper: {
     "^#interfaces(.*)$": "<rootDir>/src/interfaces$1",
     "^#models(.*)$": "<rootDir>/src/models$1",
@@ -7,6 +9,11 @@ const config = {
   preset: "ts-jest",
   setupFilesAfterEnv: ["./jest.setup.ts"],
   testEnvironment: "node",
+  globals: {
+    "ts-jest": {
+      tsconfig: "tsconfig.eslint.json",
+    },
+  },
 }
 
 export default config

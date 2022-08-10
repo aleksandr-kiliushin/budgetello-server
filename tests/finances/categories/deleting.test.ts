@@ -1,17 +1,14 @@
 import { IFinanceCategory } from "../../../src/interfaces/finance"
-import { logIn } from "../../helpers/logIn"
+import { authorize } from "../../helpers/authorize"
+import { fetchApi } from "../../helpers/fetchApi"
 
-let authToken = ""
 beforeEach(async () => {
-  authToken = await logIn({ username: "john-doe", password: "john-doe-password" })
+  await authorize("john-doe")
 })
 
 describe("Finance category deleting", () => {
   it("returns a correct response after deleting", async () => {
-    const categoryCreatingResponse = await fetch("http://localhost:3080/api/finances/categories/2", {
-      headers: { Authorization: authToken },
-      method: "DELETE",
-    })
+    const categoryCreatingResponse = await fetchApi("/api/finances/categories/2", { method: "DELETE" })
     expect(categoryCreatingResponse.status).toEqual(200)
     expect(await categoryCreatingResponse.json()).toEqual<IFinanceCategory>({
       id: 2,
@@ -21,13 +18,8 @@ describe("Finance category deleting", () => {
   })
 
   it("the deleted category is not presented in all categories list", async () => {
-    await fetch("http://localhost:3080/api/finances/categories/2", {
-      headers: { Authorization: authToken },
-      method: "DELETE",
-    })
-    const getAllCategoriesResponse = await fetch("http://localhost:3080/api/finances/categories/search", {
-      headers: { Authorization: authToken },
-    })
+    await fetchApi("/api/finances/categories/2", { method: "DELETE" })
+    const getAllCategoriesResponse = await fetchApi("/api/finances/categories/search")
     expect(await getAllCategoriesResponse.json()).toEqual<IFinanceCategory[]>([
       { id: 1, name: "clothes", type: { id: 1, name: "expense" } },
       { id: 3, name: "gifts", type: { id: 1, name: "expense" } },

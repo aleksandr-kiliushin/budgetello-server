@@ -1,10 +1,10 @@
 import { IFinanceRecord } from "../../../src/interfaces/finance"
 import { UpdateFinanceRecordDto } from "../../../src/models/finance-record/dto/update-finance-record.dto"
-import { logIn } from "../../helpers/logIn"
+import { authorize } from "../../helpers/authorize"
+import { fetchApi } from "../../helpers/fetchApi"
 
-let authToken = ""
 beforeEach(async () => {
-  authToken = await logIn({ username: "john-doe", password: "john-doe-password" })
+  await authorize("john-doe")
 })
 
 /* Initial record. */
@@ -79,12 +79,11 @@ describe("Finance record updating", () => {
       },
     },
   ])("record updating", async ({ payload, updatedRecord }) => {
-    const recordUpdatingResponse = await fetch("http://localhost:3080/api/finances/records/1", {
+    const recordUpdatingResponse = await fetchApi("/api/finances/records/1", {
       body: JSON.stringify(payload),
-      headers: { Authorization: authToken, "Content-Type": "application/json" },
       method: "PATCH",
     })
-    // expect(recordUpdatingResponse.status).toEqual(200)
+    expect(recordUpdatingResponse.status).toEqual(200)
     expect(await recordUpdatingResponse.json()).toEqual(updatedRecord)
   })
 })

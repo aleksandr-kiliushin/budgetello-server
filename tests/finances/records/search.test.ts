@@ -1,9 +1,9 @@
 import { IFinanceRecord } from "../../../src/interfaces/finance"
-import { logIn } from "../../helpers/logIn"
+import { authorize } from "../../helpers/authorize"
+import { fetchApi } from "../../helpers/fetchApi"
 
-let authToken = ""
 beforeEach(async () => {
-  authToken = await logIn({ username: "john-doe", password: "john-doe-password" })
+  await authorize("john-doe")
 })
 
 describe("Get finance record by ID", () => {
@@ -12,7 +12,7 @@ describe("Get finance record by ID", () => {
     | { url: string; responseStatus: 404; responseData: { message: string } }
   >([
     {
-      url: "http://localhost:3080/api/finances/records/1",
+      url: "/api/finances/records/1",
       responseStatus: 200,
       responseData: {
         amount: 100,
@@ -23,12 +23,12 @@ describe("Get finance record by ID", () => {
       },
     },
     {
-      url: "http://localhost:3080/api/finances/records/666",
+      url: "/api/finances/records/666",
       responseStatus: 404,
       responseData: { message: "Record with ID '666' not found." },
     },
   ])("find record for: $url", async ({ url, responseStatus, responseData }) => {
-    const response = await fetch(url, { headers: { Authorization: authToken } })
+    const response = await fetchApi(url)
     expect(response.status).toEqual(responseStatus)
     expect(await response.json()).toEqual(responseData)
   })
@@ -37,7 +37,7 @@ describe("Get finance record by ID", () => {
 describe("Finance records search", () => {
   test.each<{ url: string; searchResult: IFinanceRecord[] }>([
     {
-      url: "http://localhost:3080/api/finances/records/search",
+      url: "/api/finances/records/search",
       searchResult: [
         {
           amount: 230,
@@ -84,7 +84,7 @@ describe("Finance records search", () => {
       ],
     },
     {
-      url: "http://localhost:3080/api/finances/records/search?orderingByDate=ASC&orderingById=ASC&isTrashed=false&skip=1&take=2",
+      url: "/api/finances/records/search?orderingByDate=ASC&orderingById=ASC&isTrashed=false&skip=1&take=2",
       searchResult: [
         {
           amount: 30,
@@ -103,7 +103,7 @@ describe("Finance records search", () => {
       ],
     },
   ])("find records for: $url", async ({ url, searchResult }) => {
-    const response = await fetch(url, { headers: { Authorization: authToken } })
+    const response = await fetchApi(url)
     expect(response.status).toEqual(200)
     expect(await response.json()).toEqual(searchResult)
   })

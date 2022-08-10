@@ -1,17 +1,14 @@
 import { IFinanceRecord } from "../../../src/interfaces/finance"
-import { logIn } from "../../helpers/logIn"
+import { authorize } from "../../helpers/authorize"
+import { fetchApi } from "../../helpers/fetchApi"
 
-let authToken = ""
 beforeEach(async () => {
-  authToken = await logIn({ username: "john-doe", password: "john-doe-password" })
+  await authorize("john-doe")
 })
 
 describe("Finance record deleting", () => {
   it("returns a correct response after deleting", async () => {
-    const recordDeletingResponse = await fetch("http://localhost:3080/api/finances/records/1", {
-      headers: { Authorization: authToken },
-      method: "DELETE",
-    })
+    const recordDeletingResponse = await fetchApi("/api/finances/records/1", { method: "DELETE" })
     expect(recordDeletingResponse.status).toEqual(200)
     expect(await recordDeletingResponse.json()).toEqual<IFinanceRecord>({
       amount: 100,
@@ -23,21 +20,10 @@ describe("Finance record deleting", () => {
   })
 
   it("the deleted records are not presented in all records list", async () => {
-    await fetch("http://localhost:3080/api/finances/records/1", {
-      headers: { Authorization: authToken },
-      method: "DELETE",
-    })
-    await fetch("http://localhost:3080/api/finances/records/2", {
-      headers: { Authorization: authToken },
-      method: "DELETE",
-    })
-    await fetch("http://localhost:3080/api/finances/records/3", {
-      headers: { Authorization: authToken },
-      method: "DELETE",
-    })
-    const getAllRecordsResponse = await fetch("http://localhost:3080/api/finances/records/search", {
-      headers: { Authorization: authToken },
-    })
+    await fetchApi("/api/finances/records/1", { method: "DELETE" })
+    await fetchApi("/api/finances/records/2", { method: "DELETE" })
+    await fetchApi("/api/finances/records/3", { method: "DELETE" })
+    const getAllRecordsResponse = await fetchApi("/api/finances/records/search")
     expect(await getAllRecordsResponse.json()).toEqual<IFinanceRecord[]>([
       {
         amount: 230,
