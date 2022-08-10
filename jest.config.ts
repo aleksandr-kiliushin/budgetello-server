@@ -1,10 +1,7 @@
 const config = {
   moduleNameMapper: {
-    // "\\.module\\.scss$": "<rootDir>/src/utils/testing/scss-modules-mock.ts",
-    // "^#components(.*)$": "<rootDir>/src/components$1",
-    // "^#store(.*)$": "<rootDir>/src/store$1",
-    // "^#views(.*)$": "<rootDir>/src/views$1",
-    // "^#utils(.*)$": "<rootDir>/src/utils$1",
+    "^#interfaces(.*)$": "<rootDir>/src/interfaces$1",
+    "^#models(.*)$": "<rootDir>/src/models$1",
   },
   modulePathIgnorePatterns: ["<rootDir>/dist", "<rootDir>/node_modules"],
   preset: "ts-jest",

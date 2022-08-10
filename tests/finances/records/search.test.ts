@@ -102,7 +102,7 @@ describe("Finance records search", () => {
         },
       ],
     },
-  ])("user search for: $url", async ({ url, searchResult }) => {
+  ])("find records for: $url", async ({ url, searchResult }) => {
     const response = await fetch(url, { headers: { Authorization: authToken } })
     expect(response.status).toEqual(200)
     expect(await response.json()).toEqual(searchResult)
