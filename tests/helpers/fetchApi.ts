@@ -3,6 +3,7 @@ export const fetchApi = (url: string, options?: RequestInit) => {
     ...options,
     headers: {
       Authorization: globalThis.authToken,
+      "Content-Type": "application/json",
       ...options?.headers,
     },
   })
