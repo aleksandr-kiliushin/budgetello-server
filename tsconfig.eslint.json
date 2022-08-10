@@ -27,5 +27,6 @@
     },
     "target": "es6"
   },
-  "include": ["./**/*.ts"] // Only this option differs from the main `tsconfig.json` and includes all project files. So that eslint does not claim in tests/ dir files.
+  "files": ["declarations/tests.d.ts"],
+  "include": ["**/*.ts"] // Only this option differs from the main `tsconfig.json` and includes all project files. So that eslint does not claim in tests/ dir files.
 }
