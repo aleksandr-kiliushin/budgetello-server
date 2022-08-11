@@ -8,7 +8,7 @@ import { FinanceCategoryTypeService } from "./service"
 @Module({
   exports: [FinanceCategoryTypeService],
   imports: [TypeOrmModule.forFeature([FinanceCategoryTypeEntity])],
-  providers: [FinanceCategoryTypeController, FinanceCategoryTypeService], // Try to delete.
-  controllers: [FinanceCategoryTypeController], // Try to delete.
+  providers: [FinanceCategoryTypeController, FinanceCategoryTypeService],
+  controllers: [FinanceCategoryTypeController],
 })
 export class FinanceCategoryTypeModule {}
