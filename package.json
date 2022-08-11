@@ -19,6 +19,7 @@
   "devDependencies": {
     "@nestjs/cli": "9.0.0",
     "@nestjs/schematics": "9.0.1",
+    "@nestjs/testing": "9.0.8",
     "@trivago/prettier-plugin-sort-imports": "3.3.0",
     "@types/bcrypt": "5.0.0",
     "@types/express": "4.17.13",
@@ -54,7 +55,8 @@
     "start": "nest start",
     "start:debug": "nest start --debug --watch",
     "start:prod": "node dist/main.js",
-    "test": "jest --runInBand",
+    "test:e2e": "jest --runInBand --testPathPattern=e2e\\/.+\\.test\\.ts",
+    "test:unit-and-intergration": "jest --testPathPattern=src\\/.+\\.test\\.ts",
     "typeorm": "typeorm-ts-node-esm -d ./src/config/ormConfig.ts"
   },
   "version": "0.0.1"
