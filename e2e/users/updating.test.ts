@@ -19,7 +19,7 @@ describe("User updating", () => {
     expect(await fetchAnotherUserResponse.json()).toEqual<IUser>({
       id: 2,
       username: "jessica-stark",
-      password: "$2b$10$7IiBG7wqNoYzokw2ZOXF2uy1iHrDDaNge.de67g1n7TNTIY4iI6jC",
+      password: "8bd912e2fe84cd93c457142a1d7e77136c3bc954f183",
     })
   })
 
@@ -90,7 +90,7 @@ describe("User updating", () => {
     expect(allUsers).toContainEqual({
       id: 2,
       username: "jessica-stark",
-      password: "$2b$10$7IiBG7wqNoYzokw2ZOXF2uy1iHrDDaNge.de67g1n7TNTIY4iI6jC",
+      password: "8bd912e2fe84cd93c457142a1d7e77136c3bc954f183",
     })
   })
 })

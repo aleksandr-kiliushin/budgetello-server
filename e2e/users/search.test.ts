@@ -25,7 +25,7 @@ describe("Returns a user by their identifier", () => {
       responseData: {
         id: 1,
         username: "john-doe",
-        password: "$2b$10$h/JNwLghT1FZHjXWIPPO7OMBw5TKr3JExRhWZv4ERZ.YeDmgoBs0i",
+        password: "8bd309ffba83c3db9a53142b052468007b",
       },
     },
     {
@@ -34,7 +34,7 @@ describe("Returns a user by their identifier", () => {
       responseData: {
         id: 1,
         username: "john-doe",
-        password: "$2b$10$h/JNwLghT1FZHjXWIPPO7OMBw5TKr3JExRhWZv4ERZ.YeDmgoBs0i",
+        password: "8bd309ffba83c3db9a53142b052468007b",
       },
     },
     {
@@ -43,7 +43,7 @@ describe("Returns a user by their identifier", () => {
       responseData: {
         id: 1,
         username: "john-doe",
-        password: "$2b$10$h/JNwLghT1FZHjXWIPPO7OMBw5TKr3JExRhWZv4ERZ.YeDmgoBs0i",
+        password: "8bd309ffba83c3db9a53142b052468007b",
       },
     },
     {
@@ -73,44 +73,76 @@ describe("Users search", () => {
     {
       url: "/api/users/search?id=1",
       searchResult: [
-        { id: 1, username: "john-doe", password: "$2b$10$h/JNwLghT1FZHjXWIPPO7OMBw5TKr3JExRhWZv4ERZ.YeDmgoBs0i" },
+        {
+          id: 1,
+          username: "john-doe",
+          password: "8bd309ffba83c3db9a53142b052468007b",
+        },
       ],
     },
     {
       url: "/api/users/search?username=john-doe",
       searchResult: [
-        { id: 1, username: "john-doe", password: "$2b$10$h/JNwLghT1FZHjXWIPPO7OMBw5TKr3JExRhWZv4ERZ.YeDmgoBs0i" },
+        {
+          id: 1,
+          username: "john-doe",
+          password: "8bd309ffba83c3db9a53142b052468007b",
+        },
       ],
     },
     {
       url: "/api/users/search?id=1&username=john-doe",
       searchResult: [
-        { id: 1, username: "john-doe", password: "$2b$10$h/JNwLghT1FZHjXWIPPO7OMBw5TKr3JExRhWZv4ERZ.YeDmgoBs0i" },
+        {
+          id: 1,
+          username: "john-doe",
+          password: "8bd309ffba83c3db9a53142b052468007b",
+        },
       ],
     },
     {
       url: "/api/users/search?username=john",
       searchResult: [
-        { id: 1, username: "john-doe", password: "$2b$10$h/JNwLghT1FZHjXWIPPO7OMBw5TKr3JExRhWZv4ERZ.YeDmgoBs0i" },
+        {
+          id: 1,
+          username: "john-doe",
+          password: "8bd309ffba83c3db9a53142b052468007b",
+        },
       ],
     },
     {
       url: "/api/users/search?username=doe",
       searchResult: [
-        { id: 1, username: "john-doe", password: "$2b$10$h/JNwLghT1FZHjXWIPPO7OMBw5TKr3JExRhWZv4ERZ.YeDmgoBs0i" },
+        {
+          id: 1,
+          username: "john-doe",
+          password: "8bd309ffba83c3db9a53142b052468007b",
+        },
       ],
     },
     {
       url: "/api/users/search?username=doe",
       searchResult: [
-        { id: 1, username: "john-doe", password: "$2b$10$h/JNwLghT1FZHjXWIPPO7OMBw5TKr3JExRhWZv4ERZ.YeDmgoBs0i" },
+        {
+          id: 1,
+          username: "john-doe",
+          password: "8bd309ffba83c3db9a53142b052468007b",
+        },
       ],
     },
     {
       url: "/api/users/search?username=j",
       searchResult: [
-        { id: 1, username: "john-doe", password: "$2b$10$h/JNwLghT1FZHjXWIPPO7OMBw5TKr3JExRhWZv4ERZ.YeDmgoBs0i" },
-        { id: 2, username: "jessica-stark", password: "$2b$10$7IiBG7wqNoYzokw2ZOXF2uy1iHrDDaNge.de67g1n7TNTIY4iI6jC" },
+        {
+          id: 1,
+          username: "john-doe",
+          password: "8bd309ffba83c3db9a53142b052468007b",
+        },
+        {
+          id: 2,
+          username: "jessica-stark",
+          password: "8bd912e2fe84cd93c457142a1d7e77136c3bc954f183",
+        },
       ],
     },
     {
@@ -124,8 +156,16 @@ describe("Users search", () => {
     {
       url: "/api/users/search",
       searchResult: [
-        { id: 1, username: "john-doe", password: "$2b$10$h/JNwLghT1FZHjXWIPPO7OMBw5TKr3JExRhWZv4ERZ.YeDmgoBs0i" },
-        { id: 2, username: "jessica-stark", password: "$2b$10$7IiBG7wqNoYzokw2ZOXF2uy1iHrDDaNge.de67g1n7TNTIY4iI6jC" },
+        {
+          id: 1,
+          username: "john-doe",
+          password: "8bd309ffba83c3db9a53142b052468007b",
+        },
+        {
+          id: 2,
+          username: "jessica-stark",
+          password: "8bd912e2fe84cd93c457142a1d7e77136c3bc954f183",
+        },
       ],
     },
   ])("user search for: $url", async ({ url, searchResult }) => {

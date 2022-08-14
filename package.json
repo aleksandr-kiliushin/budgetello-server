@@ -53,6 +53,7 @@
     "start": "nest start",
     "start:debug": "nest start --debug --watch",
     "start:prod": "node dist/main.js",
+    "test": "jest --runInBand",
     "test:e2e": "jest --runInBand --testPathPattern=e2e\\/.+\\.test\\.ts",
     "typeorm": "typeorm-ts-node-esm -d ./src/config/ormConfig.ts"
   },

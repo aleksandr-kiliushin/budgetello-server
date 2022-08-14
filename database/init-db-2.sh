@@ -27,9 +27,9 @@ EOF
 
 # Seed database with testing data.
 psql personal_app_db postgres << EOF
-  INSERT INTO "user" (username,        password                                                         )
-  VALUES             ('john-doe',      '\$2b\$10\$h/JNwLghT1FZHjXWIPPO7OMBw5TKr3JExRhWZv4ERZ.YeDmgoBs0i'),
-                     ('jessica-stark', '\$2b\$10\$7IiBG7wqNoYzokw2ZOXF2uy1iHrDDaNge.de67g1n7TNTIY4iI6jC');
+  INSERT INTO "user" (username,        password                                                                                                                          )
+  VALUES             ('john-doe',      '8bd309ffba83c3db9a53142b052468007b'),
+                     ('jessica-stark', '8bd912e2fe84cd93c457142a1d7e77136c3bc954f183');
 EOF
 psql personal_app_db postgres << EOF
   INSERT INTO finance_category_type (name     )

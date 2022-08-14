@@ -16,7 +16,7 @@ describe("User deletion", () => {
     expect(await fetchAnotherUserResponse.json()).toEqual<IUser>({
       id: 2,
       username: "jessica-stark",
-      password: "$2b$10$7IiBG7wqNoYzokw2ZOXF2uy1iHrDDaNge.de67g1n7TNTIY4iI6jC",
+      password: "8bd912e2fe84cd93c457142a1d7e77136c3bc954f183",
     })
   })
 
@@ -26,7 +26,7 @@ describe("User deletion", () => {
     expect(await deleteMeResponse.json()).toEqual<IUser>({
       id: 1,
       username: "john-doe",
-      password: "$2b$10$h/JNwLghT1FZHjXWIPPO7OMBw5TKr3JExRhWZv4ERZ.YeDmgoBs0i",
+      password: "8bd309ffba83c3db9a53142b052468007b",
     })
   })
 
@@ -35,7 +35,11 @@ describe("User deletion", () => {
     await authorize("jessica-stark")
     const fetchAllUsersResponse = await fetchApi("/api/users/search")
     expect(await fetchAllUsersResponse.json()).toEqual<IUser[]>([
-      { id: 2, username: "jessica-stark", password: "$2b$10$7IiBG7wqNoYzokw2ZOXF2uy1iHrDDaNge.de67g1n7TNTIY4iI6jC" },
+      {
+        id: 2,
+        username: "jessica-stark",
+        password: "8bd912e2fe84cd93c457142a1d7e77136c3bc954f183",
+      },
     ])
   })
 })

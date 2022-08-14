@@ -1,8 +1,9 @@
 import { Injectable, NotFoundException, ServiceUnavailableException, UnauthorizedException } from "@nestjs/common"
-import * as bcrypt from "bcrypt"
 import * as jwt from "jsonwebtoken"
 
 import { UserService } from "#models/user/service"
+
+import { encrypt } from "#utils/crypto"
 
 import { LoginDto } from "./dto/login.dto"
 
@@ -17,7 +18,8 @@ export class AuthService {
 
     if (user === null) throw new NotFoundException({})
 
-    const isPasswordValid = await bcrypt.compare(password, user.password)
+    const hashedPassword = encrypt(password)
+    const isPasswordValid = hashedPassword === user.password
 
     if (!isPasswordValid) throw new UnauthorizedException({ message: "Invalid password." })
 
