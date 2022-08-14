@@ -14,8 +14,7 @@ services:
       - 3080:3080
     restart: on-failure
     volumes:
-      - ./:/var/app # Named volume for all files.
-      - /var/app/node_modules # Anonymous volume for node_modules only to fix issue with bcrypt.
+      - ./:/var/app
 
   database:
     build:
