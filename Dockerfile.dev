@@ -2,11 +2,6 @@ FROM node:18.7.0
 
 WORKDIR /var/app/
 
-COPY ./package.json ./package.json
-COPY ./package-lock.json ./package-lock.json
-
-RUN npm install
-
 CMD ["npm", "run", "dev"]
 
 EXPOSE 3080
