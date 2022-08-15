@@ -53,6 +53,7 @@
     "start:prod": "node dist/main.js",
     "test": "jest --runInBand",
     "test:e2e": "jest --runInBand --testPathPattern=e2e\\/.+\\.test\\.ts",
+    "test:unit-and-integration": "jest --runInBand --testPathPattern=src\\/.+\\.test\\.ts",
     "typeorm": "typeorm-ts-node-esm -d ./src/config/ormConfig.ts"
   },
   "version": "0.0.1"
