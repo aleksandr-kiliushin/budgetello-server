@@ -11,7 +11,6 @@ const users: UserEntity[] = [
 
 describe("UserController", () => {
   let userController: UserController
-  let userService: UserService
   beforeEach(async () => {
     const moduleRef = await Test.createTestingModule({
       controllers: [UserController],
@@ -23,12 +22,10 @@ describe("UserController", () => {
       })
       .compile()
     userController = moduleRef.get<UserController>(UserController)
-    userService = moduleRef.get<UserService>(UserService)
   })
 
   describe("getAll", () => {
     it("should return an array of users", async () => {
-      jest.spyOn(userService, "searchUsers").mockImplementation(async () => users)
       expect(await userController.searchUsers({ id: "1", username: "heh" })).toBe(users)
     })
   })
