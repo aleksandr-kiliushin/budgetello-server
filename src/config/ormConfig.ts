@@ -3,9 +3,9 @@ import { DataSource } from "typeorm"
 
 export const ormConfig: TypeOrmModuleOptions = {
   database: process.env.DATABASE_NAME ?? "personal_app_db",
-  entities: ["dist/**/*.entity.js"],
+  entities: [__dirname, "dist/**/*.entity.js"],
   host: process.env.DATABASE_HOST ?? "personal-app-database", // Name of database service in compose.dev.yml.
-  migrations: ["dist/migrations/*.js"],
+  migrations: [__dirname + "dist/migrations/*.js"],
   migrationsTableName: "migrations",
   password: process.env.POSTGRES_PASSWORD ?? "123",
   port: 5432,
