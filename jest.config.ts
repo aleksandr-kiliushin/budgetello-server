@@ -10,11 +10,11 @@ const config: Config.InitialOptions = {
   preset: "ts-jest",
   setupFilesAfterEnv: ["./jest.setup.ts"],
   testEnvironment: "node",
-  globals: {
-    "ts-jest": {
-      tsconfig: "tsconfig.eslint.json",
-    },
-  },
+  // globals: {
+  //   "ts-jest": {
+  //     tsconfig: "tsconfig.eslint.json",
+  //   },
+  // },
 }
 
 export default config
