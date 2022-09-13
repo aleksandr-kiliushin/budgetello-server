@@ -1,24 +1,24 @@
 describe("Login", () => {
-  it("responds that user is not found", async () => {
+  it("responds that the user not found", async () => {
     const response = await fetch("http://localhost:3080/api/login", {
       body: JSON.stringify({ username: "nonexistent-username", password: "some-password" }),
       headers: { "Content-Type": "application/json" },
       method: "POST",
     })
 
-    expect(response.status).toEqual(404)
-    expect(await response.json()).toEqual({})
+    expect(response.status).toEqual(400)
+    expect(await response.json()).toEqual({ fields: { username: "User not found." } })
   })
 
-  it("responds 'unauthorized' if the user is found but password is invalid", async () => {
+  it("responds that the password is invalid if the user is found but password is invalid", async () => {
     const response = await fetch("http://localhost:3080/api/login", {
       body: JSON.stringify({ username: "john-doe", password: "invalid-password" }),
       headers: { "Content-Type": "application/json" },
       method: "POST",
     })
 
-    expect(response.status).toEqual(401)
-    expect(await response.json()).toEqual({ message: "Invalid password." })
+    expect(response.status).toEqual(400)
+    expect(await response.json()).toEqual({ fields: { password: "Invalid password." } })
   })
 
   it("returns an auth token if cretendials are valid", async () => {
