@@ -72,4 +72,15 @@ describe("Finance category creating", () => {
       fields: { typeId: "Required field." },
     })
   })
+
+  it("case: category type does not exist", async () => {
+    const categoryCreatingResponse = await fetchApi("/api/finances/categories", {
+      body: JSON.stringify({ name: "food", typeId: 1234123 }),
+      method: "POST",
+    })
+    expect(categoryCreatingResponse.status).toEqual(400)
+    expect(await categoryCreatingResponse.json()).toEqual({
+      fields: { typeId: "Invalid category type." },
+    })
+  })
 })
