@@ -40,17 +40,25 @@ describe("Finance category creating", () => {
     })
   })
 
-  it("returns an informative response if required fields not presented in request body", async () => {
+  it("case: category name is not provided", async () => {
     const categoryCreatingResponse = await fetchApi("/api/finances/categories", {
-      body: JSON.stringify({
-        name_WITH_A_TYPO: "food", // Incorrect field name.
-        typeId: 1,
-      }),
+      body: JSON.stringify({ name_WITH_A_TYPO: "food", typeId: 1 }),
       method: "POST",
     })
     expect(categoryCreatingResponse.status).toEqual(400)
     expect(await categoryCreatingResponse.json()).toEqual({
-      message: "Field 'name' should be provided.",
+      fields: { name: "Required field." },
+    })
+  })
+
+  it("case: category name is an empty string", async () => {
+    const categoryCreatingResponse = await fetchApi("/api/finances/categories", {
+      body: JSON.stringify({ name: "", typeId: 1 }),
+      method: "POST",
+    })
+    expect(categoryCreatingResponse.status).toEqual(400)
+    expect(await categoryCreatingResponse.json()).toEqual({
+      fields: { name: "Required field." },
     })
   })
 })
