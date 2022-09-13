@@ -13,11 +13,12 @@ describe("Finance category updating", () => {
     status: number
     url: string
   }>([
-    // {
-    //   payload: { name: "", typeId: 1 },
-    //   response: { fields: { name: "Required field." } },
-    //   status: 400,
-    // },
+    {
+      payload: { name: "" },
+      response: { fields: { name: "Category name cannot be empty." } },
+      status: 400,
+      url: "/api/finances/categories/2",
+    },
     // {
     //   payload: { name: "food", typeId_WITH_A_TYPO: 1 },
     //   response: { fields: { typeId: "Required field." } },
