@@ -83,4 +83,18 @@ describe("Finance category creating", () => {
       fields: { typeId: "Invalid category type." },
     })
   })
+
+  it("case: category already exists", async () => {
+    const categoryCreatingResponse = await fetchApi("/api/finances/categories", {
+      body: JSON.stringify({ name: "education", typeId: 1 }),
+      method: "POST",
+    })
+    expect(categoryCreatingResponse.status).toEqual(400)
+    expect(await categoryCreatingResponse.json()).toEqual({
+      fields: {
+        name: '"education" expense category already exists.',
+        typeId: '"education" expense category already exists.',
+      },
+    })
+  })
 })

@@ -48,6 +48,18 @@ export class FinanceCategoryService {
     } catch {
       throw new BadRequestException({ fields: { typeId: "Invalid category type." } })
     }
+    const theSameExistingCategory = await this.financeCategoryRepository.findOne({
+      relations: ["type"],
+      where: { name, type },
+    })
+    if (theSameExistingCategory !== null) {
+      throw new BadRequestException({
+        fields: {
+          name: `"${theSameExistingCategory.name}" ${theSameExistingCategory.type.name} category already exists.`,
+          typeId: `"${theSameExistingCategory.name}" ${theSameExistingCategory.type.name} category already exists.`,
+        },
+      })
+    }
     const category = this.financeCategoryRepository.create({ name, type })
     return this.financeCategoryRepository.save(category)
   }
