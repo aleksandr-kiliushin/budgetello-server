@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException, ServiceUnavailableException, UnauthorizedException } from "@nestjs/common"
+import { BadRequestException, Injectable, ServiceUnavailableException } from "@nestjs/common"
 import * as jwt from "jsonwebtoken"
 
 import { UserService } from "#models/user/service"
@@ -14,14 +14,14 @@ export class AuthService {
   async createToken(loginDto: LoginDto): Promise<{ authToken: string }> {
     const { password, username } = loginDto
 
-    const user = await this.userService.findUser({ username })
-
-    if (user === null) throw new NotFoundException({})
+    const user = await this.userService.findUser({ username }).catch(() => {
+      throw new BadRequestException({ fields: { username: "User not found." } })
+    })
 
     const hashedPassword = encrypt(password)
     const isPasswordValid = hashedPassword === user.password
 
-    if (!isPasswordValid) throw new UnauthorizedException({ message: "Invalid password." })
+    if (!isPasswordValid) throw new BadRequestException({ fields: { password: "Invalid password." } })
 
     const jwtSecret = process.env.JWT_SECRET
     if (jwtSecret === undefined) {
