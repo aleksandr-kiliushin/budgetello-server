@@ -7,26 +7,6 @@ beforeEach(async () => {
 })
 
 describe("Finance category creating", () => {
-  it("a newly created category is presented in all categories list", async () => {
-    await fetchApi("/api/finances/categories", { body: JSON.stringify({ name: "food", typeId: 1 }), method: "POST" })
-    const getAllCategoriesResponse = await fetchApi("/api/finances/categories/search")
-    expect(await getAllCategoriesResponse.json()).toContainEqual<IFinanceCategory>({
-      id: 6,
-      name: "food",
-      type: { id: 1, name: "expense" },
-    })
-  })
-
-  it("a newly created category can be found by ID", async () => {
-    await fetchApi("/api/finances/categories", { body: JSON.stringify({ name: "food", typeId: 1 }), method: "POST" })
-    const getNewlyCreatedCategoryResponse = await fetchApi("/api/finances/categories/6")
-    expect(await getNewlyCreatedCategoryResponse.json()).toEqual<IFinanceCategory>({
-      id: 6,
-      name: "food",
-      type: { id: 1, name: "expense" },
-    })
-  })
-
   test.each<{
     payload: Record<string, string | number>
     response: Record<string, unknown>
@@ -74,5 +54,25 @@ describe("Finance category creating", () => {
     })
     expect(categoryCreatingResponse.status).toEqual(status)
     expect(await categoryCreatingResponse.json()).toEqual(response)
+  })
+
+  it("a newly created category is presented in all categories list", async () => {
+    await fetchApi("/api/finances/categories", { body: JSON.stringify({ name: "food", typeId: 1 }), method: "POST" })
+    const getAllCategoriesResponse = await fetchApi("/api/finances/categories/search")
+    expect(await getAllCategoriesResponse.json()).toContainEqual<IFinanceCategory>({
+      id: 6,
+      name: "food",
+      type: { id: 1, name: "expense" },
+    })
+  })
+
+  it("a newly created category can be found by ID", async () => {
+    await fetchApi("/api/finances/categories", { body: JSON.stringify({ name: "food", typeId: 1 }), method: "POST" })
+    const getNewlyCreatedCategoryResponse = await fetchApi("/api/finances/categories/6")
+    expect(await getNewlyCreatedCategoryResponse.json()).toEqual<IFinanceCategory>({
+      id: 6,
+      name: "food",
+      type: { id: 1, name: "expense" },
+    })
   })
 })
