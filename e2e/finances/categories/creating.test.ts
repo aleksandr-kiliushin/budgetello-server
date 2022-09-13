@@ -33,11 +33,6 @@ describe("Finance category creating", () => {
     status: number
   }>([
     {
-      payload: { name: "food", typeId: 1 },
-      response: { id: 6, name: "food", type: { id: 1, name: "expense" } },
-      status: 201,
-    },
-    {
       payload: { name_WITH_A_TYPO: "food", typeId: 1 },
       response: { fields: { name: "Required field." } },
       status: 400,
@@ -66,6 +61,11 @@ describe("Finance category creating", () => {
         },
       },
       status: 400,
+    },
+    {
+      payload: { name: "education", typeId: 2 },
+      response: { id: 6, name: "education", type: { id: 2, name: "income" } },
+      status: 201,
     },
   ])("Category creating case #%#", async ({ payload, response, status }) => {
     const categoryCreatingResponse = await fetchApi("/api/finances/categories", {
