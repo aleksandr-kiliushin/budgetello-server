@@ -19,31 +19,12 @@ describe("Finance category updating", () => {
       status: 400,
       url: "/api/finances/categories/2",
     },
-    // {
-    //   payload: { name: "food", typeId_WITH_A_TYPO: 1 },
-    //   response: { fields: { typeId: "Required field." } },
-    //   status: 400,
-    // },
-    // {
-    //   payload: { name: "food", typeId: 1234123 },
-    //   response: { fields: { typeId: "Invalid category type." } },
-    //   status: 400,
-    // },
-    // {
-    //   payload: { name: "education", typeId: 1 },
-    //   response: {
-    //     fields: {
-    //       name: '"education" expense category already exists.',
-    //       typeId: '"education" expense category already exists.',
-    //     },
-    //   },
-    //   status: 400,
-    // },
-    // {
-    //   payload: { name: "education", typeId: 2 },
-    //   response: { id: 6, name: "education", type: { id: 2, name: "income" } },
-    //   status: 201,
-    // },
+    {
+      payload: { name: "food", typeId: 1234123 },
+      response: { fields: { typeId: "Invalid category type." } },
+      status: 400,
+      url: "/api/finances/categories/2",
+    },
     {
       payload: { name: "teaching", typeId: 2 },
       response: { id: 2, name: "teaching", type: { id: 2, name: "income" } },

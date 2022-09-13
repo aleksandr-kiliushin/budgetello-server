@@ -69,15 +69,17 @@ export class FinanceCategoryService {
     updateFinanceCategoryDto: UpdateFinanceCategoryDto
   ): Promise<FinanceCategoryEntity> {
     const { name, typeId } = updateFinanceCategoryDto
-    if (name === "") {
-      throw new BadRequestException({ fields: { name: "Category name cannot be empty." } })
-    }
     const category = await this.findById(id)
     if (typeId !== undefined) {
-      const type = await this.financeCategoryTypeService.findById(typeId)
-      category.type = type
+      try {
+        const type = await this.financeCategoryTypeService.findById(typeId)
+        category.type = type
+      } catch {
+        throw new BadRequestException({ fields: { typeId: "Invalid category type." } })
+      }
     }
     if (name !== undefined) {
+      if (name === "") throw new BadRequestException({ fields: { name: "Category name cannot be empty." } })
       category.name = name
     }
     return this.financeCategoryRepository.save(category)
