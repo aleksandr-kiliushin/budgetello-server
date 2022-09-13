@@ -7,19 +7,6 @@ beforeEach(async () => {
 })
 
 describe("Finance category creating", () => {
-  it("returns a correct response after creating", async () => {
-    const categoryCreatingResponse = await fetchApi("/api/finances/categories", {
-      body: JSON.stringify({ name: "food", typeId: 1 }),
-      method: "POST",
-    })
-    expect(categoryCreatingResponse.status).toEqual(201)
-    expect(await categoryCreatingResponse.json()).toEqual<IFinanceCategory>({
-      id: 6,
-      name: "food",
-      type: { id: 1, name: "expense" },
-    })
-  })
-
   it("a newly created category is presented in all categories list", async () => {
     await fetchApi("/api/finances/categories", { body: JSON.stringify({ name: "food", typeId: 1 }), method: "POST" })
     const getAllCategoriesResponse = await fetchApi("/api/finances/categories/search")
@@ -40,61 +27,52 @@ describe("Finance category creating", () => {
     })
   })
 
-  it("case: category name is not provided", async () => {
-    const categoryCreatingResponse = await fetchApi("/api/finances/categories", {
-      body: JSON.stringify({ name_WITH_A_TYPO: "food", typeId: 1 }),
-      method: "POST",
-    })
-    expect(categoryCreatingResponse.status).toEqual(400)
-    expect(await categoryCreatingResponse.json()).toEqual({
-      fields: { name: "Required field." },
-    })
-  })
-
-  it("case: category name is an empty string", async () => {
-    const categoryCreatingResponse = await fetchApi("/api/finances/categories", {
-      body: JSON.stringify({ name: "", typeId: 1 }),
-      method: "POST",
-    })
-    expect(categoryCreatingResponse.status).toEqual(400)
-    expect(await categoryCreatingResponse.json()).toEqual({
-      fields: { name: "Required field." },
-    })
-  })
-
-  it("case: category type is not provided", async () => {
-    const categoryCreatingResponse = await fetchApi("/api/finances/categories", {
-      body: JSON.stringify({ name: "food", typeId_WITH_A_TYPO: 1 }),
-      method: "POST",
-    })
-    expect(categoryCreatingResponse.status).toEqual(400)
-    expect(await categoryCreatingResponse.json()).toEqual({
-      fields: { typeId: "Required field." },
-    })
-  })
-
-  it("case: category type does not exist", async () => {
-    const categoryCreatingResponse = await fetchApi("/api/finances/categories", {
-      body: JSON.stringify({ name: "food", typeId: 1234123 }),
-      method: "POST",
-    })
-    expect(categoryCreatingResponse.status).toEqual(400)
-    expect(await categoryCreatingResponse.json()).toEqual({
-      fields: { typeId: "Invalid category type." },
-    })
-  })
-
-  it("case: category already exists", async () => {
-    const categoryCreatingResponse = await fetchApi("/api/finances/categories", {
-      body: JSON.stringify({ name: "education", typeId: 1 }),
-      method: "POST",
-    })
-    expect(categoryCreatingResponse.status).toEqual(400)
-    expect(await categoryCreatingResponse.json()).toEqual({
-      fields: {
-        name: '"education" expense category already exists.',
-        typeId: '"education" expense category already exists.',
+  test.each<{
+    payload: Record<string, string | number>
+    response: Record<string, unknown>
+    status: number
+  }>([
+    {
+      payload: { name: "food", typeId: 1 },
+      response: { id: 6, name: "food", type: { id: 1, name: "expense" } },
+      status: 201,
+    },
+    {
+      payload: { name_WITH_A_TYPO: "food", typeId: 1 },
+      response: { fields: { name: "Required field." } },
+      status: 400,
+    },
+    {
+      payload: { name: "", typeId: 1 },
+      response: { fields: { name: "Required field." } },
+      status: 400,
+    },
+    {
+      payload: { name: "food", typeId_WITH_A_TYPO: 1 },
+      response: { fields: { typeId: "Required field." } },
+      status: 400,
+    },
+    {
+      payload: { name: "food", typeId: 1234123 },
+      response: { fields: { typeId: "Invalid category type." } },
+      status: 400,
+    },
+    {
+      payload: { name: "education", typeId: 1 },
+      response: {
+        fields: {
+          name: '"education" expense category already exists.',
+          typeId: '"education" expense category already exists.',
+        },
       },
+      status: 400,
+    },
+  ])("Category creating case #%#", async ({ payload, response, status }) => {
+    const categoryCreatingResponse = await fetchApi("/api/finances/categories", {
+      body: JSON.stringify(payload),
+      method: "POST",
     })
+    expect(categoryCreatingResponse.status).toEqual(status)
+    expect(await categoryCreatingResponse.json()).toEqual(response)
   })
 })
