@@ -46,8 +46,8 @@ describe("User updating", () => {
       headers: { "Content-Type": "application/json" },
       method: "POST",
     })
-    expect(loginWithTheOldCredentialsResponse.status).toEqual(404)
-    expect(await loginWithTheOldCredentialsResponse.json()).toEqual({})
+    expect(loginWithTheOldCredentialsResponse.status).toEqual(400)
+    expect(await loginWithTheOldCredentialsResponse.json()).toEqual({ fields: { username: "User not found." } })
   })
 
   it("user can login with the new credentials", async () => {
