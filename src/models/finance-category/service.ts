@@ -72,8 +72,7 @@ export class FinanceCategoryService {
     const category = await this.findById(id)
     if (typeId !== undefined) {
       try {
-        const type = await this.financeCategoryTypeService.findById(typeId)
-        category.type = type
+        category.type = await this.financeCategoryTypeService.findById(typeId)
       } catch {
         throw new BadRequestException({ fields: { typeId: "Invalid category type." } })
       }
