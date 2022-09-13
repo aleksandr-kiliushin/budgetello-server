@@ -38,7 +38,9 @@ export class FinanceCategoryService {
   async create(createFinanceCategoryDto: CreateFinanceCategoryDto): Promise<FinanceCategoryEntity> {
     const { name, typeId } = createFinanceCategoryDto
     if (name === undefined || name === "") throw new BadRequestException({ fields: { name: "Required field." } })
-    if (typeId === undefined) throw new BadRequestException({ message: "Field 'typeId' should be provided." })
+    if (typeId === undefined) {
+      throw new BadRequestException({ fields: { typeId: "Required field." } })
+    }
     const type = await this.financeCategoryTypeService.findById(typeId)
     const category = this.financeCategoryRepository.create({ name, type })
     return this.financeCategoryRepository.save(category)
