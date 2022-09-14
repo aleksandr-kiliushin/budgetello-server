@@ -2,6 +2,7 @@ import { BadRequestException, Injectable, NotFoundException } from "@nestjs/comm
 import { InjectRepository } from "@nestjs/typeorm"
 import { Repository } from "typeorm"
 
+import { FinanceCategoryEntity } from "#models/finance-category/entities/finance-category.entity"
 import { FinanceCategoryService } from "#models/finance-category/service"
 
 import { CreateFinanceRecordDto } from "./dto/create-finance-record.dto"
@@ -54,8 +55,14 @@ export class FinanceRecordService {
     if (createFinanceRecordDto.categoryId === undefined) {
       throw new BadRequestException({ fields: { categoryId: "Required field." } })
     }
+    let category: FinanceCategoryEntity | undefined
+    try {
+      category = await this.financeCategoryService.findById(createFinanceRecordDto.categoryId)
+    } catch {
+      throw new BadRequestException({ fields: { categoryId: "Invalid category." } })
+    }
     const record = this.financeRecordRepository.create(createFinanceRecordDto)
-    record.category = await this.financeCategoryService.findById(createFinanceRecordDto.categoryId)
+    record.category = category
     return this.financeRecordRepository.save(record)
   }
 
