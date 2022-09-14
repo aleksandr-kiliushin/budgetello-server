@@ -20,6 +20,21 @@ describe("Finance record updating", () => {
     response: Record<string, unknown>
     status: number
   }>([
+    // {
+    //   payload: { amount: 0, categoryId: 5, date: "2022-08-05" },
+    //   response: { fields: { amount: "Should be a positive number." } },
+    //   status: 400,
+    // },
+    {
+      payload: { amount: 2000, categoryId: 666666, date: "2022-08-05" },
+      response: { fields: { categoryId: "Invalid category." } },
+      status: 400,
+    },
+    // {
+    //   payload: { date: "2022/08/05" },
+    //   response: { fields: { date: "Should have format YYYY-MM-DD." } },
+    //   status: 400,
+    // },
     {
       payload: { amount: 8000 },
       response: {

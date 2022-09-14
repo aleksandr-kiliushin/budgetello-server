@@ -83,9 +83,12 @@ export class FinanceRecordService {
     const updatedRecord = { ...record, ...rest }
 
     if (categoryId !== undefined) {
-      updatedRecord.category = await this.financeCategoryService.findById(categoryId)
+      try {
+        updatedRecord.category = await this.financeCategoryService.findById(categoryId)
+      } catch {
+        throw new BadRequestException({ fields: { categoryId: "Invalid category." } })
+      }
     }
-
     return this.financeRecordRepository.save(updatedRecord)
   }
 
