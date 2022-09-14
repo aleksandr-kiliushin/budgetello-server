@@ -8,7 +8,7 @@ beforeEach(async () => {
 
 describe("Finance category creating", () => {
   test.each<{
-    payload: Record<string, string | number>
+    payload: Record<string, unknown>
     response: Record<string, unknown>
     status: number
   }>([
