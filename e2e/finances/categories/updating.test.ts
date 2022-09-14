@@ -26,6 +26,17 @@ describe("Finance category updating", () => {
       url: "/api/finances/categories/2",
     },
     {
+      payload: { name: "clothes" },
+      response: {
+        fields: {
+          name: '"clothes" expense category already exists.',
+          typeId: '"clothes" expense category already exists.',
+        },
+      },
+      status: 400,
+      url: "/api/finances/categories/2",
+    },
+    {
       payload: { name: "teaching", typeId: 2 },
       response: { id: 2, name: "teaching", type: { id: 2, name: "income" } },
       status: 200,

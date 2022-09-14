@@ -81,6 +81,18 @@ export class FinanceCategoryService {
       if (name === "") throw new BadRequestException({ fields: { name: "Category name cannot be empty." } })
       category.name = name
     }
+    const theSameExistingCategory = await this.financeCategoryRepository.findOne({
+      relations: ["type"],
+      where: { name: category.name, type: category.type },
+    })
+    if (theSameExistingCategory !== null) {
+      throw new BadRequestException({
+        fields: {
+          name: `"${theSameExistingCategory.name}" ${theSameExistingCategory.type.name} category already exists.`,
+          typeId: `"${theSameExistingCategory.name}" ${theSameExistingCategory.type.name} category already exists.`,
+        },
+      })
+    }
     return this.financeCategoryRepository.save(category)
   }
 
