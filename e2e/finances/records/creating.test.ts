@@ -43,6 +43,11 @@ describe("Finance record creating", () => {
       status: 400,
     },
     {
+      payload: { amount: 2000, categoryId: 5, date_WITH_A_TYPO: "2022-08-05" },
+      response: { fields: { date: "Required field." } },
+      status: 400,
+    },
+    {
       payload: { amount: 2000, categoryId: 5, date: "2022-08-05" },
       response: {
         amount: 2000,

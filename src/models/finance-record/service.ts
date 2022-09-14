@@ -61,6 +61,9 @@ export class FinanceRecordService {
     } catch {
       throw new BadRequestException({ fields: { categoryId: "Invalid category." } })
     }
+    if (createFinanceRecordDto.date === undefined) {
+      throw new BadRequestException({ fields: { date: "Required field." } })
+    }
     const record = this.financeRecordRepository.create(createFinanceRecordDto)
     record.category = category
     return this.financeRecordRepository.save(record)
