@@ -48,9 +48,6 @@ export class FinanceRecordService {
   }
 
   async create(createFinanceRecordDto: CreateFinanceRecordDto): Promise<FinanceRecordEntity> {
-    if (createFinanceRecordDto.amount === undefined) {
-      throw new BadRequestException({ fields: { amount: "Required field." } })
-    }
     if (typeof createFinanceRecordDto.amount !== "number" || createFinanceRecordDto.amount <= 0) {
       throw new BadRequestException({ fields: { amount: "Should be a positive number." } })
     }
