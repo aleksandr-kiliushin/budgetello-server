@@ -28,6 +28,16 @@ describe("Finance record creating", () => {
     status: number
   }>([
     {
+      payload: { amount: 0, categoryId: 5, date: "2022-08-05" },
+      response: { fields: { amount: "Should be a positive number." } },
+      status: 400,
+    },
+    {
+      payload: { amount: 2000, categoryId_WITH_A_TYPO: 5, date: "2022-08-05" },
+      response: { fields: { categoryId: "Required field." } },
+      status: 400,
+    },
+    {
       payload: { amount: 2000, categoryId: 5, date: "2022-08-05" },
       response: {
         amount: 2000,
@@ -37,11 +47,6 @@ describe("Finance record creating", () => {
         isTrashed: false,
       },
       status: 201,
-    },
-    {
-      payload: { amount: 0, categoryId: 5, date: "2022-08-05" },
-      response: { fields: { amount: "Should be a positive number." } },
-      status: 400,
     },
   ])("Finance record creating case #%#", async ({ payload, response, status }) => {
     const recordCreatingResponse = await fetchApi("/api/finances/records", {

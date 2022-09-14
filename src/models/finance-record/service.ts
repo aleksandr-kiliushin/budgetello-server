@@ -51,6 +51,9 @@ export class FinanceRecordService {
     if (typeof createFinanceRecordDto.amount !== "number" || createFinanceRecordDto.amount <= 0) {
       throw new BadRequestException({ fields: { amount: "Should be a positive number." } })
     }
+    if (createFinanceRecordDto.categoryId === undefined) {
+      throw new BadRequestException({ fields: { categoryId: "Required field." } })
+    }
     const record = this.financeRecordRepository.create(createFinanceRecordDto)
     record.category = await this.financeCategoryService.findById(createFinanceRecordDto.categoryId)
     return this.financeRecordRepository.save(record)
