@@ -76,20 +76,30 @@ export class FinanceRecordService {
     id: FinanceRecordEntity["id"],
     updateFinanceRecordDto: UpdateFinanceRecordDto
   ): Promise<FinanceRecordEntity> {
-    const { categoryId, ...rest } = updateFinanceRecordDto
-
     const record = await this.findById(id)
-
-    const updatedRecord = { ...record, ...rest }
-
-    if (categoryId !== undefined) {
+    if (updateFinanceRecordDto.amount !== undefined) {
+      if (typeof updateFinanceRecordDto.amount !== "number" || updateFinanceRecordDto.amount <= 0) {
+        throw new BadRequestException({ fields: { amount: "Should be a positive number." } })
+      }
+      record.amount = updateFinanceRecordDto.amount
+    }
+    if (typeof updateFinanceRecordDto.isTrashed === "boolean") {
+      record.isTrashed = updateFinanceRecordDto.isTrashed
+    }
+    if (updateFinanceRecordDto.date !== undefined) {
+      if (!/\d\d\d\d-\d\d-\d\d/.test(updateFinanceRecordDto.date)) {
+        throw new BadRequestException({ fields: { date: "Should have format YYYY-MM-DD." } })
+      }
+      record.date = updateFinanceRecordDto.date
+    }
+    if (updateFinanceRecordDto.categoryId !== undefined) {
       try {
-        updatedRecord.category = await this.financeCategoryService.findById(categoryId)
+        record.category = await this.financeCategoryService.findById(updateFinanceRecordDto.categoryId)
       } catch {
         throw new BadRequestException({ fields: { categoryId: "Invalid category." } })
       }
     }
-    return this.financeRecordRepository.save(updatedRecord)
+    return this.financeRecordRepository.save(record)
   }
 
   async deleteFinanceRecord(id: FinanceRecordEntity["id"]): Promise<FinanceRecordEntity> {
