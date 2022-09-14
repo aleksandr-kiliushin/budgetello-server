@@ -38,6 +38,16 @@ describe("Finance record creating", () => {
       },
       status: 201,
     },
+    {
+      payload: { amount_WITH_A_TYPO: 2000, categoryId: 5, date: "2022-08-05" },
+      response: { fields: { amount: "Required field." } },
+      status: 400,
+    },
+    {
+      payload: { amount: 0, categoryId: 5, date: "2022-08-05" },
+      response: { fields: { amount: "Should be a positive number." } },
+      status: 400,
+    },
   ])("Finance record creating case #%#", async ({ payload, response, status }) => {
     const recordCreatingResponse = await fetchApi("/api/finances/records", {
       body: JSON.stringify(payload),
