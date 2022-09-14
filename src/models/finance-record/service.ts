@@ -64,6 +64,9 @@ export class FinanceRecordService {
     if (createFinanceRecordDto.date === undefined) {
       throw new BadRequestException({ fields: { date: "Required field." } })
     }
+    if (!/\d\d\d\d-\d\d-\d\d/.test(createFinanceRecordDto.date)) {
+      throw new BadRequestException({ fields: { date: "Should have format YYYY-MM-DD." } })
+    }
     const record = this.financeRecordRepository.create(createFinanceRecordDto)
     record.category = category
     return this.financeRecordRepository.save(record)
