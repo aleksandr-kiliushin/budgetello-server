@@ -35,14 +35,16 @@ export class UserController {
   @UseGuards(AuthGuard)
   findUser(
     @Request()
-    req: { userId: IUser["id"] },
+    request: { userId: IUser["id"] },
     @Param("userIdentifier")
     userIdentifier: string
   ) {
+    // If request to /api/users/john-doe.
     if (isNaN(parseInt(userIdentifier))) {
-      return this.userService.findUser({ loggedInUserId: req.userId, username: userIdentifier })
+      return this.userService.findUser({ loggedInUserId: request.userId, username: userIdentifier })
     }
-    return this.userService.findUser({ loggedInUserId: req.userId, id: parseInt(userIdentifier) })
+    // If request to /api/users/123.
+    return this.userService.findUser({ loggedInUserId: request.userId, id: parseInt(userIdentifier) })
   }
 
   @Post()
@@ -61,10 +63,10 @@ export class UserController {
     @Body()
     updateUserDto: UpdateUserDto,
     @Request()
-    req: any // eslint-disable-line @typescript-eslint/no-explicit-any
+    request: { userId: IUser["id"] }
   ) {
     const userToBeUpdatedId = parseInt(id)
-    if (req.userId !== userToBeUpdatedId) {
+    if (request.userId !== userToBeUpdatedId) {
       throw new ForbiddenException({ message: "You are not allowed to update another user." })
     }
     return this.userService.update(userToBeUpdatedId, updateUserDto)
@@ -76,10 +78,10 @@ export class UserController {
     @Param("id")
     id: string,
     @Request()
-    req: any // eslint-disable-line @typescript-eslint/no-explicit-any
+    request: { userId: IUser["id"] }
   ) {
     const userToBeDeletedId = parseInt(id)
-    if (req.userId !== userToBeDeletedId) {
+    if (request.userId !== userToBeDeletedId) {
       throw new ForbiddenException({ message: "You are not allowed to delete another user." })
     }
     return this.userService.delete(userToBeDeletedId)
