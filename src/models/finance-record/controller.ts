@@ -3,6 +3,7 @@ import { Body, Controller, Delete, Get, Param, Patch, Post, Query, UseGuards } f
 import { AuthGuard } from "#models/auth/guard"
 
 import { CreateFinanceRecordDto } from "./dto/create-finance-record.dto"
+import { SearchFinanceRecordsQueryDto } from "./dto/search-finance-records-query.dto"
 import { UpdateFinanceRecordDto } from "./dto/update-finance-record.dto"
 import { FinanceRecordService } from "./service"
 
@@ -12,8 +13,7 @@ export class FinanceRecordController {
   constructor(private readonly financeRecordService: FinanceRecordService) {}
 
   @Get("search")
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  search(@Query() query: any) {
+  search(@Query() query: SearchFinanceRecordsQueryDto) {
     return this.financeRecordService.search(query)
   }
 

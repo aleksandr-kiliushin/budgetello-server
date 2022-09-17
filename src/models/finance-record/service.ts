@@ -6,7 +6,7 @@ import { FinanceCategoryEntity } from "#models/finance-category/entities/finance
 import { FinanceCategoryService } from "#models/finance-category/service"
 
 import { CreateFinanceRecordDto } from "./dto/create-finance-record.dto"
-import { GetFinanceRecordsDto } from "./dto/get-finance-records.dto"
+import { SearchFinanceRecordsQueryDto } from "./dto/search-finance-records-query.dto"
 import { UpdateFinanceRecordDto } from "./dto/update-finance-record.dto"
 import { FinanceRecordEntity } from "./entities/finance-record.entity"
 
@@ -18,22 +18,23 @@ export class FinanceRecordService {
     private financeCategoryService: FinanceCategoryService
   ) {}
 
-  search({
-    orderingByDate = "desc",
-    orderingById = "desc",
-    skip = 0,
-    take,
-    ...where
-  }: GetFinanceRecordsDto): Promise<FinanceRecordEntity[]> {
+  search(query: SearchFinanceRecordsQueryDto): Promise<FinanceRecordEntity[]> {
     return this.financeRecordRepository.find({
       order: {
-        ...(orderingByDate === undefined ? {} : { date: orderingByDate }),
-        ...(orderingById === undefined ? {} : { id: orderingById }),
+        id: query.orderingById ?? "desc",
+        date: query.orderingById ?? "desc",
       },
       relations: ["category", "category.type"],
-      skip,
-      ...(take === undefined ? {} : { take }),
-      where,
+      skip: query.skip === undefined ? 0 : parseInt(query.skip),
+      ...(query.take !== undefined && { take: parseInt(query.take) }),
+      where: {
+        ...(query.amount !== undefined && { amount: parseInt(query.amount) }),
+        ...(query.date !== undefined && { date: query.date }),
+        ...(query.categoryId !== undefined && { categoryId: query.categoryId }),
+        ...(query.id !== undefined && { id: parseInt(query.id) }),
+        ...(query.isTrashed === "true" && { isTrashed: true }),
+        ...(query.isTrashed === "false" && { isTrashed: false }),
+      },
     })
   }
 
