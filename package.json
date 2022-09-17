@@ -55,7 +55,7 @@
     "lint": "eslint \"**/*.{js,ts}\"",
     "lint-staged": "lint-staged",
     "prepare": "husky install",
-    "prettier": "prettier --write '**/*.ts'",
+    "prettier": "prettier --write \"**/*.{js,ts,json}\"",
     "remove-images": "docker stop personal-app-api && docker rm personal-app-api && docker rmi personal-app-server_api && docker stop personal-app-database && docker rm personal-app-database && docker rmi personal-app-server_database",
     "start": "nest start",
     "start:debug": "nest start --debug --watch",
