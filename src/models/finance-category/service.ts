@@ -6,9 +6,9 @@ import { FinanceCategoryTypeEntity } from "#models/finance-category-type/entitie
 import { FinanceCategoryTypeService } from "#models/finance-category-type/service"
 
 import { CreateFinanceCategoryDto } from "./dto/create-finance-category.dto"
+import { SearchFinanceCategoriesQueryDto } from "./dto/seach-finance-categories-query.dto"
 import { UpdateFinanceCategoryDto } from "./dto/update-finance-category.dto"
 import { FinanceCategoryEntity } from "./entities/finance-category.entity"
-import { ISearchCategoriesQuery } from "./types"
 
 @Injectable()
 export class FinanceCategoryService {
@@ -18,7 +18,7 @@ export class FinanceCategoryService {
     private financeCategoryTypeService: FinanceCategoryTypeService
   ) {}
 
-  searchCategories(query: ISearchCategoriesQuery): Promise<FinanceCategoryEntity[]> {
+  searchCategories(query: SearchFinanceCategoriesQueryDto): Promise<FinanceCategoryEntity[]> {
     return this.financeCategoryRepository.find({
       order: { id: "ASC", name: "ASC" },
       relations: ["type"],

@@ -3,9 +3,9 @@ import { Body, Controller, Delete, Get, Param, Patch, Post, Query, UseGuards } f
 import { AuthGuard } from "#models/auth/guard"
 
 import { CreateFinanceCategoryDto } from "./dto/create-finance-category.dto"
+import { SearchFinanceCategoriesQueryDto } from "./dto/seach-finance-categories-query.dto"
 import { UpdateFinanceCategoryDto } from "./dto/update-finance-category.dto"
 import { FinanceCategoryService } from "./service"
-import { ISearchCategoriesQuery } from "./types"
 
 @Controller("finances/categories")
 @UseGuards(AuthGuard)
@@ -13,7 +13,7 @@ export class FinanceCategoryController {
   constructor(private financeCategoryService: FinanceCategoryService) {}
 
   @Get("search")
-  searchCategories(@Query() query: ISearchCategoriesQuery) {
+  searchCategories(@Query() query: SearchFinanceCategoriesQueryDto) {
     return this.financeCategoryService.searchCategories(query)
   }
 
