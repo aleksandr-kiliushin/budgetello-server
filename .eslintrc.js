@@ -14,10 +14,33 @@ module.exports = {
   plugins: ["@typescript-eslint/eslint-plugin"],
   root: true,
   rules: {
-    "@typescript-eslint/interface-name-prefix": "off",
-    "@typescript-eslint/explicit-module-boundary-types": "off",
-    "@typescript-eslint/no-var-requires": "off",
+    "arrow-parens": 1,
+    "no-duplicate-imports": 1,
+    "no-restricted-syntax": [
+      1,
+      {
+        selector: "ExportDefaultDeclaration",
+        message: "Prefer named exports.",
+      },
+    ],
+    "no-tabs": 1,
     "@typescript-eslint/explicit-function-return-type": "off",
+    "@typescript-eslint/explicit-module-boundary-types": "off",
+    "@typescript-eslint/naming-convention": [
+      1,
+      {
+        format: ["StrictPascalCase"],
+        prefix: ["I"],
+        selector: "interface",
+      },
+      {
+        format: ["StrictPascalCase"],
+        prefix: ["can", "did", "has", "is", "should", "will"],
+        selector: "variable",
+        types: ["boolean"],
+      },
+    ],
     "@typescript-eslint/no-empty-function": "off",
+    "@typescript-eslint/no-var-requires": "off",
   },
 }

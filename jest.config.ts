@@ -17,4 +17,4 @@ const config: Config.InitialOptions = {
   // },
 }
 
-export default config
+module.exports = config
