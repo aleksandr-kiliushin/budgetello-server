@@ -4,7 +4,7 @@ module.exports = {
     jest: true,
   },
   extends: ["plugin:@typescript-eslint/recommended", "plugin:prettier/recommended"],
-  ignorePatterns: [".eslintrc.js"],
+  ignorePatterns: ["coverage", "dist", "node_modules", "package-lock.json", "src/migrations"],
   parser: "@typescript-eslint/parser",
   parserOptions: {
     project: "tsconfig.eslint.json",
