@@ -1,4 +1,3 @@
 - Add meningful feedback message to 400 and 404 response when a finance category (or something else) not found by ID, or when provided data is invalid.
 - npm run check-types:watch (TS only) -> npm run lint (eslint + TS)
-- Configure husky and list-staged.
 - Remove all `any` and `ts-ignore`.
