@@ -5,6 +5,7 @@ import { AuthGuard } from "#models/auth/guard"
 import { CreateFinanceCategoryDto } from "./dto/create-finance-category.dto"
 import { UpdateFinanceCategoryDto } from "./dto/update-finance-category.dto"
 import { FinanceCategoryService } from "./service"
+import { ISearchCategoriesQuery } from "./types"
 
 @Controller("finances/categories")
 @UseGuards(AuthGuard)
@@ -12,8 +13,7 @@ export class FinanceCategoryController {
   constructor(private financeCategoryService: FinanceCategoryService) {}
 
   @Get("search")
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  searchCategories(@Query() query: any) {
+  searchCategories(@Query() query: ISearchCategoriesQuery) {
     return this.financeCategoryService.searchCategories(query)
   }
 
