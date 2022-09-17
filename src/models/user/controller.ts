@@ -35,7 +35,7 @@ export class UserController {
   @UseGuards(AuthGuard)
   findUser(
     @Request()
-    request: { userId: IUser["id"] },
+    request: Record<string, unknown> & { userId: IUser["id"] },
     @Param("userIdentifier")
     userIdentifier: string
   ) {
@@ -63,7 +63,7 @@ export class UserController {
     @Body()
     updateUserDto: UpdateUserDto,
     @Request()
-    request: { userId: IUser["id"] }
+    request: Record<string, unknown> & { userId: IUser["id"] }
   ) {
     const userToBeUpdatedId = parseInt(id)
     if (request.userId !== userToBeUpdatedId) {
@@ -78,7 +78,7 @@ export class UserController {
     @Param("id")
     id: string,
     @Request()
-    request: { userId: IUser["id"] }
+    request: Record<string, unknown> & { userId: IUser["id"] }
   ) {
     const userToBeDeletedId = parseInt(id)
     if (request.userId !== userToBeDeletedId) {
