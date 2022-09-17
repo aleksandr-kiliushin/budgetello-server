@@ -1,33 +1,4 @@
 {
-  "compilerOptions": {
-    "allowSyntheticDefaultImports": true,
-    "baseUrl": ".",
-    "declaration": true,
-    "emitDecoratorMetadata": true,
-    "exactOptionalPropertyTypes": true,
-    "experimentalDecorators": true,
-    "incremental": true,
-    "module": "commonjs",
-    "noUnusedLocals": true,
-    "noUnusedParameters": false,
-    "noEmitOnError": true,
-    "noImplicitAny": true,
-    "outDir": "./dist",
-    "removeComments": false,
-    "resolveJsonModule": true,
-    "skipLibCheck": true,
-    "strict": true,
-    "strictFunctionTypes": true,
-    "strictNullChecks": true,
-    "strictPropertyInitialization": false,
-    "sourceMap": true,
-    "paths": {
-      "#interfaces/*": ["src/interfaces/*"],
-      "#models/*": ["src/models/*"],
-      "#utils/*": ["src/utils/*"]
-    },
-    "target": "es6"
-  },
-  "files": ["declarations/tests.d.ts"],
-  "include": ["**/*.ts"] // Only this option differs from the main `tsconfig.json` and includes all project files. So that eslint does not claim in tests/ dir files.
+  "extends": "./tsconfig.json",
+  "include": ["./src/**/*.ts"]
 }
