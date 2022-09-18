@@ -61,7 +61,9 @@
     "start:debug": "nest start --debug --watch",
     "start:prod": "node dist/main.js",
     "test": "jest --runInBand",
-    "typeorm": "typeorm-ts-node-esm -d ./src/config/ormConfig.ts"
+    "typeorm": "typeorm-ts-node-esm -d ./src/config/ormConfig.ts",
+    "typeorm:migration:generate": "npm run typeorm -- migration:generate",
+    "typeorm:migration:run": "npm run typeorm -- migration:run"
   },
   "version": "0.0.1"
 }
