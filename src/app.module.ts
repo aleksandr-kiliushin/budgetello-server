@@ -1,5 +1,5 @@
 import { Module } from "@nestjs/common"
-import { TypeOrmModule } from "@nestjs/typeorm"
+import { SequelizeModule } from "@nestjs/sequelize"
 
 import { AuthModule } from "#models/auth/module"
 import { FinanceCategoryTypeModule } from "#models/finance-category-type/module"
@@ -11,7 +11,7 @@ import { UserModule } from "./models/user/module"
 
 @Module({
   imports: [
-    TypeOrmModule.forRoot(ormConfig),
+    SequelizeModule.forRoot(ormConfig),
     AuthModule,
     FinanceCategoryModule,
     FinanceCategoryTypeModule,
