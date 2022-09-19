@@ -1,12 +1,13 @@
 import { TypeOrmModuleOptions } from "@nestjs/typeorm"
 import { DataSource } from "typeorm"
 
+const path = require("path")
+
 export const ormConfig: TypeOrmModuleOptions = {
   database: process.env.DATABASE_NAME ?? "personal_app_db",
-  dropSchema: true,
-  entities: [__dirname, "dist/**/*.entity.js"],
-  host: process.env.DATABASE_HOST ?? "personal-app-database", // Name of database service in compose.dev.yml.
-  migrations: [__dirname + "dist/migrations/*.js"],
+  entities: [path.join(__dirname, "..", "**", "*.entity.js")],
+  host: process.env.DATABASE_HOST ?? "localhost", // Name of database service in compose.dev.yml.
+  migrations: ["dist/migrations/*.js"],
   migrationsTableName: "migrations",
   password: process.env.POSTGRES_PASSWORD ?? "123",
   port: 5432,
@@ -18,6 +19,4 @@ export const ormConfig: TypeOrmModuleOptions = {
 
 export const dataSource = new DataSource({
   ...ormConfig,
-  host:
-    process.env.DATABASE_HOST !== undefined && process.env.MODE === "prod" ? process.env.DATABASE_HOST : "localhost", // For TypeORM CLI to be able to run migrations when db is inside a docker container (not exactly).
 })

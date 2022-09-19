@@ -7,7 +7,8 @@
     "exactOptionalPropertyTypes": true,
     "experimentalDecorators": true,
     "incremental": true,
-    "module": "commonjs",
+    "module": "CommonJS",
+    "moduleResolution": "Node",
     "noUnusedLocals": true,
     "noUnusedParameters": false,
     "noEmitOnError": true,
@@ -29,5 +30,5 @@
     "target": "es6"
   },
   "files": ["declarations/tests.d.ts"],
-  "include": ["./src/**/*.ts"]
+  "include": ["src"]
 }

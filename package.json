@@ -51,9 +51,12 @@
     "check-types:watch": "tsc --project tsconfig.eslint.json --noEmit --watch",
     "dev": "rm -rf ./dist && nest start --watch",
     "dev:db-and-api": "rm -rf ./dist && docker-compose -f ./compose.dev.yml up",
-    "init-db": "(echo \"bash /var/app/init-db-1.sh\" | docker exec -i personal-app-database bash;) && (npm run migration:up) && (echo \"bash /var/app/init-db-2.sh\" | docker exec -i personal-app-database bash;)",
+    "init-db": "(echo \"bash /var/app/init-db-1.sh\" | docker exec -i personal-app-database bash;) && npm run migration:up && (echo \"bash /var/app/init-db-2.sh\" | docker exec -i personal-app-database bash;)",
     "lint": "eslint \"**/*.{js,ts}\" --max-warnings=0",
     "lint-staged": "lint-staged",
+    "migration:generate": "node --loader ts-node/esm ./node_modules/.bin/typeorm migration:generate -d ./src/config/ormConfig.ts",
+    "migration:up": "node --loader ts-node/esm ./node_modules/.bin/typeorm migration:run -d ./src/config/ormConfig.ts",
+    "migration:down": "node --loader ts-node/esm ./node_modules/.bin/typeorm migration:revert -d ./src/config/ormConfig.ts",
     "prepare": "husky install",
     "prettier": "prettier --write \"**/*.{js,ts,json}\"",
     "remove-images": "docker stop personal-app-api && docker rm personal-app-api && docker rmi personal-app-server_api && docker stop personal-app-database && docker rm personal-app-database && docker rmi personal-app-server_database",
@@ -61,10 +64,7 @@
     "start:debug": "nest start --debug --watch",
     "start:prod": "node dist/main.js",
     "test": "jest --runInBand",
-    "typeorm": "typeorm-ts-node-esm -d ./src/config/ormConfig.ts",
-    "migration:generate": "node --loader ts-node/esm ./node_modules/.bin/typeorm migration:generate -d ./src/config/ormConfig.ts",
-    "migration:up": "node --loader ts-node/esm ./node_modules/.bin/typeorm migration:run -d ./src/config/ormConfig.ts",
-    "migration:down": "node --loader ts-node/esm ./node_modules/.bin/typeorm migration:revert -d ./src/config/ormConfig.ts"
+    "typeorm": "typeorm-ts-node-esm -d ./src/config/ormConfig.ts"
   },
   "version": "0.0.1"
 }
