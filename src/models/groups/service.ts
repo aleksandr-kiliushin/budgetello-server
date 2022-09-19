@@ -1,7 +1,8 @@
 import { Injectable, NotFoundException } from "@nestjs/common"
 import { InjectRepository } from "@nestjs/typeorm"
-import { Repository } from "typeorm"
+import { In, Repository } from "typeorm"
 
+import { SearchGroupsQueryDto } from "./dto/search-groups-query.dto"
 import { GroupEntity } from "./entities/group.entity"
 
 @Injectable()
@@ -10,6 +11,15 @@ export class GroupsService {
     @InjectRepository(GroupEntity)
     private groupsRepository: Repository<GroupEntity>
   ) {}
+
+  search(query: SearchGroupsQueryDto): Promise<GroupEntity[]> {
+    return this.groupsRepository.find({
+      relations: { subject: true, users: true },
+      where: {
+        ...(query.id !== undefined && { id: In(query.id.split(",")) }),
+      },
+    })
+  }
 
   async findById(id: GroupEntity["id"]): Promise<GroupEntity> {
     const group = await this.groupsRepository.findOne({

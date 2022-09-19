@@ -63,9 +63,9 @@ psql personal_app_db postgres << EOF
                               ('habits'  );
 EOF
 psql personal_app_db postgres << EOF
-  INSERT INTO groups (name                , "subjectId")
-  VALUES             ('clever-financiers' , 1          ),
-                     ('beautiful-sportmen', 2          );
+  INSERT INTO groups (name                 , "subjectId")
+  VALUES             ('clever-financiers'  , 1          ),
+                     ('beautiful-sportsmen', 2          );
 EOF
 psql personal_app_db postgres << EOF
   INSERT INTO user_groups_groups ("userId", "groupsId")
