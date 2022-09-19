@@ -15,7 +15,9 @@ export const authorize = async (username: IUser["username"]): Promise<void> => {
   const { authToken } = await authorizationResponse.json()
   if (typeof authToken !== "string") {
     throw new Error(`Authorization failed for the following credentials.
-Username: [${username}], password: [${password}].`)
+Username: [${username}], password: [${password}].
+Response status: ${authorizationResponse.status}
+`)
   }
   globalThis.authToken = authToken
 }
