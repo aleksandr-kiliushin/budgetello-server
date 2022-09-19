@@ -1,4 +1,6 @@
-import { Column, Entity, PrimaryGeneratedColumn } from "typeorm"
+import { Column, Entity, JoinTable, ManyToMany, PrimaryGeneratedColumn } from "typeorm"
+
+import { GroupEntity } from "#models/groups/entities/group.entity"
 
 import { IUser } from "#interfaces/user"
 
@@ -12,4 +14,8 @@ export class UserEntity {
 
   @Column({ type: "varchar" })
   password: IUser["password"]
+
+  @ManyToMany(() => GroupEntity, (group) => group.users)
+  @JoinTable()
+  groups: GroupEntity[]
 }

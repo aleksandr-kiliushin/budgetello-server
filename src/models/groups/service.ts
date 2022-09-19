@@ -12,7 +12,10 @@ export class GroupsService {
   ) {}
 
   async findById(id: GroupEntity["id"]): Promise<GroupEntity> {
-    const group = await this.groupsRepository.findOne({ relations: ["subject"], where: { id } })
+    const group = await this.groupsRepository.findOne({
+      relations: { subject: true, users: true },
+      where: { id },
+    })
     if (group === null) throw new NotFoundException({})
     return group
   }
