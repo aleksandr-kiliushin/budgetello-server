@@ -12,6 +12,7 @@ psql personal_app_db postgres << EOF
   finance_category,
   finance_category_type,
   finance_record,
+  groups_subjects,
   "user"
   CASCADE;
 EOF
@@ -20,6 +21,7 @@ psql personal_app_db postgres << EOF
   ALTER SEQUENCE finance_category_id_seq RESTART WITH 1;
   ALTER SEQUENCE finance_category_type_id_seq RESTART WITH 1;
   ALTER SEQUENCE finance_record_id_seq RESTART WITH 1;
+  ALTER SEQUENCE groups_subjects_id_seq RESTART WITH 1;
   ALTER SEQUENCE user_id_seq RESTART WITH 1;
 EOF
 
@@ -27,8 +29,8 @@ EOF
 
 # Seed database with testing data.
 psql personal_app_db postgres << EOF
-  INSERT INTO "user" (username,        password                                                                                                                          )
-  VALUES             ('john-doe',      '8bd309ffba83c3db9a53142b052468007b'),
+  INSERT INTO "user" (username,        password                                      )
+  VALUES             ('john-doe',      '8bd309ffba83c3db9a53142b052468007b'          ),
                      ('jessica-stark', '8bd912e2fe84cd93c457142a1d7e77136c3bc954f183');
 EOF
 psql personal_app_db postgres << EOF
@@ -52,6 +54,11 @@ psql personal_app_db postgres << EOF
                              (30    , '2022-08-02', FALSE      ,  3          ),
                              (10    , '2022-08-02', FALSE      ,  3          ),
                              (230   , '2022-08-03', FALSE      ,  4          );
+EOF
+psql personal_app_db postgres << EOF
+  INSERT INTO groups_subjects (name      )
+  VALUES                      ('finances'),
+                              ('habits'  );
 EOF
 
 

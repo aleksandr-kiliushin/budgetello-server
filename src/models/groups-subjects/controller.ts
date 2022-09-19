@@ -4,7 +4,7 @@ import { AuthGuard } from "#models/auth/guard"
 
 import { GroupsSubjectsService } from "./service"
 
-@Controller("groups/subjects")
+@Controller("groups-subjects")
 @UseGuards(AuthGuard)
 export class GroupsSubjectsController {
   constructor(private readonly groupsSubjectsService: GroupsSubjectsService) {}
