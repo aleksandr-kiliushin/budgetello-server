@@ -3,7 +3,12 @@ FROM postgres:14.4
 RUN mkdir /var/app/dumps -p
 RUN apt-get update && apt-get upgrade -y
 RUN apt-get install -y curl jq lzop
+RUN curl -sL https://deb.nodesource.com/setup_18.x | bash
+RUN apt-get install nodejs
 
 COPY ./database/*.sh /var/app
+COPY ./dist/config/ormConfig.js /var/app/dist/config/ormConfig.js
+COPY ./dist/migrations /var/app/dist/migrations
+RUN npm --prefix /var/app init -y && npm --prefix /var/app install ts-node@10.9.1 pg@8.8.0 typeorm@0.3.9 @nestjs/typeorm@9.0.1
 
 EXPOSE 5432

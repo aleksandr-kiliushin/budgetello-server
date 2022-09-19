@@ -17,6 +17,4 @@ export const ormConfig: TypeOrmModuleOptions = {
   username: process.env.DATABASE_USERNAME ?? "postgres",
 }
 
-export const dataSource = new DataSource({
-  ...ormConfig,
-})
+export const dataSource = new DataSource(ormConfig)
