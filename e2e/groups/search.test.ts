@@ -27,6 +27,11 @@ describe("Responds with a group found by provided ID", () => {
         ],
       },
     },
+    {
+      url: "/api/finances/categories/666666",
+      responseStatus: 404,
+      responseData: {},
+    },
   ])("group search for: $url", async ({ url, responseStatus, responseData }) => {
     const response = await fetchApi(url)
     expect(response.status).toEqual(responseStatus)
