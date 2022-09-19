@@ -1,6 +1,6 @@
-import { GroupsSubjectsEntity } from "../../../src/models/groups-subjects/entities/groups-subjects.entity"
-import { authorize } from "../../helpers/authorize"
-import { fetchApi } from "../../helpers/fetchApi"
+import { GroupsSubjectsEntity } from "../../src/models/groups-subjects/entities/groups-subjects.entity"
+import { authorize } from "../helpers/authorize"
+import { fetchApi } from "../helpers/fetchApi"
 
 beforeEach(async () => {
   await authorize("john-doe")

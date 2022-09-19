@@ -6,6 +6,7 @@ import { FinanceCategoryTypeModule } from "#models/finance-category-type/module"
 import { FinanceCategoryModule } from "#models/finance-category/module"
 import { FinanceRecordModule } from "#models/finance-record/module"
 import { GroupsSubjectsModule } from "#models/groups-subjects/module"
+import { GroupsModule } from "#models/groups/module"
 
 import { ormConfig } from "./config/ormConfig"
 import { UserModule } from "./models/user/module"
@@ -17,6 +18,7 @@ import { UserModule } from "./models/user/module"
     FinanceCategoryModule,
     FinanceCategoryTypeModule,
     FinanceRecordModule,
+    GroupsModule,
     GroupsSubjectsModule,
     UserModule,
   ],

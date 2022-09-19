@@ -12,6 +12,7 @@ psql personal_app_db postgres << EOF
   finance_category,
   finance_category_type,
   finance_record,
+  groups,
   groups_subjects,
   "user"
   CASCADE;
@@ -21,6 +22,7 @@ psql personal_app_db postgres << EOF
   ALTER SEQUENCE finance_category_id_seq RESTART WITH 1;
   ALTER SEQUENCE finance_category_type_id_seq RESTART WITH 1;
   ALTER SEQUENCE finance_record_id_seq RESTART WITH 1;
+  ALTER SEQUENCE groups_id_seq RESTART WITH 1;
   ALTER SEQUENCE groups_subjects_id_seq RESTART WITH 1;
   ALTER SEQUENCE user_id_seq RESTART WITH 1;
 EOF
@@ -59,6 +61,11 @@ psql personal_app_db postgres << EOF
   INSERT INTO groups_subjects (name      )
   VALUES                      ('finances'),
                               ('habits'  );
+EOF
+psql personal_app_db postgres << EOF
+  INSERT INTO groups (name                , "subjectId")
+  VALUES             ('clever-financiers' , 1          ),
+                     ('beautiful-sportmen', 2          );
 EOF
 
 

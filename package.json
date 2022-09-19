@@ -54,7 +54,7 @@
     "init-db": "npm run build && (echo \"bash /var/app/scripts/init-db-1.sh\" | docker exec -i personal-app-database bash;) && node --loader ts-node/esm ./node_modules/.bin/typeorm migration:run -d ./dist/config/ormConfig.js && (echo \"bash /var/app/scripts/init-db-2.sh\" | docker exec -i personal-app-database bash;)",
     "lint": "eslint \"**/*.{js,ts}\" --max-warnings=0",
     "lint-staged": "lint-staged",
-    "migration:generate": "node --loader ts-node/esm ./node_modules/.bin/typeorm migration:generate -d ./src/config/ormConfig.ts",
+    "migration:generate": "npm run build && node --loader ts-node/esm ./node_modules/.bin/typeorm migration:generate -d ./src/config/ormConfig.ts",
     "migration:up": "node --loader ts-node/esm ./node_modules/.bin/typeorm migration:run -d ./src/config/ormConfig.ts",
     "migration:down": "node --loader ts-node/esm ./node_modules/.bin/typeorm migration:revert -d ./src/config/ormConfig.ts",
     "prepare": "husky install",
