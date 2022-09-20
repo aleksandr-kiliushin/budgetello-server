@@ -1,3 +1,4 @@
+import { GroupEntity } from "../../src/models/groups/entities/group.entity"
 import { authorize } from "../helpers/authorize"
 import { fetchApi } from "../helpers/fetchApi"
 
@@ -52,31 +53,19 @@ describe("Group creating", () => {
       status: 201,
     },
   ])("Group creating case #%#", async ({ payload, response, status }) => {
-    const groupResponse = await fetchApi("/api/groups", {
-      body: JSON.stringify(payload),
-      method: "POST",
-    })
+    const groupResponse = await fetchApi("/api/groups", { body: JSON.stringify(payload), method: "POST" })
     expect(groupResponse.status).toEqual(status)
     expect(await groupResponse.json()).toEqual(response)
   })
 
-  // it("a newly created group is presented in all groups list", async () => {
-  //   await fetchApi("/api/groups", { body: JSON.stringify({ name: "food", typeId: 1 }), method: "POST" })
-  //   const getAllCategoriesResponse = await fetchApi("/api/finances/categories/search")
-  //   expect(await getAllCategoriesResponse.json()).toContainEqual<IFinanceCategory>({
-  //     id: 6,
-  //     name: "food",
-  //     type: { id: 1, name: "expense" },
-  //   })
-  // })
-
-  // it("a newly created category can be found by ID", async () => {
-  //   await fetchApi("/api/finances/categories", { body: JSON.stringify({ name: "food", typeId: 1 }), method: "POST" })
-  //   const getNewlyCreatedCategoryResponse = await fetchApi("/api/finances/categories/6")
-  //   expect(await getNewlyCreatedCategoryResponse.json()).toEqual<IFinanceCategory>({
-  //     id: 6,
-  //     name: "food",
-  //     type: { id: 1, name: "expense" },
-  //   })
-  // })
+  it("a newly created group can be found by ID", async () => {
+    await fetchApi("/api/groups", { body: JSON.stringify({ name: "champions", subjectId: 2 }), method: "POST" })
+    const getNewlyGroupResponse = await fetchApi("/api/groups/3")
+    expect(await getNewlyGroupResponse.json()).toEqual<GroupEntity | unknown>({
+      id: 3,
+      name: "champions",
+      subject: { id: 2, name: "habits" },
+      users: [{ id: 1, username: "john-doe", password: "8bd309ffba83c3db9a53142b052468007b" }],
+    })
+  })
 })
