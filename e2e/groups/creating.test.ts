@@ -11,41 +11,41 @@ describe("Group creating", () => {
     response: Record<string, unknown>
     status: number
   }>([
-    // {
-    //   payload: { name_WITH_A_TYPO: "food", typeId: 1 },
-    //   response: { fields: { name: "Required field." } },
-    //   status: 400,
-    // },
-    // {
-    //   payload: { name: "", typeId: 1 },
-    //   response: { fields: { name: "Required field." } },
-    //   status: 400,
-    // },
-    // {
-    //   payload: { name: "food", typeId_WITH_A_TYPO: 1 },
-    //   response: { fields: { typeId: "Required field." } },
-    //   status: 400,
-    // },
-    // {
-    //   payload: { name: "food", typeId: 1234123 },
-    //   response: { fields: { typeId: "Invalid category type." } },
-    //   status: 400,
-    // },
-    // {
-    //   payload: { name: "education", typeId: 1 },
-    //   response: {
-    //     fields: {
-    //       name: '"education" expense category already exists.',
-    //       typeId: '"education" expense category already exists.',
-    //     },
-    //   },
-    //   status: 400,
-    // },
-    // {
-    //   payload: { name: "education", typeId: 2 },
-    //   response: { id: 6, name: "education", type: { id: 2, name: "income" } },
-    //   status: 201,
-    // },
+    {
+      payload: { name_WITH_A_TYPO: "food", subjectId: 1 },
+      response: { fields: { name: "Required field." } },
+      status: 400,
+    },
+    {
+      payload: { name: "", subjectId: 1 },
+      response: { fields: { name: "Required field." } },
+      status: 400,
+    },
+    {
+      payload: { name: "food", subjectId_WITH_A_TYPO: 1 },
+      response: { fields: { subjectId: "Required field." } },
+      status: 400,
+    },
+    {
+      payload: { name: "food", subjectId: 1234123 },
+      response: { fields: { subjectId: "Invalid subject." } },
+      status: 400,
+    },
+    {
+      payload: { name: "clever-financiers", subjectId: 1 },
+      response: {
+        fields: {
+          name: '"clever-financiers" finances group already exists.',
+          subjectId: '"clever-financiers" finances group already exists.',
+        },
+      },
+      status: 400,
+    },
+    {
+      payload: { name: "champions", subjectId: 2 },
+      response: { id: 3, name: "champions", subject: { id: 2, name: "habits" }, users: [] },
+      status: 201,
+    },
   ])("Group creating case #%#", async ({ payload, response, status }) => {
     const groupResponse = await fetchApi("/api/groups", {
       body: JSON.stringify(payload),

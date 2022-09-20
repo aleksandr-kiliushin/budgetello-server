@@ -1,7 +1,8 @@
-import { Controller, Get, Param, Query, UseGuards } from "@nestjs/common"
+import { Body, Controller, Get, Param, Post, Query, UseGuards } from "@nestjs/common"
 
 import { AuthGuard } from "#models/auth/guard"
 
+import { CreateGroupDto } from "./dto/create-group.dto"
 import { SearchGroupsQueryDto } from "./dto/search-groups-query.dto"
 import { GroupsService } from "./service"
 
@@ -18,5 +19,10 @@ export class GroupsController {
   @Get(":id")
   findById(@Param("id") id: string) {
     return this.groupsService.findById(parseInt(id))
+  }
+
+  @Post()
+  create(@Body() createGroupDto: CreateGroupDto) {
+    return this.groupsService.create(createGroupDto)
   }
 }

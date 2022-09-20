@@ -1,7 +1,11 @@
-import { Injectable, NotFoundException } from "@nestjs/common"
+import { BadRequestException, Injectable, NotFoundException } from "@nestjs/common"
 import { InjectRepository } from "@nestjs/typeorm"
 import { In, Like, Repository } from "typeorm"
 
+import { GroupsSubjectsEntity } from "#models/groups-subjects/entities/groups-subjects.entity"
+import { GroupsSubjectsService } from "#models/groups-subjects/service"
+
+import { CreateGroupDto } from "./dto/create-group.dto"
 import { SearchGroupsQueryDto } from "./dto/search-groups-query.dto"
 import { GroupEntity } from "./entities/group.entity"
 
@@ -9,7 +13,8 @@ import { GroupEntity } from "./entities/group.entity"
 export class GroupsService {
   constructor(
     @InjectRepository(GroupEntity)
-    private groupsRepository: Repository<GroupEntity>
+    private groupsRepository: Repository<GroupEntity>,
+    private groupsSubjectsService: GroupsSubjectsService
   ) {}
 
   search(query: SearchGroupsQueryDto): Promise<GroupEntity[]> {
@@ -30,5 +35,34 @@ export class GroupsService {
     })
     if (group === null) throw new NotFoundException({})
     return group
+  }
+
+  async create(createGroupDto: CreateGroupDto): Promise<GroupEntity> {
+    if (createGroupDto.name === undefined || createGroupDto.name === "") {
+      throw new BadRequestException({ fields: { name: "Required field." } })
+    }
+    if (createGroupDto.subjectId === undefined) {
+      throw new BadRequestException({ fields: { subjectId: "Required field." } })
+    }
+    let subject: GroupsSubjectsEntity | undefined
+    try {
+      subject = await this.groupsSubjectsService.findById(createGroupDto.subjectId)
+    } catch {
+      throw new BadRequestException({ fields: { subjectId: "Invalid subject." } })
+    }
+    const theSameExistingGroup = await this.groupsRepository.findOne({
+      relations: { subject: true },
+      where: { name: createGroupDto.name, subject },
+    })
+    if (theSameExistingGroup !== null) {
+      throw new BadRequestException({
+        fields: {
+          name: `"${theSameExistingGroup.name}" ${theSameExistingGroup.subject.name} group already exists.`,
+          subjectId: `"${theSameExistingGroup.name}" ${theSameExistingGroup.subject.name} group already exists.`,
+        },
+      })
+    }
+    const group = this.groupsRepository.create({ name: createGroupDto.name, subject, users: [] })
+    return this.groupsRepository.save(group)
   }
 }
