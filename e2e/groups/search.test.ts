@@ -22,7 +22,7 @@ describe("Responds with a group found by provided ID", () => {
       },
     },
     {
-      url: "/api/finances/categories/666666",
+      url: "/api/groups/666666",
       responseStatus: 404,
       responseData: {},
     },
@@ -33,7 +33,7 @@ describe("Responds with a group found by provided ID", () => {
   })
 })
 
-describe("Finance categoires search", () => {
+describe("Groups search", () => {
   test.each<{ url: string; searchResult: (GroupEntity | unknown)[] }>([
     {
       url: "/api/groups/search?id=1",
@@ -126,7 +126,7 @@ describe("Finance categoires search", () => {
         },
       ],
     },
-  ])("categories search for: $url", async ({ url, searchResult }) => {
+  ])("groups search for: $url", async ({ url, searchResult }) => {
     const response = await fetchApi(url)
     expect(response.status).toEqual(200)
     expect(await response.json()).toEqual(searchResult)
