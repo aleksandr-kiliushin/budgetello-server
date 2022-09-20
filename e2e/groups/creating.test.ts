@@ -43,7 +43,12 @@ describe("Group creating", () => {
     },
     {
       payload: { name: "champions", subjectId: 2 },
-      response: { id: 3, name: "champions", subject: { id: 2, name: "habits" }, users: [] },
+      response: {
+        id: 3,
+        name: "champions",
+        subject: { id: 2, name: "habits" },
+        users: [{ id: 1, username: "john-doe", password: "8bd309ffba83c3db9a53142b052468007b" }],
+      },
       status: 201,
     },
   ])("Group creating case #%#", async ({ payload, response, status }) => {

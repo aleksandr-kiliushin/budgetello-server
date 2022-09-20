@@ -4,6 +4,9 @@ import { In, Like, Repository } from "typeorm"
 
 import { GroupsSubjectsEntity } from "#models/groups-subjects/entities/groups-subjects.entity"
 import { GroupsSubjectsService } from "#models/groups-subjects/service"
+import { UserService } from "#models/user/service"
+
+import { IUser } from "#interfaces/user"
 
 import { CreateGroupDto } from "./dto/create-group.dto"
 import { SearchGroupsQueryDto } from "./dto/search-groups-query.dto"
@@ -14,7 +17,8 @@ export class GroupsService {
   constructor(
     @InjectRepository(GroupEntity)
     private groupsRepository: Repository<GroupEntity>,
-    private groupsSubjectsService: GroupsSubjectsService
+    private groupsSubjectsService: GroupsSubjectsService,
+    private userService: UserService
   ) {}
 
   search(query: SearchGroupsQueryDto): Promise<GroupEntity[]> {
@@ -37,7 +41,13 @@ export class GroupsService {
     return group
   }
 
-  async create(createGroupDto: CreateGroupDto): Promise<GroupEntity> {
+  async create({
+    authorizedUserId,
+    createGroupDto,
+  }: {
+    authorizedUserId: IUser["id"]
+    createGroupDto: CreateGroupDto
+  }): Promise<GroupEntity> {
     if (createGroupDto.name === undefined || createGroupDto.name === "") {
       throw new BadRequestException({ fields: { name: "Required field." } })
     }
@@ -62,7 +72,8 @@ export class GroupsService {
         },
       })
     }
-    const group = this.groupsRepository.create({ name: createGroupDto.name, subject, users: [] })
+    const authorizedUser = await this.userService.findUser({ id: authorizedUserId })
+    const group = this.groupsRepository.create({ name: createGroupDto.name, subject, users: [authorizedUser] })
     return this.groupsRepository.save(group)
   }
 }

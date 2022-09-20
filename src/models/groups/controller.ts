@@ -1,6 +1,8 @@
-import { Body, Controller, Get, Param, Post, Query, UseGuards } from "@nestjs/common"
+import { Body, Controller, Get, Param, Post, Query, Request, UseGuards } from "@nestjs/common"
 
 import { AuthGuard } from "#models/auth/guard"
+
+import { IUser } from "#interfaces/user"
 
 import { CreateGroupDto } from "./dto/create-group.dto"
 import { SearchGroupsQueryDto } from "./dto/search-groups-query.dto"
@@ -22,7 +24,12 @@ export class GroupsController {
   }
 
   @Post()
-  create(@Body() createGroupDto: CreateGroupDto) {
-    return this.groupsService.create(createGroupDto)
+  create(
+    @Body()
+    createGroupDto: CreateGroupDto,
+    @Request()
+    request: Record<string, unknown> & { userId: IUser["id"] }
+  ) {
+    return this.groupsService.create({ createGroupDto, authorizedUserId: request.userId })
   }
 }
