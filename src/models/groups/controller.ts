@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, Post, Query, Request, UseGuards } from "@nestjs/common"
+import { Body, Controller, Get, Param, Patch, Post, Query, Request, UseGuards } from "@nestjs/common"
 
 import { AuthGuard } from "#models/auth/guard"
 
@@ -6,6 +6,7 @@ import { IUser } from "#interfaces/user"
 
 import { CreateGroupDto } from "./dto/create-group.dto"
 import { SearchGroupsQueryDto } from "./dto/search-groups-query.dto"
+import { UpdateGroupDto } from "./dto/update-finance-category.dto"
 import { GroupsService } from "./service"
 
 @Controller("groups")
@@ -30,6 +31,18 @@ export class GroupsController {
     @Request()
     request: Record<string, unknown> & { userId: IUser["id"] }
   ) {
-    return this.groupsService.create({ createGroupDto, authorizedUserId: request.userId })
+    return this.groupsService.create({ authorizedUserId: request.userId, createGroupDto })
+  }
+
+  @Patch(":id")
+  update(
+    @Param("id")
+    id: string,
+    @Body()
+    updateGroupDto: UpdateGroupDto,
+    @Request()
+    request: Record<string, unknown> & { userId: IUser["id"] }
+  ) {
+    return this.groupsService.update({ authorizedUserId: request.userId, groupId: parseInt(id), updateGroupDto })
   }
 }

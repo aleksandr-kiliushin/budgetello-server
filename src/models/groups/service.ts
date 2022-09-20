@@ -10,6 +10,7 @@ import { IUser } from "#interfaces/user"
 
 import { CreateGroupDto } from "./dto/create-group.dto"
 import { SearchGroupsQueryDto } from "./dto/search-groups-query.dto"
+import { UpdateGroupDto } from "./dto/update-finance-category.dto"
 import { GroupEntity } from "./entities/group.entity"
 
 @Injectable()
@@ -74,6 +75,44 @@ export class GroupsService {
     }
     const authorizedUser = await this.userService.findUser({ id: authorizedUserId })
     const group = this.groupsRepository.create({ name: createGroupDto.name, subject, users: [authorizedUser] })
+    return this.groupsRepository.save(group)
+  }
+
+  async update({
+    authorizedUserId,
+    groupId,
+    updateGroupDto,
+  }: {
+    authorizedUserId: IUser["id"]
+    groupId: GroupEntity["id"]
+    updateGroupDto: UpdateGroupDto
+  }): Promise<GroupEntity> {
+    const group = await this.findById(groupId)
+    if (updateGroupDto.name !== undefined) {
+      if (updateGroupDto.name === "") {
+        throw new BadRequestException({ fields: { name: "Name cannot be empty." } })
+      }
+      group.name = updateGroupDto.name
+    }
+    if (updateGroupDto.subjectId !== undefined) {
+      try {
+        group.subject = await this.groupsSubjectsService.findById(updateGroupDto.subjectId)
+      } catch {
+        throw new BadRequestException({ fields: { subjectId: "Invalid group subject." } })
+      }
+    }
+    const theSameExistingGroup = await this.groupsRepository.findOne({
+      relations: { subject: true },
+      where: { name: group.name, subject: group.subject },
+    })
+    if (theSameExistingGroup !== null) {
+      throw new BadRequestException({
+        fields: {
+          name: `"${theSameExistingGroup.name}" ${theSameExistingGroup.subject.name} group already exists.`,
+          subjectId: `"${theSameExistingGroup.name}" ${theSameExistingGroup.subject.name} group already exists.`,
+        },
+      })
+    }
     return this.groupsRepository.save(group)
   }
 }
