@@ -1,6 +1,6 @@
 import { Injectable, NotFoundException } from "@nestjs/common"
 import { InjectRepository } from "@nestjs/typeorm"
-import { In, Repository } from "typeorm"
+import { In, Like, Repository } from "typeorm"
 
 import { SearchGroupsQueryDto } from "./dto/search-groups-query.dto"
 import { GroupEntity } from "./entities/group.entity"
@@ -18,6 +18,7 @@ export class GroupsService {
       where: {
         ...(query.id !== undefined && { id: In(query.id.split(",")) }),
         ...(query.subjectId !== undefined && { id: In(query.subjectId.split(",")) }),
+        ...(query.name !== undefined && { name: Like(`%${query.name}%`) }),
       },
     })
   }

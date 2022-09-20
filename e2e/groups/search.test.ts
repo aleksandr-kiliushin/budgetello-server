@@ -104,6 +104,28 @@ describe("Finance categoires search", () => {
         },
       ],
     },
+    {
+      url: "/api/groups/search?name=finan",
+      searchResult: [
+        {
+          id: 1,
+          name: "clever-financiers",
+          subject: { id: 1, name: "finances" },
+          users: [{ id: 1, username: "john-doe", password: "8bd309ffba83c3db9a53142b052468007b" }],
+        },
+      ],
+    },
+    {
+      url: "/api/groups/search?name=finan&id=1&subjectId=1",
+      searchResult: [
+        {
+          id: 1,
+          name: "clever-financiers",
+          subject: { id: 1, name: "finances" },
+          users: [{ id: 1, username: "john-doe", password: "8bd309ffba83c3db9a53142b052468007b" }],
+        },
+      ],
+    },
   ])("categories search for: $url", async ({ url, searchResult }) => {
     const response = await fetchApi(url)
     expect(response.status).toEqual(200)
