@@ -17,6 +17,7 @@ export class GroupsService {
       relations: { subject: true, users: true },
       where: {
         ...(query.id !== undefined && { id: In(query.id.split(",")) }),
+        ...(query.subjectId !== undefined && { id: In(query.subjectId.split(",")) }),
       },
     })
   }
