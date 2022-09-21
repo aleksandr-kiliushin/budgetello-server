@@ -55,7 +55,7 @@ describe("Groups updating", () => {
 
   it("updated groups can be found by ID", async () => {
     await fetchApi("/api/groups/1", { body: JSON.stringify({ name: "champions", subjectId: 2 }), method: "PATCH" })
-    const response = await fetchApi("/api/groups/2")
+    const response = await fetchApi("/api/groups/1")
     expect(await response.json()).toEqual<GroupEntity | unknown>({
       id: 1,
       name: "champions",
