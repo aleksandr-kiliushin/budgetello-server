@@ -1,3 +1,2 @@
 - Add meningful feedback message to 400 and 404 response when a finance category (or something else) not found by ID, or when provided data is invalid.
-- Setup docker so that it is no longer needed to rebuild DB image to see scripts and migration changes.
 - Add groups admins, who can update and delete groups.
