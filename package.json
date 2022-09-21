@@ -51,7 +51,7 @@
     "check-types:watch": "tsc --project tsconfig.eslint.json --noEmit --watch",
     "dev": "rm -rf ./dist && nest start --watch",
     "dev:db-and-api": "rm -rf ./dist && npm run build && docker-compose -f ./compose.dev.yml up",
-    "init-db": "npm run build && (echo \"bash /var/app/scripts/init-db-1.sh\" | docker exec -i personal-app-database bash;) && node --loader ts-node/esm ./node_modules/.bin/typeorm migration:run -d ./dist/config/ormConfig.js && (echo \"bash /var/app/scripts/init-db-2.sh\" | docker exec -i personal-app-database bash;)",
+    "init-db": "npm run build && (echo \"bash /var/app/database/scripts/init-db-1.sh\" | docker exec -i personal-app-database bash;) && (echo npm --prefix /var/app run migration:up | docker exec -i personal-app-database bash;) && (echo \"bash /var/app/database/scripts/init-db-2.sh\" | docker exec -i personal-app-database bash;)",
     "lint": "eslint \"**/!(migrations)/*.{js,ts}\" --max-warnings=0",
     "lint-staged": "lint-staged",
     "migration:generate": "npm run build && node --loader ts-node/esm ./node_modules/.bin/typeorm migration:generate -d ./src/config/ormConfig.ts",

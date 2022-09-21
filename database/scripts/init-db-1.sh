@@ -1,11 +1,11 @@
 #!/bin/bash
 
 # Loading dump list from remote server to the container.
-curl -u :$REMOTE_API_KEY --output /var/app/dumps/dumps.json https://api.elephantsql.com/api/backup?db=$REMOTE_DATABASE_NAME;
+curl -u :$REMOTE_API_KEY --output /var/dumps.json https://api.elephantsql.com/api/backup?db=$REMOTE_DATABASE_NAME;
 # Get the latest date from the dumps array.
-DUMP_URL=$(jq 'max_by(.backup_date) | .url' /var/app/dumps/dumps.json -r);
+DUMP_URL=$(jq 'max_by(.backup_date) | .url' /var/dumps.json -r);
 # Downloading the last dump.
-curl $DUMP_URL --output /var/app/dumps/dump.lzo
+curl $DUMP_URL --output /var/dump.lzo
 
 
 
@@ -16,4 +16,4 @@ psql -U postgres -c "CREATE DATABASE personal_app_db ENCODING 'UTF-8';";
 
 
 # Seed the database with the downloaded dump data.
-lzop -cd /var/app/dumps/dump.lzo | psql -U postgres personal_app_db;
+lzop -cd /var/dump.lzo | psql -U postgres personal_app_db;
