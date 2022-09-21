@@ -39,6 +39,7 @@ describe("Groups updating", () => {
     {
       payload: { name: "champions", subjectId: 2 },
       response: {
+        admins: [{ id: 1, username: "john-doe", password: "8bd309ffba83c3db9a53142b052468007b" }],
         id: 1,
         members: [{ id: 1, username: "john-doe", password: "8bd309ffba83c3db9a53142b052468007b" }],
         name: "champions",
@@ -57,6 +58,7 @@ describe("Groups updating", () => {
     await fetchApi("/api/groups/1", { body: JSON.stringify({ name: "champions", subjectId: 2 }), method: "PATCH" })
     const response = await fetchApi("/api/groups/1")
     expect(await response.json()).toEqual<GroupEntity | unknown>({
+      admins: [{ id: 1, username: "john-doe", password: "8bd309ffba83c3db9a53142b052468007b" }],
       id: 1,
       members: [{ id: 1, username: "john-doe", password: "8bd309ffba83c3db9a53142b052468007b" }],
       name: "champions",

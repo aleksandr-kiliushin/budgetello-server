@@ -73,6 +73,11 @@ psql personal_app_db postgres << EOF
                                  (1       , 2         ),
                                  (2       , 2         );
 EOF
+psql personal_app_db postgres << EOF
+  INSERT INTO user_administrated_groups_groups ("userId", "groupsId")
+  VALUES                                       (1       , 1         ),
+                                               (2       , 2         );
+EOF
 
 
 

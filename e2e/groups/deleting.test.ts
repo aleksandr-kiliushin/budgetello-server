@@ -11,6 +11,7 @@ describe("Group deleting", () => {
     const response = await fetchApi("/api/groups/1", { method: "DELETE" })
     expect(response.status).toEqual(200)
     expect(await response.json()).toEqual<GroupEntity | unknown>({
+      admins: [{ id: 1, username: "john-doe", password: "8bd309ffba83c3db9a53142b052468007b" }],
       id: 1,
       name: "clever-financiers",
       subject: { id: 1, name: "finances" },
@@ -23,12 +24,13 @@ describe("Group deleting", () => {
     const response = await fetchApi("/api/groups/search")
     expect(await response.json()).toEqual<(GroupEntity | unknown)[]>([
       {
+        admins: [{ id: 2, username: "jessica-stark", password: "8bd912e2fe84cd93c457142a1d7e77136c3bc954f183" }],
         id: 2,
         name: "beautiful-sportsmen",
         subject: { id: 2, name: "habits" },
         members: [
-          { id: 1, username: "john-doe", password: "8bd309ffba83c3db9a53142b052468007b" },
           { id: 2, username: "jessica-stark", password: "8bd912e2fe84cd93c457142a1d7e77136c3bc954f183" },
+          { id: 1, username: "john-doe", password: "8bd309ffba83c3db9a53142b052468007b" },
         ],
       },
     ])

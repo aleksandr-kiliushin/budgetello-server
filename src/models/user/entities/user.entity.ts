@@ -9,6 +9,10 @@ export class UserEntity {
   @PrimaryGeneratedColumn({ type: "int" })
   id: IUser["id"]
 
+  @ManyToMany(() => GroupEntity, (group) => group.admins, { onDelete: "CASCADE" })
+  @JoinTable()
+  administratedGroups: GroupEntity[]
+
   @Column({ type: "varchar" })
   username: IUser["username"]
 

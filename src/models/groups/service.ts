@@ -24,7 +24,7 @@ export class GroupsService {
 
   search(query: SearchGroupsQueryDto): Promise<GroupEntity[]> {
     return this.groupsRepository.find({
-      relations: { members: true, subject: true },
+      relations: { admins: true, members: true, subject: true },
       where: {
         ...(query.id !== undefined && { id: In(query.id.split(",")) }),
         ...(query.subjectId !== undefined && { id: In(query.subjectId.split(",")) }),
@@ -35,7 +35,7 @@ export class GroupsService {
 
   async findById(id: GroupEntity["id"]): Promise<GroupEntity> {
     const group = await this.groupsRepository.findOne({
-      relations: { members: true, subject: true },
+      relations: { admins: true, members: true, subject: true },
       where: { id },
     })
     if (group === null) throw new NotFoundException({})
@@ -56,6 +56,7 @@ export class GroupsService {
       throw new BadRequestException({ fields: { subjectId: "Required field." } })
     }
     let subject: GroupsSubjectsEntity | undefined
+    // TODO: Refactor with .catch() method.
     try {
       subject = await this.groupsSubjectsService.findById(createGroupDto.subjectId)
     } catch {
@@ -74,7 +75,12 @@ export class GroupsService {
       })
     }
     const authorizedUser = await this.userService.findUser({ id: authorizedUserId })
-    const group = this.groupsRepository.create({ members: [authorizedUser], name: createGroupDto.name, subject })
+    const group = this.groupsRepository.create({
+      admins: [authorizedUser],
+      members: [authorizedUser],
+      name: createGroupDto.name,
+      subject,
+    })
     return this.groupsRepository.save(group)
   }
 

@@ -8,6 +8,9 @@ export class GroupEntity {
   @PrimaryGeneratedColumn({ type: "int" })
   id: number
 
+  @ManyToMany(() => UserEntity, (user) => user.administratedGroups, { onDelete: "CASCADE" })
+  admins: UserEntity[]
+
   @Column({ type: "varchar" })
   name: string
 
