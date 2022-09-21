@@ -15,7 +15,7 @@ export class UserEntity {
   @Column({ type: "varchar" })
   password: IUser["password"]
 
-  @ManyToMany(() => GroupEntity, (group) => group.users)
+  @ManyToMany(() => GroupEntity, (group) => group.users, { onDelete: "CASCADE" })
   @JoinTable()
   groups: GroupEntity[]
 }

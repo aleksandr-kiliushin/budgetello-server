@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, Patch, Post, Query, Request, UseGuards } from "@nestjs/common"
+import { Body, Controller, Delete, Get, Param, Patch, Post, Query, Request, UseGuards } from "@nestjs/common"
 
 import { AuthGuard } from "#models/auth/guard"
 
@@ -44,5 +44,15 @@ export class GroupsController {
     request: Record<string, unknown> & { userId: IUser["id"] }
   ) {
     return this.groupsService.update({ authorizedUserId: request.userId, groupId: parseInt(id), updateGroupDto })
+  }
+
+  @Delete(":id")
+  delete(
+    @Param("id")
+    id: string,
+    @Request()
+    request: Record<string, unknown> & { userId: IUser["id"] }
+  ) {
+    return this.groupsService.delete({ authorizedUserId: request.userId, groupId: parseInt(id) })
   }
 }

@@ -14,6 +14,6 @@ export class GroupEntity {
   @ManyToOne(() => GroupsSubjectsEntity)
   subject: GroupsSubjectsEntity
 
-  @ManyToMany(() => UserEntity, (user) => user.groups)
+  @ManyToMany(() => UserEntity, (user) => user.groups, { onDelete: "CASCADE" })
   users: UserEntity[]
 }

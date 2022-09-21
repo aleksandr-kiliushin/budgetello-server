@@ -115,4 +115,16 @@ export class GroupsService {
     }
     return this.groupsRepository.save(group)
   }
+
+  async delete({
+    authorizedUserId,
+    groupId,
+  }: {
+    authorizedUserId: IUser["id"]
+    groupId: GroupEntity["id"]
+  }): Promise<GroupEntity> {
+    const group = await this.findById(groupId)
+    await this.groupsRepository.delete(groupId)
+    return group
+  }
 }
