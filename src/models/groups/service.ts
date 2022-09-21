@@ -24,7 +24,7 @@ export class GroupsService {
 
   search(query: SearchGroupsQueryDto): Promise<GroupEntity[]> {
     return this.groupsRepository.find({
-      relations: { subject: true, users: true },
+      relations: { members: true, subject: true },
       where: {
         ...(query.id !== undefined && { id: In(query.id.split(",")) }),
         ...(query.subjectId !== undefined && { id: In(query.subjectId.split(",")) }),
@@ -35,7 +35,7 @@ export class GroupsService {
 
   async findById(id: GroupEntity["id"]): Promise<GroupEntity> {
     const group = await this.groupsRepository.findOne({
-      relations: { subject: true, users: true },
+      relations: { members: true, subject: true },
       where: { id },
     })
     if (group === null) throw new NotFoundException({})
@@ -74,7 +74,7 @@ export class GroupsService {
       })
     }
     const authorizedUser = await this.userService.findUser({ id: authorizedUserId })
-    const group = this.groupsRepository.create({ name: createGroupDto.name, subject, users: [authorizedUser] })
+    const group = this.groupsRepository.create({ members: [authorizedUser], name: createGroupDto.name, subject })
     return this.groupsRepository.save(group)
   }
 

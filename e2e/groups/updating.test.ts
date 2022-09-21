@@ -40,9 +40,9 @@ describe("Groups updating", () => {
       payload: { name: "champions", subjectId: 2 },
       response: {
         id: 1,
+        members: [{ id: 1, username: "john-doe", password: "8bd309ffba83c3db9a53142b052468007b" }],
         name: "champions",
         subject: { id: 2, name: "habits" },
-        users: [{ id: 1, username: "john-doe", password: "8bd309ffba83c3db9a53142b052468007b" }],
       },
       status: 200,
       url: "/api/groups/1",
@@ -58,9 +58,9 @@ describe("Groups updating", () => {
     const response = await fetchApi("/api/groups/1")
     expect(await response.json()).toEqual<GroupEntity | unknown>({
       id: 1,
+      members: [{ id: 1, username: "john-doe", password: "8bd309ffba83c3db9a53142b052468007b" }],
       name: "champions",
       subject: { id: 2, name: "habits" },
-      users: [{ id: 1, username: "john-doe", password: "8bd309ffba83c3db9a53142b052468007b" }],
     })
   })
 })

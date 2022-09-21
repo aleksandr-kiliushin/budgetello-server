@@ -11,9 +11,9 @@ export class GroupEntity {
   @Column({ type: "varchar" })
   name: string
 
+  @ManyToMany(() => UserEntity, (user) => user.groups, { onDelete: "CASCADE" })
+  members: UserEntity[]
+
   @ManyToOne(() => GroupsSubjectsEntity)
   subject: GroupsSubjectsEntity
-
-  @ManyToMany(() => UserEntity, (user) => user.groups, { onDelete: "CASCADE" })
-  users: UserEntity[]
 }
