@@ -178,8 +178,7 @@ export class GroupsService {
     }
     if (group.admins.length === 1 && group.admins.every((admin) => admin.id === authorizedUserId)) {
       throw new BadRequestException({
-        message:
-          "You can't leave a group where you are the only admin. First, give admin role to another member, or delete the group completely.",
+        message: "You can't leave a group where you are the only admin. You can delete the group.",
       })
     }
     group.members = group.members.filter((member) => member.id !== authorizedUserId)

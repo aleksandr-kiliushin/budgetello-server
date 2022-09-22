@@ -51,8 +51,7 @@ describe("Participating in a group", () => {
     {
       authorizedUserUsername: "jessica-stark",
       responseBody: {
-        message:
-          "You can't leave a group where you are the only admin. First, give admin role to another member, or delete the group completely.",
+        message: "You can't leave a group where you are the only admin. You can delete the group.",
       },
       status: 400,
       url: "/api/groups/2/participating",
