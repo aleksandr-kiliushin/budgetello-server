@@ -7,7 +7,7 @@ describe("Group deleting", () => {
     await authorize("jessica-stark")
     const response = await fetchApi("/api/groups/1", { method: "DELETE" })
     expect(response.status).toEqual(403)
-    expect(await response.json()).toEqual({ message: "You are not allowed to make this action." })
+    expect(await response.json()).toEqual({ message: "You are not allowed to to this action." })
   })
 
   it("returns a correct response after deleting", async () => {

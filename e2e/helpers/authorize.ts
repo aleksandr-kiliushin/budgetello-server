@@ -3,7 +3,9 @@ const passwordByUsername = {
   "jessica-stark": "jessica-stark-password",
 }
 
-export const authorize = async (username: keyof typeof passwordByUsername): Promise<void> => {
+export type ITestUserUsername = keyof typeof passwordByUsername
+
+export const authorize = async (username: ITestUserUsername): Promise<void> => {
   const password = passwordByUsername[username]
   const authorizationResponse = await fetch("http://localhost:3080/api/login", {
     body: JSON.stringify({ username, password }),

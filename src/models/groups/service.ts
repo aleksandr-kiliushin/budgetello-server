@@ -100,6 +100,12 @@ export class GroupsService {
     updateGroupDto: UpdateGroupDto
   }): Promise<GroupEntity> {
     const group = await this.findById(groupId)
+    if (group.admins.every((admin) => admin.id !== authorizedUserId)) {
+      throw new ForbiddenException({ message: "You are not allowed to to this action." })
+    }
+    if (updateGroupDto.name === undefined && updateGroupDto.subjectId === undefined) {
+      return group
+    }
     if (updateGroupDto.name !== undefined) {
       if (updateGroupDto.name === "") {
         throw new BadRequestException({ fields: { name: "Name cannot be empty." } })
@@ -137,7 +143,7 @@ export class GroupsService {
   }): Promise<GroupEntity> {
     const group = await this.findById(groupId)
     if (group.admins.every((admin) => admin.id !== authorizedUserId)) {
-      throw new ForbiddenException({ message: "You are not allowed to make this action." })
+      throw new ForbiddenException({ message: "You are not allowed to to this action." })
     }
     await this.groupsRepository.delete(groupId)
     return group
