@@ -1,11 +1,9 @@
-import { IUser } from "../../src/interfaces/user"
-
-const passwordByUsername: Record<IUser["username"], IUser["password"]> = {
+const passwordByUsername = {
   "john-doe": "john-doe-password",
   "jessica-stark": "jessica-stark-password",
 }
 
-export const authorize = async (username: IUser["username"]): Promise<void> => {
+export const authorize = async (username: keyof typeof passwordByUsername): Promise<void> => {
   const password = passwordByUsername[username]
   const authorizationResponse = await fetch("http://localhost:3080/api/login", {
     body: JSON.stringify({ username, password }),

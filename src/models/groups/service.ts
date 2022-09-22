@@ -1,4 +1,4 @@
-import { BadRequestException, Injectable, NotFoundException } from "@nestjs/common"
+import { BadRequestException, ForbiddenException, Injectable, NotFoundException } from "@nestjs/common"
 import { InjectRepository } from "@nestjs/typeorm"
 import { In, Like, Repository } from "typeorm"
 
@@ -136,6 +136,9 @@ export class GroupsService {
     groupId: GroupEntity["id"]
   }): Promise<GroupEntity> {
     const group = await this.findById(groupId)
+    if (group.admins.every((admin) => admin.id !== authorizedUserId)) {
+      throw new ForbiddenException({ message: "You are not allowed to make this action." })
+    }
     await this.groupsRepository.delete(groupId)
     return group
   }

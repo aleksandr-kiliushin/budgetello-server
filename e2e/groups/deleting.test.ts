@@ -2,12 +2,16 @@ import { GroupEntity } from "../../src/models/groups/entities/group.entity"
 import { authorize } from "../helpers/authorize"
 import { fetchApi } from "../helpers/fetchApi"
 
-beforeEach(async () => {
-  await authorize("john-doe")
-})
-
 describe("Group deleting", () => {
   it("returns a correct response after deleting", async () => {
+    await authorize("jessica-stark")
+    const response = await fetchApi("/api/groups/1", { method: "DELETE" })
+    expect(response.status).toEqual(403)
+    expect(await response.json()).toEqual({ message: "You are not allowed to make this action." })
+  })
+
+  it("returns a correct response after deleting", async () => {
+    await authorize("john-doe")
     const response = await fetchApi("/api/groups/1", { method: "DELETE" })
     expect(response.status).toEqual(200)
     expect(await response.json()).toEqual<GroupEntity | unknown>({
@@ -20,6 +24,7 @@ describe("Group deleting", () => {
   })
 
   it("the deleted group is not presented in all categories list", async () => {
+    await authorize("john-doe")
     await fetchApi("/api/groups/1", { method: "DELETE" })
     const response = await fetchApi("/api/groups/search")
     expect(await response.json()).toEqual<(GroupEntity | unknown)[]>([
