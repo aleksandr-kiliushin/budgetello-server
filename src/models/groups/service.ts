@@ -148,4 +148,20 @@ export class GroupsService {
     await this.groupsRepository.delete(groupId)
     return group
   }
+
+  async join({
+    authorizedUserId,
+    groupId,
+  }: {
+    authorizedUserId: IUser["id"]
+    groupId: GroupEntity["id"]
+  }): Promise<GroupEntity> {
+    const group = await this.findById(groupId)
+    if (group.members.some((member) => member.id === authorizedUserId)) {
+      throw new BadRequestException({ message: "You are already a member of this group." })
+    }
+    const authorizedUser = await this.userService.findUser({ id: authorizedUserId })
+    group.members = [...group.members, authorizedUser]
+    return this.groupsRepository.save(group)
+  }
 }

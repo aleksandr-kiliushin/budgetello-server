@@ -55,4 +55,14 @@ export class GroupsController {
   ) {
     return this.groupsService.delete({ authorizedUserId: request.userId, groupId: parseInt(id) })
   }
+
+  @Post(":id/participating")
+  join(
+    @Param("id")
+    id: string,
+    @Request()
+    request: Record<string, unknown> & { userId: IUser["id"] }
+  ) {
+    return this.groupsService.join({ authorizedUserId: request.userId, groupId: parseInt(id) })
+  }
 }
