@@ -176,6 +176,12 @@ export class GroupsService {
     if (group.members.every((member) => member.id !== authorizedUserId)) {
       throw new BadRequestException({ message: "You can't leave this group because you are not it's member." })
     }
+    if (group.admins.length === 1 && group.admins.every((admin) => admin.id === authorizedUserId)) {
+      throw new BadRequestException({
+        message:
+          "You can't leave a group where you are the only admin. First, give admin role to another member, or delete the group completely.",
+      })
+    }
     group.members = group.members.filter((member) => member.id !== authorizedUserId)
     return this.groupsRepository.save(group)
   }
