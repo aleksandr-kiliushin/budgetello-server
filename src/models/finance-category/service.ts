@@ -21,7 +21,7 @@ export class FinanceCategoryService {
   searchCategories(query: SearchFinanceCategoriesQueryDto): Promise<FinanceCategoryEntity[]> {
     return this.financeCategoryRepository.find({
       order: { id: "ASC", name: "ASC" },
-      relations: ["type"],
+      relations: { type: true },
       where: {
         ...(query.id === undefined ? {} : { id: In(query.id.split(",")) }),
       },
@@ -47,7 +47,7 @@ export class FinanceCategoryService {
       throw new BadRequestException({ fields: { typeId: "Invalid category type." } })
     }
     const theSameExistingCategory = await this.financeCategoryRepository.findOne({
-      relations: ["type"],
+      relations: { type: true },
       where: { name, type },
     })
     if (theSameExistingCategory !== null) {
@@ -80,7 +80,7 @@ export class FinanceCategoryService {
       category.name = name
     }
     const theSameExistingCategory = await this.financeCategoryRepository.findOne({
-      relations: ["type"],
+      relations: { type: true },
       where: { name: category.name, type: category.type },
     })
     if (theSameExistingCategory !== null) {

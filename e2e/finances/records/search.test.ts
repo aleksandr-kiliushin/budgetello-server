@@ -84,6 +84,57 @@ describe("Finance records search", () => {
       ],
     },
     {
+      url: "/api/finances/records/search?groupId=1,666666",
+      searchResult: [
+        {
+          amount: 230,
+          category: { id: 4, name: "gifts", type: { id: 2, name: "income" } },
+          date: "2022-08-03",
+          id: 6,
+          isTrashed: false,
+        },
+        {
+          amount: 10,
+          category: { id: 3, name: "gifts", type: { id: 1, name: "expense" } },
+          date: "2022-08-02",
+          id: 5,
+          isTrashed: false,
+        },
+        {
+          amount: 30,
+          category: { id: 3, name: "gifts", type: { id: 1, name: "expense" } },
+          date: "2022-08-02",
+          id: 4,
+          isTrashed: false,
+        },
+        {
+          amount: 25,
+          category: { id: 2, name: "education", type: { id: 1, name: "expense" } },
+          date: "2022-08-01",
+          id: 3,
+          isTrashed: false,
+        },
+        {
+          amount: 400,
+          category: { id: 2, name: "education", type: { id: 1, name: "expense" } },
+          date: "2022-08-01",
+          id: 2,
+          isTrashed: true,
+        },
+        {
+          amount: 100,
+          category: { id: 1, name: "clothes", type: { id: 1, name: "expense" } },
+          date: "2022-08-01",
+          id: 1,
+          isTrashed: true,
+        },
+      ],
+    },
+    {
+      url: "/api/finances/records/search?groupId=666666",
+      searchResult: [],
+    },
+    {
       url: "/api/finances/records/search?orderingByDate=ASC&orderingById=ASC&isTrashed=false&skip=1&take=2",
       searchResult: [
         {

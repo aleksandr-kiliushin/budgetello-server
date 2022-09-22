@@ -14,7 +14,9 @@ psql personal_app_db postgres << EOF
   finance_record,
   groups,
   groups_subjects,
-  "user"
+  "user",
+  user_administrated_groups_groups,
+  user_groups_groups
   CASCADE;
 EOF
 # Reset tables primary key sequence.
@@ -36,28 +38,6 @@ psql personal_app_db postgres << EOF
                      ('jessica-stark', '8bd912e2fe84cd93c457142a1d7e77136c3bc954f183');
 EOF
 psql personal_app_db postgres << EOF
-  INSERT INTO finance_category_type (name     )
-  VALUES                            ('expense'),
-                                    ('income' );
-EOF
-psql personal_app_db postgres << EOF
-  INSERT INTO finance_category (name       , "typeId")
-  VALUES                       ('clothes'  , 1       ),
-                               ('education', 1       ),
-                               ('gifts'    , 1       ),
-                               ('gifts'    , 2       ),
-                               ('salary'   , 2       );
-EOF
-psql personal_app_db postgres << EOF
-  INSERT INTO finance_record (amount, date        , "isTrashed", "categoryId")
-  VALUES                     (100   , '2022-08-01', TRUE       ,  1          ),
-                             (400   , '2022-08-01', TRUE       ,  2          ),
-                             (25    , '2022-08-01', FALSE      ,  2          ),
-                             (30    , '2022-08-02', FALSE      ,  3          ),
-                             (10    , '2022-08-02', FALSE      ,  3          ),
-                             (230   , '2022-08-03', FALSE      ,  4          );
-EOF
-psql personal_app_db postgres << EOF
   INSERT INTO groups_subjects (name      )
   VALUES                      ('finances'),
                               ('habits'  );
@@ -77,6 +57,28 @@ psql personal_app_db postgres << EOF
   INSERT INTO user_administrated_groups_groups ("userId", "groupsId")
   VALUES                                       (1       , 1         ),
                                                (2       , 2         );
+EOF
+psql personal_app_db postgres << EOF
+  INSERT INTO finance_category_type (name     )
+  VALUES                            ('expense'),
+                                    ('income' );
+EOF
+psql personal_app_db postgres << EOF
+  INSERT INTO finance_category (name       , "typeId", "groupId")
+  VALUES                       ('clothes'  , 1       , 1        ),
+                               ('education', 1       , 1        ),
+                               ('gifts'    , 1       , 1        ),
+                               ('gifts'    , 2       , 1        ),
+                               ('salary'   , 2       , 1        );
+EOF
+psql personal_app_db postgres << EOF
+  INSERT INTO finance_record (amount, date        , "isTrashed", "categoryId")
+  VALUES                     (100   , '2022-08-01', TRUE       ,  1          ),
+                             (400   , '2022-08-01', TRUE       ,  2          ),
+                             (25    , '2022-08-01', FALSE      ,  2          ),
+                             (30    , '2022-08-02', FALSE      ,  3          ),
+                             (10    , '2022-08-02', FALSE      ,  3          ),
+                             (230   , '2022-08-03', FALSE      ,  4          );
 EOF
 
 

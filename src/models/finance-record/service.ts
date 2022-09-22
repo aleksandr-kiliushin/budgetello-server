@@ -1,6 +1,6 @@
 import { BadRequestException, Injectable, NotFoundException } from "@nestjs/common"
 import { InjectRepository } from "@nestjs/typeorm"
-import { Repository } from "typeorm"
+import { In, Repository } from "typeorm"
 
 import { FinanceCategoryEntity } from "#models/finance-category/entities/finance-category.entity"
 import { FinanceCategoryService } from "#models/finance-category/service"
@@ -24,14 +24,15 @@ export class FinanceRecordService {
         id: query.orderingById ?? "desc",
         date: query.orderingById ?? "desc",
       },
-      relations: ["category", "category.type"],
+      relations: { category: { type: true } },
       skip: query.skip === undefined ? 0 : parseInt(query.skip),
       ...(query.take !== undefined && { take: parseInt(query.take) }),
       where: {
-        ...(query.amount !== undefined && { amount: parseInt(query.amount) }),
-        ...(query.date !== undefined && { date: query.date }),
-        ...(query.categoryId !== undefined && { categoryId: query.categoryId }),
-        ...(query.id !== undefined && { id: parseInt(query.id) }),
+        ...(query.amount !== undefined && { amount: In(query.amount.split(",")) }),
+        ...(query.date !== undefined && { date: In(query.date.split(",")) }),
+        ...(query.categoryId !== undefined && { categoryId: In(query.categoryId.split(",")) }),
+        ...(query.id !== undefined && { id: In(query.id.split(",")) }),
+        ...(query.groupId !== undefined && { category: { group: { id: In(query.groupId.split(",")) } } }),
         ...(query.isTrashed === "true" && { isTrashed: true }),
         ...(query.isTrashed === "false" && { isTrashed: false }),
       },
@@ -40,7 +41,7 @@ export class FinanceRecordService {
 
   async findById(id: FinanceRecordEntity["id"]): Promise<FinanceRecordEntity> {
     const financeRecord = await this.financeRecordRepository.findOne({
-      relations: ["category", "category.type"],
+      relations: { category: { type: true } },
       where: { id },
     })
     if (financeRecord === null) {
