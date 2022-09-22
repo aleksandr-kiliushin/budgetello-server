@@ -24,6 +24,9 @@ export class GroupsService {
 
   search(query: SearchGroupsQueryDto): Promise<GroupEntity[]> {
     return this.groupsRepository.find({
+      order: {
+        members: { id: "asc" },
+      },
       relations: { admins: true, members: true, subject: true },
       where: {
         ...(query.id !== undefined && { id: In(query.id.split(",")) }),
@@ -35,6 +38,9 @@ export class GroupsService {
 
   async findById(id: GroupEntity["id"]): Promise<GroupEntity> {
     const group = await this.groupsRepository.findOne({
+      order: {
+        members: { id: "asc" },
+      },
       relations: { admins: true, members: true, subject: true },
       where: { id },
     })
