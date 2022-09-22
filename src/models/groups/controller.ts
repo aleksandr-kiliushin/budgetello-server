@@ -34,6 +34,26 @@ export class GroupsController {
     return this.groupsService.create({ authorizedUserId: request.userId, createGroupDto })
   }
 
+  @Post(":id/participating")
+  join(
+    @Param("id")
+    id: string,
+    @Request()
+    request: Record<string, unknown> & { userId: IUser["id"] }
+  ) {
+    return this.groupsService.join({ authorizedUserId: request.userId, groupId: parseInt(id) })
+  }
+
+  @Delete(":id/participating")
+  leave(
+    @Param("id")
+    id: string,
+    @Request()
+    request: Record<string, unknown> & { userId: IUser["id"] }
+  ) {
+    return this.groupsService.leave({ authorizedUserId: request.userId, groupId: parseInt(id) })
+  }
+
   @Patch(":id")
   update(
     @Param("id")
@@ -54,15 +74,5 @@ export class GroupsController {
     request: Record<string, unknown> & { userId: IUser["id"] }
   ) {
     return this.groupsService.delete({ authorizedUserId: request.userId, groupId: parseInt(id) })
-  }
-
-  @Post(":id/participating")
-  join(
-    @Param("id")
-    id: string,
-    @Request()
-    request: Record<string, unknown> & { userId: IUser["id"] }
-  ) {
-    return this.groupsService.join({ authorizedUserId: request.userId, groupId: parseInt(id) })
   }
 }

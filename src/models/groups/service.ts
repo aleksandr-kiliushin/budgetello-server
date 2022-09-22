@@ -164,4 +164,19 @@ export class GroupsService {
     group.members = [...group.members, authorizedUser]
     return this.groupsRepository.save(group)
   }
+
+  async leave({
+    authorizedUserId,
+    groupId,
+  }: {
+    authorizedUserId: IUser["id"]
+    groupId: GroupEntity["id"]
+  }): Promise<GroupEntity> {
+    const group = await this.findById(groupId)
+    if (group.members.every((member) => member.id !== authorizedUserId)) {
+      throw new BadRequestException({ message: "You can't leave this group because you are not it's member." })
+    }
+    group.members = group.members.filter((member) => member.id !== authorizedUserId)
+    return this.groupsRepository.save(group)
+  }
 }
