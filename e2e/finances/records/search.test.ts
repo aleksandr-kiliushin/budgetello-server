@@ -47,7 +47,7 @@ describe("Finance records search", () => {
         {
           amount: 230,
           category: {
-            group: { id: 1, name: "clever-financiers" },
+            group: { id: 2, name: "mega-economists" },
             id: 4,
             name: "gifts",
             type: { id: 2, name: "income" },
@@ -59,7 +59,7 @@ describe("Finance records search", () => {
         {
           amount: 10,
           category: {
-            group: { id: 1, name: "clever-financiers" },
+            group: { id: 2, name: "mega-economists" },
             id: 3,
             name: "gifts",
             type: { id: 1, name: "expense" },
@@ -71,7 +71,7 @@ describe("Finance records search", () => {
         {
           amount: 30,
           category: {
-            group: { id: 1, name: "clever-financiers" },
+            group: { id: 2, name: "mega-economists" },
             id: 3,
             name: "gifts",
             type: { id: 1, name: "expense" },
@@ -122,42 +122,6 @@ describe("Finance records search", () => {
       url: "/api/finances/records/search?groupId=1,666666",
       searchResult: [
         {
-          amount: 230,
-          category: {
-            group: { id: 1, name: "clever-financiers" },
-            id: 4,
-            name: "gifts",
-            type: { id: 2, name: "income" },
-          },
-          date: "2022-08-03",
-          id: 6,
-          isTrashed: false,
-        },
-        {
-          amount: 10,
-          category: {
-            group: { id: 1, name: "clever-financiers" },
-            id: 3,
-            name: "gifts",
-            type: { id: 1, name: "expense" },
-          },
-          date: "2022-08-02",
-          id: 5,
-          isTrashed: false,
-        },
-        {
-          amount: 30,
-          category: {
-            group: { id: 1, name: "clever-financiers" },
-            id: 3,
-            name: "gifts",
-            type: { id: 1, name: "expense" },
-          },
-          date: "2022-08-02",
-          id: 4,
-          isTrashed: false,
-        },
-        {
           amount: 25,
           category: {
             group: { id: 1, name: "clever-financiers" },
@@ -205,7 +169,7 @@ describe("Finance records search", () => {
         {
           amount: 30,
           category: {
-            group: { id: 1, name: "clever-financiers" },
+            group: { id: 2, name: "mega-economists" },
             id: 3,
             name: "gifts",
             type: { id: 1, name: "expense" },
@@ -217,7 +181,7 @@ describe("Finance records search", () => {
         {
           amount: 10,
           category: {
-            group: { id: 1, name: "clever-financiers" },
+            group: { id: 2, name: "mega-economists" },
             id: 3,
             name: "gifts",
             type: { id: 1, name: "expense" },

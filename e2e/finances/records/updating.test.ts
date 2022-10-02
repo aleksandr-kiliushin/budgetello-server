@@ -56,7 +56,7 @@ describe("Finance record updating", () => {
       response: {
         amount: 100,
         category: {
-          group: { id: 1, name: "clever-financiers" },
+          group: { id: 2, name: "mega-economists" },
           id: 5,
           name: "salary",
           type: { id: 2, name: "income" },
@@ -104,7 +104,7 @@ describe("Finance record updating", () => {
       response: {
         amount: 90000,
         category: {
-          group: { id: 1, name: "clever-financiers" },
+          group: { id: 2, name: "mega-economists" },
           id: 3,
           name: "gifts",
           type: { id: 1, name: "expense" },

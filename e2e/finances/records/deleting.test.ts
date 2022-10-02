@@ -33,7 +33,7 @@ describe("Finance record deleting", () => {
       {
         amount: 230,
         category: {
-          group: { id: 1, name: "clever-financiers" },
+          group: { id: 2, name: "mega-economists" },
           id: 4,
           name: "gifts",
           type: { id: 2, name: "income" },
@@ -45,7 +45,7 @@ describe("Finance record deleting", () => {
       {
         amount: 10,
         category: {
-          group: { id: 1, name: "clever-financiers" },
+          group: { id: 2, name: "mega-economists" },
           id: 3,
           name: "gifts",
           type: { id: 1, name: "expense" },
@@ -57,7 +57,7 @@ describe("Finance record deleting", () => {
       {
         amount: 30,
         category: {
-          group: { id: 1, name: "clever-financiers" },
+          group: { id: 2, name: "mega-economists" },
           id: 3,
           name: "gifts",
           type: { id: 1, name: "expense" },

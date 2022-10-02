@@ -70,9 +70,9 @@ psql personal_app_db postgres << EOF
   INSERT INTO finance_category (name       , "typeId", "groupId")
   VALUES                       ('clothes'  , 1       , 1        ),
                                ('education', 1       , 1        ),
-                               ('gifts'    , 1       , 1        ),
-                               ('gifts'    , 2       , 1        ),
-                               ('salary'   , 2       , 1        );
+                               ('gifts'    , 1       , 2        ),
+                               ('gifts'    , 2       , 2        ),
+                               ('salary'   , 2       , 2        );
 EOF
 psql personal_app_db postgres << EOF
   INSERT INTO finance_record (amount, date        , "isTrashed", "categoryId")

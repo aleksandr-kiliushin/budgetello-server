@@ -15,7 +15,7 @@ describe("Finance record creating", () => {
     const getAllCategoriesResponse = await fetchApi("/api/finances/records/search")
     expect(await getAllCategoriesResponse.json()).toContainEqual<IFinanceRecord>({
       amount: 2000,
-      category: { group: { id: 1, name: "clever-financiers" }, id: 5, name: "salary", type: { id: 2, name: "income" } },
+      category: { group: { id: 2, name: "mega-economists" }, id: 5, name: "salary", type: { id: 2, name: "income" } },
       date: "2022-08-05",
       id: 7,
       isTrashed: false,
@@ -57,7 +57,7 @@ describe("Finance record creating", () => {
       response: {
         amount: 2000,
         category: {
-          group: { id: 1, name: "clever-financiers" },
+          group: { id: 2, name: "mega-economists" },
           id: 5,
           name: "salary",
           type: { id: 2, name: "income" },

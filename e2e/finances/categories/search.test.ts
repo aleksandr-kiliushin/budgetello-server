@@ -25,7 +25,7 @@ describe("Responds with a finance category found by provided ID", () => {
       url: "/api/finances/categories/3",
       responseStatus: 200,
       responseData: {
-        group: { id: 1, name: "clever-financiers" },
+        group: { id: 2, name: "mega-economists" },
         id: 3,
         name: "gifts",
         type: { id: 1, name: "expense" },
@@ -35,7 +35,7 @@ describe("Responds with a finance category found by provided ID", () => {
       url: "/api/finances/categories/4",
       responseStatus: 200,
       responseData: {
-        group: { id: 1, name: "clever-financiers" },
+        group: { id: 2, name: "mega-economists" },
         id: 4,
         name: "gifts",
         type: { id: 2, name: "income" },
@@ -64,8 +64,8 @@ describe("Finance categoires search", () => {
     {
       url: "/api/finances/categories/search?id=3,4",
       searchResult: [
-        { group: { id: 1, name: "clever-financiers" }, id: 3, name: "gifts", type: { id: 1, name: "expense" } },
-        { group: { id: 1, name: "clever-financiers" }, id: 4, name: "gifts", type: { id: 2, name: "income" } },
+        { group: { id: 2, name: "mega-economists" }, id: 3, name: "gifts", type: { id: 1, name: "expense" } },
+        { group: { id: 2, name: "mega-economists" }, id: 4, name: "gifts", type: { id: 2, name: "income" } },
       ],
     },
     {
@@ -75,7 +75,7 @@ describe("Finance categoires search", () => {
     {
       url: "/api/finances/categories/search?id=66666,5",
       searchResult: [
-        { group: { id: 1, name: "clever-financiers" }, id: 5, name: "salary", type: { id: 2, name: "income" } },
+        { group: { id: 2, name: "mega-economists" }, id: 5, name: "salary", type: { id: 2, name: "income" } },
       ],
     },
     {
@@ -83,23 +83,24 @@ describe("Finance categoires search", () => {
       searchResult: [
         { group: { id: 1, name: "clever-financiers" }, id: 1, name: "clothes", type: { id: 1, name: "expense" } },
         { group: { id: 1, name: "clever-financiers" }, id: 2, name: "education", type: { id: 1, name: "expense" } },
-        { group: { id: 1, name: "clever-financiers" }, id: 3, name: "gifts", type: { id: 1, name: "expense" } },
-        { group: { id: 1, name: "clever-financiers" }, id: 4, name: "gifts", type: { id: 2, name: "income" } },
-        { group: { id: 1, name: "clever-financiers" }, id: 5, name: "salary", type: { id: 2, name: "income" } },
       ],
     },
     {
       url: "/api/finances/categories/search?groupId=2",
-      searchResult: [],
+      searchResult: [
+        { group: { id: 2, name: "mega-economists" }, id: 3, name: "gifts", type: { id: 1, name: "expense" } },
+        { group: { id: 2, name: "mega-economists" }, id: 4, name: "gifts", type: { id: 2, name: "income" } },
+        { group: { id: 2, name: "mega-economists" }, id: 5, name: "salary", type: { id: 2, name: "income" } },
+      ],
     },
     {
       url: "/api/finances/categories/search",
       searchResult: [
         { group: { id: 1, name: "clever-financiers" }, id: 1, name: "clothes", type: { id: 1, name: "expense" } },
         { group: { id: 1, name: "clever-financiers" }, id: 2, name: "education", type: { id: 1, name: "expense" } },
-        { group: { id: 1, name: "clever-financiers" }, id: 3, name: "gifts", type: { id: 1, name: "expense" } },
-        { group: { id: 1, name: "clever-financiers" }, id: 4, name: "gifts", type: { id: 2, name: "income" } },
-        { group: { id: 1, name: "clever-financiers" }, id: 5, name: "salary", type: { id: 2, name: "income" } },
+        { group: { id: 2, name: "mega-economists" }, id: 3, name: "gifts", type: { id: 1, name: "expense" } },
+        { group: { id: 2, name: "mega-economists" }, id: 4, name: "gifts", type: { id: 2, name: "income" } },
+        { group: { id: 2, name: "mega-economists" }, id: 5, name: "salary", type: { id: 2, name: "income" } },
       ],
     },
   ])("categories search for: $url", async ({ url, searchResult }) => {
