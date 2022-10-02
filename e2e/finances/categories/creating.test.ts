@@ -13,38 +13,49 @@ describe("Finance category creating", () => {
     status: number
   }>([
     {
-      payload: { name_WITH_A_TYPO: "food", typeId: 1 },
+      payload: { groupId: 1, name_WITH_A_TYPO: "food", typeId: 1 },
       response: { fields: { name: "Required field." } },
       status: 400,
     },
     {
-      payload: { name: "", typeId: 1 },
+      payload: { groupId: 1, name: "", typeId: 1 },
       response: { fields: { name: "Required field." } },
       status: 400,
     },
     {
-      payload: { name: "food", typeId_WITH_A_TYPO: 1 },
+      payload: { groupId: 1, name: "food", typeId_WITH_A_TYPO: 1 },
       response: { fields: { typeId: "Required field." } },
       status: 400,
     },
     {
-      payload: { name: "food", typeId: 1234123 },
+      payload: { groupId: 1, name: "food", typeId: 1234123 },
       response: { fields: { typeId: "Invalid category type." } },
       status: 400,
     },
     {
-      payload: { name: "education", typeId: 1 },
+      payload: { name: "education", typeId: 2 },
+      response: { fields: { groupId: "Required field." } },
+      status: 400,
+    },
+    {
+      payload: { groupId: 1, name: "education", typeId: 1 },
       response: {
         fields: {
-          name: '"education" expense category already exists.',
-          typeId: '"education" expense category already exists.',
+          groupId: '"education" expense category already exists in this group.',
+          name: '"education" expense category already exists in this group.',
+          typeId: '"education" expense category already exists in this group.',
         },
       },
       status: 400,
     },
     {
-      payload: { name: "education", typeId: 2 },
-      response: { id: 6, name: "education", type: { id: 2, name: "income" } },
+      payload: { groupId: 1, name: "education", typeId: 2 },
+      response: {
+        group: { id: 1, name: "clever-financiers" },
+        id: 6,
+        name: "education",
+        type: { id: 2, name: "income" },
+      },
       status: 201,
     },
   ])("Category creating case #%#", async ({ payload, response, status }) => {
@@ -57,9 +68,13 @@ describe("Finance category creating", () => {
   })
 
   it("a newly created category is presented in all categories list", async () => {
-    await fetchApi("/api/finances/categories", { body: JSON.stringify({ name: "food", typeId: 1 }), method: "POST" })
+    await fetchApi("/api/finances/categories", {
+      body: JSON.stringify({ groupId: 1, name: "food", typeId: 1 }),
+      method: "POST",
+    })
     const getAllCategoriesResponse = await fetchApi("/api/finances/categories/search")
     expect(await getAllCategoriesResponse.json()).toContainEqual<IFinanceCategory>({
+      group: { id: 1, name: "clever-financiers" },
       id: 6,
       name: "food",
       type: { id: 1, name: "expense" },
@@ -67,9 +82,13 @@ describe("Finance category creating", () => {
   })
 
   it("a newly created category can be found by ID", async () => {
-    await fetchApi("/api/finances/categories", { body: JSON.stringify({ name: "food", typeId: 1 }), method: "POST" })
+    await fetchApi("/api/finances/categories", {
+      body: JSON.stringify({ groupId: 1, name: "food", typeId: 1 }),
+      method: "POST",
+    })
     const getNewlyCreatedCategoryResponse = await fetchApi("/api/finances/categories/6")
     expect(await getNewlyCreatedCategoryResponse.json()).toEqual<IFinanceCategory>({
+      group: { id: 1, name: "clever-financiers" },
       id: 6,
       name: "food",
       type: { id: 1, name: "expense" },

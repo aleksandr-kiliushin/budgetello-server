@@ -1,4 +1,7 @@
+import { IGroup } from "./groups"
+
 export interface IFinanceCategory {
+  group: IGroup
   id: number
   name: string
   type: IFinanceCategoryType
