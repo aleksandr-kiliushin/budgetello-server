@@ -17,7 +17,10 @@ describe("Responds with a group found by provided ID", () => {
       responseData: {
         admins: [{ id: 1, username: "john-doe", password: "8bd309ffba83c3db9a53142b052468007b" }],
         id: 1,
-        members: [{ id: 1, username: "john-doe", password: "8bd309ffba83c3db9a53142b052468007b" }],
+        members: [
+          { id: 1, username: "john-doe", password: "8bd309ffba83c3db9a53142b052468007b" },
+          { id: 2, username: "jessica-stark", password: "8bd912e2fe84cd93c457142a1d7e77136c3bc954f183" },
+        ],
         name: "clever-financiers",
         subject: { id: 1, name: "finances" },
       },
@@ -42,29 +45,32 @@ describe("Groups search", () => {
         {
           admins: [{ id: 1, username: "john-doe", password: "8bd309ffba83c3db9a53142b052468007b" }],
           id: 1,
-          members: [{ id: 1, username: "john-doe", password: "8bd309ffba83c3db9a53142b052468007b" }],
+          members: [
+            { id: 1, username: "john-doe", password: "8bd309ffba83c3db9a53142b052468007b" },
+            { id: 2, username: "jessica-stark", password: "8bd912e2fe84cd93c457142a1d7e77136c3bc954f183" },
+          ],
           name: "clever-financiers",
           subject: { id: 1, name: "finances" },
         },
       ],
     },
     {
-      url: "/api/groups/search?id=1,2",
+      url: "/api/groups/search?id=1,3",
       searchResult: [
         {
           admins: [{ id: 1, username: "john-doe", password: "8bd309ffba83c3db9a53142b052468007b" }],
           id: 1,
-          members: [{ id: 1, username: "john-doe", password: "8bd309ffba83c3db9a53142b052468007b" }],
+          members: [
+            { id: 1, username: "john-doe", password: "8bd309ffba83c3db9a53142b052468007b" },
+            { id: 2, username: "jessica-stark", password: "8bd912e2fe84cd93c457142a1d7e77136c3bc954f183" },
+          ],
           name: "clever-financiers",
           subject: { id: 1, name: "finances" },
         },
         {
           admins: [{ id: 2, username: "jessica-stark", password: "8bd912e2fe84cd93c457142a1d7e77136c3bc954f183" }],
-          id: 2,
-          members: [
-            { id: 1, username: "john-doe", password: "8bd309ffba83c3db9a53142b052468007b" },
-            { id: 2, username: "jessica-stark", password: "8bd912e2fe84cd93c457142a1d7e77136c3bc954f183" },
-          ],
+          id: 3,
+          members: [{ id: 2, username: "jessica-stark", password: "8bd912e2fe84cd93c457142a1d7e77136c3bc954f183" }],
           name: "beautiful-sportsmen",
           subject: { id: 2, name: "habits" },
         },
@@ -80,57 +86,78 @@ describe("Groups search", () => {
         {
           admins: [{ id: 1, username: "john-doe", password: "8bd309ffba83c3db9a53142b052468007b" }],
           id: 1,
-          members: [{ id: 1, username: "john-doe", password: "8bd309ffba83c3db9a53142b052468007b" }],
+          members: [
+            { id: 1, username: "john-doe", password: "8bd309ffba83c3db9a53142b052468007b" },
+            { id: 2, username: "jessica-stark", password: "8bd912e2fe84cd93c457142a1d7e77136c3bc954f183" },
+          ],
           name: "clever-financiers",
           subject: { id: 1, name: "finances" },
         },
         {
           admins: [{ id: 2, username: "jessica-stark", password: "8bd912e2fe84cd93c457142a1d7e77136c3bc954f183" }],
           id: 2,
-          members: [
-            { id: 1, username: "john-doe", password: "8bd309ffba83c3db9a53142b052468007b" },
-            { id: 2, username: "jessica-stark", password: "8bd912e2fe84cd93c457142a1d7e77136c3bc954f183" },
-          ],
-          name: "beautiful-sportsmen",
-          subject: { id: 2, name: "habits" },
+          members: [{ id: 2, username: "jessica-stark", password: "8bd912e2fe84cd93c457142a1d7e77136c3bc954f183" }],
+          name: "mega-economists",
+          subject: { id: 1, name: "finances" },
         },
-      ],
-    },
-    {
-      url: "/api/groups/search?subjectId=2",
-      searchResult: [
         {
           admins: [{ id: 2, username: "jessica-stark", password: "8bd912e2fe84cd93c457142a1d7e77136c3bc954f183" }],
-          id: 2,
-          members: [
-            { id: 1, username: "john-doe", password: "8bd309ffba83c3db9a53142b052468007b" },
-            { id: 2, username: "jessica-stark", password: "8bd912e2fe84cd93c457142a1d7e77136c3bc954f183" },
-          ],
+          id: 3,
+          members: [{ id: 2, username: "jessica-stark", password: "8bd912e2fe84cd93c457142a1d7e77136c3bc954f183" }],
           name: "beautiful-sportsmen",
           subject: { id: 2, name: "habits" },
         },
       ],
     },
     {
-      url: "/api/groups/search?name=finan",
+      url: "/api/groups/search?subjectId=1",
       searchResult: [
         {
           admins: [{ id: 1, username: "john-doe", password: "8bd309ffba83c3db9a53142b052468007b" }],
           id: 1,
-          members: [{ id: 1, username: "john-doe", password: "8bd309ffba83c3db9a53142b052468007b" }],
+          members: [
+            { id: 1, username: "john-doe", password: "8bd309ffba83c3db9a53142b052468007b" },
+            { id: 2, username: "jessica-stark", password: "8bd912e2fe84cd93c457142a1d7e77136c3bc954f183" },
+          ],
           name: "clever-financiers",
+          subject: { id: 1, name: "finances" },
+        },
+        {
+          admins: [{ id: 2, username: "jessica-stark", password: "8bd912e2fe84cd93c457142a1d7e77136c3bc954f183" }],
+          id: 2,
+          members: [{ id: 2, username: "jessica-stark", password: "8bd912e2fe84cd93c457142a1d7e77136c3bc954f183" }],
+          name: "mega-economists",
           subject: { id: 1, name: "finances" },
         },
       ],
     },
     {
-      url: "/api/groups/search?name=finan&id=1&subjectId=1",
+      url: "/api/groups/search?name=me",
       searchResult: [
         {
-          admins: [{ id: 1, username: "john-doe", password: "8bd309ffba83c3db9a53142b052468007b" }],
-          id: 1,
-          members: [{ id: 1, username: "john-doe", password: "8bd309ffba83c3db9a53142b052468007b" }],
-          name: "clever-financiers",
+          admins: [{ id: 2, username: "jessica-stark", password: "8bd912e2fe84cd93c457142a1d7e77136c3bc954f183" }],
+          id: 2,
+          members: [{ id: 2, username: "jessica-stark", password: "8bd912e2fe84cd93c457142a1d7e77136c3bc954f183" }],
+          name: "mega-economists",
+          subject: { id: 1, name: "finances" },
+        },
+        {
+          admins: [{ id: 2, username: "jessica-stark", password: "8bd912e2fe84cd93c457142a1d7e77136c3bc954f183" }],
+          id: 3,
+          members: [{ id: 2, username: "jessica-stark", password: "8bd912e2fe84cd93c457142a1d7e77136c3bc954f183" }],
+          name: "beautiful-sportsmen",
+          subject: { id: 2, name: "habits" },
+        },
+      ],
+    },
+    {
+      url: "/api/groups/search?name=me&subjectId=1&id=2",
+      searchResult: [
+        {
+          admins: [{ id: 2, username: "jessica-stark", password: "8bd912e2fe84cd93c457142a1d7e77136c3bc954f183" }],
+          id: 2,
+          members: [{ id: 2, username: "jessica-stark", password: "8bd912e2fe84cd93c457142a1d7e77136c3bc954f183" }],
+          name: "mega-economists",
           subject: { id: 1, name: "finances" },
         },
       ],

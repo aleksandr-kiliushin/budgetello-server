@@ -19,7 +19,10 @@ describe("Group deleting", () => {
       id: 1,
       name: "clever-financiers",
       subject: { id: 1, name: "finances" },
-      members: [{ id: 1, username: "john-doe", password: "8bd309ffba83c3db9a53142b052468007b" }],
+      members: [
+        { id: 1, username: "john-doe", password: "8bd309ffba83c3db9a53142b052468007b" },
+        { id: 2, username: "jessica-stark", password: "8bd912e2fe84cd93c457142a1d7e77136c3bc954f183" },
+      ],
     })
   })
 
@@ -31,12 +34,16 @@ describe("Group deleting", () => {
       {
         admins: [{ id: 2, username: "jessica-stark", password: "8bd912e2fe84cd93c457142a1d7e77136c3bc954f183" }],
         id: 2,
+        name: "mega-economists",
+        subject: { id: 1, name: "finances" },
+        members: [{ id: 2, username: "jessica-stark", password: "8bd912e2fe84cd93c457142a1d7e77136c3bc954f183" }],
+      },
+      {
+        admins: [{ id: 2, username: "jessica-stark", password: "8bd912e2fe84cd93c457142a1d7e77136c3bc954f183" }],
+        id: 3,
         name: "beautiful-sportsmen",
         subject: { id: 2, name: "habits" },
-        members: [
-          { id: 1, username: "john-doe", password: "8bd309ffba83c3db9a53142b052468007b" },
-          { id: 2, username: "jessica-stark", password: "8bd912e2fe84cd93c457142a1d7e77136c3bc954f183" },
-        ],
+        members: [{ id: 2, username: "jessica-stark", password: "8bd912e2fe84cd93c457142a1d7e77136c3bc954f183" }],
       },
     ])
   })

@@ -46,7 +46,7 @@ describe("Group creating", () => {
       payload: { name: "champions", subjectId: 2 },
       response: {
         admins: [{ id: 1, username: "john-doe", password: "8bd309ffba83c3db9a53142b052468007b" }],
-        id: 3,
+        id: 4,
         members: [{ id: 1, username: "john-doe", password: "8bd309ffba83c3db9a53142b052468007b" }],
         name: "champions",
         subject: { id: 2, name: "habits" },
@@ -61,10 +61,10 @@ describe("Group creating", () => {
 
   it("a newly created group can be found by ID", async () => {
     await fetchApi("/api/groups", { body: JSON.stringify({ name: "champions", subjectId: 2 }), method: "POST" })
-    const getNewlyGroupResponse = await fetchApi("/api/groups/3")
+    const getNewlyGroupResponse = await fetchApi("/api/groups/4")
     expect(await getNewlyGroupResponse.json()).toEqual<GroupEntity | unknown>({
       admins: [{ id: 1, username: "john-doe", password: "8bd309ffba83c3db9a53142b052468007b" }],
-      id: 3,
+      id: 4,
       members: [{ id: 1, username: "john-doe", password: "8bd309ffba83c3db9a53142b052468007b" }],
       name: "champions",
       subject: { id: 2, name: "habits" },

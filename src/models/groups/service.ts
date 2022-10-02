@@ -30,7 +30,7 @@ export class GroupsService {
       relations: { admins: true, members: true, subject: true },
       where: {
         ...(query.id !== undefined && { id: In(query.id.split(",")) }),
-        ...(query.subjectId !== undefined && { id: In(query.subjectId.split(",")) }),
+        ...(query.subjectId !== undefined && { subject: In(query.subjectId.split(",")) }),
         ...(query.name !== undefined && { name: Like(`%${query.name}%`) }),
       },
     })

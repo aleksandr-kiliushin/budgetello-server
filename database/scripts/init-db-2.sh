@@ -45,18 +45,21 @@ EOF
 psql personal_app_db postgres << EOF
   INSERT INTO groups (name                 , "subjectId")
   VALUES             ('clever-financiers'  , 1          ),
+                     ('mega-economists'    , 1          ),
                      ('beautiful-sportsmen', 2          );
 EOF
 psql personal_app_db postgres << EOF
   INSERT INTO user_groups_groups ("userId", "groupsId")
   VALUES                         (1       , 1         ),
-                                 (1       , 2         ),
-                                 (2       , 2         );
+                                 (2       , 1         ),
+                                 (2       , 2         ),
+                                 (2       , 3         );
 EOF
 psql personal_app_db postgres << EOF
   INSERT INTO user_administrated_groups_groups ("userId", "groupsId")
   VALUES                                       (1       , 1         ),
-                                               (2       , 2         );
+                                               (2       , 2         ),
+                                               (2       , 3         );
 EOF
 psql personal_app_db postgres << EOF
   INSERT INTO finance_category_type (name     )
