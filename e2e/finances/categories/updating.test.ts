@@ -26,8 +26,8 @@ describe("Finance category updating", () => {
       url: "/api/finances/categories/2",
     },
     {
-      payload: { groupId: 666666 },
-      response: { fields: { groupId: "Invalid group." } },
+      payload: { boardId: 666666 },
+      response: { fields: { boardId: "Invalid board." } },
       status: 400,
       url: "/api/finances/categories/2",
     },
@@ -35,9 +35,9 @@ describe("Finance category updating", () => {
       payload: { name: "clothes" },
       response: {
         fields: {
-          groupId: '"clothes" expense category already exists in this group.',
-          name: '"clothes" expense category already exists in this group.',
-          typeId: '"clothes" expense category already exists in this group.',
+          boardId: '"clothes" expense category already exists in this board.',
+          name: '"clothes" expense category already exists in this board.',
+          typeId: '"clothes" expense category already exists in this board.',
         },
       },
       status: 400,
@@ -46,7 +46,7 @@ describe("Finance category updating", () => {
     {
       payload: {},
       response: {
-        group: { id: 1, name: "clever-financiers" },
+        board: { id: 1, name: "clever-financiers" },
         id: 2,
         name: "education",
         type: { id: 1, name: "expense" },
@@ -55,8 +55,8 @@ describe("Finance category updating", () => {
       url: "/api/finances/categories/2",
     },
     {
-      payload: { groupId: 2, name: "teaching", typeId: 2 },
-      response: { group: { id: 2, name: "mega-economists" }, id: 2, name: "teaching", type: { id: 2, name: "income" } },
+      payload: { boardId: 2, name: "teaching", typeId: 2 },
+      response: { board: { id: 2, name: "mega-economists" }, id: 2, name: "teaching", type: { id: 2, name: "income" } },
       status: 200,
       url: "/api/finances/categories/2",
     },
@@ -70,7 +70,7 @@ describe("Finance category updating", () => {
     await fetchApi("/api/finances/categories/2", { body: JSON.stringify({ name: "drugs" }), method: "PATCH" })
     const getAllCategoriesResponse = await fetchApi("/api/finances/categories/search")
     expect(await getAllCategoriesResponse.json()).toContainEqual<IFinanceCategory>({
-      group: { id: 1, name: "clever-financiers" },
+      board: { id: 1, name: "clever-financiers" },
       id: 2,
       name: "drugs",
       type: { id: 1, name: "expense" },
@@ -81,7 +81,7 @@ describe("Finance category updating", () => {
     await fetchApi("/api/finances/categories/2", { body: JSON.stringify({ typeId: 2 }), method: "PATCH" })
     const getUpdatedCategoryResponse = await fetchApi("/api/finances/categories/2")
     expect(await getUpdatedCategoryResponse.json()).toEqual<IFinanceCategory>({
-      group: { id: 1, name: "clever-financiers" },
+      board: { id: 1, name: "clever-financiers" },
       id: 2,
       name: "education",
       type: { id: 2, name: "income" },

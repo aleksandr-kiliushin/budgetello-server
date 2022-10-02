@@ -1,7 +1,10 @@
-import { IGroup } from "./groups"
+import { IBoard } from "./boards"
 
 export interface IFinanceCategory {
-  group: IGroup
+  board: {
+    id: IBoard["id"]
+    name: IBoard["name"]
+  }
   id: number
   name: string
   type: IFinanceCategoryType

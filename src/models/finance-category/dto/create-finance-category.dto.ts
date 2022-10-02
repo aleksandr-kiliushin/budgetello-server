@@ -1,8 +1,8 @@
+import { IBoard } from "#interfaces/boards"
 import { IFinanceCategory, IFinanceCategoryType } from "#interfaces/finance"
-import { IGroup } from "#interfaces/groups"
 
 export class CreateFinanceCategoryDto {
-  groupId: IGroup["id"]
+  boardId: IBoard["id"]
   name: IFinanceCategory["name"]
   typeId: IFinanceCategoryType["id"]
 }

@@ -1,8 +1,8 @@
-import { GroupEntity } from "../../src/models/groups/entities/group.entity"
+import { BoardEntity } from "../../src/models/boards/entities/board.entity"
 import { ITestUserUsername, authorize } from "../helpers/authorize"
 import { fetchApi } from "../helpers/fetchApi"
 
-describe("Groups updating", () => {
+describe("Boards updating", () => {
   test.each<{
     authorizedUserUsername: ITestUserUsername
     payload: Record<string, unknown>
@@ -15,33 +15,33 @@ describe("Groups updating", () => {
       payload: {},
       response: { message: "You are not allowed to to this action." },
       status: 403,
-      url: "/api/groups/1",
+      url: "/api/boards/1",
     },
     {
       authorizedUserUsername: "john-doe",
       payload: { name: "" },
       response: { fields: { name: "Name cannot be empty." } },
       status: 400,
-      url: "/api/groups/1",
+      url: "/api/boards/1",
     },
     {
       authorizedUserUsername: "john-doe",
       payload: { subjectId: 666666 },
-      response: { fields: { subjectId: "Invalid group subject." } },
+      response: { fields: { subjectId: "Invalid board subject." } },
       status: 400,
-      url: "/api/groups/1",
+      url: "/api/boards/1",
     },
     {
       authorizedUserUsername: "john-doe",
       payload: { name: "mega-economists" },
       response: {
         fields: {
-          name: '"mega-economists" finances group already exists.',
-          subjectId: '"mega-economists" finances group already exists.',
+          name: '"mega-economists" finances board already exists.',
+          subjectId: '"mega-economists" finances board already exists.',
         },
       },
       status: 400,
-      url: "/api/groups/1",
+      url: "/api/boards/1",
     },
     {
       authorizedUserUsername: "john-doe",
@@ -57,7 +57,7 @@ describe("Groups updating", () => {
         subject: { id: 1, name: "finances" },
       },
       status: 200,
-      url: "/api/groups/1",
+      url: "/api/boards/1",
     },
     {
       authorizedUserUsername: "john-doe",
@@ -73,20 +73,20 @@ describe("Groups updating", () => {
         subject: { id: 2, name: "habits" },
       },
       status: 200,
-      url: "/api/groups/1",
+      url: "/api/boards/1",
     },
-  ])("Group updating case #%#", async ({ authorizedUserUsername, payload, response, status, url }) => {
+  ])("Board updating case #%#", async ({ authorizedUserUsername, payload, response, status, url }) => {
     await authorize(authorizedUserUsername)
-    const groupUpdatingResponse = await fetchApi(url, { body: JSON.stringify(payload), method: "PATCH" })
-    expect(groupUpdatingResponse.status).toEqual(status)
-    expect(await groupUpdatingResponse.json()).toEqual(response)
+    const boardUpdatingResponse = await fetchApi(url, { body: JSON.stringify(payload), method: "PATCH" })
+    expect(boardUpdatingResponse.status).toEqual(status)
+    expect(await boardUpdatingResponse.json()).toEqual(response)
   })
 
-  it("updated groups can be found by ID", async () => {
+  it("updated boards can be found by ID", async () => {
     await authorize("john-doe")
-    await fetchApi("/api/groups/1", { body: JSON.stringify({ name: "champions", subjectId: 2 }), method: "PATCH" })
-    const response = await fetchApi("/api/groups/1")
-    expect(await response.json()).toEqual<GroupEntity | unknown>({
+    await fetchApi("/api/boards/1", { body: JSON.stringify({ name: "champions", subjectId: 2 }), method: "PATCH" })
+    const response = await fetchApi("/api/boards/1")
+    expect(await response.json()).toEqual<BoardEntity | unknown>({
       admins: [{ id: 1, username: "john-doe", password: "8bd309ffba83c3db9a53142b052468007b" }],
       id: 1,
       members: [

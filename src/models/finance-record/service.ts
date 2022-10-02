@@ -24,7 +24,7 @@ export class FinanceRecordService {
         id: query.orderingById ?? "desc",
         date: query.orderingById ?? "desc",
       },
-      relations: { category: { group: true, type: true } },
+      relations: { category: { board: true, type: true } },
       skip: query.skip === undefined ? 0 : parseInt(query.skip),
       ...(query.take !== undefined && { take: parseInt(query.take) }),
       where: {
@@ -32,7 +32,7 @@ export class FinanceRecordService {
         ...(query.date !== undefined && { date: In(query.date.split(",")) }),
         ...(query.categoryId !== undefined && { categoryId: In(query.categoryId.split(",")) }),
         ...(query.id !== undefined && { id: In(query.id.split(",")) }),
-        ...(query.groupId !== undefined && { category: { group: { id: In(query.groupId.split(",")) } } }),
+        ...(query.boardId !== undefined && { category: { board: { id: In(query.boardId.split(",")) } } }),
         ...(query.isTrashed === "true" && { isTrashed: true }),
         ...(query.isTrashed === "false" && { isTrashed: false }),
       },
@@ -41,7 +41,7 @@ export class FinanceRecordService {
 
   async findById(id: FinanceRecordEntity["id"]): Promise<FinanceRecordEntity> {
     const financeRecord = await this.financeRecordRepository.findOne({
-      relations: { category: { group: true, type: true } },
+      relations: { category: { board: true, type: true } },
       where: { id },
     })
     if (financeRecord === null) {

@@ -1,6 +1,6 @@
 import { Column, Entity, JoinTable, ManyToMany, PrimaryGeneratedColumn } from "typeorm"
 
-import { GroupEntity } from "#models/groups/entities/group.entity"
+import { BoardEntity } from "#models/boards/entities/board.entity"
 
 import { IUser } from "#interfaces/user"
 
@@ -9,9 +9,9 @@ export class UserEntity {
   @PrimaryGeneratedColumn({ type: "int" })
   id: IUser["id"]
 
-  @ManyToMany(() => GroupEntity, (group) => group.admins, { onDelete: "CASCADE" })
+  @ManyToMany(() => BoardEntity, (board) => board.admins, { onDelete: "CASCADE" })
   @JoinTable()
-  administratedGroups: GroupEntity[]
+  administratedBoards: BoardEntity[]
 
   @Column({ type: "varchar" })
   username: IUser["username"]
@@ -19,7 +19,7 @@ export class UserEntity {
   @Column({ type: "varchar" })
   password: IUser["password"]
 
-  @ManyToMany(() => GroupEntity, (group) => group.members, { onDelete: "CASCADE" })
+  @ManyToMany(() => BoardEntity, (board) => board.members, { onDelete: "CASCADE" })
   @JoinTable()
-  groups: GroupEntity[]
+  boards: BoardEntity[]
 }

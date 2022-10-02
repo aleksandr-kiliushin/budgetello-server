@@ -1,0 +1,22 @@
+import { BoardSubjectEntity } from "../../../src/models/board-subjects/entities/board-subject.entity"
+import { authorize } from "../../helpers/authorize"
+import { fetchApi } from "../../helpers/fetchApi"
+
+beforeEach(async () => {
+  await authorize("john-doe")
+})
+
+describe("get boards subjects", () => {
+  it("responds with all board subjects list", async () => {
+    const fetchAllFinanceCategoryTypesResponse = await fetchApi("/api/board-subjects")
+    expect(await fetchAllFinanceCategoryTypesResponse.json()).toEqual<BoardSubjectEntity[]>([
+      { id: 1, name: "finances" },
+      { id: 2, name: "habits" },
+    ])
+  })
+
+  it("responds with a board subject for a given id", async () => {
+    const getBoardSubjectWithIdOf2Response = await fetchApi("/api/board-subjects/2")
+    expect(await getBoardSubjectWithIdOf2Response.json()).toEqual<BoardSubjectEntity>({ id: 2, name: "habits" })
+  })
+})

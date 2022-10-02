@@ -1,4 +1,4 @@
-import { GroupEntity } from "../../src/models/groups/entities/group.entity"
+import { BoardEntity } from "../../src/models/boards/entities/board.entity"
 import { authorize } from "../helpers/authorize"
 import { fetchApi } from "../helpers/fetchApi"
 
@@ -6,7 +6,7 @@ beforeEach(async () => {
   await authorize("john-doe")
 })
 
-describe("Group creating", () => {
+describe("Board creating", () => {
   test.each<{
     payload: Record<string, unknown>
     response: Record<string, unknown>
@@ -36,8 +36,8 @@ describe("Group creating", () => {
       payload: { name: "clever-financiers", subjectId: 1 },
       response: {
         fields: {
-          name: '"clever-financiers" finances group already exists.',
-          subjectId: '"clever-financiers" finances group already exists.',
+          name: '"clever-financiers" finances board already exists.',
+          subjectId: '"clever-financiers" finances board already exists.',
         },
       },
       status: 400,
@@ -53,16 +53,19 @@ describe("Group creating", () => {
       },
       status: 201,
     },
-  ])("Group creating case #%#", async ({ payload, response, status }) => {
-    const groupResponse = await fetchApi("/api/groups", { body: JSON.stringify(payload), method: "POST" })
-    expect(groupResponse.status).toEqual(status)
-    expect(await groupResponse.json()).toEqual(response)
+  ])("Board creating case #%#", async ({ payload, response, status }) => {
+    const getNewlyCreatedBoardResponse = await fetchApi("/api/boards", {
+      body: JSON.stringify(payload),
+      method: "POST",
+    })
+    expect(getNewlyCreatedBoardResponse.status).toEqual(status)
+    expect(await getNewlyCreatedBoardResponse.json()).toEqual(response)
   })
 
-  it("a newly created group can be found by ID", async () => {
-    await fetchApi("/api/groups", { body: JSON.stringify({ name: "champions", subjectId: 2 }), method: "POST" })
-    const getNewlyGroupResponse = await fetchApi("/api/groups/4")
-    expect(await getNewlyGroupResponse.json()).toEqual<GroupEntity | unknown>({
+  it("a newly created board can be found by ID", async () => {
+    await fetchApi("/api/boards", { body: JSON.stringify({ name: "champions", subjectId: 2 }), method: "POST" })
+    const getNewlyCreatedBoardResponse = await fetchApi("/api/boards/4")
+    expect(await getNewlyCreatedBoardResponse.json()).toEqual<BoardEntity | unknown>({
       admins: [{ id: 1, username: "john-doe", password: "8bd309ffba83c3db9a53142b052468007b" }],
       id: 4,
       members: [{ id: 1, username: "john-doe", password: "8bd309ffba83c3db9a53142b052468007b" }],

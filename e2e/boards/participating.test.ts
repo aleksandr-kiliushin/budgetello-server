@@ -1,7 +1,7 @@
 import { ITestUserUsername, authorize } from "../helpers/authorize"
 import { fetchApi } from "../helpers/fetchApi"
 
-describe("Participating in a group", () => {
+describe("Participating in a board", () => {
   test.each<{
     authorizedUserUsername: ITestUserUsername
     responseBody: Record<string, unknown>
@@ -10,9 +10,9 @@ describe("Participating in a group", () => {
   }>([
     {
       authorizedUserUsername: "jessica-stark",
-      responseBody: { message: "You are already a member of this group." },
+      responseBody: { message: "You are already a member of this board." },
       status: 400,
-      url: "/api/groups/2/participating",
+      url: "/api/boards/2/participating",
     },
     {
       authorizedUserUsername: "john-doe",
@@ -27,9 +27,9 @@ describe("Participating in a group", () => {
         subject: { id: 2, name: "habits" },
       },
       status: 201,
-      url: "/api/groups/3/participating",
+      url: "/api/boards/3/participating",
     },
-  ])("Group joining case #%#", async ({ authorizedUserUsername, responseBody, status, url }) => {
+  ])("Board joining case #%#", async ({ authorizedUserUsername, responseBody, status, url }) => {
     await authorize(authorizedUserUsername)
     const response = await fetchApi(url, { method: "POST" })
     expect(response.status).toEqual(status)
@@ -44,17 +44,17 @@ describe("Participating in a group", () => {
   }>([
     {
       authorizedUserUsername: "john-doe",
-      responseBody: { message: "You can't leave this group because you are not it's member." },
+      responseBody: { message: "You can't leave this board because you are not it's member." },
       status: 400,
-      url: "/api/groups/3/participating",
+      url: "/api/boards/3/participating",
     },
     {
       authorizedUserUsername: "jessica-stark",
       responseBody: {
-        message: "You can't leave a group where you are the only admin. You can delete the group.",
+        message: "You can't leave a board where you are the only admin. You can delete the board.",
       },
       status: 400,
-      url: "/api/groups/3/participating",
+      url: "/api/boards/3/participating",
     },
     {
       authorizedUserUsername: "jessica-stark",
@@ -66,9 +66,9 @@ describe("Participating in a group", () => {
         subject: { id: 1, name: "finances" },
       },
       status: 200,
-      url: "/api/groups/1/participating",
+      url: "/api/boards/1/participating",
     },
-  ])("Group leaving case #%#", async ({ authorizedUserUsername, responseBody, status, url }) => {
+  ])("Board leaving case #%#", async ({ authorizedUserUsername, responseBody, status, url }) => {
     await authorize(authorizedUserUsername)
     const response = await fetchApi(url, { method: "DELETE" })
     expect(response.status).toEqual(status)

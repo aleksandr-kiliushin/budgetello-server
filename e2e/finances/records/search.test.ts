@@ -17,7 +17,7 @@ describe("Get finance record by ID", () => {
       responseData: {
         amount: 100,
         category: {
-          group: { id: 1, name: "clever-financiers" },
+          board: { id: 1, name: "clever-financiers" },
           id: 1,
           name: "clothes",
           type: { id: 1, name: "expense" },
@@ -47,7 +47,7 @@ describe("Finance records search", () => {
         {
           amount: 230,
           category: {
-            group: { id: 2, name: "mega-economists" },
+            board: { id: 2, name: "mega-economists" },
             id: 4,
             name: "gifts",
             type: { id: 2, name: "income" },
@@ -59,7 +59,7 @@ describe("Finance records search", () => {
         {
           amount: 10,
           category: {
-            group: { id: 2, name: "mega-economists" },
+            board: { id: 2, name: "mega-economists" },
             id: 3,
             name: "gifts",
             type: { id: 1, name: "expense" },
@@ -71,7 +71,7 @@ describe("Finance records search", () => {
         {
           amount: 30,
           category: {
-            group: { id: 2, name: "mega-economists" },
+            board: { id: 2, name: "mega-economists" },
             id: 3,
             name: "gifts",
             type: { id: 1, name: "expense" },
@@ -83,7 +83,7 @@ describe("Finance records search", () => {
         {
           amount: 25,
           category: {
-            group: { id: 1, name: "clever-financiers" },
+            board: { id: 1, name: "clever-financiers" },
             id: 2,
             name: "education",
             type: { id: 1, name: "expense" },
@@ -95,7 +95,7 @@ describe("Finance records search", () => {
         {
           amount: 400,
           category: {
-            group: { id: 1, name: "clever-financiers" },
+            board: { id: 1, name: "clever-financiers" },
             id: 2,
             name: "education",
             type: { id: 1, name: "expense" },
@@ -107,7 +107,7 @@ describe("Finance records search", () => {
         {
           amount: 100,
           category: {
-            group: { id: 1, name: "clever-financiers" },
+            board: { id: 1, name: "clever-financiers" },
             id: 1,
             name: "clothes",
             type: { id: 1, name: "expense" },
@@ -119,12 +119,12 @@ describe("Finance records search", () => {
       ],
     },
     {
-      url: "/api/finances/records/search?groupId=1,666666",
+      url: "/api/finances/records/search?boardId=1,666666",
       searchResult: [
         {
           amount: 25,
           category: {
-            group: { id: 1, name: "clever-financiers" },
+            board: { id: 1, name: "clever-financiers" },
             id: 2,
             name: "education",
             type: { id: 1, name: "expense" },
@@ -136,7 +136,7 @@ describe("Finance records search", () => {
         {
           amount: 400,
           category: {
-            group: { id: 1, name: "clever-financiers" },
+            board: { id: 1, name: "clever-financiers" },
             id: 2,
             name: "education",
             type: { id: 1, name: "expense" },
@@ -148,7 +148,7 @@ describe("Finance records search", () => {
         {
           amount: 100,
           category: {
-            group: { id: 1, name: "clever-financiers" },
+            board: { id: 1, name: "clever-financiers" },
             id: 1,
             name: "clothes",
             type: { id: 1, name: "expense" },
@@ -160,7 +160,7 @@ describe("Finance records search", () => {
       ],
     },
     {
-      url: "/api/finances/records/search?groupId=666666",
+      url: "/api/finances/records/search?boardId=666666",
       searchResult: [],
     },
     {
@@ -169,7 +169,7 @@ describe("Finance records search", () => {
         {
           amount: 30,
           category: {
-            group: { id: 2, name: "mega-economists" },
+            board: { id: 2, name: "mega-economists" },
             id: 3,
             name: "gifts",
             type: { id: 1, name: "expense" },
@@ -181,7 +181,7 @@ describe("Finance records search", () => {
         {
           amount: 10,
           category: {
-            group: { id: 2, name: "mega-economists" },
+            board: { id: 2, name: "mega-economists" },
             id: 3,
             name: "gifts",
             type: { id: 1, name: "expense" },

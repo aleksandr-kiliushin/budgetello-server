@@ -1,7 +1,7 @@
 import { Column, Entity, PrimaryGeneratedColumn } from "typeorm"
 
-@Entity("groups_subjects")
-export class GroupsSubjectsEntity {
+@Entity("board_subject")
+export class BoardSubjectEntity {
   @PrimaryGeneratedColumn({ type: "int" })
   id: number
 

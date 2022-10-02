@@ -11,7 +11,7 @@ describe("Finance category deleting", () => {
     const categoryCreatingResponse = await fetchApi("/api/finances/categories/2", { method: "DELETE" })
     expect(categoryCreatingResponse.status).toEqual(200)
     expect(await categoryCreatingResponse.json()).toEqual<IFinanceCategory>({
-      group: { id: 1, name: "clever-financiers" },
+      board: { id: 1, name: "clever-financiers" },
       id: 2,
       name: "education",
       type: { id: 1, name: "expense" },
@@ -22,10 +22,10 @@ describe("Finance category deleting", () => {
     await fetchApi("/api/finances/categories/2", { method: "DELETE" })
     const getAllCategoriesResponse = await fetchApi("/api/finances/categories/search")
     expect(await getAllCategoriesResponse.json()).toEqual<IFinanceCategory[]>([
-      { group: { id: 1, name: "clever-financiers" }, id: 1, name: "clothes", type: { id: 1, name: "expense" } },
-      { group: { id: 2, name: "mega-economists" }, id: 3, name: "gifts", type: { id: 1, name: "expense" } },
-      { group: { id: 2, name: "mega-economists" }, id: 4, name: "gifts", type: { id: 2, name: "income" } },
-      { group: { id: 2, name: "mega-economists" }, id: 5, name: "salary", type: { id: 2, name: "income" } },
+      { board: { id: 1, name: "clever-financiers" }, id: 1, name: "clothes", type: { id: 1, name: "expense" } },
+      { board: { id: 2, name: "mega-economists" }, id: 3, name: "gifts", type: { id: 1, name: "expense" } },
+      { board: { id: 2, name: "mega-economists" }, id: 4, name: "gifts", type: { id: 2, name: "income" } },
+      { board: { id: 2, name: "mega-economists" }, id: 5, name: "salary", type: { id: 2, name: "income" } },
     ])
   })
 })
