@@ -39,7 +39,12 @@ describe("Finance record updating", () => {
       payload: { amount: 8000 },
       response: {
         amount: 8000,
-        category: { id: 1, name: "clothes", type: { id: 1, name: "expense" } },
+        category: {
+          group: { id: 1, name: "clever-financiers" },
+          id: 1,
+          name: "clothes",
+          type: { id: 1, name: "expense" },
+        },
         date: "2022-08-01",
         id: 1,
         isTrashed: true,
@@ -50,7 +55,12 @@ describe("Finance record updating", () => {
       payload: { categoryId: 5 },
       response: {
         amount: 100,
-        category: { id: 5, name: "salary", type: { id: 2, name: "income" } },
+        category: {
+          group: { id: 1, name: "clever-financiers" },
+          id: 5,
+          name: "salary",
+          type: { id: 2, name: "income" },
+        },
         date: "2022-08-01",
         id: 1,
         isTrashed: true,
@@ -61,7 +71,12 @@ describe("Finance record updating", () => {
       payload: { date: "2029-20-10" },
       response: {
         amount: 100,
-        category: { id: 1, name: "clothes", type: { id: 1, name: "expense" } },
+        category: {
+          group: { id: 1, name: "clever-financiers" },
+          id: 1,
+          name: "clothes",
+          type: { id: 1, name: "expense" },
+        },
         date: "2029-20-10",
         id: 1,
         isTrashed: true,
@@ -72,7 +87,12 @@ describe("Finance record updating", () => {
       payload: { isTrashed: false },
       response: {
         amount: 100,
-        category: { id: 1, name: "clothes", type: { id: 1, name: "expense" } },
+        category: {
+          group: { id: 1, name: "clever-financiers" },
+          id: 1,
+          name: "clothes",
+          type: { id: 1, name: "expense" },
+        },
         date: "2022-08-01",
         id: 1,
         isTrashed: false,
@@ -83,7 +103,12 @@ describe("Finance record updating", () => {
       payload: { amount: 90000, categoryId: 3, date: "2050-01-02", isTrashed: false },
       response: {
         amount: 90000,
-        category: { id: 3, name: "gifts", type: { id: 1, name: "expense" } },
+        category: {
+          group: { id: 1, name: "clever-financiers" },
+          id: 3,
+          name: "gifts",
+          type: { id: 1, name: "expense" },
+        },
         date: "2050-01-02",
         id: 1,
         isTrashed: false,
@@ -94,7 +119,12 @@ describe("Finance record updating", () => {
       payload: {},
       response: {
         amount: 100,
-        category: { id: 1, name: "clothes", type: { id: 1, name: "expense" } },
+        category: {
+          group: { id: 1, name: "clever-financiers" },
+          id: 1,
+          name: "clothes",
+          type: { id: 1, name: "expense" },
+        },
         date: "2022-08-01",
         id: 1,
         isTrashed: true,

@@ -24,7 +24,7 @@ export class FinanceRecordService {
         id: query.orderingById ?? "desc",
         date: query.orderingById ?? "desc",
       },
-      relations: { category: { type: true } },
+      relations: { category: { group: true, type: true } },
       skip: query.skip === undefined ? 0 : parseInt(query.skip),
       ...(query.take !== undefined && { take: parseInt(query.take) }),
       where: {
@@ -41,7 +41,7 @@ export class FinanceRecordService {
 
   async findById(id: FinanceRecordEntity["id"]): Promise<FinanceRecordEntity> {
     const financeRecord = await this.financeRecordRepository.findOne({
-      relations: { category: { type: true } },
+      relations: { category: { group: true, type: true } },
       where: { id },
     })
     if (financeRecord === null) {

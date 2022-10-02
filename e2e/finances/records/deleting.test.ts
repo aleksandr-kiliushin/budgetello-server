@@ -12,7 +12,12 @@ describe("Finance record deleting", () => {
     expect(recordDeletingResponse.status).toEqual(200)
     expect(await recordDeletingResponse.json()).toEqual<IFinanceRecord>({
       amount: 100,
-      category: { id: 1, name: "clothes", type: { id: 1, name: "expense" } },
+      category: {
+        group: { id: 1, name: "clever-financiers" },
+        id: 1,
+        name: "clothes",
+        type: { id: 1, name: "expense" },
+      },
       date: "2022-08-01",
       id: 1,
       isTrashed: true,
@@ -27,21 +32,36 @@ describe("Finance record deleting", () => {
     expect(await getAllRecordsResponse.json()).toEqual<IFinanceRecord[]>([
       {
         amount: 230,
-        category: { id: 4, name: "gifts", type: { id: 2, name: "income" } },
+        category: {
+          group: { id: 1, name: "clever-financiers" },
+          id: 4,
+          name: "gifts",
+          type: { id: 2, name: "income" },
+        },
         date: "2022-08-03",
         id: 6,
         isTrashed: false,
       },
       {
         amount: 10,
-        category: { id: 3, name: "gifts", type: { id: 1, name: "expense" } },
+        category: {
+          group: { id: 1, name: "clever-financiers" },
+          id: 3,
+          name: "gifts",
+          type: { id: 1, name: "expense" },
+        },
         date: "2022-08-02",
         id: 5,
         isTrashed: false,
       },
       {
         amount: 30,
-        category: { id: 3, name: "gifts", type: { id: 1, name: "expense" } },
+        category: {
+          group: { id: 1, name: "clever-financiers" },
+          id: 3,
+          name: "gifts",
+          type: { id: 1, name: "expense" },
+        },
         date: "2022-08-02",
         id: 4,
         isTrashed: false,
