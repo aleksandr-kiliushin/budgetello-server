@@ -86,6 +86,7 @@ export class FinanceCategoryService {
   ): Promise<FinanceCategoryEntity> {
     const { groupId, name, typeId } = updateFinanceCategoryDto
     const category = await this.findById(id)
+    if (groupId === undefined && name === undefined && typeId === undefined) return category
     if (typeId !== undefined) {
       try {
         category.type = await this.financeCategoryTypeService.findById(typeId)

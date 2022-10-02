@@ -44,6 +44,17 @@ describe("Finance category updating", () => {
       url: "/api/finances/categories/2",
     },
     {
+      payload: {},
+      response: {
+        group: { id: 1, name: "clever-financiers" },
+        id: 2,
+        name: "education",
+        type: { id: 1, name: "expense" },
+      },
+      status: 200,
+      url: "/api/finances/categories/2",
+    },
+    {
       payload: { groupId: 2, name: "teaching", typeId: 2 },
       response: { group: { id: 2, name: "mega-economists" }, id: 2, name: "teaching", type: { id: 2, name: "income" } },
       status: 200,
