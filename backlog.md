@@ -1,3 +1,2 @@
-- Add meningful feedback message to 400 and 404 response when a finance category (or something else) not found by ID, or when provided data is invalid.
 - Build CI pipeline with GitHub actions.
 - Set up alias imports in tests.
