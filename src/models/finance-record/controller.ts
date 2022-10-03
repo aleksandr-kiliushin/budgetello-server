@@ -15,13 +15,23 @@ export class FinanceRecordController {
   constructor(private readonly financeRecordService: FinanceRecordService) {}
 
   @Get("search")
-  search(@Query() query: SearchFinanceRecordsQueryDto) {
-    return this.financeRecordService.search(query)
+  search(
+    @Query()
+    query: SearchFinanceRecordsQueryDto,
+    @Request()
+    request: Record<string, unknown> & { userId: IUser["id"] }
+  ) {
+    return this.financeRecordService.search({ authorizedUserId: request.userId, query })
   }
 
   @Get(":id")
-  findById(@Param("id") id: string) {
-    return this.financeRecordService.findById(parseInt(id))
+  findById(
+    @Param("id")
+    recordId: string,
+    @Request()
+    request: Record<string, unknown> & { userId: IUser["id"] }
+  ) {
+    return this.financeRecordService.findById({ authorizedUserId: request.userId, recordId: parseInt(recordId) })
   }
 
   @Post()
@@ -50,7 +60,15 @@ export class FinanceRecordController {
   }
 
   @Delete(":id")
-  deleteFinanceRecord(@Param("id") id: string) {
-    return this.financeRecordService.deleteFinanceRecord(parseInt(id))
+  deleteFinanceRecord(
+    @Param("id")
+    recordId: string,
+    @Request()
+    request: Record<string, unknown> & { userId: IUser["id"] }
+  ) {
+    return this.financeRecordService.deleteFinanceRecord({
+      authorizedUserId: request.userId,
+      recordId: parseInt(recordId),
+    })
   }
 }

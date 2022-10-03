@@ -1,4 +1,4 @@
 export class SearchFinanceCategoriesQueryDto {
-  id: string
-  boardId: string
+  id?: string
+  boardId?: string
 }

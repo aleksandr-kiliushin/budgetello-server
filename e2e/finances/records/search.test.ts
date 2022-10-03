@@ -9,6 +9,7 @@ beforeEach(async () => {
 describe("Get finance record by ID", () => {
   test.each<
     | { url: string; responseStatus: 200; responseData: IFinanceRecord }
+    | { url: string; responseStatus: 403; responseData: { message: string } }
     | { url: string; responseStatus: 404; responseData: { message: string } }
   >([
     {
@@ -28,6 +29,11 @@ describe("Get finance record by ID", () => {
       },
     },
     {
+      url: "/api/finances/records/4",
+      responseStatus: 403,
+      responseData: { message: "Access denied." },
+    },
+    {
       url: "/api/finances/records/666",
       responseStatus: 404,
       responseData: { message: "Record with ID '666' not found." },
@@ -44,42 +50,6 @@ describe("Finance records search", () => {
     {
       url: "/api/finances/records/search",
       searchResult: [
-        {
-          amount: 230,
-          category: {
-            board: { id: 2, name: "mega-economists" },
-            id: 4,
-            name: "gifts",
-            type: { id: 2, name: "income" },
-          },
-          date: "2022-08-03",
-          id: 6,
-          isTrashed: false,
-        },
-        {
-          amount: 10,
-          category: {
-            board: { id: 2, name: "mega-economists" },
-            id: 3,
-            name: "gifts",
-            type: { id: 1, name: "expense" },
-          },
-          date: "2022-08-02",
-          id: 5,
-          isTrashed: false,
-        },
-        {
-          amount: 30,
-          category: {
-            board: { id: 2, name: "mega-economists" },
-            id: 3,
-            name: "gifts",
-            type: { id: 1, name: "expense" },
-          },
-          date: "2022-08-02",
-          id: 4,
-          isTrashed: false,
-        },
         {
           amount: 25,
           category: {
@@ -164,31 +134,23 @@ describe("Finance records search", () => {
       searchResult: [],
     },
     {
-      url: "/api/finances/records/search?orderingByDate=ASC&orderingById=ASC&isTrashed=false&skip=1&take=2",
+      url: "/api/finances/records/search?boardId=2",
+      searchResult: [],
+    },
+    {
+      url: "/api/finances/records/search?orderingByDate=ASC&orderingById=ASC&isTrashed=true&skip=1&take=1",
       searchResult: [
         {
-          amount: 30,
+          amount: 400,
           category: {
-            board: { id: 2, name: "mega-economists" },
-            id: 3,
-            name: "gifts",
+            board: { id: 1, name: "clever-financiers" },
+            id: 2,
+            name: "education",
             type: { id: 1, name: "expense" },
           },
-          date: "2022-08-02",
-          id: 4,
-          isTrashed: false,
-        },
-        {
-          amount: 10,
-          category: {
-            board: { id: 2, name: "mega-economists" },
-            id: 3,
-            name: "gifts",
-            type: { id: 1, name: "expense" },
-          },
-          date: "2022-08-02",
-          id: 5,
-          isTrashed: false,
+          date: "2022-08-01",
+          id: 2,
+          isTrashed: true,
         },
       ],
     },

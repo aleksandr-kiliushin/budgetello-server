@@ -1,9 +1,10 @@
-import { BadRequestException, Injectable, NotFoundException } from "@nestjs/common"
+import { BadRequestException, ForbiddenException, Injectable, NotFoundException } from "@nestjs/common"
 import { InjectRepository } from "@nestjs/typeorm"
 import { In, Repository } from "typeorm"
 
 import { FinanceCategoryEntity } from "#models/finance-category/entities/finance-category.entity"
 import { FinanceCategoryService } from "#models/finance-category/service"
+import { UserService } from "#models/user/service"
 
 import { IUser } from "#interfaces/user"
 
@@ -17,10 +18,49 @@ export class FinanceRecordService {
   constructor(
     @InjectRepository(FinanceRecordEntity)
     private financeRecordRepository: Repository<FinanceRecordEntity>,
-    private financeCategoryService: FinanceCategoryService
+    private financeCategoryService: FinanceCategoryService,
+    private userService: UserService
   ) {}
 
-  search(query: SearchFinanceRecordsQueryDto): Promise<FinanceRecordEntity[]> {
+  async search({
+    authorizedUserId,
+    query,
+  }: {
+    authorizedUserId: IUser["id"]
+    query: SearchFinanceRecordsQueryDto
+  }): Promise<FinanceRecordEntity[]> {
+    const authorizedUser = await this.userService.findUser({
+      id: authorizedUserId,
+      relations: { administratedBoards: true, boards: true },
+    })
+    const accessibleBoardsIds = [
+      ...new Set([
+        ...authorizedUser.administratedBoards.map((board) => board.id),
+        ...authorizedUser.boards.map((board) => board.id),
+      ]),
+    ]
+
+    const boardsIdsToSearchWith =
+      query.boardId === undefined
+        ? accessibleBoardsIds
+        : query.boardId
+            .split(",")
+            .map(parseInt)
+            .filter((boardIdFromQuery) => accessibleBoardsIds.includes(boardIdFromQuery))
+
+    const accessibleCategoriesOfSelectedBoards = await this.financeCategoryService.searchCategories({
+      authorizedUserId,
+      query: { boardId: boardsIdsToSearchWith.join(",") },
+    })
+    const accessibleCategoriesOfSelectedBoardsIds = accessibleCategoriesOfSelectedBoards.map((category) => category.id)
+    const categoriesIdsToSearchWith =
+      query.categoryId === undefined
+        ? accessibleCategoriesOfSelectedBoardsIds
+        : query.categoryId
+            .split(",")
+            .map(parseInt)
+            .filter((categoryIdFromQuery) => accessibleCategoriesOfSelectedBoardsIds.includes(categoryIdFromQuery))
+
     return this.financeRecordRepository.find({
       order: {
         id: query.orderingById ?? "desc",
@@ -32,24 +72,44 @@ export class FinanceRecordService {
       where: {
         ...(query.amount !== undefined && { amount: In(query.amount.split(",")) }),
         ...(query.date !== undefined && { date: In(query.date.split(",")) }),
-        ...(query.categoryId !== undefined && { categoryId: In(query.categoryId.split(",")) }),
         ...(query.id !== undefined && { id: In(query.id.split(",")) }),
-        ...(query.boardId !== undefined && { category: { board: { id: In(query.boardId.split(",")) } } }),
         ...(query.isTrashed === "true" && { isTrashed: true }),
         ...(query.isTrashed === "false" && { isTrashed: false }),
+        category: { id: In(categoriesIdsToSearchWith) },
       },
     })
   }
 
-  async findById(id: FinanceRecordEntity["id"]): Promise<FinanceRecordEntity> {
-    const financeRecord = await this.financeRecordRepository.findOne({
+  async findById({
+    authorizedUserId,
+    recordId,
+  }: {
+    authorizedUserId: IUser["id"]
+    recordId: FinanceRecordEntity["id"]
+  }): Promise<FinanceRecordEntity> {
+    const record = await this.financeRecordRepository.findOne({
       relations: { category: { board: true, type: true } },
-      where: { id },
+      where: { id: recordId },
     })
-    if (financeRecord === null) {
-      throw new NotFoundException({ message: `Record with ID '${id}' not found.` })
+    if (record === null) {
+      throw new NotFoundException({ message: `Record with ID '${recordId}' not found.` })
     }
-    return financeRecord
+
+    const authorizedUser = await this.userService.findUser({
+      id: authorizedUserId,
+      relations: { administratedBoards: true, boards: true },
+    })
+    const accessibleBoardsIds = [
+      ...new Set([
+        ...authorizedUser.administratedBoards.map((board) => board.id),
+        ...authorizedUser.boards.map((board) => board.id),
+      ]),
+    ]
+    if (!accessibleBoardsIds.includes(record.category.board.id)) {
+      throw new ForbiddenException({ message: "Access denied." })
+    }
+
+    return record
   }
 
   async create({
@@ -94,7 +154,7 @@ export class FinanceRecordService {
     recordId: FinanceRecordEntity["id"]
     updateFinanceRecordDto: UpdateFinanceRecordDto
   }): Promise<FinanceRecordEntity> {
-    const record = await this.findById(recordId)
+    const record = await this.findById({ authorizedUserId, recordId })
     if (updateFinanceRecordDto.amount !== undefined) {
       if (typeof updateFinanceRecordDto.amount !== "number" || updateFinanceRecordDto.amount <= 0) {
         throw new BadRequestException({ fields: { amount: "Should be a positive number." } })
@@ -123,9 +183,15 @@ export class FinanceRecordService {
     return this.financeRecordRepository.save(record)
   }
 
-  async deleteFinanceRecord(id: FinanceRecordEntity["id"]): Promise<FinanceRecordEntity> {
-    const record = await this.findById(id)
-    await this.financeRecordRepository.delete(id)
+  async deleteFinanceRecord({
+    authorizedUserId,
+    recordId,
+  }: {
+    authorizedUserId: IUser["id"]
+    recordId: FinanceRecordEntity["id"]
+  }): Promise<FinanceRecordEntity> {
+    const record = await this.findById({ authorizedUserId, recordId })
+    await this.financeRecordRepository.delete(recordId)
     return record
   }
 }
