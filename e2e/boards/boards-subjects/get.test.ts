@@ -1,10 +1,11 @@
 import { BoardSubjectEntity } from "#models/board-subjects/entities/board-subject.entity"
 
+import { users } from "#e2e/constants/users"
 import { authorize } from "#e2e/helpers/authorize"
 import { fetchApi } from "#e2e/helpers/fetchApi"
 
 beforeEach(async () => {
-  await authorize("john-doe")
+  await authorize(users.johnDoe.username)
 })
 
 describe("get boards subjects", () => {

@@ -79,7 +79,7 @@ describe("Boards updating", () => {
   })
 
   it("updated boards can be found by ID", async () => {
-    await authorize("john-doe")
+    await authorize(users.johnDoe.username)
     await fetchApi("/api/boards/1", { body: JSON.stringify({ name: "champions", subjectId: 2 }), method: "PATCH" })
     const response = await fetchApi("/api/boards/1")
     expect(await response.json()).toEqual<BoardEntity | unknown>({

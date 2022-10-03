@@ -1,10 +1,11 @@
 import { IFinanceCategoryType } from "#interfaces/finance"
 
+import { users } from "#e2e/constants/users"
 import { authorize } from "#e2e/helpers/authorize"
 import { fetchApi } from "#e2e/helpers/fetchApi"
 
 beforeEach(async () => {
-  await authorize("john-doe")
+  await authorize(users.johnDoe.username)
 })
 
 describe("get finance category types", () => {

@@ -5,7 +5,7 @@ import { authorize } from "#e2e/helpers/authorize"
 import { fetchApi } from "#e2e/helpers/fetchApi"
 
 beforeEach(async () => {
-  await authorize("john-doe")
+  await authorize(users.johnDoe.username)
 })
 
 describe("Board creating", () => {

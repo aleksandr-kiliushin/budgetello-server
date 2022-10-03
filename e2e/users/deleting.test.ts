@@ -26,7 +26,7 @@ describe("User deletion", () => {
 
   it("the deleted user doesn't exist in all users list", async () => {
     await fetchApi(`/api/users/${users.johnDoe.id}`, { method: "DELETE" })
-    await authorize("jessica-stark")
+    await authorize(users.jessicaStark.username)
     const fetchAllUsersResponse = await fetchApi("/api/users/search")
     expect(await fetchAllUsersResponse.json()).toEqual<IUser[]>([users.jessicaStark])
   })
