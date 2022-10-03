@@ -1,44 +1,41 @@
 import { IUser } from "#interfaces/user"
 
+import { users } from "#e2e/constants/users"
 import { authorize } from "#e2e/helpers/authorize"
 import { fetchApi } from "#e2e/helpers/fetchApi"
 
 beforeEach(async () => {
-  await authorize("john-doe")
+  await authorize(users.johnDoe.username)
 })
 
 describe("User updating", () => {
   it("doesn't allow update another user", async () => {
-    const updateAnotherUserResponse = await fetchApi("/api/users/2", {
+    const updateAnotherUserResponse = await fetchApi(`/api/users/${users.jessicaStark.id}`, {
       body: JSON.stringify({ username: "jessica-stark-is-stupid" }),
       method: "PATCH",
     })
     expect(updateAnotherUserResponse.status).toEqual(403)
     expect(await updateAnotherUserResponse.json()).toEqual({ message: "You are not allowed to update another user." })
-    const fetchAnotherUserResponse = await fetchApi("/api/users/2")
+    const fetchAnotherUserResponse = await fetchApi(`/api/users/${users.jessicaStark.id}`)
     expect(fetchAnotherUserResponse.status).toEqual(200)
-    expect(await fetchAnotherUserResponse.json()).toEqual<IUser>({
-      id: 2,
-      username: "jessica-stark",
-      password: "8bd912e2fe84cd93c457142a1d7e77136c3bc954f183",
-    })
+    expect(await fetchAnotherUserResponse.json()).toEqual<IUser>(users.jessicaStark)
   })
 
   it("allows the logged in user to update themselves", async () => {
-    const updateMeResponse = await fetchApi("/api/users/1", {
+    const updateMeResponse = await fetchApi(`/api/users/${users.johnDoe.id}`, {
       body: JSON.stringify({ username: "john-doe-is-cool", password: "john-doe-new-password" }),
       method: "PATCH",
     })
     expect(updateMeResponse.status).toEqual(200)
     expect(await updateMeResponse.json()).toEqual<IUser>({
-      id: 1,
+      id: users.johnDoe.id,
       username: "john-doe-is-cool",
       password: expect.stringMatching(".+"),
     })
   })
 
   it("user cannot login with the old credentials", async () => {
-    await fetchApi("/api/users/1", {
+    await fetchApi(`/api/users/${users.johnDoe.id}`, {
       body: JSON.stringify({ username: "john-doe-is-cool", password: "john-doe-new-password" }),
       method: "PATCH",
     })
@@ -52,7 +49,7 @@ describe("User updating", () => {
   })
 
   it("user can login with the new credentials", async () => {
-    await fetchApi("/api/users/1", {
+    await fetchApi(`/api/users/${users.johnDoe.id}`, {
       body: JSON.stringify({ username: "john-doe-is-cool", password: "john-doe-new-password" }),
       method: "PATCH",
     })
@@ -68,7 +65,7 @@ describe("User updating", () => {
   })
 
   it("all users list is updated after a user is updated", async () => {
-    const updateMeResponse = await fetchApi("/api/users/1", {
+    const updateMeResponse = await fetchApi(`/api/users/${users.johnDoe.id}`, {
       body: JSON.stringify({ username: "john-doe-is-cool", password: "john-doe-new-password" }),
       method: "PATCH",
     })
@@ -84,14 +81,10 @@ describe("User updating", () => {
     const allUsers = await fetchAllUsersResponse.json()
     expect(allUsers).toHaveLength(2)
     expect(allUsers).toContainEqual({
-      id: 1,
+      id: users.johnDoe.id,
       username: "john-doe-is-cool",
       password: (await updateMeResponse.json()).password,
     })
-    expect(allUsers).toContainEqual({
-      id: 2,
-      username: "jessica-stark",
-      password: "8bd912e2fe84cd93c457142a1d7e77136c3bc954f183",
-    })
+    expect(allUsers).toContainEqual(users.jessicaStark)
   })
 })

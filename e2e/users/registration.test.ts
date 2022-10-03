@@ -1,5 +1,7 @@
 import { IUser } from "#interfaces/user"
 
+import { users } from "#e2e/constants/users"
+
 describe("User registration process", () => {
   it("can register and get correct data response after registration", async () => {
     const registerUserResponse = await fetch("http://localhost:3080/api/users", {
@@ -76,16 +78,8 @@ describe("Registered user data and functions", () => {
       headers: { Authorization: newlyRegisteredUser.authToken },
     })
     expect(await allUsersResponse.json()).toEqual<IUser[]>([
-      {
-        id: 1,
-        username: "john-doe",
-        password: "8bd309ffba83c3db9a53142b052468007b",
-      },
-      {
-        id: 2,
-        username: "jessica-stark",
-        password: "8bd912e2fe84cd93c457142a1d7e77136c3bc954f183",
-      },
+      users.johnDoe,
+      users.jessicaStark,
       { id: 3, username: "andrew-smith", password: newlyRegisteredUser.hashedPassword },
     ])
   })

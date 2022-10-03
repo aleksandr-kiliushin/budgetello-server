@@ -1,3 +1,4 @@
+import { users } from "#e2e/constants/users"
 import { ITestUserUsername, authorize } from "#e2e/helpers/authorize"
 import { fetchApi } from "#e2e/helpers/fetchApi"
 
@@ -17,12 +18,9 @@ describe("Participating in a board", () => {
     {
       authorizedUserUsername: "john-doe",
       responseBody: {
-        admins: [{ id: 2, username: "jessica-stark", password: "8bd912e2fe84cd93c457142a1d7e77136c3bc954f183" }],
+        admins: [users.jessicaStark],
         id: 3,
-        members: [
-          { id: 2, username: "jessica-stark", password: "8bd912e2fe84cd93c457142a1d7e77136c3bc954f183" },
-          { id: 1, username: "john-doe", password: "8bd309ffba83c3db9a53142b052468007b" },
-        ],
+        members: [users.jessicaStark, users.johnDoe],
         name: "beautiful-sportsmen",
         subject: { id: 2, name: "habits" },
       },
@@ -59,9 +57,9 @@ describe("Participating in a board", () => {
     {
       authorizedUserUsername: "jessica-stark",
       responseBody: {
-        admins: [{ id: 1, username: "john-doe", password: "8bd309ffba83c3db9a53142b052468007b" }],
+        admins: [users.johnDoe],
         id: 1,
-        members: [{ id: 1, username: "john-doe", password: "8bd309ffba83c3db9a53142b052468007b" }],
+        members: [users.johnDoe],
         name: "clever-financiers",
         subject: { id: 1, name: "finances" },
       },

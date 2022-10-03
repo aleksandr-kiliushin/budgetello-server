@@ -1,5 +1,6 @@
 import { BoardEntity } from "#models/boards/entities/board.entity"
 
+import { users } from "#e2e/constants/users"
 import { authorize } from "#e2e/helpers/authorize"
 import { fetchApi } from "#e2e/helpers/fetchApi"
 
@@ -46,9 +47,9 @@ describe("Board creating", () => {
     {
       payload: { name: "champions", subjectId: 2 },
       response: {
-        admins: [{ id: 1, username: "john-doe", password: "8bd309ffba83c3db9a53142b052468007b" }],
+        admins: [users.johnDoe],
         id: 4,
-        members: [{ id: 1, username: "john-doe", password: "8bd309ffba83c3db9a53142b052468007b" }],
+        members: [users.johnDoe],
         name: "champions",
         subject: { id: 2, name: "habits" },
       },
@@ -67,9 +68,9 @@ describe("Board creating", () => {
     await fetchApi("/api/boards", { body: JSON.stringify({ name: "champions", subjectId: 2 }), method: "POST" })
     const getNewlyCreatedBoardResponse = await fetchApi("/api/boards/4")
     expect(await getNewlyCreatedBoardResponse.json()).toEqual<BoardEntity | unknown>({
-      admins: [{ id: 1, username: "john-doe", password: "8bd309ffba83c3db9a53142b052468007b" }],
+      admins: [users.johnDoe],
       id: 4,
-      members: [{ id: 1, username: "john-doe", password: "8bd309ffba83c3db9a53142b052468007b" }],
+      members: [users.johnDoe],
       name: "champions",
       subject: { id: 2, name: "habits" },
     })
