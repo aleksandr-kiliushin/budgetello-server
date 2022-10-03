@@ -1,6 +1,6 @@
 import { BoardEntity } from "#models/boards/entities/board.entity"
 
-import { boardsSubjects } from "#e2e/constants/boards"
+import { boards, boardsSubjects } from "#e2e/constants/boards"
 import { users } from "#e2e/constants/users"
 import { authorize } from "#e2e/helpers/authorize"
 import { fetchApi } from "#e2e/helpers/fetchApi"
@@ -15,15 +15,9 @@ describe("Responds with a board found by provided ID", () => {
     | { url: string; responseStatus: 404; responseData: Record<string, never> }
   >([
     {
-      url: "/api/boards/1",
+      url: `/api/boards/${boards.cleverFinanciers.id}`,
       responseStatus: 200,
-      responseData: {
-        admins: [users.johnDoe],
-        id: 1,
-        members: [users.johnDoe, users.jessicaStark],
-        name: "clever-financiers",
-        subject: boardsSubjects.finances,
-      },
+      responseData: boards.cleverFinanciers,
     },
     {
       url: "/api/boards/666666",
@@ -40,35 +34,12 @@ describe("Responds with a board found by provided ID", () => {
 describe("Boards search", () => {
   test.each<{ url: string; searchResult: (BoardEntity | unknown)[] }>([
     {
-      url: "/api/boards/search?id=1",
-      searchResult: [
-        {
-          admins: [users.johnDoe],
-          id: 1,
-          members: [users.johnDoe, users.jessicaStark],
-          name: "clever-financiers",
-          subject: boardsSubjects.finances,
-        },
-      ],
+      url: `/api/boards/search?id=${boards.cleverFinanciers.id}`,
+      searchResult: [boards.cleverFinanciers],
     },
     {
-      url: "/api/boards/search?id=1,3",
-      searchResult: [
-        {
-          admins: [users.johnDoe],
-          id: 1,
-          members: [users.johnDoe, users.jessicaStark],
-          name: "clever-financiers",
-          subject: boardsSubjects.finances,
-        },
-        {
-          admins: [users.jessicaStark],
-          id: 3,
-          members: [users.jessicaStark],
-          name: "beautiful-sportsmen",
-          subject: boardsSubjects.habits,
-        },
-      ],
+      url: `/api/boards/search?id=${boards.cleverFinanciers.id},${boards.beautifulSportsmen.id}`,
+      searchResult: [boards.cleverFinanciers, boards.beautifulSportsmen],
     },
     {
       url: "/api/boards/search?id=666666",
@@ -76,79 +47,19 @@ describe("Boards search", () => {
     },
     {
       url: "/api/boards/search",
-      searchResult: [
-        {
-          admins: [users.johnDoe],
-          id: 1,
-          members: [users.johnDoe, users.jessicaStark],
-          name: "clever-financiers",
-          subject: boardsSubjects.finances,
-        },
-        {
-          admins: [users.jessicaStark],
-          id: 2,
-          members: [users.jessicaStark],
-          name: "mega-economists",
-          subject: boardsSubjects.finances,
-        },
-        {
-          admins: [users.jessicaStark],
-          id: 3,
-          members: [users.jessicaStark],
-          name: "beautiful-sportsmen",
-          subject: boardsSubjects.habits,
-        },
-      ],
+      searchResult: [boards.cleverFinanciers, boards.megaEconomists, boards.beautifulSportsmen],
     },
     {
-      url: "/api/boards/search?subjectId=1",
-      searchResult: [
-        {
-          admins: [users.johnDoe],
-          id: 1,
-          members: [users.johnDoe, users.jessicaStark],
-          name: "clever-financiers",
-          subject: boardsSubjects.finances,
-        },
-        {
-          admins: [users.jessicaStark],
-          id: 2,
-          members: [users.jessicaStark],
-          name: "mega-economists",
-          subject: boardsSubjects.finances,
-        },
-      ],
+      url: `/api/boards/search?subjectId=${boardsSubjects.finances.id}`,
+      searchResult: [boards.cleverFinanciers, boards.megaEconomists],
     },
     {
       url: "/api/boards/search?name=me",
-      searchResult: [
-        {
-          admins: [users.jessicaStark],
-          id: 2,
-          members: [users.jessicaStark],
-          name: "mega-economists",
-          subject: boardsSubjects.finances,
-        },
-        {
-          admins: [users.jessicaStark],
-          id: 3,
-          members: [users.jessicaStark],
-          name: "beautiful-sportsmen",
-          subject: boardsSubjects.habits,
-        },
-      ],
+      searchResult: [boards.megaEconomists, boards.beautifulSportsmen],
     },
     {
-      url: "/api/boards/search?name=me&subjectId=1&id=2",
-      searchResult: [
-        {
-          admins: [users.jessicaStark],
-          id: 2,
-          members: [users.jessicaStark],
-          name: "mega-economists",
-          subject: boardsSubjects.finances,
-        },
-      ],
+      url: `/api/boards/search?name=me&subjectId=${boardsSubjects.finances.id}&id=${boards.megaEconomists.id}`,
+      searchResult: [boards.megaEconomists],
     },
   ])("boards search for: $url", async ({ url, searchResult }) => {
     const response = await fetchApi(url)

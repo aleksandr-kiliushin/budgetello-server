@@ -1,4 +1,4 @@
-import { boardsSubjects } from "#e2e/constants/boards"
+import { boards, boardsSubjects } from "#e2e/constants/boards"
 import { users } from "#e2e/constants/users"
 import { ITestUserUsername, authorize } from "#e2e/helpers/authorize"
 import { fetchApi } from "#e2e/helpers/fetchApi"
@@ -11,22 +11,22 @@ describe("Participating in a board", () => {
     url: string
   }>([
     {
-      authorizedUserUsername: "jessica-stark",
+      authorizedUserUsername: users.jessicaStark.username,
       responseBody: { message: "You are already a member of this board." },
       status: 400,
-      url: "/api/boards/2/participating",
+      url: `/api/boards/${boards.megaEconomists.id}/participating`,
     },
     {
-      authorizedUserUsername: "john-doe",
+      authorizedUserUsername: users.johnDoe.username,
       responseBody: {
         admins: [users.jessicaStark],
-        id: 3,
+        id: boards.beautifulSportsmen.id,
         members: [users.jessicaStark, users.johnDoe],
-        name: "beautiful-sportsmen",
+        name: boards.beautifulSportsmen.name,
         subject: boardsSubjects.habits,
       },
       status: 201,
-      url: "/api/boards/3/participating",
+      url: `/api/boards/${boards.beautifulSportsmen.id}/participating`,
     },
   ])("Board joining case #%#", async ({ authorizedUserUsername, responseBody, status, url }) => {
     await authorize(authorizedUserUsername)
@@ -42,30 +42,30 @@ describe("Participating in a board", () => {
     url: string
   }>([
     {
-      authorizedUserUsername: "john-doe",
+      authorizedUserUsername: users.johnDoe.username,
       responseBody: { message: "You can't leave this board because you are not it's member." },
       status: 400,
-      url: "/api/boards/3/participating",
+      url: `/api/boards/${boards.beautifulSportsmen.id}/participating`,
     },
     {
-      authorizedUserUsername: "jessica-stark",
+      authorizedUserUsername: users.jessicaStark.username,
       responseBody: {
         message: "You can't leave a board where you are the only admin. You can delete the board.",
       },
       status: 400,
-      url: "/api/boards/3/participating",
+      url: `/api/boards/${boards.beautifulSportsmen.id}/participating`,
     },
     {
-      authorizedUserUsername: "jessica-stark",
+      authorizedUserUsername: users.jessicaStark.username,
       responseBody: {
         admins: [users.johnDoe],
-        id: 1,
+        id: boards.cleverFinanciers.id,
         members: [users.johnDoe],
-        name: "clever-financiers",
+        name: boards.cleverFinanciers.name,
         subject: boardsSubjects.finances,
       },
       status: 200,
-      url: "/api/boards/1/participating",
+      url: `/api/boards/${boards.cleverFinanciers.id}/participating`,
     },
   ])("Board leaving case #%#", async ({ authorizedUserUsername, responseBody, status, url }) => {
     await authorize(authorizedUserUsername)
