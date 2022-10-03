@@ -1,5 +1,6 @@
 import { IFinanceCategoryType } from "#interfaces/finance"
 
+import { financeCategoryTypes } from "#e2e/constants/finances"
 import { users } from "#e2e/constants/users"
 import { authorize } from "#e2e/helpers/authorize"
 import { fetchApi } from "#e2e/helpers/fetchApi"
@@ -12,8 +13,8 @@ describe("get finance category types", () => {
   it("responds with all finance category types list", async () => {
     const fetchAllFinanceCategoryTypesResponse = await fetchApi("/api/finances/category-types")
     expect(await fetchAllFinanceCategoryTypesResponse.json()).toEqual<IFinanceCategoryType[]>([
-      { id: 1, name: "expense" },
-      { id: 2, name: "income" },
+      financeCategoryTypes.expense,
+      financeCategoryTypes.income,
     ])
   })
 
