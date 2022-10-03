@@ -2,6 +2,7 @@ import type { Config } from "@jest/types"
 
 const config: Config.InitialOptions = {
   moduleNameMapper: {
+    "^#e2e(.*)$": "<rootDir>/e2e$1",
     "^#interfaces(.*)$": "<rootDir>/src/interfaces$1",
     "^#models(.*)$": "<rootDir>/src/models$1",
     "^#utils(.*)$": "<rootDir>/src/utils$1",

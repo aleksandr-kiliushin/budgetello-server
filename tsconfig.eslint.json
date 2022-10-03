@@ -1,4 +1,0 @@
-{
-  "extends": "./tsconfig.json",
-  "include": ["src", "e2e", ".eslintrc.js", "jest.config.ts", "jest.setup.ts"]
-}

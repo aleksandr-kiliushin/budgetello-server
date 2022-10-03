@@ -7,7 +7,7 @@ module.exports = {
   ignorePatterns: ["coverage", "dist", "node_modules", "package-lock.json"],
   parser: "@typescript-eslint/parser",
   parserOptions: {
-    project: "tsconfig.eslint.json",
+    project: "tsconfig.json",
     sourceType: "module",
     tsconfigRootDir: __dirname,
   },

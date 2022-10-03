@@ -23,6 +23,7 @@
     "strictPropertyInitialization": false,
     "sourceMap": true,
     "paths": {
+      "#e2e/*": ["e2e/*"],
       "#interfaces/*": ["src/interfaces/*"],
       "#models/*": ["src/models/*"],
       "#utils/*": ["src/utils/*"]
@@ -30,5 +31,5 @@
     "target": "es6"
   },
   "files": ["declarations/tests.d.ts"],
-  "include": ["src"]
+  "include": ["src", "e2e", ".eslintrc.js", "jest.config.ts", "jest.setup.ts"]
 }
