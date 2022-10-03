@@ -1,4 +1,4 @@
-import { IUser } from "../../src/interfaces/user"
+import { IUser } from "#interfaces/user"
 
 describe("User registration process", () => {
   it("can register and get correct data response after registration", async () => {

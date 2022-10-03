@@ -1,6 +1,7 @@
-import { BoardSubjectEntity } from "../../../src/models/board-subjects/entities/board-subject.entity"
-import { authorize } from "../../helpers/authorize"
-import { fetchApi } from "../../helpers/fetchApi"
+import { BoardSubjectEntity } from "#models/board-subjects/entities/board-subject.entity"
+
+import { authorize } from "#e2e/helpers/authorize"
+import { fetchApi } from "#e2e/helpers/fetchApi"
 
 beforeEach(async () => {
   await authorize("john-doe")

@@ -1,6 +1,7 @@
-import { BoardEntity } from "../../src/models/boards/entities/board.entity"
-import { ITestUserUsername, authorize } from "../helpers/authorize"
-import { fetchApi } from "../helpers/fetchApi"
+import { BoardEntity } from "#models/boards/entities/board.entity"
+
+import { ITestUserUsername, authorize } from "#e2e/helpers/authorize"
+import { fetchApi } from "#e2e/helpers/fetchApi"
 
 describe("Boards updating", () => {
   test.each<{

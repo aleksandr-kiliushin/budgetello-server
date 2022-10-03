@@ -1,7 +1,7 @@
 {
   "arrowParens": "always",
   "bracketSpacing": true,
-  "importOrder": ["^#models", "^#utils", "^#interfaces", "\\."],
+  "importOrder": ["^#models", "^#utils", "^#interfaces", "^#e2e", "\\."],
   "importOrderParserPlugins": ["decorators-legacy", "typescript"],
   "importOrderSeparation": true,
   "importOrderSortSpecifiers": true,

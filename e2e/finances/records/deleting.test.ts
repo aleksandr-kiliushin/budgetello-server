@@ -1,6 +1,7 @@
-import { IFinanceRecord } from "../../../src/interfaces/finance"
-import { authorize } from "../../helpers/authorize"
-import { fetchApi } from "../../helpers/fetchApi"
+import { IFinanceRecord } from "#interfaces/finance"
+
+import { authorize } from "#e2e/helpers/authorize"
+import { fetchApi } from "#e2e/helpers/fetchApi"
 
 describe("Finance record deleting", () => {
   it("returns a correct response after deleting", async () => {

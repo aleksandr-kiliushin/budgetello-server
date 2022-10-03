@@ -1,7 +1,7 @@
+import { IUser } from "#interfaces/user"
+
 import { authorize } from "#e2e/helpers/authorize"
 import { fetchApi } from "#e2e/helpers/fetchApi"
-
-import { IUser } from "#interfaces/user"
 
 beforeEach(async () => {
   await authorize("john-doe")

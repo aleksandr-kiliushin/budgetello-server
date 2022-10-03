@@ -1,5 +1,5 @@
-import { ITestUserUsername, authorize } from "../helpers/authorize"
-import { fetchApi } from "../helpers/fetchApi"
+import { ITestUserUsername, authorize } from "#e2e/helpers/authorize"
+import { fetchApi } from "#e2e/helpers/fetchApi"
 
 describe("Participating in a board", () => {
   test.each<{
