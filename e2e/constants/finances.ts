@@ -41,8 +41,8 @@ export const financeCategories = {
 export const financeRecords = {
   "1st": { amount: 100, category: financeCategories.clothesExpense, date: "2022-08-01", id: 1, isTrashed: true },
   "2nd": { amount: 400, category: financeCategories.educationExpense, date: "2022-08-01", id: 2, isTrashed: true },
-  "3rd": { amount: 25, category: financeCategories.clothesExpense, date: "2022-08-01", id: 3, isTrashed: false },
-  "4th": { amount: 30, category: financeCategories.giftsExpense, date: "2022-08-02", id: 3, isTrashed: false },
-  "5th": { amount: 10, category: financeCategories.giftsExpense, date: "2022-08-02", id: 3, isTrashed: false },
-  "6th": { amount: 230, category: financeCategories.giftsIncome, date: "2022-08-03", id: 3, isTrashed: false },
+  "3rd": { amount: 25, category: financeCategories.educationExpense, date: "2022-08-01", id: 3, isTrashed: false },
+  "4th": { amount: 30, category: financeCategories.giftsExpense, date: "2022-08-02", id: 4, isTrashed: false },
+  "5th": { amount: 10, category: financeCategories.giftsExpense, date: "2022-08-02", id: 5, isTrashed: false },
+  "6th": { amount: 230, category: financeCategories.giftsIncome, date: "2022-08-03", id: 6, isTrashed: false },
 }

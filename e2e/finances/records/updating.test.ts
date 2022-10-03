@@ -1,3 +1,4 @@
+import { financeCategories, financeRecords } from "#e2e/constants/finances"
 import { users } from "#e2e/constants/users"
 import { authorize } from "#e2e/helpers/authorize"
 import { fetchApi } from "#e2e/helpers/fetchApi"
@@ -22,7 +23,7 @@ describe("Finance record updating", () => {
     status: number
   }>([
     {
-      payload: { amount: 0, categoryId: 1, date: "2022-08-05" },
+      payload: { amount: 0, categoryId: financeCategories.clothesExpense.id, date: "2022-08-05" },
       response: { fields: { amount: "Should be a positive number." } },
       status: 400,
     },
@@ -40,14 +41,9 @@ describe("Finance record updating", () => {
       payload: { amount: 8000 },
       response: {
         amount: 8000,
-        category: {
-          board: { id: 1, name: "clever-financiers" },
-          id: 1,
-          name: "clothes",
-          type: { id: 1, name: "expense" },
-        },
+        category: financeCategories.clothesExpense,
         date: "2022-08-01",
-        id: 1,
+        id: financeRecords["1st"].id,
         isTrashed: true,
       },
       status: 200,
@@ -56,14 +52,9 @@ describe("Finance record updating", () => {
       payload: { categoryId: 2 },
       response: {
         amount: 100,
-        category: {
-          board: { id: 1, name: "clever-financiers" },
-          id: 2,
-          name: "education",
-          type: { id: 1, name: "expense" },
-        },
+        category: financeCategories.educationExpense,
         date: "2022-08-01",
-        id: 1,
+        id: financeRecords["1st"].id,
         isTrashed: true,
       },
       status: 200,
@@ -72,14 +63,9 @@ describe("Finance record updating", () => {
       payload: { date: "2029-20-10" },
       response: {
         amount: 100,
-        category: {
-          board: { id: 1, name: "clever-financiers" },
-          id: 1,
-          name: "clothes",
-          type: { id: 1, name: "expense" },
-        },
+        category: financeCategories.clothesExpense,
         date: "2029-20-10",
-        id: 1,
+        id: financeRecords["1st"].id,
         isTrashed: true,
       },
       status: 200,
@@ -88,14 +74,9 @@ describe("Finance record updating", () => {
       payload: { isTrashed: false },
       response: {
         amount: 100,
-        category: {
-          board: { id: 1, name: "clever-financiers" },
-          id: 1,
-          name: "clothes",
-          type: { id: 1, name: "expense" },
-        },
+        category: financeCategories.clothesExpense,
         date: "2022-08-01",
-        id: 1,
+        id: financeRecords["1st"].id,
         isTrashed: false,
       },
       status: 200,
@@ -104,14 +85,9 @@ describe("Finance record updating", () => {
       payload: { amount: 90000, categoryId: 2, date: "2050-01-02", isTrashed: false },
       response: {
         amount: 90000,
-        category: {
-          board: { id: 1, name: "clever-financiers" },
-          id: 2,
-          name: "education",
-          type: { id: 1, name: "expense" },
-        },
+        category: financeCategories.educationExpense,
         date: "2050-01-02",
-        id: 1,
+        id: financeRecords["1st"].id,
         isTrashed: false,
       },
       status: 200,
@@ -120,20 +96,15 @@ describe("Finance record updating", () => {
       payload: {},
       response: {
         amount: 100,
-        category: {
-          board: { id: 1, name: "clever-financiers" },
-          id: 1,
-          name: "clothes",
-          type: { id: 1, name: "expense" },
-        },
+        category: financeCategories.clothesExpense,
         date: "2022-08-01",
-        id: 1,
+        id: financeRecords["1st"].id,
         isTrashed: true,
       },
       status: 200,
     },
   ])("Finance record updating case #%#", async ({ payload, response, status }) => {
-    const recordUpdatingResponse = await fetchApi("/api/finances/records/1", {
+    const recordUpdatingResponse = await fetchApi(`/api/finances/records/${financeRecords["1st"].id}`, {
       body: JSON.stringify(payload),
       method: "PATCH",
     })
@@ -142,7 +113,7 @@ describe("Finance record updating", () => {
   })
 
   test("the user cannot update a record of a board that they is not a member of", async () => {
-    const recordUpdatingResponse = await fetchApi("/api/finances/records/5", {
+    const recordUpdatingResponse = await fetchApi(`/api/finances/records/${financeRecords["5th"].id}`, {
       body: JSON.stringify({}),
       method: "PATCH",
     })

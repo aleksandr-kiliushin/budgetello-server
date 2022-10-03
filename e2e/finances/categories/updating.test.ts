@@ -1,5 +1,6 @@
 import { IFinanceCategory } from "#interfaces/finance"
 
+import { boards } from "#e2e/constants/boards"
 import { financeCategories, financeCategoryTypes } from "#e2e/constants/finances"
 import { users } from "#e2e/constants/users"
 import { authorize } from "#e2e/helpers/authorize"
@@ -59,7 +60,7 @@ describe("Finance category updating", () => {
       url: `/api/finances/categories/${financeCategories.educationExpense.id}`,
     },
     {
-      payload: { boardId: 2 },
+      payload: { boardId: boards.megaEconomists.id },
       response: { message: "Access denied." },
       status: 403,
       url: `/api/finances/categories/${financeCategories.educationExpense.id}`,
