@@ -1,5 +1,6 @@
 import { IFinanceCategory } from "#interfaces/finance"
 
+import { financeCategories, financeCategoryTypes } from "#e2e/constants/finances"
 import { users } from "#e2e/constants/users"
 import { authorize } from "#e2e/helpers/authorize"
 import { fetchApi } from "#e2e/helpers/fetchApi"
@@ -19,19 +20,19 @@ describe("Finance category updating", () => {
       payload: { name: "" },
       response: { fields: { name: "Category name cannot be empty." } },
       status: 400,
-      url: "/api/finances/categories/2",
+      url: `/api/finances/categories/${financeCategories.educationExpense.id}`,
     },
     {
       payload: { name: "food", typeId: 1234123 },
       response: { fields: { typeId: "Invalid category type." } },
       status: 400,
-      url: "/api/finances/categories/2",
+      url: `/api/finances/categories/${financeCategories.educationExpense.id}`,
     },
     {
       payload: { boardId: 666666 },
       response: { fields: { boardId: "Invalid board." } },
       status: 400,
-      url: "/api/finances/categories/2",
+      url: `/api/finances/categories/${financeCategories.educationExpense.id}`,
     },
     {
       payload: { name: "clothes" },
@@ -43,41 +44,36 @@ describe("Finance category updating", () => {
         },
       },
       status: 400,
-      url: "/api/finances/categories/2",
+      url: `/api/finances/categories/${financeCategories.educationExpense.id}`,
     },
     {
       payload: { name: "clothes" },
       response: { message: "Access denied." },
       status: 403,
-      url: "/api/finances/categories/4",
+      url: `/api/finances/categories/${financeCategories.giftsIncome.id}`,
     },
     {
       payload: {},
-      response: {
-        board: { id: 1, name: "clever-financiers" },
-        id: 2,
-        name: "education",
-        type: { id: 1, name: "expense" },
-      },
+      response: financeCategories.educationExpense,
       status: 200,
-      url: "/api/finances/categories/2",
+      url: `/api/finances/categories/${financeCategories.educationExpense.id}`,
     },
     {
       payload: { boardId: 2 },
       response: { message: "Access denied." },
       status: 403,
-      url: "/api/finances/categories/2",
+      url: `/api/finances/categories/${financeCategories.educationExpense.id}`,
     },
     {
-      payload: { name: "teaching", typeId: 2 },
+      payload: { name: "teaching", typeId: financeCategoryTypes.income.id },
       response: {
-        board: { id: 1, name: "clever-financiers" },
-        id: 2,
+        board: financeCategories.educationExpense.board,
+        id: financeCategories.educationExpense.id,
         name: "teaching",
-        type: { id: 2, name: "income" },
+        type: financeCategoryTypes.income,
       },
       status: 200,
-      url: "/api/finances/categories/2",
+      url: `/api/finances/categories/${financeCategories.educationExpense.id}`,
     },
   ])("Category editing case #%#", async ({ payload, response, status, url }) => {
     const categoryUpdatingResponse = await fetchApi(url, { body: JSON.stringify(payload), method: "PATCH" })
@@ -86,24 +82,29 @@ describe("Finance category updating", () => {
   })
 
   it("updated category is presented in all categories list", async () => {
-    await fetchApi("/api/finances/categories/2", { body: JSON.stringify({ name: "drugs" }), method: "PATCH" })
+    await fetchApi(`/api/finances/categories/${financeCategories.educationExpense.id}`, {
+      body: JSON.stringify({ name: "drugs" }),
+      method: "PATCH",
+    })
     const getAllCategoriesResponse = await fetchApi("/api/finances/categories/search")
     expect(await getAllCategoriesResponse.json()).toContainEqual<IFinanceCategory>({
-      board: { id: 1, name: "clever-financiers" },
-      id: 2,
+      board: financeCategories.educationExpense.board,
+      id: financeCategories.educationExpense.id,
       name: "drugs",
-      type: { id: 1, name: "expense" },
+      type: financeCategoryTypes.expense,
     })
   })
 
   it("updated category category can be found by ID", async () => {
     await fetchApi("/api/finances/categories/2", { body: JSON.stringify({ typeId: 2 }), method: "PATCH" })
-    const getUpdatedCategoryResponse = await fetchApi("/api/finances/categories/2")
+    const getUpdatedCategoryResponse = await fetchApi(
+      `/api/finances/categories/${financeCategories.educationExpense.id}`
+    )
     expect(await getUpdatedCategoryResponse.json()).toEqual<IFinanceCategory>({
-      board: { id: 1, name: "clever-financiers" },
-      id: 2,
+      board: financeCategories.educationExpense.board,
+      id: financeCategories.educationExpense.id,
       name: "education",
-      type: { id: 2, name: "income" },
+      type: financeCategoryTypes.income,
     })
   })
 })

@@ -1,5 +1,4 @@
-import { IFinanceCategory } from "#interfaces/finance"
-
+import { financeCategories } from "#e2e/constants/finances"
 import { users } from "#e2e/constants/users"
 import { authorize } from "#e2e/helpers/authorize"
 import { fetchApi } from "#e2e/helpers/fetchApi"
@@ -10,21 +9,16 @@ beforeEach(async () => {
 
 describe("Finance category deleting", () => {
   it("returns a correct response after deleting", async () => {
-    const categoryCreatingResponse = await fetchApi("/api/finances/categories/2", { method: "DELETE" })
-    expect(categoryCreatingResponse.status).toEqual(200)
-    expect(await categoryCreatingResponse.json()).toEqual<IFinanceCategory>({
-      board: { id: 1, name: "clever-financiers" },
-      id: 2,
-      name: "education",
-      type: { id: 1, name: "expense" },
+    const response = await fetchApi(`/api/finances/categories/${financeCategories.educationExpense.id}`, {
+      method: "DELETE",
     })
+    expect(response.status).toEqual(200)
+    expect(await response.json()).toEqual(financeCategories.educationExpense)
   })
 
   it("the deleted category is not presented in all categories list", async () => {
-    await fetchApi("/api/finances/categories/2", { method: "DELETE" })
+    await fetchApi(`/api/finances/categories/${financeCategories.educationExpense.id}`, { method: "DELETE" })
     const getAllCategoriesResponse = await fetchApi("/api/finances/categories/search")
-    expect(await getAllCategoriesResponse.json()).toEqual<IFinanceCategory[]>([
-      { board: { id: 1, name: "clever-financiers" }, id: 1, name: "clothes", type: { id: 1, name: "expense" } },
-    ])
+    expect(await getAllCategoriesResponse.json()).toEqual([financeCategories.clothesExpense])
   })
 })

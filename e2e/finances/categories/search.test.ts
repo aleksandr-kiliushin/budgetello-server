@@ -1,5 +1,6 @@
 import { IFinanceCategory } from "#interfaces/finance"
 
+import { financeCategories } from "#e2e/constants/finances"
 import { users } from "#e2e/constants/users"
 import { authorize } from "#e2e/helpers/authorize"
 import { fetchApi } from "#e2e/helpers/fetchApi"
@@ -17,12 +18,7 @@ describe("Responds with a finance category found by provided ID", () => {
     {
       url: "/api/finances/categories/1",
       responseStatus: 200,
-      responseData: {
-        board: { id: 1, name: "clever-financiers" },
-        id: 1,
-        name: "clothes",
-        type: { id: 1, name: "expense" },
-      },
+      responseData: financeCategories.clothesExpense,
     },
     {
       url: "/api/finances/categories/3",
@@ -44,34 +40,24 @@ describe("Responds with a finance category found by provided ID", () => {
 describe("Finance categoires search", () => {
   test.each<{ url: string; searchResult: IFinanceCategory[] }>([
     {
-      url: "/api/finances/categories/search?id=1",
-      searchResult: [
-        { board: { id: 1, name: "clever-financiers" }, id: 1, name: "clothes", type: { id: 1, name: "expense" } },
-      ],
+      url: `/api/finances/categories/search?id=${financeCategories.clothesExpense.id}`,
+      searchResult: [financeCategories.clothesExpense],
     },
     {
-      url: "/api/finances/categories/search?id=2,3",
-      searchResult: [
-        { board: { id: 1, name: "clever-financiers" }, id: 2, name: "education", type: { id: 1, name: "expense" } },
-      ],
+      url: `/api/finances/categories/search?boardId=${financeCategories.clothesExpense.id},${financeCategories.educationExpense.id}`,
+      searchResult: [financeCategories.clothesExpense, financeCategories.educationExpense],
     },
     {
-      url: "/api/finances/categories/search?id=5,666666",
+      url: `/api/finances/categories/search?id=${financeCategories.educationExpense.id},${financeCategories.giftsExpense.id}`,
+      searchResult: [financeCategories.educationExpense],
+    },
+    {
+      url: `/api/finances/categories/search?id=${financeCategories.salaryIncome.id},666666`,
       searchResult: [],
     },
     {
-      url: "/api/finances/categories/search?boardId=1,2",
-      searchResult: [
-        { board: { id: 1, name: "clever-financiers" }, id: 1, name: "clothes", type: { id: 1, name: "expense" } },
-        { board: { id: 1, name: "clever-financiers" }, id: 2, name: "education", type: { id: 1, name: "expense" } },
-      ],
-    },
-    {
       url: "/api/finances/categories/search",
-      searchResult: [
-        { board: { id: 1, name: "clever-financiers" }, id: 1, name: "clothes", type: { id: 1, name: "expense" } },
-        { board: { id: 1, name: "clever-financiers" }, id: 2, name: "education", type: { id: 1, name: "expense" } },
-      ],
+      searchResult: [financeCategories.clothesExpense, financeCategories.educationExpense],
     },
   ])("categories search for: $url", async ({ url, searchResult }) => {
     const response = await fetchApi(url)

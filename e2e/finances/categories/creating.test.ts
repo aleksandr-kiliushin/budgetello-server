@@ -1,5 +1,7 @@
 import { IFinanceCategory } from "#interfaces/finance"
 
+import { boards } from "#e2e/constants/boards"
+import { financeCategories, financeCategoryTypes } from "#e2e/constants/finances"
 import { users } from "#e2e/constants/users"
 import { authorize } from "#e2e/helpers/authorize"
 import { fetchApi } from "#e2e/helpers/fetchApi"
@@ -15,32 +17,40 @@ describe("Finance category creating", () => {
     status: number
   }>([
     {
-      payload: { boardId: 1, name_WITH_A_TYPO: "food", typeId: 1 },
+      payload: {
+        boardId: boards.cleverFinanciers.id,
+        name_WITH_A_TYPO: "food",
+        typeId: financeCategoryTypes.expense.id,
+      },
       response: { fields: { name: "Required field." } },
       status: 400,
     },
     {
-      payload: { boardId: 1, name: "", typeId: 1 },
+      payload: { boardId: boards.cleverFinanciers.id, name: "", typeId: financeCategoryTypes.expense.id },
       response: { fields: { name: "Required field." } },
       status: 400,
     },
     {
-      payload: { boardId: 1, name: "food", typeId_WITH_A_TYPO: 1 },
+      payload: {
+        boardId: boards.cleverFinanciers.id,
+        name: "food",
+        typeId_WITH_A_TYPO: financeCategoryTypes.expense.id,
+      },
       response: { fields: { typeId: "Required field." } },
       status: 400,
     },
     {
-      payload: { boardId: 1, name: "food", typeId: 1234123 },
+      payload: { boardId: boards.cleverFinanciers.id, name: "food", typeId: 1234123 },
       response: { fields: { typeId: "Invalid category type." } },
       status: 400,
     },
     {
-      payload: { name: "education", typeId: 2 },
+      payload: { name: "education", typeId: financeCategoryTypes.income.id },
       response: { fields: { boardId: "Required field." } },
       status: 400,
     },
     {
-      payload: { boardId: 1, name: "education", typeId: 1 },
+      payload: { boardId: boards.cleverFinanciers.id, name: "education", typeId: financeCategoryTypes.expense.id },
       response: {
         fields: {
           boardId: '"education" expense category already exists in this board.',
@@ -51,12 +61,12 @@ describe("Finance category creating", () => {
       status: 400,
     },
     {
-      payload: { boardId: 1, name: "education", typeId: 2 },
+      payload: { boardId: boards.cleverFinanciers.id, name: "education", typeId: financeCategoryTypes.income.id },
       response: {
-        board: { id: 1, name: "clever-financiers" },
+        board: { id: boards.cleverFinanciers.id, name: boards.cleverFinanciers.name },
         id: 6,
         name: "education",
-        type: { id: 2, name: "income" },
+        type: financeCategoryTypes.income,
       },
       status: 201,
     },
@@ -71,29 +81,37 @@ describe("Finance category creating", () => {
 
   it("a newly created category is presented in all categories list", async () => {
     await fetchApi("/api/finances/categories", {
-      body: JSON.stringify({ boardId: 1, name: "food", typeId: 1 }),
+      body: JSON.stringify({
+        boardId: boards.cleverFinanciers.id,
+        name: "food",
+        typeId: financeCategoryTypes.expense.id,
+      }),
       method: "POST",
     })
     const getAllCategoriesResponse = await fetchApi("/api/finances/categories/search")
     expect(await getAllCategoriesResponse.json()).toContainEqual<IFinanceCategory>({
-      board: { id: 1, name: "clever-financiers" },
+      board: financeCategories.educationExpense.board,
       id: 6,
       name: "food",
-      type: { id: 1, name: "expense" },
+      type: financeCategoryTypes.expense,
     })
   })
 
   it("a newly created category can be found by ID", async () => {
     await fetchApi("/api/finances/categories", {
-      body: JSON.stringify({ boardId: 1, name: "food", typeId: 1 }),
+      body: JSON.stringify({
+        boardId: boards.cleverFinanciers.id,
+        name: "food",
+        typeId: financeCategoryTypes.expense.id,
+      }),
       method: "POST",
     })
     const getNewlyCreatedCategoryResponse = await fetchApi("/api/finances/categories/6")
-    expect(await getNewlyCreatedCategoryResponse.json()).toEqual<IFinanceCategory>({
-      board: { id: 1, name: "clever-financiers" },
+    expect(await getNewlyCreatedCategoryResponse.json()).toEqual({
+      board: financeCategories.educationExpense.board,
       id: 6,
       name: "food",
-      type: { id: 1, name: "expense" },
+      type: financeCategoryTypes.expense,
     })
   })
 })
