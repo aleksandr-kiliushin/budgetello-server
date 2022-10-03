@@ -21,7 +21,7 @@ describe("Finance record updating", () => {
     status: number
   }>([
     {
-      payload: { amount: 0, categoryId: 5, date: "2022-08-05" },
+      payload: { amount: 0, categoryId: 1, date: "2022-08-05" },
       response: { fields: { amount: "Should be a positive number." } },
       status: 400,
     },
@@ -52,14 +52,14 @@ describe("Finance record updating", () => {
       status: 200,
     },
     {
-      payload: { categoryId: 5 },
+      payload: { categoryId: 2 },
       response: {
         amount: 100,
         category: {
-          board: { id: 2, name: "mega-economists" },
-          id: 5,
-          name: "salary",
-          type: { id: 2, name: "income" },
+          board: { id: 1, name: "clever-financiers" },
+          id: 2,
+          name: "education",
+          type: { id: 1, name: "expense" },
         },
         date: "2022-08-01",
         id: 1,
@@ -100,13 +100,13 @@ describe("Finance record updating", () => {
       status: 200,
     },
     {
-      payload: { amount: 90000, categoryId: 3, date: "2050-01-02", isTrashed: false },
+      payload: { amount: 90000, categoryId: 2, date: "2050-01-02", isTrashed: false },
       response: {
         amount: 90000,
         category: {
-          board: { id: 2, name: "mega-economists" },
-          id: 3,
-          name: "gifts",
+          board: { id: 1, name: "clever-financiers" },
+          id: 2,
+          name: "education",
           type: { id: 1, name: "expense" },
         },
         date: "2050-01-02",
