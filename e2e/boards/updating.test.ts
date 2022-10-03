@@ -61,7 +61,7 @@ describe("Boards updating", () => {
     },
     {
       authorizedUserUsername: "john-doe",
-      payload: { name: "champions", subjectId: 2 },
+      payload: { name: "champions", subjectId: boardsSubjects.habits.id },
       response: {
         admins: [users.johnDoe],
         id: 1,
@@ -81,7 +81,10 @@ describe("Boards updating", () => {
 
   it("updated boards can be found by ID", async () => {
     await authorize(users.johnDoe.username)
-    await fetchApi("/api/boards/1", { body: JSON.stringify({ name: "champions", subjectId: 2 }), method: "PATCH" })
+    await fetchApi("/api/boards/1", {
+      body: JSON.stringify({ name: "champions", subjectId: boardsSubjects.habits.id }),
+      method: "PATCH",
+    })
     const response = await fetchApi("/api/boards/1")
     expect(await response.json()).toEqual<BoardEntity | unknown>({
       admins: [users.johnDoe],

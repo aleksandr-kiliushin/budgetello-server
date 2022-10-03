@@ -16,17 +16,17 @@ describe("Board creating", () => {
     status: number
   }>([
     {
-      payload: { name_WITH_A_TYPO: "food", subjectId: 1 },
+      payload: { name_WITH_A_TYPO: "food", subjectId: boardsSubjects.finances.id },
       response: { fields: { name: "Required field." } },
       status: 400,
     },
     {
-      payload: { name: "", subjectId: 1 },
+      payload: { name: "", subjectId: boardsSubjects.finances.id },
       response: { fields: { name: "Required field." } },
       status: 400,
     },
     {
-      payload: { name: "food", subjectId_WITH_A_TYPO: 1 },
+      payload: { name: "food", subjectId_WITH_A_TYPO: boardsSubjects.finances.id },
       response: { fields: { subjectId: "Required field." } },
       status: 400,
     },
@@ -36,7 +36,7 @@ describe("Board creating", () => {
       status: 400,
     },
     {
-      payload: { name: "clever-financiers", subjectId: 1 },
+      payload: { name: "clever-financiers", subjectId: boardsSubjects.finances.id },
       response: {
         fields: {
           name: '"clever-financiers" finances board already exists.',
@@ -46,7 +46,7 @@ describe("Board creating", () => {
       status: 400,
     },
     {
-      payload: { name: "champions", subjectId: 2 },
+      payload: { name: "champions", subjectId: boardsSubjects.habits.id },
       response: {
         admins: [users.johnDoe],
         id: 4,
@@ -66,7 +66,10 @@ describe("Board creating", () => {
   })
 
   it("a newly created board can be found by ID", async () => {
-    await fetchApi("/api/boards", { body: JSON.stringify({ name: "champions", subjectId: 2 }), method: "POST" })
+    await fetchApi("/api/boards", {
+      body: JSON.stringify({ name: "champions", subjectId: boardsSubjects.habits.id }),
+      method: "POST",
+    })
     const getNewlyCreatedBoardResponse = await fetchApi("/api/boards/4")
     expect(await getNewlyCreatedBoardResponse.json()).toEqual<BoardEntity | unknown>({
       admins: [users.johnDoe],
