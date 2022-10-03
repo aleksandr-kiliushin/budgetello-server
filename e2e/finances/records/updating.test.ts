@@ -139,4 +139,13 @@ describe("Finance record updating", () => {
     expect(recordUpdatingResponse.status).toEqual(status)
     expect(await recordUpdatingResponse.json()).toEqual(response)
   })
+
+  test("the user cannot update a record of a board that they is not a member of", async () => {
+    const recordUpdatingResponse = await fetchApi("/api/finances/records/5", {
+      body: JSON.stringify({}),
+      method: "PATCH",
+    })
+    expect(recordUpdatingResponse.status).toEqual(403)
+    expect(await recordUpdatingResponse.json()).toEqual({ message: "Access denied." })
+  })
 })
