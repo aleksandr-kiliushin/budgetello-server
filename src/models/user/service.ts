@@ -1,6 +1,6 @@
 import { Injectable, NotFoundException } from "@nestjs/common"
 import { InjectRepository } from "@nestjs/typeorm"
-import { Like, Repository } from "typeorm"
+import { FindOptionsRelations, Like, Repository } from "typeorm"
 
 import { encrypt } from "#utils/crypto"
 
@@ -20,19 +20,28 @@ export class UserService {
 
   async findUser(
     params:
-      | { loggedInUserId?: IUser["id"]; id: IUser["id"] }
-      | { loggedInUserId?: IUser["id"]; username: IUser["username"] }
+      | { authorizedUserId?: IUser["id"]; id: IUser["id"]; relations?: FindOptionsRelations<UserEntity> }
+      | { authorizedUserId?: IUser["id"]; username: IUser["username"]; relations?: FindOptionsRelations<UserEntity> }
   ): Promise<UserEntity> {
     let user: UserEntity | null = null
 
-    if ("id" in params && params.id === 0 && params.loggedInUserId !== undefined) {
-      user = await this.userRepository.findOneBy({ id: params.loggedInUserId })
+    if ("id" in params && params.id === 0 && params.authorizedUserId !== undefined) {
+      user = await this.userRepository.findOne({
+        where: { id: params.authorizedUserId },
+        ...(params.relations !== undefined && { relations: params.relations }),
+      })
     }
     if ("id" in params && params.id !== 0) {
-      user = await this.userRepository.findOneBy({ id: params.id })
+      user = await this.userRepository.findOne({
+        where: { id: params.id },
+        ...(params.relations !== undefined && { relations: params.relations }),
+      })
     }
     if ("username" in params) {
-      user = await this.userRepository.findOneBy({ username: params.username })
+      user = await this.userRepository.findOne({
+        where: { username: params.username },
+        ...(params.relations !== undefined && { relations: params.relations }),
+      })
     }
 
     if (user === null) throw new NotFoundException({})

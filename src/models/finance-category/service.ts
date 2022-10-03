@@ -1,4 +1,4 @@
-import { BadRequestException, Injectable, NotFoundException } from "@nestjs/common"
+import { BadRequestException, ForbiddenException, Injectable, NotFoundException } from "@nestjs/common"
 import { InjectRepository } from "@nestjs/typeorm"
 import { In, Repository } from "typeorm"
 
@@ -6,6 +6,9 @@ import { BoardEntity } from "#models/boards/entities/board.entity"
 import { BoardsService } from "#models/boards/service"
 import { FinanceCategoryTypeEntity } from "#models/finance-category-type/entities/finance-category-type.entity"
 import { FinanceCategoryTypeService } from "#models/finance-category-type/service"
+import { UserService } from "#models/user/service"
+
+import { IUser } from "#interfaces/user"
 
 import { CreateFinanceCategoryDto } from "./dto/create-finance-category.dto"
 import { SearchFinanceCategoriesQueryDto } from "./dto/seach-finance-categories-query.dto"
@@ -18,30 +21,83 @@ export class FinanceCategoryService {
     @InjectRepository(FinanceCategoryEntity)
     private financeCategoryRepository: Repository<FinanceCategoryEntity>,
     private financeCategoryTypeService: FinanceCategoryTypeService,
-    private boardsService: BoardsService
+    private boardsService: BoardsService,
+    private userService: UserService
   ) {}
 
-  searchCategories(query: SearchFinanceCategoriesQueryDto): Promise<FinanceCategoryEntity[]> {
+  async searchCategories({
+    authorizedUserId,
+    query,
+  }: {
+    authorizedUserId: IUser["id"]
+    query: SearchFinanceCategoriesQueryDto
+  }): Promise<FinanceCategoryEntity[]> {
+    const authorizedUser = await this.userService.findUser({
+      id: authorizedUserId,
+      relations: { administratedBoards: true, boards: true },
+    })
+
+    const accessibleBoardsIds = [
+      ...new Set([
+        ...authorizedUser.administratedBoards.map((board) => board.id),
+        ...authorizedUser.boards.map((board) => board.id),
+      ]),
+    ]
+    const boardsIdsToSearchWith =
+      query.boardId === undefined
+        ? accessibleBoardsIds
+        : query.boardId
+            .split(",")
+            .map(parseInt)
+            .filter((boardIdFromQuery) => accessibleBoardsIds.includes(boardIdFromQuery))
+
     return this.financeCategoryRepository.find({
       order: { id: "ASC", name: "ASC" },
       relations: { board: true, type: true },
       where: {
-        ...(query.id !== undefined && { id: In(query.id.split(",")) }),
         ...(query.boardId !== undefined && { board: In(query.boardId.split(",")) }),
+        ...(query.id !== undefined && { id: In(query.id.split(",")) }),
+        board: { id: In(boardsIdsToSearchWith) },
       },
     })
   }
 
-  async findById(id: FinanceCategoryEntity["id"]): Promise<FinanceCategoryEntity> {
+  async findById({
+    authorizedUserId,
+    categoryId,
+  }: {
+    authorizedUserId: IUser["id"]
+    categoryId: FinanceCategoryEntity["id"]
+  }): Promise<FinanceCategoryEntity> {
     const category = await this.financeCategoryRepository.findOne({
       relations: { board: true, type: true },
-      where: { id },
+      where: { id: categoryId },
     })
     if (category === null) throw new NotFoundException({})
+
+    const authorizedUser = await this.userService.findUser({
+      id: authorizedUserId,
+      relations: { administratedBoards: true, boards: true },
+    })
+    const isAuthorizedUserBoardAdmin = authorizedUser.administratedBoards.some((board) => {
+      return board.id === category.board.id
+    })
+    const isAuthorizedUserBoardMember = authorizedUser.boards.some((board) => board.id === category.board.id)
+    const canAuthorizedUserEditThisCategory = isAuthorizedUserBoardAdmin || isAuthorizedUserBoardMember
+    if (!canAuthorizedUserEditThisCategory) {
+      throw new ForbiddenException({ message: "Access denied." })
+    }
+
     return category
   }
 
-  async create(createFinanceCategoryDto: CreateFinanceCategoryDto): Promise<FinanceCategoryEntity> {
+  async create({
+    authorizedUserId,
+    createFinanceCategoryDto,
+  }: {
+    authorizedUserId: IUser["id"]
+    createFinanceCategoryDto: CreateFinanceCategoryDto
+  }): Promise<FinanceCategoryEntity> {
     const { boardId, name, typeId } = createFinanceCategoryDto
     if (name === undefined || name === "") throw new BadRequestException({ fields: { name: "Required field." } })
     if (typeId === undefined) {
@@ -77,15 +133,34 @@ export class FinanceCategoryService {
     }
     const category = this.financeCategoryRepository.create({ board, name, type })
     const { id: createdCategoryId } = await this.financeCategoryRepository.save(category)
-    return await this.findById(createdCategoryId)
+    return await this.findById({ authorizedUserId, categoryId: createdCategoryId })
   }
 
-  async update(
-    id: FinanceCategoryEntity["id"],
+  async update({
+    authorizedUserId,
+    categoryId,
+    updateFinanceCategoryDto,
+  }: {
+    authorizedUserId: IUser["id"]
+    categoryId: FinanceCategoryEntity["id"]
     updateFinanceCategoryDto: UpdateFinanceCategoryDto
-  ): Promise<FinanceCategoryEntity> {
+  }): Promise<FinanceCategoryEntity> {
     const { boardId, name, typeId } = updateFinanceCategoryDto
-    const category = await this.findById(id)
+    const category = await this.findById({ authorizedUserId, categoryId })
+
+    const authorizedUser = await this.userService.findUser({
+      id: authorizedUserId,
+      relations: { administratedBoards: true, boards: true },
+    })
+    const isAuthorizedUserBoardAdmin = authorizedUser.administratedBoards.some((board) => {
+      return board.id === category.board.id
+    })
+    const isAuthorizedUserBoardMember = authorizedUser.boards.some((board) => board.id === category.board.id)
+    const canAuthorizedUserEditThisCategory = isAuthorizedUserBoardAdmin || isAuthorizedUserBoardMember
+    if (!canAuthorizedUserEditThisCategory) {
+      throw new ForbiddenException({ message: "Access denied." })
+    }
+
     if (boardId === undefined && name === undefined && typeId === undefined) return category
     if (typeId !== undefined) {
       try {
@@ -119,12 +194,18 @@ export class FinanceCategoryService {
       })
     }
     await this.financeCategoryRepository.save(category)
-    return await this.findById(id)
+    return await this.findById({ authorizedUserId, categoryId })
   }
 
-  async delete(id: FinanceCategoryEntity["id"]): Promise<FinanceCategoryEntity> {
-    const category = await this.findById(id)
-    await this.financeCategoryRepository.delete(id)
+  async delete({
+    authorizedUserId,
+    categoryId,
+  }: {
+    authorizedUserId: IUser["id"]
+    categoryId: FinanceCategoryEntity["id"]
+  }): Promise<FinanceCategoryEntity> {
+    const category = await this.findById({ authorizedUserId, categoryId })
+    await this.financeCategoryRepository.delete(categoryId)
     return category
   }
 }

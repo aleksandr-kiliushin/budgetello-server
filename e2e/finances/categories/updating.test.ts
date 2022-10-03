@@ -44,6 +44,12 @@ describe("Finance category updating", () => {
       url: "/api/finances/categories/2",
     },
     {
+      payload: { name: "clothes" },
+      response: { message: "Access denied." },
+      status: 403,
+      url: "/api/finances/categories/4",
+    },
+    {
       payload: {},
       response: {
         board: { id: 1, name: "clever-financiers" },
@@ -55,8 +61,19 @@ describe("Finance category updating", () => {
       url: "/api/finances/categories/2",
     },
     {
-      payload: { boardId: 2, name: "teaching", typeId: 2 },
-      response: { board: { id: 2, name: "mega-economists" }, id: 2, name: "teaching", type: { id: 2, name: "income" } },
+      payload: { boardId: 2 },
+      response: { message: "Access denied." },
+      status: 403,
+      url: "/api/finances/categories/2",
+    },
+    {
+      payload: { name: "teaching", typeId: 2 },
+      response: {
+        board: { id: 1, name: "clever-financiers" },
+        id: 2,
+        name: "teaching",
+        type: { id: 2, name: "income" },
+      },
       status: 200,
       url: "/api/finances/categories/2",
     },

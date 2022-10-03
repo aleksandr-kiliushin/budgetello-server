@@ -5,6 +5,8 @@ import { In, Repository } from "typeorm"
 import { FinanceCategoryEntity } from "#models/finance-category/entities/finance-category.entity"
 import { FinanceCategoryService } from "#models/finance-category/service"
 
+import { IUser } from "#interfaces/user"
+
 import { CreateFinanceRecordDto } from "./dto/create-finance-record.dto"
 import { SearchFinanceRecordsQueryDto } from "./dto/search-finance-records-query.dto"
 import { UpdateFinanceRecordDto } from "./dto/update-finance-record.dto"
@@ -50,7 +52,13 @@ export class FinanceRecordService {
     return financeRecord
   }
 
-  async create(createFinanceRecordDto: CreateFinanceRecordDto): Promise<FinanceRecordEntity> {
+  async create({
+    authorizedUserId,
+    createFinanceRecordDto,
+  }: {
+    authorizedUserId: IUser["id"]
+    createFinanceRecordDto: CreateFinanceRecordDto
+  }): Promise<FinanceRecordEntity> {
     if (typeof createFinanceRecordDto.amount !== "number" || createFinanceRecordDto.amount <= 0) {
       throw new BadRequestException({ fields: { amount: "Should be a positive number." } })
     }
@@ -59,7 +67,10 @@ export class FinanceRecordService {
     }
     let category: FinanceCategoryEntity | undefined
     try {
-      category = await this.financeCategoryService.findById(createFinanceRecordDto.categoryId)
+      category = await this.financeCategoryService.findById({
+        authorizedUserId,
+        categoryId: createFinanceRecordDto.categoryId,
+      })
     } catch {
       throw new BadRequestException({ fields: { categoryId: "Invalid category." } })
     }
@@ -74,11 +85,16 @@ export class FinanceRecordService {
     return this.financeRecordRepository.save(record)
   }
 
-  async updateFinanceRecord(
-    id: FinanceRecordEntity["id"],
+  async updateFinanceRecord({
+    authorizedUserId,
+    recordId,
+    updateFinanceRecordDto,
+  }: {
+    authorizedUserId: IUser["id"]
+    recordId: FinanceRecordEntity["id"]
     updateFinanceRecordDto: UpdateFinanceRecordDto
-  ): Promise<FinanceRecordEntity> {
-    const record = await this.findById(id)
+  }): Promise<FinanceRecordEntity> {
+    const record = await this.findById(recordId)
     if (updateFinanceRecordDto.amount !== undefined) {
       if (typeof updateFinanceRecordDto.amount !== "number" || updateFinanceRecordDto.amount <= 0) {
         throw new BadRequestException({ fields: { amount: "Should be a positive number." } })
@@ -96,7 +112,10 @@ export class FinanceRecordService {
     }
     if (updateFinanceRecordDto.categoryId !== undefined) {
       try {
-        record.category = await this.financeCategoryService.findById(updateFinanceRecordDto.categoryId)
+        record.category = await this.financeCategoryService.findById({
+          authorizedUserId,
+          categoryId: updateFinanceRecordDto.categoryId,
+        })
       } catch {
         throw new BadRequestException({ fields: { categoryId: "Invalid category." } })
       }

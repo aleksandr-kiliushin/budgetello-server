@@ -1,6 +1,8 @@
-import { Body, Controller, Delete, Get, Param, Patch, Post, Query, UseGuards } from "@nestjs/common"
+import { Body, Controller, Delete, Get, Param, Patch, Post, Query, Request, UseGuards } from "@nestjs/common"
 
 import { AuthGuard } from "#models/auth/guard"
+
+import { IUser } from "#interfaces/user"
 
 import { CreateFinanceCategoryDto } from "./dto/create-finance-category.dto"
 import { SearchFinanceCategoriesQueryDto } from "./dto/seach-finance-categories-query.dto"
@@ -13,18 +15,32 @@ export class FinanceCategoryController {
   constructor(private financeCategoryService: FinanceCategoryService) {}
 
   @Get("search")
-  searchCategories(@Query() query: SearchFinanceCategoriesQueryDto) {
-    return this.financeCategoryService.searchCategories(query)
+  searchCategories(
+    @Query() query: SearchFinanceCategoriesQueryDto,
+    @Request()
+    request: Record<string, unknown> & { userId: IUser["id"] }
+  ) {
+    return this.financeCategoryService.searchCategories({ authorizedUserId: request.userId, query })
   }
 
   @Get(":id")
-  findById(@Param("id") id: string) {
-    return this.financeCategoryService.findById(parseInt(id))
+  findById(
+    @Param("id")
+    id: string,
+    @Request()
+    request: Record<string, unknown> & { userId: IUser["id"] }
+  ) {
+    return this.financeCategoryService.findById({ authorizedUserId: request.userId, categoryId: parseInt(id) })
   }
 
   @Post()
-  create(@Body() createFinanceCategoryDto: CreateFinanceCategoryDto) {
-    return this.financeCategoryService.create(createFinanceCategoryDto)
+  create(
+    @Body()
+    createFinanceCategoryDto: CreateFinanceCategoryDto,
+    @Request()
+    request: Record<string, unknown> & { userId: IUser["id"] }
+  ) {
+    return this.financeCategoryService.create({ authorizedUserId: request.userId, createFinanceCategoryDto })
   }
 
   @Patch(":id")
@@ -32,13 +48,24 @@ export class FinanceCategoryController {
     @Param("id")
     id: string,
     @Body()
-    updateFinanceCategoryDto: UpdateFinanceCategoryDto
+    updateFinanceCategoryDto: UpdateFinanceCategoryDto,
+    @Request()
+    request: Record<string, unknown> & { userId: IUser["id"] }
   ) {
-    return this.financeCategoryService.update(parseInt(id), updateFinanceCategoryDto)
+    return this.financeCategoryService.update({
+      authorizedUserId: request.userId,
+      categoryId: parseInt(id),
+      updateFinanceCategoryDto,
+    })
   }
 
   @Delete(":id")
-  delete(@Param("id") id: string) {
-    return this.financeCategoryService.delete(parseInt(id))
+  delete(
+    @Param("id")
+    id: string,
+    @Request()
+    request: Record<string, unknown> & { userId: IUser["id"] }
+  ) {
+    return this.financeCategoryService.delete({ authorizedUserId: request.userId, categoryId: parseInt(id) })
   }
 }

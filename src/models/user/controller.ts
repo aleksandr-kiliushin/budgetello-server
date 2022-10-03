@@ -41,10 +41,10 @@ export class UserController {
   ) {
     // If request to /api/users/john-doe.
     if (isNaN(parseInt(userIdentifier))) {
-      return this.userService.findUser({ loggedInUserId: request.userId, username: userIdentifier })
+      return this.userService.findUser({ authorizedUserId: request.userId, username: userIdentifier })
     }
     // If request to /api/users/123.
-    return this.userService.findUser({ loggedInUserId: request.userId, id: parseInt(userIdentifier) })
+    return this.userService.findUser({ authorizedUserId: request.userId, id: parseInt(userIdentifier) })
   }
 
   @Post()

@@ -1,6 +1,8 @@
-import { Body, Controller, Delete, Get, Param, Patch, Post, Query, UseGuards } from "@nestjs/common"
+import { Body, Controller, Delete, Get, Param, Patch, Post, Query, Request, UseGuards } from "@nestjs/common"
 
 import { AuthGuard } from "#models/auth/guard"
+
+import { IUser } from "#interfaces/user"
 
 import { CreateFinanceRecordDto } from "./dto/create-finance-record.dto"
 import { SearchFinanceRecordsQueryDto } from "./dto/search-finance-records-query.dto"
@@ -23,13 +25,28 @@ export class FinanceRecordController {
   }
 
   @Post()
-  create(@Body() createFinanceRecordDto: CreateFinanceRecordDto) {
-    return this.financeRecordService.create(createFinanceRecordDto)
+  create(
+    @Body()
+    createFinanceRecordDto: CreateFinanceRecordDto,
+    @Request()
+    request: Record<string, unknown> & { userId: IUser["id"] }
+  ) {
+    return this.financeRecordService.create({ authorizedUserId: request.userId, createFinanceRecordDto })
   }
 
   @Patch(":id")
-  updateFinanceRecord(@Param("id") id: string, @Body() updateFinanceRecordDto: UpdateFinanceRecordDto) {
-    return this.financeRecordService.updateFinanceRecord(parseInt(id), updateFinanceRecordDto)
+  updateFinanceRecord(
+    @Param("id")
+    recordId: string,
+    @Body() updateFinanceRecordDto: UpdateFinanceRecordDto,
+    @Request()
+    request: Record<string, unknown> & { userId: IUser["id"] }
+  ) {
+    return this.financeRecordService.updateFinanceRecord({
+      authorizedUserId: request.userId,
+      recordId: parseInt(recordId),
+      updateFinanceRecordDto,
+    })
   }
 
   @Delete(":id")
