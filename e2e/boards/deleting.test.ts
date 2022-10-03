@@ -1,5 +1,6 @@
 import { BoardEntity } from "#models/boards/entities/board.entity"
 
+import { boardsSubjects } from "#e2e/constants/boards"
 import { users } from "#e2e/constants/users"
 import { authorize } from "#e2e/helpers/authorize"
 import { fetchApi } from "#e2e/helpers/fetchApi"
@@ -20,7 +21,7 @@ describe("Board deleting", () => {
       admins: [users.johnDoe],
       id: 1,
       name: "clever-financiers",
-      subject: { id: 1, name: "finances" },
+      subject: boardsSubjects.finances,
       members: [users.johnDoe, users.jessicaStark],
     })
   })
@@ -34,14 +35,14 @@ describe("Board deleting", () => {
         admins: [users.jessicaStark],
         id: 2,
         name: "mega-economists",
-        subject: { id: 1, name: "finances" },
+        subject: boardsSubjects.finances,
         members: [users.jessicaStark],
       },
       {
         admins: [users.jessicaStark],
         id: 3,
         name: "beautiful-sportsmen",
-        subject: { id: 2, name: "habits" },
+        subject: boardsSubjects.habits,
         members: [users.jessicaStark],
       },
     ])

@@ -1,5 +1,6 @@
 import { BoardEntity } from "#models/boards/entities/board.entity"
 
+import { boardsSubjects } from "#e2e/constants/boards"
 import { users } from "#e2e/constants/users"
 import { authorize } from "#e2e/helpers/authorize"
 import { fetchApi } from "#e2e/helpers/fetchApi"
@@ -51,7 +52,7 @@ describe("Board creating", () => {
         id: 4,
         members: [users.johnDoe],
         name: "champions",
-        subject: { id: 2, name: "habits" },
+        subject: boardsSubjects.habits,
       },
       status: 201,
     },
@@ -72,7 +73,7 @@ describe("Board creating", () => {
       id: 4,
       members: [users.johnDoe],
       name: "champions",
-      subject: { id: 2, name: "habits" },
+      subject: boardsSubjects.habits,
     })
   })
 })

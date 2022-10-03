@@ -1,5 +1,6 @@
 import { BoardEntity } from "#models/boards/entities/board.entity"
 
+import { boardsSubjects } from "#e2e/constants/boards"
 import { users } from "#e2e/constants/users"
 import { ITestUserUsername, authorize } from "#e2e/helpers/authorize"
 import { fetchApi } from "#e2e/helpers/fetchApi"
@@ -53,7 +54,7 @@ describe("Boards updating", () => {
         id: 1,
         members: [users.johnDoe, users.jessicaStark],
         name: "clever-financiers",
-        subject: { id: 1, name: "finances" },
+        subject: boardsSubjects.finances,
       },
       status: 200,
       url: "/api/boards/1",
@@ -66,7 +67,7 @@ describe("Boards updating", () => {
         id: 1,
         members: [users.johnDoe, users.jessicaStark],
         name: "champions",
-        subject: { id: 2, name: "habits" },
+        subject: boardsSubjects.habits,
       },
       status: 200,
       url: "/api/boards/1",
@@ -87,7 +88,7 @@ describe("Boards updating", () => {
       id: 1,
       members: [users.johnDoe, users.jessicaStark],
       name: "champions",
-      subject: { id: 2, name: "habits" },
+      subject: boardsSubjects.habits,
     })
   })
 })

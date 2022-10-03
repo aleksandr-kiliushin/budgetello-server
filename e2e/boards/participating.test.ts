@@ -1,3 +1,4 @@
+import { boardsSubjects } from "#e2e/constants/boards"
 import { users } from "#e2e/constants/users"
 import { ITestUserUsername, authorize } from "#e2e/helpers/authorize"
 import { fetchApi } from "#e2e/helpers/fetchApi"
@@ -22,7 +23,7 @@ describe("Participating in a board", () => {
         id: 3,
         members: [users.jessicaStark, users.johnDoe],
         name: "beautiful-sportsmen",
-        subject: { id: 2, name: "habits" },
+        subject: boardsSubjects.habits,
       },
       status: 201,
       url: "/api/boards/3/participating",
@@ -61,7 +62,7 @@ describe("Participating in a board", () => {
         id: 1,
         members: [users.johnDoe],
         name: "clever-financiers",
-        subject: { id: 1, name: "finances" },
+        subject: boardsSubjects.finances,
       },
       status: 200,
       url: "/api/boards/1/participating",
