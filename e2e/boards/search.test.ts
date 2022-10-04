@@ -15,9 +15,9 @@ describe("Responds with a board found by provided ID", () => {
     | { url: string; responseStatus: 404; responseData: Record<string, never> }
   >([
     {
-      url: `/api/boards/${boards.cleverFinanciers.id}`,
+      url: `/api/boards/${boards.cleverBudgetiers.id}`,
       responseStatus: 200,
-      responseData: boards.cleverFinanciers,
+      responseData: boards.cleverBudgetiers,
     },
     {
       url: "/api/boards/666666",
@@ -34,12 +34,12 @@ describe("Responds with a board found by provided ID", () => {
 describe("Boards search", () => {
   test.each<{ url: string; searchResult: (BoardEntity | unknown)[] }>([
     {
-      url: `/api/boards/search?id=${boards.cleverFinanciers.id}`,
-      searchResult: [boards.cleverFinanciers],
+      url: `/api/boards/search?id=${boards.cleverBudgetiers.id}`,
+      searchResult: [boards.cleverBudgetiers],
     },
     {
-      url: `/api/boards/search?id=${boards.cleverFinanciers.id},${boards.beautifulSportsmen.id}`,
-      searchResult: [boards.cleverFinanciers, boards.beautifulSportsmen],
+      url: `/api/boards/search?id=${boards.cleverBudgetiers.id},${boards.beautifulSportsmen.id}`,
+      searchResult: [boards.cleverBudgetiers, boards.beautifulSportsmen],
     },
     {
       url: "/api/boards/search?id=666666",
@@ -47,18 +47,18 @@ describe("Boards search", () => {
     },
     {
       url: "/api/boards/search",
-      searchResult: [boards.cleverFinanciers, boards.megaEconomists, boards.beautifulSportsmen],
+      searchResult: [boards.cleverBudgetiers, boards.megaEconomists, boards.beautifulSportsmen],
     },
     {
-      url: `/api/boards/search?subjectId=${boardsSubjects.finances.id}`,
-      searchResult: [boards.cleverFinanciers, boards.megaEconomists],
+      url: `/api/boards/search?subjectId=${boardsSubjects.budgeting.id}`,
+      searchResult: [boards.cleverBudgetiers, boards.megaEconomists],
     },
     {
       url: "/api/boards/search?name=me",
       searchResult: [boards.megaEconomists, boards.beautifulSportsmen],
     },
     {
-      url: `/api/boards/search?name=me&subjectId=${boardsSubjects.finances.id}&id=${boards.megaEconomists.id}`,
+      url: `/api/boards/search?name=me&subjectId=${boardsSubjects.budgeting.id}&id=${boards.megaEconomists.id}`,
       searchResult: [boards.megaEconomists],
     },
   ])("boards search for: $url", async ({ url, searchResult }) => {

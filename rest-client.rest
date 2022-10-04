@@ -1,27 +1,27 @@
-### Finance category type #####################################################
-GET http://localhost:3080/api/finances/category-types
+### Budgeting category type #####################################################
+GET http://localhost:3080/api/budgeting/category-types
 Authorization: MY_TOKEN
 
 ###
-GET http://localhost:3080/api/finances/category-types?ids=1
+GET http://localhost:3080/api/budgeting/category-types?ids=1
 Authorization: MY_TOKEN
 
 ###
-GET http://localhost:3080/api/finances/category-types/2
+GET http://localhost:3080/api/budgeting/category-types/2
 Authorization: MY_TOKEN
 
 
 
-### Finance category ##########################################################
-GET http://localhost:3080/api/finances/categories
-Authorization: MY_TOKEN
-
-###
-GET http://localhost:3080/api/finances/categories/10
+### Budgeting category ##########################################################
+GET http://localhost:3080/api/budgeting/categories
 Authorization: MY_TOKEN
 
 ###
-POST http://localhost:3080/api/finances/categories
+GET http://localhost:3080/api/budgeting/categories/10
+Authorization: MY_TOKEN
+
+###
+POST http://localhost:3080/api/budgeting/categories
 Authorization: MY_TOKEN
 Content-Type: application/json
 
@@ -31,7 +31,7 @@ Content-Type: application/json
 }
 
 ###
-PATCH http://localhost:3080/api/finances/categories/16
+PATCH http://localhost:3080/api/budgeting/categories/16
 Authorization: MY_TOKEN
 Content-Type: application/json
 
@@ -41,21 +41,21 @@ Content-Type: application/json
 }
 
 ###
-DELETE http://localhost:3080/api/finances/categories/4
+DELETE http://localhost:3080/api/budgeting/categories/4
 Authorization: MY_TOKEN
 
 
 
-### Finance record ############################################################
-GET http://localhost:3080/api/finances/records/search?take=4&skip=200
-Authorization: MY_TOKEN
-
-###
-GET http://localhost:3080/api/finances/records/250
+### Budgeting record ############################################################
+GET http://localhost:3080/api/budgeting/records/search?take=4&skip=200
 Authorization: MY_TOKEN
 
 ###
-POST http://localhost:3080/api/finances/records
+GET http://localhost:3080/api/budgeting/records/250
+Authorization: MY_TOKEN
+
+###
+POST http://localhost:3080/api/budgeting/records
 Authorization: MY_TOKEN
 Content-Type: application/json
 
@@ -66,7 +66,7 @@ Content-Type: application/json
 }
 
 ###
-PATCH http://localhost:3080/api/finances/records/330
+PATCH http://localhost:3080/api/budgeting/records/330
 Authorization: MY_TOKEN
 Content-Type: application/json
 
@@ -78,7 +78,7 @@ Content-Type: application/json
 }
 
 ###
-DELETE http://localhost:3080/api/finances/records/331
+DELETE http://localhost:3080/api/budgeting/records/331
 Authorization: MY_TOKEN
 
 

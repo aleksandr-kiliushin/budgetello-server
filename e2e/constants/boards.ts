@@ -1,23 +1,23 @@
 import { users } from "./users"
 
 export const boardsSubjects = {
-  finances: { id: 1, name: "finances" },
+  budgeting: { id: 1, name: "budgeting" },
   habits: { id: 2, name: "habits" },
 } as const
 
 export const boards = {
-  cleverFinanciers: {
+  cleverBudgetiers: {
     admins: [users.johnDoe],
     id: 1,
-    name: "clever-financiers",
-    subject: boardsSubjects.finances,
+    name: "clever-budgetiers",
+    subject: boardsSubjects.budgeting,
     members: [users.johnDoe, users.jessicaStark],
   },
   megaEconomists: {
     admins: [users.jessicaStark],
     id: 2,
     name: "mega-economists",
-    subject: boardsSubjects.finances,
+    subject: boardsSubjects.budgeting,
     members: [users.jessicaStark],
   },
   beautifulSportsmen: {

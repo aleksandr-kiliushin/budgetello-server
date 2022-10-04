@@ -9,9 +9,9 @@ psql -U postgres -c "CREATE DATABASE personal_app_dev_template WITH TEMPLATE per
 # Clear database tables.
 psql personal_app_db postgres << EOF
   TRUNCATE
-  finance_category,
-  finance_category_type,
-  finance_record,
+  budgeting_category,
+  budgeting_category_type,
+  budgeting_record,
   board,
   board_subject,
   "user",
@@ -21,9 +21,9 @@ psql personal_app_db postgres << EOF
 EOF
 # Reset tables primary key sequence.
 psql personal_app_db postgres << EOF
-  ALTER SEQUENCE finance_category_id_seq RESTART WITH 1;
-  ALTER SEQUENCE finance_category_type_id_seq RESTART WITH 1;
-  ALTER SEQUENCE finance_record_id_seq RESTART WITH 1;
+  ALTER SEQUENCE budgeting_category_id_seq RESTART WITH 1;
+  ALTER SEQUENCE budgeting_category_type_id_seq RESTART WITH 1;
+  ALTER SEQUENCE budgeting_record_id_seq RESTART WITH 1;
   ALTER SEQUENCE board_id_seq RESTART WITH 1;
   ALTER SEQUENCE board_subject_id_seq RESTART WITH 1;
   ALTER SEQUENCE user_id_seq RESTART WITH 1;
@@ -39,12 +39,12 @@ psql personal_app_db postgres << EOF
 EOF
 psql personal_app_db postgres << EOF
   INSERT INTO board_subject (name      )
-  VALUES                      ('finances'),
+  VALUES                      ('budgeting'),
                               ('habits'  );
 EOF
 psql personal_app_db postgres << EOF
   INSERT INTO board (name                 , "subjectId")
-  VALUES             ('clever-financiers'  , 1          ),
+  VALUES             ('clever-budgetiers'  , 1          ),
                      ('mega-economists'    , 1          ),
                      ('beautiful-sportsmen', 2          );
 EOF
@@ -62,12 +62,12 @@ psql personal_app_db postgres << EOF
                                                (2       , 3         );
 EOF
 psql personal_app_db postgres << EOF
-  INSERT INTO finance_category_type (name     )
+  INSERT INTO budgeting_category_type (name     )
   VALUES                            ('expense'),
                                     ('income' );
 EOF
 psql personal_app_db postgres << EOF
-  INSERT INTO finance_category (name       , "typeId", "boardId")
+  INSERT INTO budgeting_category (name       , "typeId", "boardId")
   VALUES                       ('clothes'  , 1       , 1        ),
                                ('education', 1       , 1        ),
                                ('gifts'    , 1       , 2        ),
@@ -75,7 +75,7 @@ psql personal_app_db postgres << EOF
                                ('salary'   , 2       , 2        );
 EOF
 psql personal_app_db postgres << EOF
-  INSERT INTO finance_record (amount, date        , "isTrashed", "categoryId")
+  INSERT INTO budgeting_record (amount, date        , "isTrashed", "categoryId")
   VALUES                     (100   , '2022-08-01', TRUE       ,  1          ),
                              (400   , '2022-08-01', TRUE       ,  2          ),
                              (25    , '2022-08-01', FALSE      ,  2          ),

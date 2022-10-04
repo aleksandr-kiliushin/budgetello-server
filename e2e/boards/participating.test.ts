@@ -59,13 +59,13 @@ describe("Participating in a board", () => {
       authorizedUserUsername: users.jessicaStark.username,
       responseBody: {
         admins: [users.johnDoe],
-        id: boards.cleverFinanciers.id,
+        id: boards.cleverBudgetiers.id,
         members: [users.johnDoe],
-        name: boards.cleverFinanciers.name,
-        subject: boardsSubjects.finances,
+        name: boards.cleverBudgetiers.name,
+        subject: boardsSubjects.budgeting,
       },
       status: 200,
-      url: `/api/boards/${boards.cleverFinanciers.id}/participating`,
+      url: `/api/boards/${boards.cleverBudgetiers.id}/participating`,
     },
   ])("Board leaving case #%#", async ({ authorizedUserUsername, responseBody, status, url }) => {
     await authorize(authorizedUserUsername)
