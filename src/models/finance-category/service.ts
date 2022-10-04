@@ -6,9 +6,7 @@ import { BoardEntity } from "#models/boards/entities/board.entity"
 import { BoardsService } from "#models/boards/service"
 import { FinanceCategoryTypeEntity } from "#models/finance-category-type/entities/finance-category-type.entity"
 import { FinanceCategoryTypeService } from "#models/finance-category-type/service"
-import { UserService } from "#models/user/service"
-
-import { IUser } from "#interfaces/user"
+import { UserEntity } from "#models/user/entities/user.entity"
 
 import { CreateFinanceCategoryDto } from "./dto/create-finance-category.dto"
 import { SearchFinanceCategoriesQueryDto } from "./dto/seach-finance-categories-query.dto"
@@ -21,22 +19,16 @@ export class FinanceCategoryService {
     @InjectRepository(FinanceCategoryEntity)
     private financeCategoryRepository: Repository<FinanceCategoryEntity>,
     private financeCategoryTypeService: FinanceCategoryTypeService,
-    private boardsService: BoardsService,
-    private userService: UserService
+    private boardsService: BoardsService
   ) {}
 
   async searchCategories({
-    authorizedUserId,
+    authorizedUser,
     query,
   }: {
-    authorizedUserId: IUser["id"]
+    authorizedUser: UserEntity
     query: SearchFinanceCategoriesQueryDto
   }): Promise<FinanceCategoryEntity[]> {
-    const authorizedUser = await this.userService.findUser({
-      id: authorizedUserId,
-      relations: { administratedBoards: true, boards: true },
-    })
-
     const accessibleBoardsIds = [
       ...new Set([
         ...authorizedUser.administratedBoards.map((board) => board.id),
@@ -63,10 +55,10 @@ export class FinanceCategoryService {
   }
 
   async findById({
-    authorizedUserId,
+    authorizedUser,
     categoryId,
   }: {
-    authorizedUserId: IUser["id"]
+    authorizedUser: UserEntity
     categoryId: FinanceCategoryEntity["id"]
   }): Promise<FinanceCategoryEntity> {
     const category = await this.financeCategoryRepository.findOne({
@@ -75,10 +67,6 @@ export class FinanceCategoryService {
     })
     if (category === null) throw new NotFoundException({})
 
-    const authorizedUser = await this.userService.findUser({
-      id: authorizedUserId,
-      relations: { administratedBoards: true, boards: true },
-    })
     const isAuthorizedUserBoardAdmin = authorizedUser.administratedBoards.some((board) => {
       return board.id === category.board.id
     })
@@ -92,10 +80,10 @@ export class FinanceCategoryService {
   }
 
   async create({
-    authorizedUserId,
+    authorizedUser,
     createFinanceCategoryDto,
   }: {
-    authorizedUserId: IUser["id"]
+    authorizedUser: UserEntity
     createFinanceCategoryDto: CreateFinanceCategoryDto
   }): Promise<FinanceCategoryEntity> {
     const { boardId, name, typeId } = createFinanceCategoryDto
@@ -132,26 +120,22 @@ export class FinanceCategoryService {
       })
     }
     const category = this.financeCategoryRepository.create({ board, name, type })
-    const { id: createdCategoryId } = await this.financeCategoryRepository.save(category)
-    return await this.findById({ authorizedUserId, categoryId: createdCategoryId })
+    const createdCategory = await this.financeCategoryRepository.save(category)
+    return await this.findById({ authorizedUser, categoryId: createdCategory.id })
   }
 
   async update({
-    authorizedUserId,
+    authorizedUser,
     categoryId,
     updateFinanceCategoryDto,
   }: {
-    authorizedUserId: IUser["id"]
+    authorizedUser: UserEntity
     categoryId: FinanceCategoryEntity["id"]
     updateFinanceCategoryDto: UpdateFinanceCategoryDto
   }): Promise<FinanceCategoryEntity> {
     const { boardId, name, typeId } = updateFinanceCategoryDto
-    const category = await this.findById({ authorizedUserId, categoryId })
+    const category = await this.findById({ authorizedUser, categoryId })
 
-    const authorizedUser = await this.userService.findUser({
-      id: authorizedUserId,
-      relations: { administratedBoards: true, boards: true },
-    })
     const isAuthorizedUserBoardAdmin = authorizedUser.administratedBoards.some((board) => {
       return board.id === category.board.id
     })
@@ -194,17 +178,17 @@ export class FinanceCategoryService {
       })
     }
     await this.financeCategoryRepository.save(category)
-    return await this.findById({ authorizedUserId, categoryId })
+    return await this.findById({ authorizedUser, categoryId })
   }
 
   async delete({
-    authorizedUserId,
+    authorizedUser,
     categoryId,
   }: {
-    authorizedUserId: IUser["id"]
+    authorizedUser: UserEntity
     categoryId: FinanceCategoryEntity["id"]
   }): Promise<FinanceCategoryEntity> {
-    const category = await this.findById({ authorizedUserId, categoryId })
+    const category = await this.findById({ authorizedUser, categoryId })
     await this.financeCategoryRepository.delete(categoryId)
     return category
   }

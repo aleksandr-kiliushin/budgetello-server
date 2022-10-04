@@ -4,9 +4,7 @@ import { In, Like, Repository } from "typeorm"
 
 import { BoardSubjectEntity } from "#models/board-subjects/entities/board-subject.entity"
 import { BoardSubjectsService } from "#models/board-subjects/service"
-import { UserService } from "#models/user/service"
-
-import { IUser } from "#interfaces/user"
+import { UserEntity } from "#models/user/entities/user.entity"
 
 import { CreateBoardDto } from "./dto/create-board.dto"
 import { SearchBoardsQueryDto } from "./dto/search-boards-query.dto"
@@ -18,8 +16,7 @@ export class BoardsService {
   constructor(
     @InjectRepository(BoardEntity)
     private boardsRepository: Repository<BoardEntity>,
-    private boardSubjectsService: BoardSubjectsService,
-    private userService: UserService
+    private boardSubjectsService: BoardSubjectsService
   ) {}
 
   search(query: SearchBoardsQueryDto): Promise<BoardEntity[]> {
@@ -39,6 +36,7 @@ export class BoardsService {
   async findById(id: BoardEntity["id"]): Promise<BoardEntity> {
     const board = await this.boardsRepository.findOne({
       order: {
+        admins: { id: "asc" },
         members: { id: "asc" },
       },
       relations: { admins: true, members: true, subject: true },
@@ -49,10 +47,10 @@ export class BoardsService {
   }
 
   async create({
-    authorizedUserId,
+    authorizedUser,
     createBoardDto,
   }: {
-    authorizedUserId: IUser["id"]
+    authorizedUser: UserEntity
     createBoardDto: CreateBoardDto
   }): Promise<BoardEntity> {
     if (createBoardDto.name === undefined || createBoardDto.name === "") {
@@ -80,27 +78,27 @@ export class BoardsService {
         },
       })
     }
-    const authorizedUser = await this.userService.findUser({ id: authorizedUserId })
     const board = this.boardsRepository.create({
       admins: [authorizedUser],
       members: [authorizedUser],
       name: createBoardDto.name,
       subject,
     })
-    return this.boardsRepository.save(board)
+    const newlyCreatedBoard = await this.boardsRepository.save(board)
+    return await this.findById(newlyCreatedBoard.id)
   }
 
   async update({
-    authorizedUserId,
+    authorizedUser,
     boardId,
     updateBoardDto,
   }: {
-    authorizedUserId: IUser["id"]
+    authorizedUser: UserEntity
     boardId: BoardEntity["id"]
     updateBoardDto: UpdateBoardDto
   }): Promise<BoardEntity> {
     const board = await this.findById(boardId)
-    if (board.admins.every((admin) => admin.id !== authorizedUserId)) {
+    if (board.admins.every((admin) => admin.id !== authorizedUser.id)) {
       throw new ForbiddenException({ message: "You are not allowed to to this action." })
     }
     if (updateBoardDto.name === undefined && updateBoardDto.subjectId === undefined) {
@@ -135,14 +133,14 @@ export class BoardsService {
   }
 
   async delete({
-    authorizedUserId,
+    authorizedUser,
     boardId,
   }: {
-    authorizedUserId: IUser["id"]
+    authorizedUser: UserEntity
     boardId: BoardEntity["id"]
   }): Promise<BoardEntity> {
     const board = await this.findById(boardId)
-    if (board.admins.every((admin) => admin.id !== authorizedUserId)) {
+    if (board.admins.every((admin) => admin.id !== authorizedUser.id)) {
       throw new ForbiddenException({ message: "You are not allowed to to this action." })
     }
     await this.boardsRepository.delete(boardId)
@@ -150,38 +148,38 @@ export class BoardsService {
   }
 
   async join({
-    authorizedUserId,
+    authorizedUser,
     boardId,
   }: {
-    authorizedUserId: IUser["id"]
+    authorizedUser: UserEntity
     boardId: BoardEntity["id"]
   }): Promise<BoardEntity> {
     const board = await this.findById(boardId)
-    if (board.members.some((member) => member.id === authorizedUserId)) {
+    if (board.members.some((member) => member.id === authorizedUser.id)) {
       throw new BadRequestException({ message: "You are already a member of this board." })
     }
-    const authorizedUser = await this.userService.findUser({ id: authorizedUserId })
     board.members = [...board.members, authorizedUser]
-    return this.boardsRepository.save(board)
+    await this.boardsRepository.save(board)
+    return await this.findById(boardId)
   }
 
   async leave({
-    authorizedUserId,
+    authorizedUser,
     boardId,
   }: {
-    authorizedUserId: IUser["id"]
+    authorizedUser: UserEntity
     boardId: BoardEntity["id"]
   }): Promise<BoardEntity> {
     const board = await this.findById(boardId)
-    if (board.members.every((member) => member.id !== authorizedUserId)) {
+    if (board.members.every((member) => member.id !== authorizedUser.id)) {
       throw new BadRequestException({ message: "You can't leave this board because you are not it's member." })
     }
-    if (board.admins.length === 1 && board.admins.every((admin) => admin.id === authorizedUserId)) {
+    if (board.admins.length === 1 && board.admins.every((admin) => admin.id === authorizedUser.id)) {
       throw new BadRequestException({
         message: "You can't leave a board where you are the only admin. You can delete the board.",
       })
     }
-    board.members = board.members.filter((member) => member.id !== authorizedUserId)
+    board.members = board.members.filter((member) => member.id !== authorizedUser.id)
     return this.boardsRepository.save(board)
   }
 }

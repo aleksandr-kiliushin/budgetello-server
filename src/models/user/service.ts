@@ -20,14 +20,14 @@ export class UserService {
 
   async findUser(
     params:
-      | { authorizedUserId?: IUser["id"]; id: IUser["id"]; relations?: FindOptionsRelations<UserEntity> }
-      | { authorizedUserId?: IUser["id"]; username: IUser["username"]; relations?: FindOptionsRelations<UserEntity> }
+      | { authorizedUser?: UserEntity; id: IUser["id"]; relations?: FindOptionsRelations<UserEntity> }
+      | { authorizedUser?: UserEntity; username: IUser["username"]; relations?: FindOptionsRelations<UserEntity> }
   ): Promise<UserEntity> {
     let user: UserEntity | null = null
 
-    if ("id" in params && params.id === 0 && params.authorizedUserId !== undefined) {
+    if ("id" in params && params.id === 0 && params.authorizedUser !== undefined) {
       user = await this.userRepository.findOne({
-        where: { id: params.authorizedUserId },
+        where: { id: params.authorizedUser.id },
         ...(params.relations !== undefined && { relations: params.relations }),
       })
     }

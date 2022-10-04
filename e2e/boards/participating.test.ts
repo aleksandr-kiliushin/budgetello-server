@@ -21,7 +21,7 @@ describe("Participating in a board", () => {
       responseBody: {
         admins: [users.jessicaStark],
         id: boards.beautifulSportsmen.id,
-        members: [users.jessicaStark, users.johnDoe],
+        members: [users.johnDoe, users.jessicaStark],
         name: boards.beautifulSportsmen.name,
         subject: boardsSubjects.habits,
       },

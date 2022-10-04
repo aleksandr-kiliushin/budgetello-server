@@ -4,9 +4,7 @@ import { In, Repository } from "typeorm"
 
 import { FinanceCategoryEntity } from "#models/finance-category/entities/finance-category.entity"
 import { FinanceCategoryService } from "#models/finance-category/service"
-import { UserService } from "#models/user/service"
-
-import { IUser } from "#interfaces/user"
+import { UserEntity } from "#models/user/entities/user.entity"
 
 import { CreateFinanceRecordDto } from "./dto/create-finance-record.dto"
 import { SearchFinanceRecordsQueryDto } from "./dto/search-finance-records-query.dto"
@@ -18,21 +16,16 @@ export class FinanceRecordService {
   constructor(
     @InjectRepository(FinanceRecordEntity)
     private financeRecordRepository: Repository<FinanceRecordEntity>,
-    private financeCategoryService: FinanceCategoryService,
-    private userService: UserService
+    private financeCategoryService: FinanceCategoryService
   ) {}
 
   async search({
-    authorizedUserId,
+    authorizedUser,
     query,
   }: {
-    authorizedUserId: IUser["id"]
+    authorizedUser: UserEntity
     query: SearchFinanceRecordsQueryDto
   }): Promise<FinanceRecordEntity[]> {
-    const authorizedUser = await this.userService.findUser({
-      id: authorizedUserId,
-      relations: { administratedBoards: true, boards: true },
-    })
     const accessibleBoardsIds = [
       ...new Set([
         ...authorizedUser.administratedBoards.map((board) => board.id),
@@ -49,7 +42,7 @@ export class FinanceRecordService {
             .filter((boardIdFromQuery) => accessibleBoardsIds.includes(boardIdFromQuery))
 
     const accessibleCategoriesOfSelectedBoards = await this.financeCategoryService.searchCategories({
-      authorizedUserId,
+      authorizedUser,
       query: { boardId: boardsIdsToSearchWith.join(",") },
     })
     const accessibleCategoriesOfSelectedBoardsIds = accessibleCategoriesOfSelectedBoards.map((category) => category.id)
@@ -81,10 +74,10 @@ export class FinanceRecordService {
   }
 
   async findById({
-    authorizedUserId,
+    authorizedUser,
     recordId,
   }: {
-    authorizedUserId: IUser["id"]
+    authorizedUser: UserEntity
     recordId: FinanceRecordEntity["id"]
   }): Promise<FinanceRecordEntity> {
     const record = await this.financeRecordRepository.findOne({
@@ -95,10 +88,6 @@ export class FinanceRecordService {
       throw new NotFoundException({ message: `Record with ID '${recordId}' not found.` })
     }
 
-    const authorizedUser = await this.userService.findUser({
-      id: authorizedUserId,
-      relations: { administratedBoards: true, boards: true },
-    })
     const accessibleBoardsIds = [
       ...new Set([
         ...authorizedUser.administratedBoards.map((board) => board.id),
@@ -113,10 +102,10 @@ export class FinanceRecordService {
   }
 
   async create({
-    authorizedUserId,
+    authorizedUser,
     createFinanceRecordDto,
   }: {
-    authorizedUserId: IUser["id"]
+    authorizedUser: UserEntity
     createFinanceRecordDto: CreateFinanceRecordDto
   }): Promise<FinanceRecordEntity> {
     if (typeof createFinanceRecordDto.amount !== "number" || createFinanceRecordDto.amount <= 0) {
@@ -128,7 +117,7 @@ export class FinanceRecordService {
     let category: FinanceCategoryEntity | undefined
     try {
       category = await this.financeCategoryService.findById({
-        authorizedUserId,
+        authorizedUser,
         categoryId: createFinanceRecordDto.categoryId,
       })
     } catch {
@@ -146,15 +135,15 @@ export class FinanceRecordService {
   }
 
   async updateFinanceRecord({
-    authorizedUserId,
+    authorizedUser,
     recordId,
     updateFinanceRecordDto,
   }: {
-    authorizedUserId: IUser["id"]
+    authorizedUser: UserEntity
     recordId: FinanceRecordEntity["id"]
     updateFinanceRecordDto: UpdateFinanceRecordDto
   }): Promise<FinanceRecordEntity> {
-    const record = await this.findById({ authorizedUserId, recordId })
+    const record = await this.findById({ authorizedUser, recordId })
     if (updateFinanceRecordDto.amount !== undefined) {
       if (typeof updateFinanceRecordDto.amount !== "number" || updateFinanceRecordDto.amount <= 0) {
         throw new BadRequestException({ fields: { amount: "Should be a positive number." } })
@@ -173,7 +162,7 @@ export class FinanceRecordService {
     if (updateFinanceRecordDto.categoryId !== undefined) {
       try {
         record.category = await this.financeCategoryService.findById({
-          authorizedUserId,
+          authorizedUser,
           categoryId: updateFinanceRecordDto.categoryId,
         })
       } catch {
@@ -184,13 +173,13 @@ export class FinanceRecordService {
   }
 
   async deleteFinanceRecord({
-    authorizedUserId,
+    authorizedUser,
     recordId,
   }: {
-    authorizedUserId: IUser["id"]
+    authorizedUser: UserEntity
     recordId: FinanceRecordEntity["id"]
   }): Promise<FinanceRecordEntity> {
-    const record = await this.findById({ authorizedUserId, recordId })
+    const record = await this.findById({ authorizedUser, recordId })
     await this.financeRecordRepository.delete(recordId)
     return record
   }

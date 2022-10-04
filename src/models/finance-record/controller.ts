@@ -1,10 +1,9 @@
 import { Body, Controller, Delete, Get, Param, Patch, Post, Query, UseGuards } from "@nestjs/common"
 
 import { AuthGuard } from "#models/auth/guard"
+import { UserEntity } from "#models/user/entities/user.entity"
 
-import { AuthorizedUserId } from "#helpers/AuthorizedUserId.decorator"
-
-import { IUser } from "#interfaces/user"
+import { AuthorizedUser } from "#helpers/AuthorizedUser.decorator"
 
 import { CreateFinanceRecordDto } from "./dto/create-finance-record.dto"
 import { SearchFinanceRecordsQueryDto } from "./dto/search-finance-records-query.dto"
@@ -20,30 +19,30 @@ export class FinanceRecordController {
   search(
     @Query()
     query: SearchFinanceRecordsQueryDto,
-    @AuthorizedUserId()
-    authorizedUserId: IUser["id"]
+    @AuthorizedUser()
+    authorizedUser: UserEntity
   ) {
-    return this.financeRecordService.search({ authorizedUserId, query })
+    return this.financeRecordService.search({ authorizedUser, query })
   }
 
   @Get(":id")
   findById(
     @Param("id")
     recordId: string,
-    @AuthorizedUserId()
-    authorizedUserId: IUser["id"]
+    @AuthorizedUser()
+    authorizedUser: UserEntity
   ) {
-    return this.financeRecordService.findById({ authorizedUserId, recordId: parseInt(recordId) })
+    return this.financeRecordService.findById({ authorizedUser, recordId: parseInt(recordId) })
   }
 
   @Post()
   create(
     @Body()
     createFinanceRecordDto: CreateFinanceRecordDto,
-    @AuthorizedUserId()
-    authorizedUserId: IUser["id"]
+    @AuthorizedUser()
+    authorizedUser: UserEntity
   ) {
-    return this.financeRecordService.create({ authorizedUserId, createFinanceRecordDto })
+    return this.financeRecordService.create({ authorizedUser, createFinanceRecordDto })
   }
 
   @Patch(":id")
@@ -52,11 +51,11 @@ export class FinanceRecordController {
     recordId: string,
     @Body()
     updateFinanceRecordDto: UpdateFinanceRecordDto,
-    @AuthorizedUserId()
-    authorizedUserId: IUser["id"]
+    @AuthorizedUser()
+    authorizedUser: UserEntity
   ) {
     return this.financeRecordService.updateFinanceRecord({
-      authorizedUserId,
+      authorizedUser,
       recordId: parseInt(recordId),
       updateFinanceRecordDto,
     })
@@ -66,9 +65,9 @@ export class FinanceRecordController {
   deleteFinanceRecord(
     @Param("id")
     recordId: string,
-    @AuthorizedUserId()
-    authorizedUserId: IUser["id"]
+    @AuthorizedUser()
+    authorizedUser: UserEntity
   ) {
-    return this.financeRecordService.deleteFinanceRecord({ authorizedUserId, recordId: parseInt(recordId) })
+    return this.financeRecordService.deleteFinanceRecord({ authorizedUser, recordId: parseInt(recordId) })
   }
 }

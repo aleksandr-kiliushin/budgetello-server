@@ -1,10 +1,9 @@
 import { Body, Controller, Delete, Get, Param, Patch, Post, Query, UseGuards } from "@nestjs/common"
 
 import { AuthGuard } from "#models/auth/guard"
+import { UserEntity } from "#models/user/entities/user.entity"
 
-import { AuthorizedUserId } from "#helpers/AuthorizedUserId.decorator"
-
-import { IUser } from "#interfaces/user"
+import { AuthorizedUser } from "#helpers/AuthorizedUser.decorator"
 
 import { CreateBoardDto } from "./dto/create-board.dto"
 import { SearchBoardsQueryDto } from "./dto/search-boards-query.dto"
@@ -30,30 +29,30 @@ export class BoardsController {
   create(
     @Body()
     createBoardDto: CreateBoardDto,
-    @AuthorizedUserId()
-    authorizedUserId: IUser["id"]
+    @AuthorizedUser()
+    authorizedUser: UserEntity
   ) {
-    return this.boardsService.create({ authorizedUserId, createBoardDto })
+    return this.boardsService.create({ authorizedUser, createBoardDto })
   }
 
   @Post(":id/participating")
   join(
     @Param("id")
     id: string,
-    @AuthorizedUserId()
-    authorizedUserId: IUser["id"]
+    @AuthorizedUser()
+    authorizedUser: UserEntity
   ) {
-    return this.boardsService.join({ authorizedUserId, boardId: parseInt(id) })
+    return this.boardsService.join({ authorizedUser, boardId: parseInt(id) })
   }
 
   @Delete(":id/participating")
   leave(
     @Param("id")
     id: string,
-    @AuthorizedUserId()
-    authorizedUserId: IUser["id"]
+    @AuthorizedUser()
+    authorizedUser: UserEntity
   ) {
-    return this.boardsService.leave({ authorizedUserId, boardId: parseInt(id) })
+    return this.boardsService.leave({ authorizedUser, boardId: parseInt(id) })
   }
 
   @Patch(":id")
@@ -62,19 +61,19 @@ export class BoardsController {
     id: string,
     @Body()
     updateBoardDto: UpdateBoardDto,
-    @AuthorizedUserId()
-    authorizedUserId: IUser["id"]
+    @AuthorizedUser()
+    authorizedUser: UserEntity
   ) {
-    return this.boardsService.update({ authorizedUserId, boardId: parseInt(id), updateBoardDto })
+    return this.boardsService.update({ authorizedUser, boardId: parseInt(id), updateBoardDto })
   }
 
   @Delete(":id")
   delete(
     @Param("id")
     id: string,
-    @AuthorizedUserId()
-    authorizedUserId: IUser["id"]
+    @AuthorizedUser()
+    authorizedUser: UserEntity
   ) {
-    return this.boardsService.delete({ authorizedUserId, boardId: parseInt(id) })
+    return this.boardsService.delete({ authorizedUser, boardId: parseInt(id) })
   }
 }
