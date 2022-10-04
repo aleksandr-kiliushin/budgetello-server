@@ -1,18 +1,8 @@
-import {
-  Body,
-  Controller,
-  Delete,
-  ForbiddenException,
-  Get,
-  Param,
-  Patch,
-  Post,
-  Query,
-  Request,
-  UseGuards,
-} from "@nestjs/common"
+import { Body, Controller, Delete, ForbiddenException, Get, Param, Patch, Post, Query, UseGuards } from "@nestjs/common"
 
 import { AuthGuard } from "#models/auth/guard"
+
+import { AuthorizedUserId } from "#helpers/AuthorizedUserId.decorator"
 
 import { IUser } from "#interfaces/user"
 
@@ -34,17 +24,17 @@ export class UserController {
   @Get(":userIdentifier")
   @UseGuards(AuthGuard)
   findUser(
-    @Request()
-    request: Record<string, unknown> & { userId: IUser["id"] },
     @Param("userIdentifier")
-    userIdentifier: string
+    userIdentifier: string,
+    @AuthorizedUserId()
+    authorizedUserId: IUser["id"]
   ) {
     // If request to /api/users/john-doe.
     if (isNaN(parseInt(userIdentifier))) {
-      return this.userService.findUser({ authorizedUserId: request.userId, username: userIdentifier })
+      return this.userService.findUser({ authorizedUserId, username: userIdentifier })
     }
     // If request to /api/users/123.
-    return this.userService.findUser({ authorizedUserId: request.userId, id: parseInt(userIdentifier) })
+    return this.userService.findUser({ authorizedUserId, id: parseInt(userIdentifier) })
   }
 
   @Post()
@@ -62,11 +52,11 @@ export class UserController {
     id: string,
     @Body()
     updateUserDto: UpdateUserDto,
-    @Request()
-    request: Record<string, unknown> & { userId: IUser["id"] }
+    @AuthorizedUserId()
+    authorizedUserId: IUser["id"]
   ) {
     const userToBeUpdatedId = parseInt(id)
-    if (request.userId !== userToBeUpdatedId) {
+    if (authorizedUserId !== userToBeUpdatedId) {
       throw new ForbiddenException({ message: "You are not allowed to update another user." })
     }
     return this.userService.update(userToBeUpdatedId, updateUserDto)
@@ -77,11 +67,11 @@ export class UserController {
   delete(
     @Param("id")
     id: string,
-    @Request()
-    request: Record<string, unknown> & { userId: IUser["id"] }
+    @AuthorizedUserId()
+    authorizedUserId: IUser["id"]
   ) {
     const userToBeDeletedId = parseInt(id)
-    if (request.userId !== userToBeDeletedId) {
+    if (authorizedUserId !== userToBeDeletedId) {
       throw new ForbiddenException({ message: "You are not allowed to delete another user." })
     }
     return this.userService.delete(userToBeDeletedId)

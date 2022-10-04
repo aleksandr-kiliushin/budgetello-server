@@ -1,6 +1,8 @@
-import { Body, Controller, Delete, Get, Param, Patch, Post, Query, Request, UseGuards } from "@nestjs/common"
+import { Body, Controller, Delete, Get, Param, Patch, Post, Query, UseGuards } from "@nestjs/common"
 
 import { AuthGuard } from "#models/auth/guard"
+
+import { AuthorizedUserId } from "#helpers/AuthorizedUserId.decorator"
 
 import { IUser } from "#interfaces/user"
 
@@ -16,31 +18,32 @@ export class FinanceCategoryController {
 
   @Get("search")
   searchCategories(
-    @Query() query: SearchFinanceCategoriesQueryDto,
-    @Request()
-    request: Record<string, unknown> & { userId: IUser["id"] }
+    @Query()
+    query: SearchFinanceCategoriesQueryDto,
+    @AuthorizedUserId()
+    authorizedUserId: IUser["id"]
   ) {
-    return this.financeCategoryService.searchCategories({ authorizedUserId: request.userId, query })
+    return this.financeCategoryService.searchCategories({ authorizedUserId, query })
   }
 
   @Get(":id")
   findById(
     @Param("id")
     id: string,
-    @Request()
-    request: Record<string, unknown> & { userId: IUser["id"] }
+    @AuthorizedUserId()
+    authorizedUserId: IUser["id"]
   ) {
-    return this.financeCategoryService.findById({ authorizedUserId: request.userId, categoryId: parseInt(id) })
+    return this.financeCategoryService.findById({ authorizedUserId, categoryId: parseInt(id) })
   }
 
   @Post()
   create(
     @Body()
     createFinanceCategoryDto: CreateFinanceCategoryDto,
-    @Request()
-    request: Record<string, unknown> & { userId: IUser["id"] }
+    @AuthorizedUserId()
+    authorizedUserId: IUser["id"]
   ) {
-    return this.financeCategoryService.create({ authorizedUserId: request.userId, createFinanceCategoryDto })
+    return this.financeCategoryService.create({ authorizedUserId, createFinanceCategoryDto })
   }
 
   @Patch(":id")
@@ -49,23 +52,19 @@ export class FinanceCategoryController {
     id: string,
     @Body()
     updateFinanceCategoryDto: UpdateFinanceCategoryDto,
-    @Request()
-    request: Record<string, unknown> & { userId: IUser["id"] }
+    @AuthorizedUserId()
+    authorizedUserId: IUser["id"]
   ) {
-    return this.financeCategoryService.update({
-      authorizedUserId: request.userId,
-      categoryId: parseInt(id),
-      updateFinanceCategoryDto,
-    })
+    return this.financeCategoryService.update({ authorizedUserId, categoryId: parseInt(id), updateFinanceCategoryDto })
   }
 
   @Delete(":id")
   delete(
     @Param("id")
     id: string,
-    @Request()
-    request: Record<string, unknown> & { userId: IUser["id"] }
+    @AuthorizedUserId()
+    authorizedUserId: IUser["id"]
   ) {
-    return this.financeCategoryService.delete({ authorizedUserId: request.userId, categoryId: parseInt(id) })
+    return this.financeCategoryService.delete({ authorizedUserId, categoryId: parseInt(id) })
   }
 }
