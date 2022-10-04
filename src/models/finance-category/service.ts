@@ -2,9 +2,7 @@ import { BadRequestException, ForbiddenException, Injectable, NotFoundException 
 import { InjectRepository } from "@nestjs/typeorm"
 import { In, Repository } from "typeorm"
 
-import { BoardEntity } from "#models/boards/entities/board.entity"
 import { BoardsService } from "#models/boards/service"
-import { FinanceCategoryTypeEntity } from "#models/finance-category-type/entities/finance-category-type.entity"
 import { FinanceCategoryTypeService } from "#models/finance-category-type/service"
 import { UserEntity } from "#models/user/entities/user.entity"
 
@@ -94,18 +92,12 @@ export class FinanceCategoryService {
     if (boardId === undefined) {
       throw new BadRequestException({ fields: { boardId: "Required field." } })
     }
-    let type: FinanceCategoryTypeEntity | undefined
-    try {
-      type = await this.financeCategoryTypeService.findById(typeId)
-    } catch {
+    const type = await this.financeCategoryTypeService.findById(typeId).catch(() => {
       throw new BadRequestException({ fields: { typeId: "Invalid category type." } })
-    }
-    let board: BoardEntity | undefined
-    try {
-      board = await this.boardsService.findById(boardId)
-    } catch {
+    })
+    const board = await this.boardsService.findById(boardId).catch(() => {
       throw new BadRequestException({ fields: { boardId: "Invalid board." } })
-    }
+    })
     const theSameExistingCategory = await this.financeCategoryRepository.findOne({
       relations: { board: true, type: true },
       where: { board, name, type },

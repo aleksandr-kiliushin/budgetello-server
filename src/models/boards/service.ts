@@ -2,7 +2,6 @@ import { BadRequestException, ForbiddenException, Injectable, NotFoundException 
 import { InjectRepository } from "@nestjs/typeorm"
 import { In, Like, Repository } from "typeorm"
 
-import { BoardSubjectEntity } from "#models/board-subjects/entities/board-subject.entity"
 import { BoardSubjectsService } from "#models/board-subjects/service"
 import { UserEntity } from "#models/user/entities/user.entity"
 
@@ -59,13 +58,9 @@ export class BoardsService {
     if (createBoardDto.subjectId === undefined) {
       throw new BadRequestException({ fields: { subjectId: "Required field." } })
     }
-    let subject: BoardSubjectEntity | undefined
-    // TODO: Refactor with .catch() method.
-    try {
-      subject = await this.boardSubjectsService.findById(createBoardDto.subjectId)
-    } catch {
+    const subject = await this.boardSubjectsService.findById(createBoardDto.subjectId).catch(() => {
       throw new BadRequestException({ fields: { subjectId: "Invalid subject." } })
-    }
+    })
     const theSameExistingBoard = await this.boardsRepository.findOne({
       relations: { subject: true },
       where: { name: createBoardDto.name, subject },
