@@ -12,13 +12,11 @@ export class AuthService {
   constructor(private readonly userService: UserService) {}
 
   async createToken(loginDto: LoginDto): Promise<{ authToken: string }> {
-    const { password, username } = loginDto
-
-    const user = await this.userService.findUser({ username }).catch(() => {
+    const user = await this.userService.find({ userUsername: loginDto.username }).catch(() => {
       throw new BadRequestException({ fields: { username: "User not found." } })
     })
 
-    const hashedPassword = encrypt(password)
+    const hashedPassword = encrypt(loginDto.password)
     const isPasswordValid = hashedPassword === user.password
 
     if (!isPasswordValid) throw new BadRequestException({ fields: { password: "Invalid password." } })

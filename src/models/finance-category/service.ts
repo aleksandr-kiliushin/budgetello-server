@@ -84,23 +84,25 @@ export class FinanceCategoryService {
     authorizedUser: UserEntity
     createFinanceCategoryDto: CreateFinanceCategoryDto
   }): Promise<FinanceCategoryEntity> {
-    const { boardId, name, typeId } = createFinanceCategoryDto
-    if (name === undefined || name === "") throw new BadRequestException({ fields: { name: "Required field." } })
-    if (typeId === undefined) {
+    if (createFinanceCategoryDto.name === undefined || createFinanceCategoryDto.name === "")
+      throw new BadRequestException({ fields: { name: "Required field." } })
+    if (createFinanceCategoryDto.typeId === undefined) {
       throw new BadRequestException({ fields: { typeId: "Required field." } })
     }
-    if (boardId === undefined) {
+    if (createFinanceCategoryDto.boardId === undefined) {
       throw new BadRequestException({ fields: { boardId: "Required field." } })
     }
-    const type = await this.financeCategoryTypeService.findById(typeId).catch(() => {
-      throw new BadRequestException({ fields: { typeId: "Invalid category type." } })
-    })
-    const board = await this.boardsService.findById(boardId).catch(() => {
+    const type = await this.financeCategoryTypeService
+      .find({ financeCategoryTypeId: createFinanceCategoryDto.typeId })
+      .catch(() => {
+        throw new BadRequestException({ fields: { typeId: "Invalid category type." } })
+      })
+    const board = await this.boardsService.find({ boardId: createFinanceCategoryDto.boardId }).catch(() => {
       throw new BadRequestException({ fields: { boardId: "Invalid board." } })
     })
     const theSameExistingCategory = await this.financeCategoryRepository.findOne({
       relations: { board: true, type: true },
-      where: { board, name, type },
+      where: { board, name: createFinanceCategoryDto.name, type },
     })
     if (theSameExistingCategory !== null) {
       throw new BadRequestException({
@@ -111,7 +113,7 @@ export class FinanceCategoryService {
         },
       })
     }
-    const category = this.financeCategoryRepository.create({ board, name, type })
+    const category = this.financeCategoryRepository.create({ board, name: createFinanceCategoryDto.name, type })
     const createdCategory = await this.financeCategoryRepository.save(category)
     return await this.findById({ authorizedUser, categoryId: createdCategory.id })
   }
@@ -125,7 +127,6 @@ export class FinanceCategoryService {
     categoryId: FinanceCategoryEntity["id"]
     updateFinanceCategoryDto: UpdateFinanceCategoryDto
   }): Promise<FinanceCategoryEntity> {
-    const { boardId, name, typeId } = updateFinanceCategoryDto
     const category = await this.findById({ authorizedUser, categoryId })
 
     const isAuthorizedUserBoardAdmin = authorizedUser.administratedBoards.some((board) => {
@@ -137,24 +138,34 @@ export class FinanceCategoryService {
       throw new ForbiddenException({ message: "Access denied." })
     }
 
-    if (boardId === undefined && name === undefined && typeId === undefined) return category
-    if (typeId !== undefined) {
+    if (
+      updateFinanceCategoryDto.boardId === undefined &&
+      updateFinanceCategoryDto.name === undefined &&
+      updateFinanceCategoryDto.typeId === undefined
+    ) {
+      return category
+    }
+    if (updateFinanceCategoryDto.typeId !== undefined) {
       try {
-        category.type = await this.financeCategoryTypeService.findById(typeId)
+        category.type = await this.financeCategoryTypeService.find({
+          financeCategoryTypeId: updateFinanceCategoryDto.typeId,
+        })
       } catch {
         throw new BadRequestException({ fields: { typeId: "Invalid category type." } })
       }
     }
-    if (boardId !== undefined) {
+    if (updateFinanceCategoryDto.boardId !== undefined) {
       try {
-        category.board = await this.boardsService.findById(boardId)
+        category.board = await this.boardsService.find({ boardId: updateFinanceCategoryDto.boardId })
       } catch {
         throw new BadRequestException({ fields: { boardId: "Invalid board." } })
       }
     }
-    if (name !== undefined) {
-      if (name === "") throw new BadRequestException({ fields: { name: "Category name cannot be empty." } })
-      category.name = name
+    if (updateFinanceCategoryDto.name !== undefined) {
+      if (updateFinanceCategoryDto.name === "") {
+        throw new BadRequestException({ fields: { name: "Category name cannot be empty." } })
+      }
+      category.name = updateFinanceCategoryDto.name
     }
     const theSameExistingCategory = await this.financeCategoryRepository.findOne({
       relations: { board: true, type: true },

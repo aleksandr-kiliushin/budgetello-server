@@ -16,13 +16,19 @@ export class BoardsController {
   constructor(private boardsService: BoardsService) {}
 
   @Get("search")
-  search(@Query() query: SearchBoardsQueryDto) {
-    return this.boardsService.search(query)
+  search(
+    @Query()
+    query: SearchBoardsQueryDto
+  ) {
+    return this.boardsService.search({ query })
   }
 
   @Get(":id")
-  findById(@Param("id") id: string) {
-    return this.boardsService.findById(parseInt(id))
+  find(
+    @Param("id")
+    boardId: string
+  ) {
+    return this.boardsService.find({ boardId: parseInt(boardId) })
   }
 
   @Post()
@@ -38,42 +44,42 @@ export class BoardsController {
   @Post(":id/participating")
   join(
     @Param("id")
-    id: string,
+    boardId: string,
     @AuthorizedUser()
     authorizedUser: UserEntity
   ) {
-    return this.boardsService.join({ authorizedUser, boardId: parseInt(id) })
+    return this.boardsService.join({ authorizedUser, boardId: parseInt(boardId) })
   }
 
   @Delete(":id/participating")
   leave(
     @Param("id")
-    id: string,
+    boardId: string,
     @AuthorizedUser()
     authorizedUser: UserEntity
   ) {
-    return this.boardsService.leave({ authorizedUser, boardId: parseInt(id) })
+    return this.boardsService.leave({ authorizedUser, boardId: parseInt(boardId) })
   }
 
   @Patch(":id")
   update(
     @Param("id")
-    id: string,
+    boardId: string,
     @Body()
     updateBoardDto: UpdateBoardDto,
     @AuthorizedUser()
     authorizedUser: UserEntity
   ) {
-    return this.boardsService.update({ authorizedUser, boardId: parseInt(id), updateBoardDto })
+    return this.boardsService.update({ authorizedUser, boardId: parseInt(boardId), updateBoardDto })
   }
 
   @Delete(":id")
   delete(
     @Param("id")
-    id: string,
+    boardId: string,
     @AuthorizedUser()
     authorizedUser: UserEntity
   ) {
-    return this.boardsService.delete({ authorizedUser, boardId: parseInt(id) })
+    return this.boardsService.delete({ authorizedUser, boardId: parseInt(boardId) })
   }
 }

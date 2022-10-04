@@ -73,7 +73,7 @@ export class FinanceRecordService {
     })
   }
 
-  async findById({
+  async find({
     authorizedUser,
     recordId,
   }: {
@@ -134,7 +134,7 @@ export class FinanceRecordService {
     return this.financeRecordRepository.save(record)
   }
 
-  async updateFinanceRecord({
+  async update({
     authorizedUser,
     recordId,
     updateFinanceRecordDto,
@@ -143,7 +143,7 @@ export class FinanceRecordService {
     recordId: FinanceRecordEntity["id"]
     updateFinanceRecordDto: UpdateFinanceRecordDto
   }): Promise<FinanceRecordEntity> {
-    const record = await this.findById({ authorizedUser, recordId })
+    const record = await this.find({ authorizedUser, recordId })
     if (updateFinanceRecordDto.amount !== undefined) {
       if (typeof updateFinanceRecordDto.amount !== "number" || updateFinanceRecordDto.amount <= 0) {
         throw new BadRequestException({ fields: { amount: "Should be a positive number." } })
@@ -172,14 +172,14 @@ export class FinanceRecordService {
     return this.financeRecordRepository.save(record)
   }
 
-  async deleteFinanceRecord({
+  async delete({
     authorizedUser,
     recordId,
   }: {
     authorizedUser: UserEntity
     recordId: FinanceRecordEntity["id"]
   }): Promise<FinanceRecordEntity> {
-    const record = await this.findById({ authorizedUser, recordId })
+    const record = await this.find({ authorizedUser, recordId })
     await this.financeRecordRepository.delete(recordId)
     return record
   }

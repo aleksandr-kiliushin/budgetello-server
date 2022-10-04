@@ -18,29 +18,35 @@ export class UserService {
     private userRepository: Repository<UserEntity>
   ) {}
 
-  async findUser(
-    params:
-      | { authorizedUser?: UserEntity; id: IUser["id"]; relations?: FindOptionsRelations<UserEntity> }
-      | { authorizedUser?: UserEntity; username: IUser["username"]; relations?: FindOptionsRelations<UserEntity> }
-  ): Promise<UserEntity> {
+  async find({
+    authorizedUser,
+    userId,
+    relations,
+    userUsername,
+  }: {
+    authorizedUser?: UserEntity
+    userId?: IUser["id"]
+    relations?: FindOptionsRelations<UserEntity>
+    userUsername?: IUser["username"]
+  }): Promise<UserEntity> {
     let user: UserEntity | null = null
 
-    if ("id" in params && params.id === 0 && params.authorizedUser !== undefined) {
+    if (userId === 0 && authorizedUser !== undefined) {
       user = await this.userRepository.findOne({
-        where: { id: params.authorizedUser.id },
-        ...(params.relations !== undefined && { relations: params.relations }),
+        where: { id: authorizedUser.id },
+        ...(relations !== undefined && { relations }),
       })
     }
-    if ("id" in params && params.id !== 0) {
+    if (userId !== undefined && userId !== 0) {
       user = await this.userRepository.findOne({
-        where: { id: params.id },
-        ...(params.relations !== undefined && { relations: params.relations }),
+        where: { id: userId },
+        ...(relations !== undefined && { relations }),
       })
     }
-    if ("username" in params) {
+    if (userUsername !== undefined) {
       user = await this.userRepository.findOne({
-        where: { username: params.username },
-        ...(params.relations !== undefined && { relations: params.relations }),
+        where: { username: userUsername },
+        ...(relations !== undefined && { relations: relations }),
       })
     }
 
@@ -63,9 +69,15 @@ export class UserService {
     return this.userRepository.save(user)
   }
 
-  async update(id: UserEntity["id"], updateUserDto: UpdateUserDto): Promise<UserEntity> {
+  async update({
+    updateUserDto,
+    userId,
+  }: {
+    updateUserDto: UpdateUserDto
+    userId: UserEntity["id"]
+  }): Promise<UserEntity> {
     const { password, username } = updateUserDto
-    const newUserData = { ...(await this.findUser({ id })) }
+    const newUserData = { ...(await this.find({ userId })) }
     if (username !== undefined) {
       newUserData.username = username
     }
@@ -75,9 +87,9 @@ export class UserService {
     return this.userRepository.save(newUserData)
   }
 
-  async delete(id: UserEntity["id"]): Promise<UserEntity> {
-    const user = await this.findUser({ id })
-    await this.userRepository.delete(id)
+  async delete({ userId }: { userId: UserEntity["id"] }): Promise<UserEntity> {
+    const user = await this.find({ userId })
+    await this.userRepository.delete(userId)
     return user
   }
 }

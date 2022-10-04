@@ -15,7 +15,10 @@ export class BoardSubjectsController {
   }
 
   @Get(":id")
-  findById(@Param("id") id: string) {
-    return this.boardSubjectsService.findById(parseInt(id))
+  find(
+    @Param("id")
+    boardSubjectId: string
+  ) {
+    return this.boardSubjectsService.find({ boardSubjectId: parseInt(boardSubjectId) })
   }
 }

@@ -26,13 +26,13 @@ export class FinanceRecordController {
   }
 
   @Get(":id")
-  findById(
+  find(
     @Param("id")
     recordId: string,
     @AuthorizedUser()
     authorizedUser: UserEntity
   ) {
-    return this.financeRecordService.findById({ authorizedUser, recordId: parseInt(recordId) })
+    return this.financeRecordService.find({ authorizedUser, recordId: parseInt(recordId) })
   }
 
   @Post()
@@ -46,7 +46,7 @@ export class FinanceRecordController {
   }
 
   @Patch(":id")
-  updateFinanceRecord(
+  update(
     @Param("id")
     recordId: string,
     @Body()
@@ -54,20 +54,16 @@ export class FinanceRecordController {
     @AuthorizedUser()
     authorizedUser: UserEntity
   ) {
-    return this.financeRecordService.updateFinanceRecord({
-      authorizedUser,
-      recordId: parseInt(recordId),
-      updateFinanceRecordDto,
-    })
+    return this.financeRecordService.update({ authorizedUser, recordId: parseInt(recordId), updateFinanceRecordDto })
   }
 
   @Delete(":id")
-  deleteFinanceRecord(
+  delete(
     @Param("id")
     recordId: string,
     @AuthorizedUser()
     authorizedUser: UserEntity
   ) {
-    return this.financeRecordService.deleteFinanceRecord({ authorizedUser, recordId: parseInt(recordId) })
+    return this.financeRecordService.delete({ authorizedUser, recordId: parseInt(recordId) })
   }
 }

@@ -15,7 +15,11 @@ export class FinanceCategoryTypeService {
     return this.financeCategoryTypeRepository.find()
   }
 
-  findById(id: FinanceCategoryTypeEntity["id"]): Promise<FinanceCategoryTypeEntity> {
-    return this.financeCategoryTypeRepository.findOneOrFail({ where: { id } })
+  find({
+    financeCategoryTypeId,
+  }: {
+    financeCategoryTypeId: FinanceCategoryTypeEntity["id"]
+  }): Promise<FinanceCategoryTypeEntity> {
+    return this.financeCategoryTypeRepository.findOneOrFail({ where: { id: financeCategoryTypeId } })
   }
 }

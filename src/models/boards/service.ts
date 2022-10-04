@@ -18,7 +18,7 @@ export class BoardsService {
     private boardSubjectsService: BoardSubjectsService
   ) {}
 
-  search(query: SearchBoardsQueryDto): Promise<BoardEntity[]> {
+  search({ query }: { query: SearchBoardsQueryDto }): Promise<BoardEntity[]> {
     return this.boardsRepository.find({
       order: {
         members: { id: "asc" },
@@ -32,14 +32,14 @@ export class BoardsService {
     })
   }
 
-  async findById(id: BoardEntity["id"]): Promise<BoardEntity> {
+  async find({ boardId }: { boardId: BoardEntity["id"] }): Promise<BoardEntity> {
     const board = await this.boardsRepository.findOne({
       order: {
         admins: { id: "asc" },
         members: { id: "asc" },
       },
       relations: { admins: true, members: true, subject: true },
-      where: { id },
+      where: { id: boardId },
     })
     if (board === null) throw new NotFoundException({})
     return board
@@ -58,7 +58,7 @@ export class BoardsService {
     if (createBoardDto.subjectId === undefined) {
       throw new BadRequestException({ fields: { subjectId: "Required field." } })
     }
-    const subject = await this.boardSubjectsService.findById(createBoardDto.subjectId).catch(() => {
+    const subject = await this.boardSubjectsService.find({ boardSubjectId: createBoardDto.subjectId }).catch(() => {
       throw new BadRequestException({ fields: { subjectId: "Invalid subject." } })
     })
     const theSameExistingBoard = await this.boardsRepository.findOne({
@@ -80,7 +80,7 @@ export class BoardsService {
       subject,
     })
     const newlyCreatedBoard = await this.boardsRepository.save(board)
-    return await this.findById(newlyCreatedBoard.id)
+    return await this.find({ boardId: newlyCreatedBoard.id })
   }
 
   async update({
@@ -92,7 +92,7 @@ export class BoardsService {
     boardId: BoardEntity["id"]
     updateBoardDto: UpdateBoardDto
   }): Promise<BoardEntity> {
-    const board = await this.findById(boardId)
+    const board = await this.find({ boardId })
     if (board.admins.every((admin) => admin.id !== authorizedUser.id)) {
       throw new ForbiddenException({ message: "You are not allowed to to this action." })
     }
@@ -107,7 +107,7 @@ export class BoardsService {
     }
     if (updateBoardDto.subjectId !== undefined) {
       try {
-        board.subject = await this.boardSubjectsService.findById(updateBoardDto.subjectId)
+        board.subject = await this.boardSubjectsService.find({ boardSubjectId: updateBoardDto.subjectId })
       } catch {
         throw new BadRequestException({ fields: { subjectId: "Invalid board subject." } })
       }
@@ -134,7 +134,7 @@ export class BoardsService {
     authorizedUser: UserEntity
     boardId: BoardEntity["id"]
   }): Promise<BoardEntity> {
-    const board = await this.findById(boardId)
+    const board = await this.find({ boardId })
     if (board.admins.every((admin) => admin.id !== authorizedUser.id)) {
       throw new ForbiddenException({ message: "You are not allowed to to this action." })
     }
@@ -149,13 +149,13 @@ export class BoardsService {
     authorizedUser: UserEntity
     boardId: BoardEntity["id"]
   }): Promise<BoardEntity> {
-    const board = await this.findById(boardId)
+    const board = await this.find({ boardId })
     if (board.members.some((member) => member.id === authorizedUser.id)) {
       throw new BadRequestException({ message: "You are already a member of this board." })
     }
     board.members = [...board.members, authorizedUser]
     await this.boardsRepository.save(board)
-    return await this.findById(boardId)
+    return await this.find({ boardId })
   }
 
   async leave({
@@ -165,7 +165,7 @@ export class BoardsService {
     authorizedUser: UserEntity
     boardId: BoardEntity["id"]
   }): Promise<BoardEntity> {
-    const board = await this.findById(boardId)
+    const board = await this.find({ boardId })
     if (board.members.every((member) => member.id !== authorizedUser.id)) {
       throw new BadRequestException({ message: "You can't leave this board because you are not it's member." })
     }

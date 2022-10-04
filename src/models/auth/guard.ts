@@ -27,8 +27,8 @@ export class AuthGuard implements CanActivate {
       const decodingResult = jwt.decode(authToken, { json: true })
       if (decodingResult === null) throw new Error()
       request.authorizedUserId = decodingResult.id
-      request.authorizedUser = await this.userService.findUser({
-        id: decodingResult.id,
+      request.authorizedUser = await this.userService.find({
+        userId: decodingResult.id,
         relations: { administratedBoards: true, boards: true },
       })
     } catch {

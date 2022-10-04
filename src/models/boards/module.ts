@@ -9,9 +9,9 @@ import { BoardEntity } from "./entities/board.entity"
 import { BoardsService } from "./service"
 
 @Module({
+  controllers: [BoardsController],
   exports: [BoardsService],
   imports: [TypeOrmModule.forFeature([BoardEntity]), BoardSubjectsModule, UserModule],
   providers: [BoardsController, BoardsService],
-  controllers: [BoardsController],
 })
 export class BoardsModule {}

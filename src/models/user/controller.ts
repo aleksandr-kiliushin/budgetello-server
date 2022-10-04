@@ -22,7 +22,7 @@ export class UserController {
 
   @Get(":userIdentifier")
   @UseGuards(AuthGuard)
-  findUser(
+  find(
     @Param("userIdentifier")
     userIdentifier: string,
     @AuthorizedUser()
@@ -30,10 +30,10 @@ export class UserController {
   ) {
     // If request to /api/users/john-doe.
     if (isNaN(parseInt(userIdentifier))) {
-      return this.userService.findUser({ authorizedUser, username: userIdentifier })
+      return this.userService.find({ authorizedUser, userUsername: userIdentifier })
     }
     // If request to /api/users/123.
-    return this.userService.findUser({ authorizedUser, id: parseInt(userIdentifier) })
+    return this.userService.find({ authorizedUser, userId: parseInt(userIdentifier) })
   }
 
   @Post()
@@ -58,7 +58,7 @@ export class UserController {
     if (authorizedUser.id !== userToBeUpdatedId) {
       throw new ForbiddenException({ message: "You are not allowed to update another user." })
     }
-    return this.userService.update(userToBeUpdatedId, updateUserDto)
+    return this.userService.update({ userId: userToBeUpdatedId, updateUserDto })
   }
 
   @Delete(":id")
@@ -73,6 +73,6 @@ export class UserController {
     if (authorizedUser.id !== userToBeDeletedId) {
       throw new ForbiddenException({ message: "You are not allowed to delete another user." })
     }
-    return this.userService.delete(userToBeDeletedId)
+    return this.userService.delete({ userId: userToBeDeletedId })
   }
 }
