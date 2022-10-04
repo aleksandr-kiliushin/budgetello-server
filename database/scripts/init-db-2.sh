@@ -39,49 +39,49 @@ psql personal_app_db postgres << EOF
 EOF
 psql personal_app_db postgres << EOF
   INSERT INTO board_subject (name      )
-  VALUES                      ('budgeting'),
-                              ('habits'  );
+  VALUES                    ('budgeting'),
+                            ('habits'  );
 EOF
 psql personal_app_db postgres << EOF
   INSERT INTO board (name                 , "subjectId")
-  VALUES             ('clever-budgetiers'  , 1          ),
-                     ('mega-economists'    , 1          ),
-                     ('beautiful-sportsmen', 2          );
+  VALUES            ('clever-budgetiers'  , 1          ),
+                    ('mega-economists'    , 1          ),
+                    ('beautiful-sportsmen', 2          );
 EOF
 psql personal_app_db postgres << EOF
   INSERT INTO user_boards_board ("userId", "boardId")
-  VALUES                         (1       , 1         ),
-                                 (2       , 1         ),
-                                 (2       , 2         ),
-                                 (2       , 3         );
+  VALUES                        (1       , 1         ),
+                                (2       , 1         ),
+                                (2       , 2         ),
+                                (2       , 3         );
 EOF
 psql personal_app_db postgres << EOF
   INSERT INTO user_administrated_boards_board ("userId", "boardId")
-  VALUES                                       (1       , 1         ),
-                                               (2       , 2         ),
-                                               (2       , 3         );
+  VALUES                                      (1       , 1         ),
+                                              (2       , 2         ),
+                                              (2       , 3         );
 EOF
 psql personal_app_db postgres << EOF
   INSERT INTO budgeting_category_type (name     )
-  VALUES                            ('expense'),
-                                    ('income' );
+  VALUES                              ('expense'),
+                                      ('income' );
 EOF
 psql personal_app_db postgres << EOF
   INSERT INTO budgeting_category (name       , "typeId", "boardId")
-  VALUES                       ('clothes'  , 1       , 1        ),
-                               ('education', 1       , 1        ),
-                               ('gifts'    , 1       , 2        ),
-                               ('gifts'    , 2       , 2        ),
-                               ('salary'   , 2       , 2        );
+  VALUES                         ('clothes'  , 1       , 1        ),
+                                 ('education', 1       , 1        ),
+                                 ('gifts'    , 1       , 2        ),
+                                 ('gifts'    , 2       , 2        ),
+                                 ('salary'   , 2       , 2        );
 EOF
 psql personal_app_db postgres << EOF
   INSERT INTO budgeting_record (amount, date        , "isTrashed", "categoryId")
-  VALUES                     (100   , '2022-08-01', TRUE       ,  1          ),
-                             (400   , '2022-08-01', TRUE       ,  2          ),
-                             (25    , '2022-08-01', FALSE      ,  2          ),
-                             (30    , '2022-08-02', FALSE      ,  3          ),
-                             (10    , '2022-08-02', FALSE      ,  3          ),
-                             (230   , '2022-08-03', FALSE      ,  4          );
+  VALUES                       (100   , '2022-08-01', TRUE       ,  1          ),
+                               (400   , '2022-08-01', TRUE       ,  2          ),
+                               (25    , '2022-08-01', FALSE      ,  2          ),
+                               (30    , '2022-08-02', FALSE      ,  3          ),
+                               (10    , '2022-08-02', FALSE      ,  3          ),
+                               (230   , '2022-08-03', FALSE      ,  4          );
 EOF
 
 
