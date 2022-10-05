@@ -15,6 +15,7 @@ module.exports = {
   root: true,
   rules: {
     "arrow-parens": 1,
+    "max-params": ["error", 2],
     "no-duplicate-imports": 1,
     "no-restricted-syntax": [
       1,
