@@ -5,6 +5,7 @@ RUN apt-get install -y curl jq lzop
 RUN curl -sL https://deb.nodesource.com/setup_18.x | bash
 RUN apt-get install nodejs
 
+# Is it still required?
 RUN mkdir /var/app/dumps -p
 
 EXPOSE 5432

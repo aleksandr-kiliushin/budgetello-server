@@ -38,9 +38,9 @@ psql personal_app_db postgres << EOF
                      ('jessica-stark', '8bd912e2fe84cd93c457142a1d7e77136c3bc954f183');
 EOF
 psql personal_app_db postgres << EOF
-  INSERT INTO board_subject (name      )
+  INSERT INTO board_subject (name       )
   VALUES                    ('budgeting'),
-                            ('habits'  );
+                            ('habits'   );
 EOF
 psql personal_app_db postgres << EOF
   INSERT INTO board (name                 , "subjectId")
@@ -57,9 +57,9 @@ psql personal_app_db postgres << EOF
 EOF
 psql personal_app_db postgres << EOF
   INSERT INTO user_administrated_boards_board ("userId", "boardId")
-  VALUES                                      (1       , 1         ),
-                                              (2       , 2         ),
-                                              (2       , 3         );
+  VALUES                                      (1       , 1        ),
+                                              (2       , 2        ),
+                                              (2       , 3        );
 EOF
 psql personal_app_db postgres << EOF
   INSERT INTO budgeting_category_type (name     )
