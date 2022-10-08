@@ -1,0 +1,73 @@
+import { Body, Controller, Delete, Get, Param, Patch, Post, Query, UseGuards } from "@nestjs/common"
+
+import { AuthGuard } from "#models/auth/guard"
+import { UserEntity } from "#models/user/entities/user.entity"
+
+import { AuthorizedUser } from "#helpers/AuthorizedUser.decorator"
+
+import { CreateActivityCategoryDto } from "./dto/create-activity-category.dto"
+import { SearchActivityCategoriesQueryDto } from "./dto/seach-activity-categories-query.dto"
+import { UpdateActivityCategoryDto } from "./dto/update-activity-category.dto"
+import { ActivityCategoriesService } from "./service"
+
+@Controller("budgeting/categories")
+@UseGuards(AuthGuard)
+export class ActivityCategoriesController {
+  constructor(private activityCategoriesService: ActivityCategoriesService) {}
+
+  @Get("search")
+  searchCategories(
+    @Query()
+    query: SearchActivityCategoriesQueryDto,
+    @AuthorizedUser()
+    authorizedUser: UserEntity
+  ) {
+    return this.activityCategoriesService.search({ authorizedUser, query })
+  }
+
+  @Get(":id")
+  find(
+    @Param("id")
+    categoryId: string,
+    @AuthorizedUser()
+    authorizedUser: UserEntity
+  ) {
+    return this.activityCategoriesService.find({ authorizedUser, categoryId: parseInt(categoryId) })
+  }
+
+  @Post()
+  create(
+    @Body()
+    createActivityCategoryDto: CreateActivityCategoryDto,
+    @AuthorizedUser()
+    authorizedUser: UserEntity
+  ) {
+    return this.activityCategoriesService.create({ authorizedUser, createActivityCategoryDto })
+  }
+
+  @Patch(":id")
+  update(
+    @Param("id")
+    categoryId: string,
+    @Body()
+    updateActivityCategoryDto: UpdateActivityCategoryDto,
+    @AuthorizedUser()
+    authorizedUser: UserEntity
+  ) {
+    return this.activityCategoriesService.update({
+      authorizedUser,
+      categoryId: parseInt(categoryId),
+      updateActivityCategoryDto,
+    })
+  }
+
+  @Delete(":id")
+  delete(
+    @Param("id")
+    categoryId: string,
+    @AuthorizedUser()
+    authorizedUser: UserEntity
+  ) {
+    return this.activityCategoriesService.delete({ authorizedUser, categoryId: parseInt(categoryId) })
+  }
+}
