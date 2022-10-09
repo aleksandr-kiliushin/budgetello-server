@@ -45,8 +45,8 @@ export class ActivityCategoriesService {
       order: { id: "ASC", name: "ASC" },
       relations: { board: true },
       where: {
-        ...(query.boardId !== undefined && { board: In(query.boardId.split(",")) }),
         ...(query.id !== undefined && { id: In(query.id.split(",")) }),
+        ...(query.ownerId !== undefined && { owner: In(query.ownerId.split(",")) }),
         board: { id: In(boardsIdsToSearchWith) },
       },
     })
@@ -122,6 +122,7 @@ export class ActivityCategoriesService {
       board,
       measurementType,
       name: createActivityCategoryDto.name,
+      owner: authorizedUser,
       unit: createActivityCategoryDto.unit,
     })
     const createdCategory = await this.activityCategoriesRepository.save(category)
@@ -143,7 +144,9 @@ export class ActivityCategoriesService {
       return board.id === category.board.id
     })
     const isAuthorizedUserBoardMember = authorizedUser.boards.some((board) => board.id === category.board.id)
-    const canAuthorizedUserEditThisCategory = isAuthorizedUserBoardAdmin || isAuthorizedUserBoardMember
+    const doesAuthorizedUserOwnThisCategory = category.owner.id === authorizedUser.id
+    const canAuthorizedUserEditThisCategory =
+      isAuthorizedUserBoardAdmin || (isAuthorizedUserBoardMember && doesAuthorizedUserOwnThisCategory)
     if (!canAuthorizedUserEditThisCategory) {
       throw new ForbiddenException({ message: "Access denied." })
     }
@@ -190,6 +193,7 @@ export class ActivityCategoriesService {
         board: category.board,
         measurementType: category.measurementType,
         name: category.name,
+        owner: category.owner,
         unit: category.unit,
       },
     })

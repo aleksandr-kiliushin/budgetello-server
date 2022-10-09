@@ -1,4 +1,5 @@
 import { IBoard } from "./boards"
+import { IUser } from "./user"
 
 export interface IActivityCategoryMeasurementType {
   id: number
@@ -13,5 +14,6 @@ export interface IActivityCategory {
   id: number
   measurementType: IActivityCategoryMeasurementType
   name: string
+  owner: IUser
   unit: string
 }

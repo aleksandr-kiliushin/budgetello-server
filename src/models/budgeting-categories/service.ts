@@ -45,7 +45,7 @@ export class BudgetingCategoryService {
       order: { id: "ASC", name: "ASC" },
       relations: { board: true, type: true },
       where: {
-        ...(query.boardId !== undefined && { board: In(query.boardId.split(",")) }),
+        // ...(query.boardId !== undefined && { board: In(query.boardId.split(",")) }),
         ...(query.id !== undefined && { id: In(query.id.split(",")) }),
         board: { id: In(boardsIdsToSearchWith) },
       },
