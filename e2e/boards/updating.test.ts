@@ -55,13 +55,13 @@ describe("Boards updating", () => {
     },
     {
       authorizedUserUsername: users.johnDoe.username,
-      payload: { name: "champions", subjectId: boardsSubjects.habits.id },
+      payload: { name: "champions", subjectId: boardsSubjects.activities.id },
       response: {
         admins: [users.johnDoe],
         id: boards.cleverBudgetiers.id,
         members: [users.johnDoe, users.jessicaStark],
         name: "champions",
-        subject: boardsSubjects.habits,
+        subject: boardsSubjects.activities,
       },
       status: 200,
       url: `/api/boards/${boards.cleverBudgetiers.id}`,
@@ -76,7 +76,7 @@ describe("Boards updating", () => {
   it("updated boards can be found by ID", async () => {
     await authorize(users.johnDoe.username)
     await fetchApi(`/api/boards/${boards.cleverBudgetiers.id}`, {
-      body: JSON.stringify({ name: "champions", subjectId: boardsSubjects.habits.id }),
+      body: JSON.stringify({ name: "champions", subjectId: boardsSubjects.activities.id }),
       method: "PATCH",
     })
     const response = await fetchApi(`/api/boards/${boards.cleverBudgetiers.id}`)
@@ -85,7 +85,7 @@ describe("Boards updating", () => {
       id: boards.cleverBudgetiers.id,
       members: [users.johnDoe, users.jessicaStark],
       name: "champions",
-      subject: boardsSubjects.habits,
+      subject: boardsSubjects.activities,
     })
   })
 })

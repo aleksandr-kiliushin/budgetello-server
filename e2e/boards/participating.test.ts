@@ -23,7 +23,7 @@ describe("Participating in a board", () => {
         id: boards.beautifulSportsmen.id,
         members: [users.johnDoe, users.jessicaStark],
         name: boards.beautifulSportsmen.name,
-        subject: boardsSubjects.habits,
+        subject: boardsSubjects.activities,
       },
       status: 201,
       url: `/api/boards/${boards.beautifulSportsmen.id}/participating`,

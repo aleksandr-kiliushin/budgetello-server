@@ -46,13 +46,13 @@ describe("Board creating", () => {
       status: 400,
     },
     {
-      payload: { name: "champions", subjectId: boardsSubjects.habits.id },
+      payload: { name: "champions", subjectId: boardsSubjects.activities.id },
       response: {
         admins: [users.johnDoe],
         id: 5,
         members: [users.johnDoe],
         name: "champions",
-        subject: boardsSubjects.habits,
+        subject: boardsSubjects.activities,
       },
       status: 201,
     },
@@ -67,7 +67,7 @@ describe("Board creating", () => {
 
   it("a newly created board can be found by ID", async () => {
     await fetchApi("/api/boards", {
-      body: JSON.stringify({ name: "champions", subjectId: boardsSubjects.habits.id }),
+      body: JSON.stringify({ name: "champions", subjectId: boardsSubjects.activities.id }),
       method: "POST",
     })
     const getNewlyCreatedBoardResponse = await fetchApi("/api/boards/5")
@@ -76,7 +76,7 @@ describe("Board creating", () => {
       id: 5,
       members: [users.johnDoe],
       name: "champions",
-      subject: boardsSubjects.habits,
+      subject: boardsSubjects.activities,
     })
   })
 })
