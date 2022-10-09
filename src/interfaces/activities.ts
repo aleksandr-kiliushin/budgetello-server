@@ -9,3 +9,8 @@ export interface IActivityCategory {
   name: string
   unit: string
 }
+
+export interface IActivityCategoryMeasurementType {
+  id: number
+  name: string
+}
