@@ -43,7 +43,7 @@ export class ActivityCategoriesService {
 
     return this.activityCategoriesRepository.find({
       order: { id: "ASC", name: "ASC" },
-      relations: { board: true },
+      relations: { board: true, measurementType: true, owner: true },
       where: {
         ...(query.id !== undefined && { id: In(query.id.split(",")) }),
         ...(query.ownerId !== undefined && { owner: In(query.ownerId.split(",")) }),
@@ -60,7 +60,7 @@ export class ActivityCategoriesService {
     categoryId: ActivityCategoryEntity["id"]
   }): Promise<ActivityCategoryEntity> {
     const category = await this.activityCategoriesRepository.findOne({
-      relations: { board: true },
+      relations: { board: true, measurementType: true, owner: true },
       where: { id: categoryId },
     })
     if (category === null) throw new NotFoundException({})
@@ -105,7 +105,7 @@ export class ActivityCategoriesService {
       throw new BadRequestException({ fields: { boardId: "Invalid board." } })
     })
     const theSameExistingCategory = await this.activityCategoriesRepository.findOne({
-      relations: { board: true },
+      relations: { board: true, measurementType: true, owner: true },
       where: { board, measurementType, name: createActivityCategoryDto.name, unit: createActivityCategoryDto.unit },
     })
     if (theSameExistingCategory !== null) {
@@ -188,7 +188,7 @@ export class ActivityCategoriesService {
       category.unit = updateActivityCategoryDto.unit
     }
     const theSameExistingCategory = await this.activityCategoriesRepository.findOne({
-      relations: { board: true },
+      relations: { board: true, measurementType: true, owner: true },
       where: {
         board: category.board,
         measurementType: category.measurementType,
