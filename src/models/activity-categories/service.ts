@@ -258,6 +258,18 @@ export class ActivityCategoriesService {
     categoryId: ActivityCategoryEntity["id"]
   }): Promise<ActivityCategoryEntity> {
     const category = await this.find({ authorizedUser, categoryId })
+
+    const isAuthorizedUserBoardAdmin = authorizedUser.administratedBoards.some((board) => {
+      return board.id === category.board.id
+    })
+    const isAuthorizedUserBoardMember = authorizedUser.boards.some((board) => board.id === category.board.id)
+    const doesAuthorizedUserOwnThisCategory = category.owner.id === authorizedUser.id
+    const canAuthorizedUserDeleteThisCategory =
+      isAuthorizedUserBoardAdmin || (isAuthorizedUserBoardMember && doesAuthorizedUserOwnThisCategory)
+    if (!canAuthorizedUserDeleteThisCategory) {
+      throw new ForbiddenException({ message: "Access denied." })
+    }
+
     await this.activityCategoriesRepository.delete(categoryId)
     return category
   }
