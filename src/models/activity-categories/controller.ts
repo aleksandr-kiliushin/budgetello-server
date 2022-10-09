@@ -10,13 +10,13 @@ import { SearchActivityCategoriesQueryDto } from "./dto/seach-activity-categorie
 import { UpdateActivityCategoryDto } from "./dto/update-activity-category.dto"
 import { ActivityCategoriesService } from "./service"
 
-@Controller("budgeting/categories")
+@Controller("activities/categories")
 @UseGuards(AuthGuard)
 export class ActivityCategoriesController {
   constructor(private activityCategoriesService: ActivityCategoriesService) {}
 
   @Get("search")
-  searchCategories(
+  search(
     @Query()
     query: SearchActivityCategoriesQueryDto,
     @AuthorizedUser()
