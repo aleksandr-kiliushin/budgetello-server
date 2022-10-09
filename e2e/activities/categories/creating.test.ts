@@ -84,7 +84,7 @@ describe("Activity category creating", () => {
       response: {
         fields: {
           measurementTypeId: "«Quantitative» activity must be measured in units.",
-          unit: "«Quantitative» activity must be measured in units.",
+          unit: "Required for «Quantitative» activities.",
         },
       },
       status: 400,

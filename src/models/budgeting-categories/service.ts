@@ -100,16 +100,16 @@ export class BudgetingCategoryService {
     const board = await this.boardsService.find({ boardId: CreateBudgetingCategoryDto.boardId }).catch(() => {
       throw new BadRequestException({ fields: { boardId: "Invalid board." } })
     })
-    const theSameExistingCategory = await this.budgetingCategoryRepository.findOne({
+    const similarExistingCategory = await this.budgetingCategoryRepository.findOne({
       relations: { board: true, type: true },
       where: { board, name: CreateBudgetingCategoryDto.name, type },
     })
-    if (theSameExistingCategory !== null) {
+    if (similarExistingCategory !== null) {
       throw new BadRequestException({
         fields: {
-          boardId: `"${theSameExistingCategory.name}" ${theSameExistingCategory.type.name} category already exists in this board.`,
-          name: `"${theSameExistingCategory.name}" ${theSameExistingCategory.type.name} category already exists in this board.`,
-          typeId: `"${theSameExistingCategory.name}" ${theSameExistingCategory.type.name} category already exists in this board.`,
+          boardId: `"${similarExistingCategory.name}" ${similarExistingCategory.type.name} category already exists in this board.`,
+          name: `"${similarExistingCategory.name}" ${similarExistingCategory.type.name} category already exists in this board.`,
+          typeId: `"${similarExistingCategory.name}" ${similarExistingCategory.type.name} category already exists in this board.`,
         },
       })
     }
@@ -167,16 +167,16 @@ export class BudgetingCategoryService {
       }
       category.name = UpdateBudgetingCategoryDto.name
     }
-    const theSameExistingCategory = await this.budgetingCategoryRepository.findOne({
+    const similarExistingCategory = await this.budgetingCategoryRepository.findOne({
       relations: { board: true, type: true },
       where: { board: category.board, name: category.name, type: category.type },
     })
-    if (theSameExistingCategory !== null) {
+    if (similarExistingCategory !== null) {
       throw new BadRequestException({
         fields: {
-          boardId: `"${theSameExistingCategory.name}" ${theSameExistingCategory.type.name} category already exists in this board.`,
-          name: `"${theSameExistingCategory.name}" ${theSameExistingCategory.type.name} category already exists in this board.`,
-          typeId: `"${theSameExistingCategory.name}" ${theSameExistingCategory.type.name} category already exists in this board.`,
+          boardId: `"${similarExistingCategory.name}" ${similarExistingCategory.type.name} category already exists in this board.`,
+          name: `"${similarExistingCategory.name}" ${similarExistingCategory.type.name} category already exists in this board.`,
+          typeId: `"${similarExistingCategory.name}" ${similarExistingCategory.type.name} category already exists in this board.`,
         },
       })
     }

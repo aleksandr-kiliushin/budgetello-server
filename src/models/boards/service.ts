@@ -62,15 +62,15 @@ export class BoardsService {
     const subject = await this.boardSubjectsService.find({ boardSubjectId: createBoardDto.subjectId }).catch(() => {
       throw new BadRequestException({ fields: { subjectId: "Invalid subject." } })
     })
-    const theSameExistingBoard = await this.boardsRepository.findOne({
+    const similarExistingBoard = await this.boardsRepository.findOne({
       relations: { subject: true },
       where: { name: createBoardDto.name, subject },
     })
-    if (theSameExistingBoard !== null) {
+    if (similarExistingBoard !== null) {
       throw new BadRequestException({
         fields: {
-          name: `"${theSameExistingBoard.name}" ${theSameExistingBoard.subject.name} board already exists.`,
-          subjectId: `"${theSameExistingBoard.name}" ${theSameExistingBoard.subject.name} board already exists.`,
+          name: `"${similarExistingBoard.name}" ${similarExistingBoard.subject.name} board already exists.`,
+          subjectId: `"${similarExistingBoard.name}" ${similarExistingBoard.subject.name} board already exists.`,
         },
       })
     }
@@ -113,15 +113,15 @@ export class BoardsService {
         throw new BadRequestException({ fields: { subjectId: "Invalid board subject." } })
       }
     }
-    const theSameExistingBoard = await this.boardsRepository.findOne({
+    const similarExistingBoard = await this.boardsRepository.findOne({
       relations: { subject: true },
       where: { name: board.name, subject: board.subject },
     })
-    if (theSameExistingBoard !== null) {
+    if (similarExistingBoard !== null) {
       throw new BadRequestException({
         fields: {
-          name: `"${theSameExistingBoard.name}" ${theSameExistingBoard.subject.name} board already exists.`,
-          subjectId: `"${theSameExistingBoard.name}" ${theSameExistingBoard.subject.name} board already exists.`,
+          name: `"${similarExistingBoard.name}" ${similarExistingBoard.subject.name} board already exists.`,
+          subjectId: `"${similarExistingBoard.name}" ${similarExistingBoard.subject.name} board already exists.`,
         },
       })
     }

@@ -101,7 +101,7 @@ export class ActivityCategoriesService {
         throw new BadRequestException({
           fields: {
             measurementTypeId: "«Quantitative» activity must be measured in units.",
-            unit: "«Quantitative» activity must be measured in units.",
+            unit: "Required for «Quantitative» activities.",
           },
         })
       }
@@ -122,7 +122,7 @@ export class ActivityCategoriesService {
     const board = await this.boardsService.find({ boardId: createActivityCategoryDto.boardId }).catch(() => {
       throw new BadRequestException({ fields: { boardId: "Invalid value." } })
     })
-    const theSameExistingCategory = await this.activityCategoriesRepository.findOne({
+    const similarExistingCategory = await this.activityCategoriesRepository.findOne({
       relations: { board: true, measurementType: true, owner: true },
       where: {
         board,
@@ -132,13 +132,13 @@ export class ActivityCategoriesService {
         unit: createActivityCategoryDto.unit === null ? IsNull() : createActivityCategoryDto.unit,
       },
     })
-    if (theSameExistingCategory !== null) {
+    if (similarExistingCategory !== null) {
       throw new BadRequestException({
         fields: {
-          boardId: `Similar «${theSameExistingCategory.name}» category already exists in this board.`,
-          measurementType: `Similar «${theSameExistingCategory.name}» category already exists in this board.`,
-          name: `Similar «${theSameExistingCategory.name}» category already exists in this board.`,
-          unit: `Similar «${theSameExistingCategory.name}» category already exists in this board.`,
+          boardId: `Similar «${similarExistingCategory.name}» category already exists in this board.`,
+          measurementType: `Similar «${similarExistingCategory.name}» category already exists in this board.`,
+          name: `Similar «${similarExistingCategory.name}» category already exists in this board.`,
+          unit: `Similar «${similarExistingCategory.name}» category already exists in this board.`,
         },
       })
     }
@@ -206,12 +206,27 @@ export class ActivityCategoriesService {
       category.name = updateActivityCategoryDto.name
     }
     if (updateActivityCategoryDto.unit !== undefined) {
-      if (updateActivityCategoryDto.unit === "") {
-        throw new BadRequestException({ fields: { unit: "Cannot be empty." } })
-      }
       category.unit = updateActivityCategoryDto.unit
     }
-    const theSameExistingCategory = await this.activityCategoriesRepository.findOne({
+    if (category.measurementType.id === 1) {
+      if (typeof category.unit !== "string" || category.unit === "") {
+        throw new BadRequestException({
+          fields: {
+            measurementTypeId: "«Quantitative» activity must be measured in units.",
+            unit: "Required for «Quantitative» activities.",
+          },
+        })
+      }
+    }
+    if (category.measurementType.id === 2 && category.unit !== null) {
+      throw new BadRequestException({
+        fields: {
+          measurementTypeId: "«Yes / no» activity cannot be measured with any unit.",
+          unit: "«Yes / no» activity cannot be measured with any unit.",
+        },
+      })
+    }
+    const similarExistingCategory = await this.activityCategoriesRepository.findOne({
       relations: { board: true, measurementType: true, owner: true },
       where: {
         board: category.board,
@@ -221,13 +236,13 @@ export class ActivityCategoriesService {
         unit: category.unit === null ? IsNull() : category.unit,
       },
     })
-    if (theSameExistingCategory !== null) {
+    if (similarExistingCategory !== null) {
       throw new BadRequestException({
         fields: {
-          boardId: `"${theSameExistingCategory.name}" category already exists in this board.`,
-          measurementTypeId: `"${theSameExistingCategory.name}" category already exists in this board.`,
-          name: `"${theSameExistingCategory.name}" category already exists in this board.`,
-          unit: `"${theSameExistingCategory.name}" category already exists in this board.`,
+          boardId: `Similar «${similarExistingCategory.name}» category already exists in this board.`,
+          measurementType: `Similar «${similarExistingCategory.name}» category already exists in this board.`,
+          name: `Similar «${similarExistingCategory.name}» category already exists in this board.`,
+          unit: `Similar «${similarExistingCategory.name}» category already exists in this board.`,
         },
       })
     }
