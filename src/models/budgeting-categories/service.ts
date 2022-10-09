@@ -38,7 +38,7 @@ export class BudgetingCategoryService {
         ? accessibleBoardsIds
         : query.boardId
             .split(",")
-            .map(parseInt)
+            .map((boardId) => parseInt(boardId))
             .filter((boardIdFromQuery) => accessibleBoardsIds.includes(boardIdFromQuery))
 
     return this.budgetingCategoryRepository.find({

@@ -38,7 +38,7 @@ export class budgetingRecordservice {
         ? accessibleBoardsIds
         : query.boardId
             .split(",")
-            .map(parseInt)
+            .map((boardId) => parseInt(boardId))
             .filter((boardIdFromQuery) => accessibleBoardsIds.includes(boardIdFromQuery))
 
     const accessibleCategoriesOfSelectedBoards = await this.BudgetingCategoryService.searchCategories({
@@ -51,7 +51,7 @@ export class budgetingRecordservice {
         ? accessibleCategoriesOfSelectedBoardsIds
         : query.categoryId
             .split(",")
-            .map(parseInt)
+            .map((boardId) => parseInt(boardId))
             .filter((categoryIdFromQuery) => accessibleCategoriesOfSelectedBoardsIds.includes(categoryIdFromQuery))
 
     return this.budgetingRecordRepository.find({
