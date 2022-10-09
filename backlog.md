@@ -1,2 +1,3 @@
 - Build CI pipeline with GitHub actions.
-- Set up alias imports in tests.
+- Fix naming `UpdateBudgetingCategoryDto: UpdateBudgetingCategoryDto`.
+- Rename `updateBudgetingCategoryDto` to `payload`.
