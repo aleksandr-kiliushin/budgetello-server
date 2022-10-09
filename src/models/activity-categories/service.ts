@@ -87,22 +87,30 @@ export class ActivityCategoriesService {
     if (createActivityCategoryDto.boardId === undefined) {
       throw new BadRequestException({ fields: { boardId: "Required field." } })
     }
+    if (createActivityCategoryDto.unit === undefined) {
+      throw new BadRequestException({ fields: { unit: "Required field." } })
+    }
     const board = await this.boardsService.find({ boardId: createActivityCategoryDto.boardId }).catch(() => {
       throw new BadRequestException({ fields: { boardId: "Invalid board." } })
     })
     const theSameExistingCategory = await this.activityCategoriesRepository.findOne({
       relations: { board: true },
-      where: { board, name: createActivityCategoryDto.name },
+      where: { board, name: createActivityCategoryDto.name, unit: createActivityCategoryDto.unit },
     })
     if (theSameExistingCategory !== null) {
       throw new BadRequestException({
         fields: {
           boardId: `"${theSameExistingCategory.name}" category already exists in this board.`,
           name: `"${theSameExistingCategory.name}" category already exists in this board.`,
+          unit: `"${theSameExistingCategory.name}" category already exists in this board.`,
         },
       })
     }
-    const category = this.activityCategoriesRepository.create({ board, name: createActivityCategoryDto.name })
+    const category = this.activityCategoriesRepository.create({
+      board,
+      name: createActivityCategoryDto.name,
+      unit: createActivityCategoryDto.unit,
+    })
     const createdCategory = await this.activityCategoriesRepository.save(category)
     return await this.find({ authorizedUser, categoryId: createdCategory.id })
   }

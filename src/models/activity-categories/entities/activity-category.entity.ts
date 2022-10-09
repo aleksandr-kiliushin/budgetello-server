@@ -14,4 +14,7 @@ export class ActivityCategoryEntity {
 
   @Column({ type: "varchar" })
   name: IActivityCategory["name"]
+
+  @Column({ type: "varchar" })
+  unit: IActivityCategory["unit"]
 }
