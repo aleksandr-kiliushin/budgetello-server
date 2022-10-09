@@ -88,7 +88,7 @@ export class ActivityCategoriesService {
       throw new BadRequestException({ fields: { name: "Required field." } })
     }
     if (createActivityCategoryDto.measurementTypeId === undefined) {
-      throw new BadRequestException({ measurementTypeId: { typeId: "Required field." } })
+      throw new BadRequestException({ fields: { measurementTypeId: "Required field." } })
     }
     if (createActivityCategoryDto.boardId === undefined) {
       throw new BadRequestException({ fields: { boardId: "Required field." } })
@@ -96,13 +96,16 @@ export class ActivityCategoriesService {
     if (createActivityCategoryDto.unit === undefined) {
       throw new BadRequestException({ fields: { unit: "Required field." } })
     }
+    if (createActivityCategoryDto.measurementTypeId === 1 && createActivityCategoryDto.unit === "") {
+      throw new BadRequestException({ fields: { measurementTypeId: "Required field." } })
+    }
     const measurementType = await this.activityCategoryMeasurementTypesService
       .find({ activityCategoryMeasurementTypeId: createActivityCategoryDto.measurementTypeId })
       .catch(() => {
         throw new BadRequestException({ fields: { measurementTypeId: "Invalid value." } })
       })
     const board = await this.boardsService.find({ boardId: createActivityCategoryDto.boardId }).catch(() => {
-      throw new BadRequestException({ fields: { boardId: "Invalid board." } })
+      throw new BadRequestException({ fields: { boardId: "Invalid value." } })
     })
     const theSameExistingCategory = await this.activityCategoriesRepository.findOne({
       relations: { board: true, measurementType: true, owner: true },
