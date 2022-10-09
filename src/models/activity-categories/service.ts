@@ -69,8 +69,8 @@ export class ActivityCategoriesService {
       return board.id === category.board.id
     })
     const isAuthorizedUserBoardMember = authorizedUser.boards.some((board) => board.id === category.board.id)
-    const canAuthorizedUserEditThisCategory = isAuthorizedUserBoardAdmin || isAuthorizedUserBoardMember
-    if (!canAuthorizedUserEditThisCategory) {
+    const canAuthorizedUserFetchThisCategory = isAuthorizedUserBoardAdmin || isAuthorizedUserBoardMember
+    if (!canAuthorizedUserFetchThisCategory) {
       throw new ForbiddenException({ message: "Access denied." })
     }
 
