@@ -21,7 +21,7 @@ export const activityCategories = {
     measurementType: activityCategoryMeasurementTypes.quantitative,
     name: "pushups",
     owner: users.jessicaStark,
-    unit: "times",
+    unit: "time",
   },
   noSweets: {
     board: { id: boards.beautifulSportsmen.id, name: boards.beautifulSportsmen.name },
@@ -37,7 +37,7 @@ export const activityCategories = {
     measurementType: activityCategoryMeasurementTypes.quantitative,
     name: "sleep",
     owner: users.jessicaStark,
-    unit: "hours",
+    unit: "hour",
   },
   reading: {
     board: { id: boards.productivePeople.id, name: boards.productivePeople.name },
@@ -45,6 +45,6 @@ export const activityCategories = {
     measurementType: activityCategoryMeasurementTypes.quantitative,
     name: "reading",
     owner: users.johnDoe,
-    unit: "pages",
+    unit: "page",
   },
 } as const

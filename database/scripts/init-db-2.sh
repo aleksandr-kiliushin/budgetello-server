@@ -97,12 +97,12 @@ psql personal_app_db postgres << EOF
                                                  ('boolean'     );
 EOF
 psql personal_app_db postgres << EOF
-  INSERT INTO activity_category (name       , "boardId", "measurementTypeId", "ownerId", "unit" )
-  VALUES                        ('running'  , 3        , 1                  , 2        , 'km'   ),
-                                ('pushups'  , 3        , 1                  , 2        , 'times'),
-                                ('no sweets', 3        , 2                  , 2        , NULL   ),
-                                ('sleep'    , 3        , 1                  , 2        , 'hours'),
-                                ('reading'  , 4        , 1                  , 1        , 'pages');
+  INSERT INTO activity_category (name       , "boardId", "measurementTypeId", "ownerId", "unit")
+  VALUES                        ('running'  , 3        , 1                  , 2        , 'km'  ),
+                                ('pushups'  , 3        , 1                  , 2        , 'time'),
+                                ('no sweets', 3        , 2                  , 2        , NULL  ),
+                                ('sleep'    , 3        , 1                  , 2        , 'hour'),
+                                ('reading'  , 4        , 1                  , 1        , 'page');
 EOF
 
 
