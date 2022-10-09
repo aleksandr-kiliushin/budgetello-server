@@ -23,6 +23,6 @@ export class ActivityCategoryEntity {
   @ManyToOne(() => UserEntity, { onDelete: "CASCADE" })
   owner: UserEntity
 
-  @Column({ type: "varchar" })
+  @Column({ type: "varchar", nullable: true })
   unit: IActivityCategory["unit"]
 }

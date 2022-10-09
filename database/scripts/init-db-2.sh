@@ -9,6 +9,8 @@ psql -U postgres -c "CREATE DATABASE personal_app_dev_template WITH TEMPLATE per
 # Clear database tables.
 psql personal_app_db postgres << EOF
   TRUNCATE
+  activity_category,
+  activity_category_measurement_type,
   budgeting_category,
   budgeting_category_type,
   budgeting_record,
@@ -21,6 +23,8 @@ psql personal_app_db postgres << EOF
 EOF
 # Reset tables primary key sequence.
 psql personal_app_db postgres << EOF
+  ALTER SEQUENCE activity_category_id_seq RESTART WITH 1;
+  ALTER SEQUENCE activity_category_measurement_type_id_seq RESTART WITH 1;
   ALTER SEQUENCE budgeting_category_id_seq RESTART WITH 1;
   ALTER SEQUENCE budgeting_category_type_id_seq RESTART WITH 1;
   ALTER SEQUENCE budgeting_record_id_seq RESTART WITH 1;
@@ -51,12 +55,12 @@ psql personal_app_db postgres << EOF
 EOF
 psql personal_app_db postgres << EOF
   INSERT INTO user_boards_board ("userId", "boardId")
-  VALUES                        (1       , 1         ),
-                                (2       , 1         ),
-                                (2       , 2         ),
-                                (2       , 3         ),
-                                (1       , 4         ),
-                                (2       , 4         );
+  VALUES                        (1       , 1        ),
+                                (2       , 1        ),
+                                (2       , 2        ),
+                                (2       , 3        ),
+                                (1       , 4        ),
+                                (2       , 4        );
 EOF
 psql personal_app_db postgres << EOF
   INSERT INTO user_administrated_boards_board ("userId", "boardId")
@@ -86,6 +90,19 @@ psql personal_app_db postgres << EOF
                                (30    , '2022-08-02', FALSE      ,  3          ),
                                (10    , '2022-08-02', FALSE      ,  3          ),
                                (230   , '2022-08-03', FALSE      ,  4          );
+EOF
+psql personal_app_db postgres << EOF
+  INSERT INTO activity_category_measurement_type (name          )
+  VALUES                                         ('quantitative'),
+                                                 ('boolean'     );
+EOF
+psql personal_app_db postgres << EOF
+  INSERT INTO activity_category (name       , "boardId", "measurementTypeId", "ownerId", "unit" )
+  VALUES                        ('running'  , 3        , 1                  , 2        , 'km'   ),
+                                ('pushups'  , 4        , 1                  , 1        , 'times'),
+                                ('no sweets', 4        , 2                  , 2        , NULL   ),
+                                ('sleep'    , 4        , 1                  , 2        , 'hours'),
+                                ('reading'  , 4        , 1                  , 1        , 'pages');
 EOF
 
 

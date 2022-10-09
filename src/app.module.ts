@@ -1,8 +1,8 @@
 import { Module } from "@nestjs/common"
 import { TypeOrmModule } from "@nestjs/typeorm"
 
-// import { ActivityCategoryMeasurementTypesModule } from "#models/activity-category-measurement-types/module"
-// import { ActivityCategoriesModule } from "#models/activity-categories/module"
+import { ActivityCategoriesModule } from "#models/activity-categories/module"
+import { ActivityCategoryMeasurementTypesModule } from "#models/activity-category-measurement-types/module"
 import { AuthModule } from "#models/auth/module"
 import { BoardSubjectsModule } from "#models/board-subjects/module"
 import { BoardsModule } from "#models/boards/module"
@@ -16,8 +16,8 @@ import { UserModule } from "./models/user/module"
 @Module({
   imports: [
     TypeOrmModule.forRoot(ormConfig),
-    // ActivityCategoriesModule,
-    // ActivityCategoryMeasurementTypesModule,
+    ActivityCategoriesModule,
+    ActivityCategoryMeasurementTypesModule,
     AuthModule,
     BoardsModule,
     BoardSubjectsModule,
