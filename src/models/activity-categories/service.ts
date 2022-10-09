@@ -1,6 +1,6 @@
 import { BadRequestException, ForbiddenException, Injectable, NotFoundException } from "@nestjs/common"
 import { InjectRepository } from "@nestjs/typeorm"
-import { In, Repository } from "typeorm"
+import { In, IsNull, Repository } from "typeorm"
 
 import { ActivityCategoryMeasurementTypesService } from "#models/activity-category-measurement-types/service"
 import { BoardsService } from "#models/boards/service"
@@ -38,7 +38,7 @@ export class ActivityCategoriesService {
         ? accessibleBoardsIds
         : query.boardId
             .split(",")
-            .map(parseInt)
+            .map((boardId) => parseInt(boardId))
             .filter((boardIdFromQuery) => accessibleBoardsIds.includes(boardIdFromQuery))
 
     return this.activityCategoriesRepository.find({
@@ -109,7 +109,12 @@ export class ActivityCategoriesService {
     })
     const theSameExistingCategory = await this.activityCategoriesRepository.findOne({
       relations: { board: true, measurementType: true, owner: true },
-      where: { board, measurementType, name: createActivityCategoryDto.name, unit: createActivityCategoryDto.unit },
+      where: {
+        board,
+        measurementType,
+        name: createActivityCategoryDto.name,
+        unit: createActivityCategoryDto.unit === null ? IsNull() : createActivityCategoryDto.unit,
+      },
     })
     if (theSameExistingCategory !== null) {
       throw new BadRequestException({
@@ -197,7 +202,7 @@ export class ActivityCategoriesService {
         measurementType: category.measurementType,
         name: category.name,
         owner: category.owner,
-        unit: category.unit,
+        unit: category.unit === null ? IsNull() : category.unit,
       },
     })
     if (theSameExistingCategory !== null) {

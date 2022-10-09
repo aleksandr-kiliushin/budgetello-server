@@ -15,5 +15,5 @@ export interface IActivityCategory {
   measurementType: IActivityCategoryMeasurementType
   name: string
   owner: IUser
-  unit: string
+  unit: string | null
 }
