@@ -46,20 +46,24 @@ psql personal_app_db postgres << EOF
   INSERT INTO board (name                 , "subjectId")
   VALUES            ('clever-budgetiers'  , 1          ),
                     ('mega-economists'    , 1          ),
-                    ('beautiful-sportsmen', 2          );
+                    ('beautiful-sportsmen', 2          ),
+                    ('productive-people'  , 2          );
 EOF
 psql personal_app_db postgres << EOF
   INSERT INTO user_boards_board ("userId", "boardId")
   VALUES                        (1       , 1         ),
                                 (2       , 1         ),
                                 (2       , 2         ),
-                                (2       , 3         );
+                                (2       , 3         ),
+                                (1       , 4         ),
+                                (2       , 4         );
 EOF
 psql personal_app_db postgres << EOF
   INSERT INTO user_administrated_boards_board ("userId", "boardId")
   VALUES                                      (1       , 1        ),
                                               (2       , 2        ),
-                                              (2       , 3        );
+                                              (2       , 3        ),
+                                              (1       , 4        );
 EOF
 psql personal_app_db postgres << EOF
   INSERT INTO budgeting_category_type (name     )

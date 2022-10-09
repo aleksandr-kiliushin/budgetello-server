@@ -47,7 +47,12 @@ describe("Boards search", () => {
     },
     {
       url: "/api/boards/search",
-      searchResult: [boards.cleverBudgetiers, boards.megaEconomists, boards.beautifulSportsmen],
+      searchResult: [
+        boards.cleverBudgetiers,
+        boards.megaEconomists,
+        boards.beautifulSportsmen,
+        boards.productivePeople,
+      ],
     },
     {
       url: `/api/boards/search?subjectId=${boardsSubjects.budgeting.id}`,

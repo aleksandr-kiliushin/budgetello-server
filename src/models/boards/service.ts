@@ -21,6 +21,7 @@ export class BoardsService {
   search({ query }: { query: SearchBoardsQueryDto }): Promise<BoardEntity[]> {
     return this.boardsRepository.find({
       order: {
+        id: "asc",
         members: { id: "asc" },
       },
       relations: { admins: true, members: true, subject: true },

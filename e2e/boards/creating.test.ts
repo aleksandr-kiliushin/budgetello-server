@@ -49,7 +49,7 @@ describe("Board creating", () => {
       payload: { name: "champions", subjectId: boardsSubjects.habits.id },
       response: {
         admins: [users.johnDoe],
-        id: 4,
+        id: 5,
         members: [users.johnDoe],
         name: "champions",
         subject: boardsSubjects.habits,
@@ -70,10 +70,10 @@ describe("Board creating", () => {
       body: JSON.stringify({ name: "champions", subjectId: boardsSubjects.habits.id }),
       method: "POST",
     })
-    const getNewlyCreatedBoardResponse = await fetchApi("/api/boards/4")
+    const getNewlyCreatedBoardResponse = await fetchApi("/api/boards/5")
     expect(await getNewlyCreatedBoardResponse.json()).toEqual<BoardEntity | unknown>({
       admins: [users.johnDoe],
-      id: 4,
+      id: 5,
       members: [users.johnDoe],
       name: "champions",
       subject: boardsSubjects.habits,

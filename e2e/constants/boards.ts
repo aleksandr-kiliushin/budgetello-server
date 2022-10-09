@@ -9,22 +9,29 @@ export const boards = {
   cleverBudgetiers: {
     admins: [users.johnDoe],
     id: 1,
+    members: [users.johnDoe, users.jessicaStark],
     name: "clever-budgetiers",
     subject: boardsSubjects.budgeting,
-    members: [users.johnDoe, users.jessicaStark],
   },
   megaEconomists: {
     admins: [users.jessicaStark],
     id: 2,
+    members: [users.jessicaStark],
     name: "mega-economists",
     subject: boardsSubjects.budgeting,
-    members: [users.jessicaStark],
   },
   beautifulSportsmen: {
     admins: [users.jessicaStark],
     id: 3,
+    members: [users.jessicaStark],
     name: "beautiful-sportsmen",
     subject: boardsSubjects.habits,
-    members: [users.jessicaStark],
+  },
+  productivePeople: {
+    admins: [users.johnDoe],
+    id: 4,
+    members: [users.johnDoe, users.jessicaStark],
+    name: "productive-people",
+    subject: boardsSubjects.habits,
   },
 } as const

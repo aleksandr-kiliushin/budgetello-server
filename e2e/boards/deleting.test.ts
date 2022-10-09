@@ -22,6 +22,6 @@ describe("Board deleting", () => {
     await authorize(users.johnDoe.username)
     await fetchApi(`/api/boards/${boards.cleverBudgetiers.id}`, { method: "DELETE" })
     const response = await fetchApi("/api/boards/search")
-    expect(await response.json()).toEqual([boards.megaEconomists, boards.beautifulSportsmen])
+    expect(await response.json()).toEqual([boards.megaEconomists, boards.beautifulSportsmen, boards.productivePeople])
   })
 })
