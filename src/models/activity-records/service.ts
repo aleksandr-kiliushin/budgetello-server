@@ -58,7 +58,7 @@ export class ActivityRecordsService {
         id: query.orderingById ?? "desc",
         date: query.orderingById ?? "desc",
       },
-      // relations: { category: { board: true, type: true } },
+      relations: { category: { board: true, owner: true, measurementType: true } },
       skip: query.skip === undefined ? 0 : parseInt(query.skip),
       ...(query.take !== undefined && { take: parseInt(query.take) }),
       where: {
@@ -77,7 +77,7 @@ export class ActivityRecordsService {
     recordId: ActivityRecordEntity["id"]
   }): Promise<ActivityRecordEntity> {
     const record = await this.activityRecordsRepository.findOne({
-      // relations: { category: { board: true, type: true } },
+      relations: { category: { board: true, owner: true, measurementType: true } },
       where: { id: recordId },
     })
     if (record === null) {
@@ -106,6 +106,9 @@ export class ActivityRecordsService {
   }): Promise<ActivityRecordEntity> {
     if (payload.categoryId === undefined) {
       throw new BadRequestException({ fields: { categoryId: "Required field." } })
+    }
+    if (typeof payload.comment !== "string") {
+      throw new BadRequestException({ fields: { comment: "Required field." } })
     }
     if (payload.date === undefined) {
       throw new BadRequestException({ fields: { date: "Required field." } })
@@ -153,7 +156,7 @@ export class ActivityRecordsService {
     payload: UpdateActivityRecordDto
   }): Promise<ActivityRecordEntity> {
     const record = await this.find({ authorizedUser, recordId })
-    if (record.category.id !== authorizedUser.id) {
+    if (record.category.owner.id !== authorizedUser.id) {
       throw new ForbiddenException({ message: "Access denied." })
     }
     if (
@@ -187,7 +190,7 @@ export class ActivityRecordsService {
       const category = await this.activityCategoriesService
         .find({ authorizedUser, categoryId: payload.categoryId })
         .catch(() => {
-          throw new BadRequestException({ fields: { categoryId: "Invalid category." } })
+          throw new BadRequestException({ fields: { categoryId: "Invalid value." } })
         })
       record.category = category
     }

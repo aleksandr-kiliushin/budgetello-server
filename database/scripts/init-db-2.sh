@@ -11,6 +11,7 @@ psql personal_app_db postgres << EOF
   TRUNCATE
   activity_category,
   activity_category_measurement_type,
+  activity_record,
   budgeting_category,
   budgeting_category_type,
   budgeting_record,
@@ -25,6 +26,7 @@ EOF
 psql personal_app_db postgres << EOF
   ALTER SEQUENCE activity_category_id_seq RESTART WITH 1;
   ALTER SEQUENCE activity_category_measurement_type_id_seq RESTART WITH 1;
+  ALTER SEQUENCE activity_record_id_seq RESTART WITH 1;
   ALTER SEQUENCE budgeting_category_id_seq RESTART WITH 1;
   ALTER SEQUENCE budgeting_category_type_id_seq RESTART WITH 1;
   ALTER SEQUENCE budgeting_record_id_seq RESTART WITH 1;
@@ -104,6 +106,16 @@ psql personal_app_db postgres << EOF
                                 ('sleep'    , 3        , 1                  , 2        , 'hour'),
                                 ('reading'  , 4        , 1                  , 1        , 'page'),
                                 ('meditate' , 4        , 1                  , 2        , 'min' );
+EOF
+psql personal_app_db postgres << EOF
+  INSERT INTO activity_record ("booleanValue", "comment"              , "date"      , "quantitativeValue", "categoryId")
+  VALUES                      (NULL          , ''                     , '2022-08-01', 3.5                , 1           ),
+                              (NULL          , ''                     , '2022-08-01', 50                 , 2           ),
+                              (true          , 'it was easy today'    , '2022-08-01', NULL               , 3           ),
+                              (NULL          , ''                     , '2022-08-02', 7.25               , 4           ),
+                              (NULL          , 'Read chapter about DB', '2022-08-02', 6                  , 5           ),
+                              (NULL          , 'running in hills'     , '2022-08-03', 4                  , 1           ),
+                              (NULL          , ''                     , '2022-08-03', 10                 , 6           );
 EOF
 
 
