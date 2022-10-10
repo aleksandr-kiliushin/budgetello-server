@@ -46,7 +46,7 @@ describe("Activity categoires search", () => {
     },
     {
       url: `/api/activities/categories/search?boardId=${boards.productivePeople.id}`,
-      searchResult: [activityCategories.reading],
+      searchResult: [activityCategories.reading, activityCategories.meditate],
     },
     {
       url: `/api/activities/categories/search?boardId=${boards.productivePeople.id},${boards.beautifulSportsmen.id}`,
@@ -56,6 +56,7 @@ describe("Activity categoires search", () => {
         activityCategories.noSweets,
         activityCategories.sleep,
         activityCategories.reading,
+        activityCategories.meditate,
       ],
     },
     {
@@ -74,6 +75,7 @@ describe("Activity categoires search", () => {
         activityCategories.noSweets,
         activityCategories.sleep,
         activityCategories.reading,
+        activityCategories.meditate,
       ],
     },
   ])("categories search for: $url", async ({ url, searchResult }) => {

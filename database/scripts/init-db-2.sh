@@ -102,7 +102,8 @@ psql personal_app_db postgres << EOF
                                 ('pushups'  , 3        , 1                  , 2        , 'time'),
                                 ('no sweets', 3        , 2                  , 2        , NULL  ),
                                 ('sleep'    , 3        , 1                  , 2        , 'hour'),
-                                ('reading'  , 4        , 1                  , 1        , 'page');
+                                ('reading'  , 4        , 1                  , 1        , 'page'),
+                                ('meditate' , 4        , 1                  , 2        , 'min' );
 EOF
 
 

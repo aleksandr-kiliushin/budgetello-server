@@ -37,6 +37,6 @@ describe("Activity category deleting", () => {
       method: "DELETE",
     })
     const getAllCategoriesResponse = await fetchApi("/api/activities/categories/search")
-    expect(await getAllCategoriesResponse.json()).toEqual([])
+    expect(await getAllCategoriesResponse.json()).toEqual([activityCategories.meditate])
   })
 })

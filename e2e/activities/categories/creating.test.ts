@@ -117,7 +117,7 @@ describe("Activity category creating", () => {
       },
       response: {
         board: { id: boards.productivePeople.id, name: boards.productivePeople.name },
-        id: 6,
+        id: 7,
         measurementType: activityCategoryMeasurementTypes.quantitative,
         name: "reading",
         owner: users.jessicaStark,
@@ -149,7 +149,7 @@ describe("Activity category creating", () => {
     const getAllCategoriesResponse = await fetchApi("/api/activities/categories/search")
     expect(await getAllCategoriesResponse.json()).toContainEqual<IActivityCategory>({
       board: { id: boards.productivePeople.id, name: boards.productivePeople.name },
-      id: 6,
+      id: 7,
       measurementType: activityCategoryMeasurementTypes.quantitative,
       name: "reading",
       owner: users.jessicaStark,
@@ -168,10 +168,10 @@ describe("Activity category creating", () => {
       }),
       method: "POST",
     })
-    const getNewlyCreatedCategoryResponse = await fetchApi("/api/activities/categories/6")
+    const getNewlyCreatedCategoryResponse = await fetchApi("/api/activities/categories/7")
     expect(await getNewlyCreatedCategoryResponse.json()).toEqual({
       board: { id: boards.productivePeople.id, name: boards.productivePeople.name },
-      id: 6,
+      id: 7,
       measurementType: activityCategoryMeasurementTypes.quantitative,
       name: "reading",
       owner: users.jessicaStark,

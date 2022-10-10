@@ -47,4 +47,12 @@ export const activityCategories = {
     owner: users.johnDoe,
     unit: "page",
   },
+  meditate: {
+    board: { id: boards.productivePeople.id, name: boards.productivePeople.name },
+    id: 6,
+    measurementType: activityCategoryMeasurementTypes.quantitative,
+    name: "meditate",
+    owner: users.jessicaStark,
+    unit: "min",
+  },
 } as const
