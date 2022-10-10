@@ -1,7 +1,6 @@
 import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm"
 
 import { ActivityCategoryEntity } from "#models/activity-categories/entities/activity-category.entity"
-import { UserEntity } from "#models/user/entities/user.entity"
 
 import { IActivityRecord } from "#interfaces/activities"
 
@@ -21,9 +20,6 @@ export class ActivityRecordEntity {
 
   @PrimaryGeneratedColumn({ type: "int" })
   id: IActivityRecord["id"]
-
-  @ManyToOne(() => UserEntity, { onDelete: "CASCADE" })
-  owner: UserEntity
 
   @Column({ type: "real", nullable: true })
   quantitativeValue: IActivityRecord["quantitativeValue"]

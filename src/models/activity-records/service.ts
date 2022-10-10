@@ -118,6 +118,9 @@ export class ActivityRecordsService {
       .catch(() => {
         throw new BadRequestException({ fields: { categoryId: "Invalid category." } })
       })
+    if (category.owner.id !== authorizedUser.id) {
+      throw new ForbiddenException({ message: "Access denied." })
+    }
     if (category.measurementType.id === 1 && typeof payload.quantitativeValue !== "number") {
       throw new BadRequestException({
         fields: {
@@ -136,7 +139,6 @@ export class ActivityRecordsService {
     }
     const record = this.activityRecordsRepository.create(payload)
     record.category = category
-    record.owner = authorizedUser
     const createdRecord = await this.activityRecordsRepository.save(record)
     return await this.find({ authorizedUser, recordId: createdRecord.id })
   }
@@ -151,7 +153,7 @@ export class ActivityRecordsService {
     payload: UpdateActivityRecordDto
   }): Promise<ActivityRecordEntity> {
     const record = await this.find({ authorizedUser, recordId })
-    if (record.owner.id !== authorizedUser.id) {
+    if (record.category.id !== authorizedUser.id) {
       throw new ForbiddenException({ message: "Access denied." })
     }
     if (
@@ -216,7 +218,7 @@ export class ActivityRecordsService {
     recordId: ActivityRecordEntity["id"]
   }): Promise<ActivityRecordEntity> {
     const record = await this.find({ authorizedUser, recordId })
-    if (record.owner.id !== authorizedUser.id) {
+    if (record.category.owner.id !== authorizedUser.id) {
       throw new ForbiddenException({ message: "Access denied." })
     }
     await this.activityRecordsRepository.delete(recordId)
