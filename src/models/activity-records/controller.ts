@@ -38,11 +38,11 @@ export class ActivityRecordsController {
   @Post()
   create(
     @Body()
-    payload: CreateActivityRecordDto,
+    requestBody: CreateActivityRecordDto,
     @AuthorizedUser()
     authorizedUser: UserEntity
   ) {
-    return this.activityRecordsService.create({ authorizedUser, payload })
+    return this.activityRecordsService.create({ authorizedUser, requestBody })
   }
 
   @Patch(":id")
@@ -50,11 +50,11 @@ export class ActivityRecordsController {
     @Param("id")
     recordId: string,
     @Body()
-    payload: UpdateActivityRecordDto,
+    requestBody: UpdateActivityRecordDto,
     @AuthorizedUser()
     authorizedUser: UserEntity
   ) {
-    return this.activityRecordsService.update({ authorizedUser, payload, recordId: parseInt(recordId) })
+    return this.activityRecordsService.update({ authorizedUser, requestBody, recordId: parseInt(recordId) })
   }
 
   @Delete(":id")

@@ -99,32 +99,32 @@ export class ActivityRecordsService {
 
   async create({
     authorizedUser,
-    payload,
+    requestBody,
   }: {
     authorizedUser: UserEntity
-    payload: CreateActivityRecordDto
+    requestBody: CreateActivityRecordDto
   }): Promise<ActivityRecordEntity> {
-    if (payload.categoryId === undefined) {
+    if (requestBody.categoryId === undefined) {
       throw new BadRequestException({ fields: { categoryId: "Required field." } })
     }
-    if (typeof payload.comment !== "string") {
+    if (typeof requestBody.comment !== "string") {
       throw new BadRequestException({ fields: { comment: "Required field." } })
     }
-    if (payload.date === undefined) {
+    if (requestBody.date === undefined) {
       throw new BadRequestException({ fields: { date: "Required field." } })
     }
-    if (!/\d\d\d\d-\d\d-\d\d/.test(payload.date)) {
+    if (!/\d\d\d\d-\d\d-\d\d/.test(requestBody.date)) {
       throw new BadRequestException({ fields: { date: "Should have format YYYY-MM-DD." } })
     }
     const category = await this.activityCategoriesService
-      .find({ authorizedUser, categoryId: payload.categoryId })
+      .find({ authorizedUser, categoryId: requestBody.categoryId })
       .catch(() => {
         throw new BadRequestException({ fields: { categoryId: "Invalid category." } })
       })
     if (category.owner.id !== authorizedUser.id) {
       throw new ForbiddenException({ message: "Access denied." })
     }
-    if (category.measurementType.id === 1 && typeof payload.quantitativeValue !== "number") {
+    if (category.measurementType.id === 1 && typeof requestBody.quantitativeValue !== "number") {
       throw new BadRequestException({
         fields: {
           categoryId: "Amount should be filled for «Quantitative» activity.",
@@ -132,7 +132,7 @@ export class ActivityRecordsService {
         },
       })
     }
-    if (category.measurementType.id === 2 && typeof payload.booleanValue !== "boolean") {
+    if (category.measurementType.id === 2 && typeof requestBody.booleanValue !== "boolean") {
       throw new BadRequestException({
         fields: {
           categoryId: "Yes-no option should be filled for «Yes / no» activity.",
@@ -140,7 +140,7 @@ export class ActivityRecordsService {
         },
       })
     }
-    const record = this.activityRecordsRepository.create(payload)
+    const record = this.activityRecordsRepository.create(requestBody)
     record.category = category
     const createdRecord = await this.activityRecordsRepository.save(record)
     return await this.find({ authorizedUser, recordId: createdRecord.id })
@@ -149,46 +149,46 @@ export class ActivityRecordsService {
   async update({
     authorizedUser,
     recordId,
-    payload,
+    requestBody,
   }: {
     authorizedUser: UserEntity
     recordId: ActivityRecordEntity["id"]
-    payload: UpdateActivityRecordDto
+    requestBody: UpdateActivityRecordDto
   }): Promise<ActivityRecordEntity> {
     const record = await this.find({ authorizedUser, recordId })
     if (record.category.owner.id !== authorizedUser.id) {
       throw new ForbiddenException({ message: "Access denied." })
     }
     if (
-      payload.booleanValue === undefined &&
-      payload.categoryId === undefined &&
-      payload.comment === undefined &&
-      payload.date === undefined &&
-      payload.quantitativeValue === undefined
+      requestBody.booleanValue === undefined &&
+      requestBody.categoryId === undefined &&
+      requestBody.comment === undefined &&
+      requestBody.date === undefined &&
+      requestBody.quantitativeValue === undefined
     ) {
       return record
     }
-    if (payload.booleanValue !== undefined) {
-      record.booleanValue = payload.booleanValue
+    if (requestBody.booleanValue !== undefined) {
+      record.booleanValue = requestBody.booleanValue
     }
-    if (payload.quantitativeValue !== undefined) {
-      record.quantitativeValue = payload.quantitativeValue
+    if (requestBody.quantitativeValue !== undefined) {
+      record.quantitativeValue = requestBody.quantitativeValue
     }
-    if (payload.comment !== undefined) {
-      if (typeof payload.comment !== "string") {
+    if (requestBody.comment !== undefined) {
+      if (typeof requestBody.comment !== "string") {
         throw new BadRequestException({ fields: { comment: "Must be a string." } })
       }
-      record.comment = payload.comment
+      record.comment = requestBody.comment
     }
-    if (payload.date !== undefined) {
-      if (!/\d\d\d\d-\d\d-\d\d/.test(payload.date)) {
+    if (requestBody.date !== undefined) {
+      if (!/\d\d\d\d-\d\d-\d\d/.test(requestBody.date)) {
         throw new BadRequestException({ fields: { date: "Should have format YYYY-MM-DD." } })
       }
-      record.date = payload.date
+      record.date = requestBody.date
     }
-    if (payload.categoryId !== undefined) {
+    if (requestBody.categoryId !== undefined) {
       const category = await this.activityCategoriesService
-        .find({ authorizedUser, categoryId: payload.categoryId })
+        .find({ authorizedUser, categoryId: requestBody.categoryId })
         .catch(() => {
           throw new BadRequestException({ fields: { categoryId: "Invalid value." } })
         })

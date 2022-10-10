@@ -38,11 +38,11 @@ export class ActivityCategoriesController {
   @Post()
   create(
     @Body()
-    createActivityCategoryDto: CreateActivityCategoryDto,
+    requestBody: CreateActivityCategoryDto,
     @AuthorizedUser()
     authorizedUser: UserEntity
   ) {
-    return this.activityCategoriesService.create({ authorizedUser, createActivityCategoryDto })
+    return this.activityCategoriesService.create({ authorizedUser, requestBody })
   }
 
   @Patch(":id")
@@ -50,14 +50,14 @@ export class ActivityCategoriesController {
     @Param("id")
     categoryId: string,
     @Body()
-    updateActivityCategoryDto: UpdateActivityCategoryDto,
+    requestBody: UpdateActivityCategoryDto,
     @AuthorizedUser()
     authorizedUser: UserEntity
   ) {
     return this.activityCategoriesService.update({
       authorizedUser,
       categoryId: parseInt(categoryId),
-      updateActivityCategoryDto,
+      requestBody,
     })
   }
 

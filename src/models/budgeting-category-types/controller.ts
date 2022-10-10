@@ -2,23 +2,23 @@ import { Controller, Get, Param, UseGuards } from "@nestjs/common"
 
 import { AuthGuard } from "#models/auth/guard"
 
-import { BudgetingCategoryTypeService } from "./service"
+import { BudgetingCategoryTypesService } from "./service"
 
 @Controller("budgeting/category-types")
 @UseGuards(AuthGuard)
-export class BudgetingCategoryTypeController {
-  constructor(private readonly budgetingCategoryTypeservice: BudgetingCategoryTypeService) {}
+export class BudgetingCategoryTypesController {
+  constructor(private readonly budgetingCategoryTypesService: BudgetingCategoryTypesService) {}
 
   @Get()
   getAll() {
-    return this.budgetingCategoryTypeservice.getAll()
+    return this.budgetingCategoryTypesService.getAll()
   }
 
   @Get(":id")
   find(
     @Param("id")
-    budgetingCategoryTypeId: string
+    categoryTypeId: string
   ) {
-    return this.budgetingCategoryTypeservice.find({ budgetingCategoryTypeId: parseInt(budgetingCategoryTypeId) })
+    return this.budgetingCategoryTypesService.find({ categoryTypeId: parseInt(categoryTypeId) })
   }
 }

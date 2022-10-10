@@ -2,8 +2,7 @@ import { BadRequestException, ForbiddenException, Injectable, NotFoundException 
 import { InjectRepository } from "@nestjs/typeorm"
 import { In, Repository } from "typeorm"
 
-import { BudgetingCategoryEntity } from "#models/budgeting-categories/entities/budgeting-category.entity"
-import { BudgetingCategoryService } from "#models/budgeting-categories/service"
+import { BudgetingCategoriesService } from "#models/budgeting-categories/service"
 import { UserEntity } from "#models/user/entities/user.entity"
 
 import { CreateBudgetingRecordDto } from "./dto/create-budgeting-record.dto"
@@ -15,8 +14,8 @@ import { BudgetingRecordEntity } from "./entities/budgeting-record.entity"
 export class budgetingRecordservice {
   constructor(
     @InjectRepository(BudgetingRecordEntity)
-    private budgetingRecordRepository: Repository<BudgetingRecordEntity>,
-    private BudgetingCategoryService: BudgetingCategoryService
+    private budgetingRecordsRepository: Repository<BudgetingRecordEntity>,
+    private budgetingCategoriesService: BudgetingCategoriesService
   ) {}
 
   async search({
@@ -41,7 +40,7 @@ export class budgetingRecordservice {
             .map((boardId) => parseInt(boardId))
             .filter((boardIdFromQuery) => accessibleBoardsIds.includes(boardIdFromQuery))
 
-    const accessibleCategoriesOfSelectedBoards = await this.BudgetingCategoryService.searchCategories({
+    const accessibleCategoriesOfSelectedBoards = await this.budgetingCategoriesService.search({
       authorizedUser,
       query: { boardId: boardsIdsToSearchWith.join(",") },
     })
@@ -54,7 +53,7 @@ export class budgetingRecordservice {
             .map((boardId) => parseInt(boardId))
             .filter((categoryIdFromQuery) => accessibleCategoriesOfSelectedBoardsIds.includes(categoryIdFromQuery))
 
-    return this.budgetingRecordRepository.find({
+    return this.budgetingRecordsRepository.find({
       order: {
         id: query.orderingById ?? "desc",
         date: query.orderingById ?? "desc",
@@ -80,7 +79,7 @@ export class budgetingRecordservice {
     authorizedUser: UserEntity
     recordId: BudgetingRecordEntity["id"]
   }): Promise<BudgetingRecordEntity> {
-    const record = await this.budgetingRecordRepository.findOne({
+    const record = await this.budgetingRecordsRepository.findOne({
       relations: { category: { board: true, type: true } },
       where: { id: recordId },
     })
@@ -103,73 +102,69 @@ export class budgetingRecordservice {
 
   async create({
     authorizedUser,
-    createBudgetingRecordDto,
+    requestBody,
   }: {
     authorizedUser: UserEntity
-    createBudgetingRecordDto: CreateBudgetingRecordDto
+    requestBody: CreateBudgetingRecordDto
   }): Promise<BudgetingRecordEntity> {
-    if (typeof createBudgetingRecordDto.amount !== "number" || createBudgetingRecordDto.amount <= 0) {
+    if (typeof requestBody.amount !== "number" || requestBody.amount <= 0) {
       throw new BadRequestException({ fields: { amount: "Should be a positive number." } })
     }
-    if (createBudgetingRecordDto.categoryId === undefined) {
-      throw new BadRequestException({ fields: { categoryId: "Required field." } })
-    }
-    let category: BudgetingCategoryEntity | undefined
-    try {
-      category = await this.BudgetingCategoryService.findById({
-        authorizedUser,
-        categoryId: createBudgetingRecordDto.categoryId,
-      })
-    } catch {
-      throw new BadRequestException({ fields: { categoryId: "Invalid category." } })
-    }
-    if (createBudgetingRecordDto.date === undefined) {
+    if (requestBody.date === undefined) {
       throw new BadRequestException({ fields: { date: "Required field." } })
     }
-    if (!/\d\d\d\d-\d\d-\d\d/.test(createBudgetingRecordDto.date)) {
+    if (requestBody.categoryId === undefined) {
+      throw new BadRequestException({ fields: { categoryId: "Required field." } })
+    }
+    const category = await this.budgetingCategoriesService
+      .find({ authorizedUser, categoryId: requestBody.categoryId })
+      .catch(() => {
+        throw new BadRequestException({ fields: { categoryId: "Invalid category." } })
+      })
+    if (!/\d\d\d\d-\d\d-\d\d/.test(requestBody.date)) {
       throw new BadRequestException({ fields: { date: "Should have format YYYY-MM-DD." } })
     }
-    const record = this.budgetingRecordRepository.create(createBudgetingRecordDto)
+    const record = this.budgetingRecordsRepository.create(requestBody)
     record.category = category
-    return this.budgetingRecordRepository.save(record)
+    return this.budgetingRecordsRepository.save(record)
   }
 
   async update({
     authorizedUser,
     recordId,
-    updateBudgetingRecordDto,
+    requestBody,
   }: {
     authorizedUser: UserEntity
     recordId: BudgetingRecordEntity["id"]
-    updateBudgetingRecordDto: UpdateBudgetingRecordDto
+    requestBody: UpdateBudgetingRecordDto
   }): Promise<BudgetingRecordEntity> {
     const record = await this.find({ authorizedUser, recordId })
-    if (updateBudgetingRecordDto.amount !== undefined) {
-      if (typeof updateBudgetingRecordDto.amount !== "number" || updateBudgetingRecordDto.amount <= 0) {
+    if (requestBody.amount !== undefined) {
+      if (typeof requestBody.amount !== "number" || requestBody.amount <= 0) {
         throw new BadRequestException({ fields: { amount: "Should be a positive number." } })
       }
-      record.amount = updateBudgetingRecordDto.amount
+      record.amount = requestBody.amount
     }
-    if (typeof updateBudgetingRecordDto.isTrashed === "boolean") {
-      record.isTrashed = updateBudgetingRecordDto.isTrashed
+    if (typeof requestBody.isTrashed === "boolean") {
+      record.isTrashed = requestBody.isTrashed
     }
-    if (updateBudgetingRecordDto.date !== undefined) {
-      if (!/\d\d\d\d-\d\d-\d\d/.test(updateBudgetingRecordDto.date)) {
+    if (requestBody.date !== undefined) {
+      if (!/\d\d\d\d-\d\d-\d\d/.test(requestBody.date)) {
         throw new BadRequestException({ fields: { date: "Should have format YYYY-MM-DD." } })
       }
-      record.date = updateBudgetingRecordDto.date
+      record.date = requestBody.date
     }
-    if (updateBudgetingRecordDto.categoryId !== undefined) {
+    if (requestBody.categoryId !== undefined) {
       try {
-        record.category = await this.BudgetingCategoryService.findById({
+        record.category = await this.budgetingCategoriesService.find({
           authorizedUser,
-          categoryId: updateBudgetingRecordDto.categoryId,
+          categoryId: requestBody.categoryId,
         })
       } catch {
         throw new BadRequestException({ fields: { categoryId: "Invalid category." } })
       }
     }
-    return this.budgetingRecordRepository.save(record)
+    return this.budgetingRecordsRepository.save(record)
   }
 
   async delete({
@@ -180,7 +175,7 @@ export class budgetingRecordservice {
     recordId: BudgetingRecordEntity["id"]
   }): Promise<BudgetingRecordEntity> {
     const record = await this.find({ authorizedUser, recordId })
-    await this.budgetingRecordRepository.delete(recordId)
+    await this.budgetingRecordsRepository.delete(recordId)
     return record
   }
 }

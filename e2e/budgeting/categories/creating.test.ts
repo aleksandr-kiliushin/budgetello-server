@@ -41,7 +41,7 @@ describe("Budgeting category creating", () => {
     },
     {
       payload: { boardId: boards.cleverBudgetiers.id, name: "food", typeId: 1234123 },
-      response: { fields: { typeId: "Invalid category type." } },
+      response: { fields: { typeId: "Invalid value." } },
       status: 400,
     },
     {

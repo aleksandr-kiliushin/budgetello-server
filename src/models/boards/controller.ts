@@ -34,11 +34,11 @@ export class BoardsController {
   @Post()
   create(
     @Body()
-    createBoardDto: CreateBoardDto,
+    requestBody: CreateBoardDto,
     @AuthorizedUser()
     authorizedUser: UserEntity
   ) {
-    return this.boardsService.create({ authorizedUser, createBoardDto })
+    return this.boardsService.create({ authorizedUser, requestBody })
   }
 
   @Post(":id/participating")
@@ -66,11 +66,11 @@ export class BoardsController {
     @Param("id")
     boardId: string,
     @Body()
-    updateBoardDto: UpdateBoardDto,
+    requestBody: UpdateBoardDto,
     @AuthorizedUser()
     authorizedUser: UserEntity
   ) {
-    return this.boardsService.update({ authorizedUser, boardId: parseInt(boardId), updateBoardDto })
+    return this.boardsService.update({ authorizedUser, boardId: parseInt(boardId), requestBody })
   }
 
   @Delete(":id")

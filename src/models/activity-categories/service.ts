@@ -79,25 +79,25 @@ export class ActivityCategoriesService {
 
   async create({
     authorizedUser,
-    createActivityCategoryDto,
+    requestBody,
   }: {
     authorizedUser: UserEntity
-    createActivityCategoryDto: CreateActivityCategoryDto
+    requestBody: CreateActivityCategoryDto
   }): Promise<ActivityCategoryEntity> {
-    if (createActivityCategoryDto.name === undefined || createActivityCategoryDto.name === "") {
+    if (requestBody.name === undefined || requestBody.name === "") {
       throw new BadRequestException({ fields: { name: "Required field." } })
     }
-    if (createActivityCategoryDto.measurementTypeId === undefined) {
+    if (requestBody.measurementTypeId === undefined) {
       throw new BadRequestException({ fields: { measurementTypeId: "Required field." } })
     }
-    if (createActivityCategoryDto.boardId === undefined) {
+    if (requestBody.boardId === undefined) {
       throw new BadRequestException({ fields: { boardId: "Required field." } })
     }
-    if (createActivityCategoryDto.unit === undefined) {
+    if (requestBody.unit === undefined) {
       throw new BadRequestException({ fields: { unit: "Required field." } })
     }
-    if (createActivityCategoryDto.measurementTypeId === 1) {
-      if (typeof createActivityCategoryDto.unit !== "string" || createActivityCategoryDto.unit === "") {
+    if (requestBody.measurementTypeId === 1) {
+      if (typeof requestBody.unit !== "string" || requestBody.unit === "") {
         throw new BadRequestException({
           fields: {
             measurementTypeId: "«Quantitative» activity must be measured in units.",
@@ -106,7 +106,7 @@ export class ActivityCategoriesService {
         })
       }
     }
-    if (createActivityCategoryDto.measurementTypeId === 2 && createActivityCategoryDto.unit !== null) {
+    if (requestBody.measurementTypeId === 2 && requestBody.unit !== null) {
       throw new BadRequestException({
         fields: {
           measurementTypeId: "«Yes / no» activity cannot be measured with any unit.",
@@ -115,11 +115,11 @@ export class ActivityCategoriesService {
       })
     }
     const measurementType = await this.activityCategoryMeasurementTypesService
-      .find({ activityCategoryMeasurementTypeId: createActivityCategoryDto.measurementTypeId })
+      .find({ measurementTypeId: requestBody.measurementTypeId })
       .catch(() => {
         throw new BadRequestException({ fields: { measurementTypeId: "Invalid value." } })
       })
-    const board = await this.boardsService.find({ boardId: createActivityCategoryDto.boardId }).catch(() => {
+    const board = await this.boardsService.find({ boardId: requestBody.boardId }).catch(() => {
       throw new BadRequestException({ fields: { boardId: "Invalid value." } })
     })
     const similarExistingCategory = await this.activityCategoriesRepository.findOne({
@@ -127,9 +127,9 @@ export class ActivityCategoriesService {
       where: {
         board,
         measurementType,
-        name: createActivityCategoryDto.name,
+        name: requestBody.name,
         owner: authorizedUser,
-        unit: createActivityCategoryDto.unit === null ? IsNull() : createActivityCategoryDto.unit,
+        unit: requestBody.unit === null ? IsNull() : requestBody.unit,
       },
     })
     if (similarExistingCategory !== null) {
@@ -145,9 +145,9 @@ export class ActivityCategoriesService {
     const category = this.activityCategoriesRepository.create({
       board,
       measurementType,
-      name: createActivityCategoryDto.name,
+      name: requestBody.name,
       owner: authorizedUser,
-      unit: createActivityCategoryDto.unit,
+      unit: requestBody.unit,
     })
     const createdCategory = await this.activityCategoriesRepository.save(category)
     return await this.find({ authorizedUser, categoryId: createdCategory.id })
@@ -156,11 +156,11 @@ export class ActivityCategoriesService {
   async update({
     authorizedUser,
     categoryId,
-    updateActivityCategoryDto,
+    requestBody,
   }: {
     authorizedUser: UserEntity
     categoryId: ActivityCategoryEntity["id"]
-    updateActivityCategoryDto: UpdateActivityCategoryDto
+    requestBody: UpdateActivityCategoryDto
   }): Promise<ActivityCategoryEntity> {
     const category = await this.find({ authorizedUser, categoryId })
 
@@ -176,37 +176,37 @@ export class ActivityCategoriesService {
     }
 
     if (
-      updateActivityCategoryDto.boardId === undefined &&
-      updateActivityCategoryDto.measurementTypeId === undefined &&
-      updateActivityCategoryDto.name === undefined &&
-      updateActivityCategoryDto.unit === undefined
+      requestBody.boardId === undefined &&
+      requestBody.measurementTypeId === undefined &&
+      requestBody.name === undefined &&
+      requestBody.unit === undefined
     ) {
       return category
     }
-    if (updateActivityCategoryDto.measurementTypeId !== undefined) {
+    if (requestBody.measurementTypeId !== undefined) {
       try {
         category.measurementType = await this.activityCategoryMeasurementTypesService.find({
-          activityCategoryMeasurementTypeId: updateActivityCategoryDto.measurementTypeId,
+          measurementTypeId: requestBody.measurementTypeId,
         })
       } catch {
         throw new BadRequestException({ fields: { measurementTypeId: "Invalid value." } })
       }
     }
-    if (updateActivityCategoryDto.boardId !== undefined) {
+    if (requestBody.boardId !== undefined) {
       try {
-        category.board = await this.boardsService.find({ boardId: updateActivityCategoryDto.boardId })
+        category.board = await this.boardsService.find({ boardId: requestBody.boardId })
       } catch {
-        throw new BadRequestException({ fields: { boardId: "Invalid board." } })
+        throw new BadRequestException({ fields: { boardId: "Invalid value." } })
       }
     }
-    if (updateActivityCategoryDto.name !== undefined) {
-      if (updateActivityCategoryDto.name === "") {
+    if (requestBody.name !== undefined) {
+      if (requestBody.name === "") {
         throw new BadRequestException({ fields: { name: "Cannot be empty." } })
       }
-      category.name = updateActivityCategoryDto.name
+      category.name = requestBody.name
     }
-    if (updateActivityCategoryDto.unit !== undefined) {
-      category.unit = updateActivityCategoryDto.unit
+    if (requestBody.unit !== undefined) {
+      category.unit = requestBody.unit
     }
     if (category.measurementType.id === 1) {
       if (typeof category.unit !== "string" || category.unit === "") {

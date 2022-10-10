@@ -5,7 +5,7 @@ import { Repository } from "typeorm"
 import { BudgetingCategoryTypeEntity } from "./entities/budgeting-category-type.entity"
 
 @Injectable()
-export class BudgetingCategoryTypeService {
+export class BudgetingCategoryTypesService {
   constructor(
     @InjectRepository(BudgetingCategoryTypeEntity)
     private budgetingCategoryTypeRepository: Repository<BudgetingCategoryTypeEntity>
@@ -16,10 +16,10 @@ export class BudgetingCategoryTypeService {
   }
 
   find({
-    budgetingCategoryTypeId,
+    categoryTypeId,
   }: {
-    budgetingCategoryTypeId: BudgetingCategoryTypeEntity["id"]
+    categoryTypeId: BudgetingCategoryTypeEntity["id"]
   }): Promise<BudgetingCategoryTypeEntity> {
-    return this.budgetingCategoryTypeRepository.findOneOrFail({ where: { id: budgetingCategoryTypeId } })
+    return this.budgetingCategoryTypeRepository.findOneOrFail({ where: { id: categoryTypeId } })
   }
 }

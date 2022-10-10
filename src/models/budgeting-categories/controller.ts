@@ -8,66 +8,62 @@ import { AuthorizedUser } from "#helpers/AuthorizedUser.decorator"
 import { CreateBudgetingCategoryDto } from "./dto/create-budgeting-category.dto"
 import { SearchbudgetingCategoriesQueryDto } from "./dto/seach-budgeting-categories-query.dto"
 import { UpdateBudgetingCategoryDto } from "./dto/update-budgeting-category.dto"
-import { BudgetingCategoryService } from "./service"
+import { BudgetingCategoriesService } from "./service"
 
 @Controller("budgeting/categories")
 @UseGuards(AuthGuard)
-export class BudgetingCategoryController {
-  constructor(private BudgetingCategoryService: BudgetingCategoryService) {}
+export class BudgetingCategoriesController {
+  constructor(private budgetingCategoriesService: BudgetingCategoriesService) {}
 
   @Get("search")
-  searchCategories(
+  search(
     @Query()
     query: SearchbudgetingCategoriesQueryDto,
     @AuthorizedUser()
     authorizedUser: UserEntity
   ) {
-    return this.BudgetingCategoryService.searchCategories({ authorizedUser, query })
+    return this.budgetingCategoriesService.search({ authorizedUser, query })
   }
 
   @Get(":id")
   findById(
     @Param("id")
-    id: string,
+    categoryId: string,
     @AuthorizedUser()
     authorizedUser: UserEntity
   ) {
-    return this.BudgetingCategoryService.findById({ authorizedUser, categoryId: parseInt(id) })
+    return this.budgetingCategoriesService.find({ authorizedUser, categoryId: parseInt(categoryId) })
   }
 
   @Post()
   create(
     @Body()
-    CreateBudgetingCategoryDto: CreateBudgetingCategoryDto,
+    requestBody: CreateBudgetingCategoryDto,
     @AuthorizedUser()
     authorizedUser: UserEntity
   ) {
-    return this.BudgetingCategoryService.create({ authorizedUser, CreateBudgetingCategoryDto })
+    return this.budgetingCategoriesService.create({ authorizedUser, requestBody })
   }
 
   @Patch(":id")
   update(
     @Param("id")
-    id: string,
+    categoryId: string,
     @Body()
-    UpdateBudgetingCategoryDto: UpdateBudgetingCategoryDto,
+    requestBody: UpdateBudgetingCategoryDto,
     @AuthorizedUser()
     authorizedUser: UserEntity
   ) {
-    return this.BudgetingCategoryService.update({
-      authorizedUser,
-      categoryId: parseInt(id),
-      UpdateBudgetingCategoryDto,
-    })
+    return this.budgetingCategoriesService.update({ authorizedUser, categoryId: parseInt(categoryId), requestBody })
   }
 
   @Delete(":id")
   delete(
     @Param("id")
-    id: string,
+    categoryId: string,
     @AuthorizedUser()
     authorizedUser: UserEntity
   ) {
-    return this.BudgetingCategoryService.delete({ authorizedUser, categoryId: parseInt(id) })
+    return this.budgetingCategoriesService.delete({ authorizedUser, categoryId: parseInt(categoryId) })
   }
 }

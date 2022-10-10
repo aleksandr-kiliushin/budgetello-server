@@ -17,10 +17,10 @@ export class ActivityCategoryMeasurementTypesController {
   @Get(":id")
   find(
     @Param("id")
-    activityCategoryMeasurementTypeId: string
+    measurementTypeId: string
   ) {
     return this.activityCategoryMeasurementTypeService.find({
-      activityCategoryMeasurementTypeId: parseInt(activityCategoryMeasurementTypeId),
+      measurementTypeId: parseInt(measurementTypeId),
     })
   }
 }

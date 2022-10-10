@@ -3,14 +3,14 @@ import { TypeOrmModule } from "@nestjs/typeorm"
 
 import { UserModule } from "#models/user/module"
 
-import { BudgetingCategoryTypeController } from "./controller"
+import { BudgetingCategoryTypesController } from "./controller"
 import { BudgetingCategoryTypeEntity } from "./entities/budgeting-category-type.entity"
-import { BudgetingCategoryTypeService } from "./service"
+import { BudgetingCategoryTypesService } from "./service"
 
 @Module({
-  controllers: [BudgetingCategoryTypeController],
-  exports: [BudgetingCategoryTypeService],
+  controllers: [BudgetingCategoryTypesController],
+  exports: [BudgetingCategoryTypesService],
   imports: [TypeOrmModule.forFeature([BudgetingCategoryTypeEntity]), UserModule],
-  providers: [BudgetingCategoryTypeController, BudgetingCategoryTypeService],
+  providers: [BudgetingCategoryTypesController, BudgetingCategoryTypesService],
 })
 export class BudgetingCategoryTypesModule {}

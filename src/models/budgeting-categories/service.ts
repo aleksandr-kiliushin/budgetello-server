@@ -3,7 +3,7 @@ import { InjectRepository } from "@nestjs/typeorm"
 import { In, Repository } from "typeorm"
 
 import { BoardsService } from "#models/boards/service"
-import { BudgetingCategoryTypeService } from "#models/budgeting-category-types/service"
+import { BudgetingCategoryTypesService } from "#models/budgeting-category-types/service"
 import { UserEntity } from "#models/user/entities/user.entity"
 
 import { CreateBudgetingCategoryDto } from "./dto/create-budgeting-category.dto"
@@ -12,15 +12,15 @@ import { UpdateBudgetingCategoryDto } from "./dto/update-budgeting-category.dto"
 import { BudgetingCategoryEntity } from "./entities/budgeting-category.entity"
 
 @Injectable()
-export class BudgetingCategoryService {
+export class BudgetingCategoriesService {
   constructor(
     @InjectRepository(BudgetingCategoryEntity)
-    private budgetingCategoryRepository: Repository<BudgetingCategoryEntity>,
-    private budgetingCategoryTypeservice: BudgetingCategoryTypeService,
+    private budgetingCategoriesRepository: Repository<BudgetingCategoryEntity>,
+    private budgetingCategoryTypesService: BudgetingCategoryTypesService,
     private boardsService: BoardsService
   ) {}
 
-  async searchCategories({
+  async search({
     authorizedUser,
     query,
   }: {
@@ -41,25 +41,24 @@ export class BudgetingCategoryService {
             .map((boardId) => parseInt(boardId))
             .filter((boardIdFromQuery) => accessibleBoardsIds.includes(boardIdFromQuery))
 
-    return this.budgetingCategoryRepository.find({
+    return this.budgetingCategoriesRepository.find({
       order: { id: "ASC", name: "ASC" },
       relations: { board: true, type: true },
       where: {
-        // ...(query.boardId !== undefined && { board: In(query.boardId.split(",")) }),
         ...(query.id !== undefined && { id: In(query.id.split(",")) }),
         board: { id: In(boardsIdsToSearchWith) },
       },
     })
   }
 
-  async findById({
+  async find({
     authorizedUser,
     categoryId,
   }: {
     authorizedUser: UserEntity
     categoryId: BudgetingCategoryEntity["id"]
   }): Promise<BudgetingCategoryEntity> {
-    const category = await this.budgetingCategoryRepository.findOne({
+    const category = await this.budgetingCategoriesRepository.findOne({
       relations: { board: true, type: true },
       where: { id: categoryId },
     })
@@ -79,30 +78,28 @@ export class BudgetingCategoryService {
 
   async create({
     authorizedUser,
-    CreateBudgetingCategoryDto,
+    requestBody,
   }: {
     authorizedUser: UserEntity
-    CreateBudgetingCategoryDto: CreateBudgetingCategoryDto
+    requestBody: CreateBudgetingCategoryDto
   }): Promise<BudgetingCategoryEntity> {
-    if (CreateBudgetingCategoryDto.name === undefined || CreateBudgetingCategoryDto.name === "")
+    if (requestBody.name === undefined || requestBody.name === "")
       throw new BadRequestException({ fields: { name: "Required field." } })
-    if (CreateBudgetingCategoryDto.typeId === undefined) {
+    if (requestBody.typeId === undefined) {
       throw new BadRequestException({ fields: { typeId: "Required field." } })
     }
-    if (CreateBudgetingCategoryDto.boardId === undefined) {
+    if (requestBody.boardId === undefined) {
       throw new BadRequestException({ fields: { boardId: "Required field." } })
     }
-    const type = await this.budgetingCategoryTypeservice
-      .find({ budgetingCategoryTypeId: CreateBudgetingCategoryDto.typeId })
-      .catch(() => {
-        throw new BadRequestException({ fields: { typeId: "Invalid category type." } })
-      })
-    const board = await this.boardsService.find({ boardId: CreateBudgetingCategoryDto.boardId }).catch(() => {
-      throw new BadRequestException({ fields: { boardId: "Invalid board." } })
+    const type = await this.budgetingCategoryTypesService.find({ categoryTypeId: requestBody.typeId }).catch(() => {
+      throw new BadRequestException({ fields: { typeId: "Invalid value." } })
     })
-    const similarExistingCategory = await this.budgetingCategoryRepository.findOne({
+    const board = await this.boardsService.find({ boardId: requestBody.boardId }).catch(() => {
+      throw new BadRequestException({ fields: { boardId: "Invalid value." } })
+    })
+    const similarExistingCategory = await this.budgetingCategoriesRepository.findOne({
       relations: { board: true, type: true },
-      where: { board, name: CreateBudgetingCategoryDto.name, type },
+      where: { board, name: requestBody.name, type },
     })
     if (similarExistingCategory !== null) {
       throw new BadRequestException({
@@ -113,21 +110,22 @@ export class BudgetingCategoryService {
         },
       })
     }
-    const category = this.budgetingCategoryRepository.create({ board, name: CreateBudgetingCategoryDto.name, type })
-    const createdCategory = await this.budgetingCategoryRepository.save(category)
-    return await this.findById({ authorizedUser, categoryId: createdCategory.id })
+    console.log("requestBody.name >>", requestBody.name)
+    const category = this.budgetingCategoriesRepository.create({ board, name: requestBody.name, type })
+    const createdCategory = await this.budgetingCategoriesRepository.save(category)
+    return await this.find({ authorizedUser, categoryId: createdCategory.id })
   }
 
   async update({
     authorizedUser,
     categoryId,
-    UpdateBudgetingCategoryDto,
+    requestBody,
   }: {
     authorizedUser: UserEntity
     categoryId: BudgetingCategoryEntity["id"]
-    UpdateBudgetingCategoryDto: UpdateBudgetingCategoryDto
+    requestBody: UpdateBudgetingCategoryDto
   }): Promise<BudgetingCategoryEntity> {
-    const category = await this.findById({ authorizedUser, categoryId })
+    const category = await this.find({ authorizedUser, categoryId })
 
     const isAuthorizedUserBoardAdmin = authorizedUser.administratedBoards.some((board) => {
       return board.id === category.board.id
@@ -138,36 +136,30 @@ export class BudgetingCategoryService {
       throw new ForbiddenException({ message: "Access denied." })
     }
 
-    if (
-      UpdateBudgetingCategoryDto.boardId === undefined &&
-      UpdateBudgetingCategoryDto.name === undefined &&
-      UpdateBudgetingCategoryDto.typeId === undefined
-    ) {
+    if (requestBody.boardId === undefined && requestBody.name === undefined && requestBody.typeId === undefined) {
       return category
     }
-    if (UpdateBudgetingCategoryDto.typeId !== undefined) {
+    if (requestBody.typeId !== undefined) {
       try {
-        category.type = await this.budgetingCategoryTypeservice.find({
-          budgetingCategoryTypeId: UpdateBudgetingCategoryDto.typeId,
-        })
+        category.type = await this.budgetingCategoryTypesService.find({ categoryTypeId: requestBody.typeId })
       } catch {
-        throw new BadRequestException({ fields: { typeId: "Invalid category type." } })
+        throw new BadRequestException({ fields: { typeId: "Invalid value." } })
       }
     }
-    if (UpdateBudgetingCategoryDto.boardId !== undefined) {
+    if (requestBody.boardId !== undefined) {
       try {
-        category.board = await this.boardsService.find({ boardId: UpdateBudgetingCategoryDto.boardId })
+        category.board = await this.boardsService.find({ boardId: requestBody.boardId })
       } catch {
-        throw new BadRequestException({ fields: { boardId: "Invalid board." } })
+        throw new BadRequestException({ fields: { boardId: "Invalid value." } })
       }
     }
-    if (UpdateBudgetingCategoryDto.name !== undefined) {
-      if (UpdateBudgetingCategoryDto.name === "") {
+    if (requestBody.name !== undefined) {
+      if (requestBody.name === "") {
         throw new BadRequestException({ fields: { name: "Category name cannot be empty." } })
       }
-      category.name = UpdateBudgetingCategoryDto.name
+      category.name = requestBody.name
     }
-    const similarExistingCategory = await this.budgetingCategoryRepository.findOne({
+    const similarExistingCategory = await this.budgetingCategoriesRepository.findOne({
       relations: { board: true, type: true },
       where: { board: category.board, name: category.name, type: category.type },
     })
@@ -180,8 +172,8 @@ export class BudgetingCategoryService {
         },
       })
     }
-    await this.budgetingCategoryRepository.save(category)
-    return await this.findById({ authorizedUser, categoryId })
+    await this.budgetingCategoriesRepository.save(category)
+    return await this.find({ authorizedUser, categoryId })
   }
 
   async delete({
@@ -191,8 +183,8 @@ export class BudgetingCategoryService {
     authorizedUser: UserEntity
     categoryId: BudgetingCategoryEntity["id"]
   }): Promise<BudgetingCategoryEntity> {
-    const category = await this.findById({ authorizedUser, categoryId })
-    await this.budgetingCategoryRepository.delete(categoryId)
+    const category = await this.find({ authorizedUser, categoryId })
+    await this.budgetingCategoriesRepository.delete(categoryId)
     return category
   }
 }

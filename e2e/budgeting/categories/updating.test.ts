@@ -25,13 +25,13 @@ describe("Budgeting category updating", () => {
     },
     {
       payload: { name: "food", typeId: 1234123 },
-      response: { fields: { typeId: "Invalid category type." } },
+      response: { fields: { typeId: "Invalid value." } },
       status: 400,
       url: `/api/budgeting/categories/${budgetingCategories.educationExpense.id}`,
     },
     {
       payload: { boardId: 666666 },
-      response: { fields: { boardId: "Invalid board." } },
+      response: { fields: { boardId: "Invalid value." } },
       status: 400,
       url: `/api/budgeting/categories/${budgetingCategories.educationExpense.id}`,
     },

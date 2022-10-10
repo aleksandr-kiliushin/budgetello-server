@@ -38,11 +38,11 @@ export class BudgetingRecordsController {
   @Post()
   create(
     @Body()
-    createBudgetingRecordDto: CreateBudgetingRecordDto,
+    requestBody: CreateBudgetingRecordDto,
     @AuthorizedUser()
     authorizedUser: UserEntity
   ) {
-    return this.budgetingRecordservice.create({ authorizedUser, createBudgetingRecordDto })
+    return this.budgetingRecordservice.create({ authorizedUser, requestBody })
   }
 
   @Patch(":id")
@@ -50,14 +50,14 @@ export class BudgetingRecordsController {
     @Param("id")
     recordId: string,
     @Body()
-    updateBudgetingRecordDto: UpdateBudgetingRecordDto,
+    requestBody: UpdateBudgetingRecordDto,
     @AuthorizedUser()
     authorizedUser: UserEntity
   ) {
     return this.budgetingRecordservice.update({
       authorizedUser,
       recordId: parseInt(recordId),
-      updateBudgetingRecordDto,
+      requestBody,
     })
   }
 

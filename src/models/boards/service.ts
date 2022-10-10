@@ -48,23 +48,23 @@ export class BoardsService {
 
   async create({
     authorizedUser,
-    createBoardDto,
+    requestBody,
   }: {
     authorizedUser: UserEntity
-    createBoardDto: CreateBoardDto
+    requestBody: CreateBoardDto
   }): Promise<BoardEntity> {
-    if (createBoardDto.name === undefined || createBoardDto.name === "") {
+    if (requestBody.name === undefined || requestBody.name === "") {
       throw new BadRequestException({ fields: { name: "Required field." } })
     }
-    if (createBoardDto.subjectId === undefined) {
+    if (requestBody.subjectId === undefined) {
       throw new BadRequestException({ fields: { subjectId: "Required field." } })
     }
-    const subject = await this.boardSubjectsService.find({ boardSubjectId: createBoardDto.subjectId }).catch(() => {
+    const subject = await this.boardSubjectsService.find({ boardSubjectId: requestBody.subjectId }).catch(() => {
       throw new BadRequestException({ fields: { subjectId: "Invalid subject." } })
     })
     const similarExistingBoard = await this.boardsRepository.findOne({
       relations: { subject: true },
-      where: { name: createBoardDto.name, subject },
+      where: { name: requestBody.name, subject },
     })
     if (similarExistingBoard !== null) {
       throw new BadRequestException({
@@ -77,7 +77,7 @@ export class BoardsService {
     const board = this.boardsRepository.create({
       admins: [authorizedUser],
       members: [authorizedUser],
-      name: createBoardDto.name,
+      name: requestBody.name,
       subject,
     })
     const newlyCreatedBoard = await this.boardsRepository.save(board)
@@ -87,28 +87,28 @@ export class BoardsService {
   async update({
     authorizedUser,
     boardId,
-    updateBoardDto,
+    requestBody,
   }: {
     authorizedUser: UserEntity
     boardId: BoardEntity["id"]
-    updateBoardDto: UpdateBoardDto
+    requestBody: UpdateBoardDto
   }): Promise<BoardEntity> {
     const board = await this.find({ boardId })
     if (board.admins.every((admin) => admin.id !== authorizedUser.id)) {
       throw new ForbiddenException({ message: "You are not allowed to to this action." })
     }
-    if (updateBoardDto.name === undefined && updateBoardDto.subjectId === undefined) {
+    if (requestBody.name === undefined && requestBody.subjectId === undefined) {
       return board
     }
-    if (updateBoardDto.name !== undefined) {
-      if (updateBoardDto.name === "") {
+    if (requestBody.name !== undefined) {
+      if (requestBody.name === "") {
         throw new BadRequestException({ fields: { name: "Name cannot be empty." } })
       }
-      board.name = updateBoardDto.name
+      board.name = requestBody.name
     }
-    if (updateBoardDto.subjectId !== undefined) {
+    if (requestBody.subjectId !== undefined) {
       try {
-        board.subject = await this.boardSubjectsService.find({ boardSubjectId: updateBoardDto.subjectId })
+        board.subject = await this.boardSubjectsService.find({ boardSubjectId: requestBody.subjectId })
       } catch {
         throw new BadRequestException({ fields: { subjectId: "Invalid board subject." } })
       }
