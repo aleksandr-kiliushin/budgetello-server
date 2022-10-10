@@ -3,6 +3,7 @@ import { TypeOrmModule } from "@nestjs/typeorm"
 
 import { ActivityCategoriesModule } from "#models/activity-categories/module"
 import { ActivityCategoryMeasurementTypesModule } from "#models/activity-category-measurement-types/module"
+import { ActivityRecordsModule } from "#models/activity-records/module"
 import { AuthModule } from "#models/auth/module"
 import { BoardSubjectsModule } from "#models/board-subjects/module"
 import { BoardsModule } from "#models/boards/module"
@@ -18,6 +19,7 @@ import { UserModule } from "./models/user/module"
     TypeOrmModule.forRoot(ormConfig),
     ActivityCategoriesModule,
     ActivityCategoryMeasurementTypesModule,
+    ActivityRecordsModule,
     AuthModule,
     BoardsModule,
     BoardSubjectsModule,

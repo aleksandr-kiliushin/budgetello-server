@@ -17,3 +17,12 @@ export interface IActivityCategory {
   owner: IUser
   unit: string | null
 }
+
+export interface IActivityRecord {
+  booleanValue: boolean | null
+  category: IActivityCategory
+  comment: string
+  date: string
+  id: number
+  quantitativeValue: number | null
+}
