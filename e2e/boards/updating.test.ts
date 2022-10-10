@@ -39,8 +39,8 @@ describe("Boards updating", () => {
       payload: { name: boards.megaEconomists.name },
       response: {
         fields: {
-          name: '"mega-economists" budgeting board already exists.',
-          subjectId: '"mega-economists" budgeting board already exists.',
+          name: '"mega-economists" budget board already exists.',
+          subjectId: '"mega-economists" budget board already exists.',
         },
       },
       status: 400,

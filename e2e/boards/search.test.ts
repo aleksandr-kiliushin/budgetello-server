@@ -55,7 +55,7 @@ describe("Boards search", () => {
       ],
     },
     {
-      url: `/api/boards/search?subjectId=${boardsSubjects.budgeting.id}`,
+      url: `/api/boards/search?subjectId=${boardsSubjects.budget.id}`,
       searchResult: [boards.cleverBudgetiers, boards.megaEconomists],
     },
     {
@@ -63,7 +63,7 @@ describe("Boards search", () => {
       searchResult: [boards.megaEconomists, boards.beautifulSportsmen],
     },
     {
-      url: `/api/boards/search?name=me&subjectId=${boardsSubjects.budgeting.id}&id=${boards.megaEconomists.id}`,
+      url: `/api/boards/search?name=me&subjectId=${boardsSubjects.budget.id}&id=${boards.megaEconomists.id}`,
       searchResult: [boards.megaEconomists],
     },
   ])("boards search for: $url", async ({ url, searchResult }) => {

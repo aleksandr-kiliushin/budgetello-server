@@ -12,7 +12,7 @@ beforeEach(async () => {
 describe("get boards subjects", () => {
   it("responds with all board subjects list", async () => {
     const response = await fetchApi("/api/board-subjects")
-    expect(await response.json()).toEqual<BoardSubjectEntity[]>([boardsSubjects.budgeting, boardsSubjects.activities])
+    expect(await response.json()).toEqual<BoardSubjectEntity[]>([boardsSubjects.budget, boardsSubjects.activities])
   })
 
   it("responds with a board subject for a given id", async () => {

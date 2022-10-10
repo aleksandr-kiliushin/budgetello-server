@@ -16,17 +16,17 @@ describe("Board creating", () => {
     status: number
   }>([
     {
-      payload: { name_WITH_A_TYPO: "food", subjectId: boardsSubjects.budgeting.id },
+      payload: { name_WITH_A_TYPO: "food", subjectId: boardsSubjects.budget.id },
       response: { fields: { name: "Required field." } },
       status: 400,
     },
     {
-      payload: { name: "", subjectId: boardsSubjects.budgeting.id },
+      payload: { name: "", subjectId: boardsSubjects.budget.id },
       response: { fields: { name: "Required field." } },
       status: 400,
     },
     {
-      payload: { name: "food", subjectId_WITH_A_TYPO: boardsSubjects.budgeting.id },
+      payload: { name: "food", subjectId_WITH_A_TYPO: boardsSubjects.budget.id },
       response: { fields: { subjectId: "Required field." } },
       status: 400,
     },
@@ -36,11 +36,11 @@ describe("Board creating", () => {
       status: 400,
     },
     {
-      payload: { name: "clever-budgetiers", subjectId: boardsSubjects.budgeting.id },
+      payload: { name: "clever-budgetiers", subjectId: boardsSubjects.budget.id },
       response: {
         fields: {
-          name: '"clever-budgetiers" budgeting board already exists.',
-          subjectId: '"clever-budgetiers" budgeting board already exists.',
+          name: '"clever-budgetiers" budget board already exists.',
+          subjectId: '"clever-budgetiers" budget board already exists.',
         },
       },
       status: 400,

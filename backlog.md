@@ -1,4 +1,2 @@
 - Build CI pipeline with GitHub actions.
-- Fix naming `UpdateBudgetingCategoryDto: UpdateBudgetingCategoryDto`.
-- Rename `updateBudgetingCategoryDto` to `payload`.
 - `if (createActivityCategoryDto.measurementTypeId === undefined) throw BadRequestException`. Replace such duplications for a bunch of payload field with a helper.

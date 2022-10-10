@@ -124,7 +124,7 @@ describe("Activity record creating", () => {
       },
       status: 201,
     },
-  ])("Budgeting record creating case #%#", async ({ authorizedUserUsername, payload, responseBody, status }) => {
+  ])("Budget record creating case #%#", async ({ authorizedUserUsername, payload, responseBody, status }) => {
     await authorize(authorizedUserUsername)
     const response = await fetchApi("/api/activities/records", { body: JSON.stringify(payload), method: "POST" })
     expect(response.status).toEqual(status)

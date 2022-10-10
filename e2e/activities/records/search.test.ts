@@ -38,7 +38,7 @@ describe("Get activity record by ID", () => {
   })
 })
 
-describe("Budgeting records search", () => {
+describe("Budget records search", () => {
   test.each<{ authorizedUserUsername: ITestUserUsername; url: string; responseBody: IActivityRecord[] }>([
     {
       authorizedUserUsername: users.johnDoe.username,

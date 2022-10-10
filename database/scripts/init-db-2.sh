@@ -45,7 +45,7 @@ psql personal_app_db postgres << EOF
 EOF
 psql personal_app_db postgres << EOF
   INSERT INTO board_subject (name        )
-  VALUES                    ('budgeting' ),
+  VALUES                    ('budget' ),
                             ('activities');
 EOF
 psql personal_app_db postgres << EOF

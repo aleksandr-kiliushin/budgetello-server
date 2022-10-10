@@ -62,7 +62,7 @@ describe("Participating in a board", () => {
         id: boards.cleverBudgetiers.id,
         members: [users.johnDoe],
         name: boards.cleverBudgetiers.name,
-        subject: boardsSubjects.budgeting,
+        subject: boardsSubjects.budget,
       },
       status: 200,
       url: `/api/boards/${boards.cleverBudgetiers.id}/participating`,

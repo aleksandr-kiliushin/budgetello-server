@@ -7,9 +7,9 @@ import { ActivityRecordsModule } from "#models/activity-records/module"
 import { AuthModule } from "#models/auth/module"
 import { BoardSubjectsModule } from "#models/board-subjects/module"
 import { BoardsModule } from "#models/boards/module"
-import { BudgetingCategoriesModule } from "#models/budgeting-categories/module"
-import { BudgetingCategoryTypesModule } from "#models/budgeting-category-types/module"
-import { BudgetingRecordsModule } from "#models/budgeting-records/module"
+import { BudgetCategoriesModule } from "#models/budget-categories/module"
+import { BudgetCategoryTypesModule } from "#models/budget-category-types/module"
+import { BudgetRecordsModule } from "#models/budget-records/module"
 
 import { ormConfig } from "./config/ormConfig"
 import { UserModule } from "./models/user/module"
@@ -23,9 +23,9 @@ import { UserModule } from "./models/user/module"
     AuthModule,
     BoardsModule,
     BoardSubjectsModule,
-    BudgetingCategoriesModule,
-    BudgetingCategoryTypesModule,
-    BudgetingRecordsModule,
+    BudgetCategoriesModule,
+    BudgetCategoryTypesModule,
+    BudgetRecordsModule,
     UserModule,
   ],
 })
