@@ -5,7 +5,7 @@ import { BudgetCategoryTypeEntity } from "#models/budget-category-types/entities
 
 import { IBudgetCategory } from "#interfaces/budget"
 
-@Entity("budgeting_category")
+@Entity("budget_category")
 export class BudgetCategoryEntity {
   @PrimaryGeneratedColumn({ type: "int" })
   id: IBudgetCategory["id"]

@@ -12,9 +12,9 @@ psql personal_app_db postgres << EOF
   activity_category,
   activity_category_measurement_type,
   activity_record,
-  budgeting_category,
-  budgeting_category_type,
-  budgeting_record,
+  budget_category,
+  budget_category_type,
+  budget_record,
   board,
   board_subject,
   "user",
@@ -27,9 +27,9 @@ psql personal_app_db postgres << EOF
   ALTER SEQUENCE activity_category_id_seq RESTART WITH 1;
   ALTER SEQUENCE activity_category_measurement_type_id_seq RESTART WITH 1;
   ALTER SEQUENCE activity_record_id_seq RESTART WITH 1;
-  ALTER SEQUENCE budgeting_category_id_seq RESTART WITH 1;
-  ALTER SEQUENCE budgeting_category_type_id_seq RESTART WITH 1;
-  ALTER SEQUENCE budgeting_record_id_seq RESTART WITH 1;
+  ALTER SEQUENCE budget_category_id_seq RESTART WITH 1;
+  ALTER SEQUENCE budget_category_type_id_seq RESTART WITH 1;
+  ALTER SEQUENCE budget_record_id_seq RESTART WITH 1;
   ALTER SEQUENCE board_id_seq RESTART WITH 1;
   ALTER SEQUENCE board_subject_id_seq RESTART WITH 1;
   ALTER SEQUENCE user_id_seq RESTART WITH 1;
@@ -72,12 +72,12 @@ psql personal_app_db postgres << EOF
                                               (1       , 4        );
 EOF
 psql personal_app_db postgres << EOF
-  INSERT INTO budgeting_category_type (name     )
+  INSERT INTO budget_category_type (name     )
   VALUES                              ('expense'),
                                       ('income' );
 EOF
 psql personal_app_db postgres << EOF
-  INSERT INTO budgeting_category (name       , "typeId", "boardId")
+  INSERT INTO budget_category (name       , "typeId", "boardId")
   VALUES                         ('clothes'  , 1       , 1        ),
                                  ('education', 1       , 1        ),
                                  ('gifts'    , 1       , 2        ),
@@ -85,7 +85,7 @@ psql personal_app_db postgres << EOF
                                  ('salary'   , 2       , 2        );
 EOF
 psql personal_app_db postgres << EOF
-  INSERT INTO budgeting_record (amount, date        , "isTrashed", "categoryId")
+  INSERT INTO budget_record (amount, date        , "isTrashed", "categoryId")
   VALUES                       (100   , '2022-08-01', TRUE       ,  1          ),
                                (400   , '2022-08-01', TRUE       ,  2          ),
                                (25    , '2022-08-01', FALSE      ,  2          ),

@@ -4,7 +4,7 @@ import { BudgetCategoryEntity } from "#models/budget-categories/entities/budget-
 
 import { IBudgetRecord } from "#interfaces/budget"
 
-@Entity("budgeting_record")
+@Entity("budget_record")
 export class BudgetRecordEntity {
   @Column({ type: "int" })
   amount: IBudgetRecord["amount"]
