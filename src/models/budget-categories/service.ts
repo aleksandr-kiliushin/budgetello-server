@@ -110,7 +110,6 @@ export class BudgetCategoriesService {
         },
       })
     }
-    console.log("requestBody.name >>", requestBody.name)
     const category = this.budgetCategoriesRepository.create({ board, name: requestBody.name, type })
     const createdCategory = await this.budgetCategoriesRepository.save(category)
     return await this.find({ authorizedUser, categoryId: createdCategory.id })
