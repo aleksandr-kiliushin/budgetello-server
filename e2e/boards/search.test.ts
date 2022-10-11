@@ -76,11 +76,26 @@ describe("Boards search", () => {
       url: `/api/boards/search?name=me&subjectId=${boardsSubjects.budget.id}&id=${boards.megaEconomists.id}`,
       searchResult: [boards.megaEconomists],
     },
-    // {
-    //   authorizedUserUsername: users.jessicaStark.username,
-    //   url: `/api/boards/search?iAmMemberOf=true`,
-    //   searchResult: [boards.megaEconomists],
-    // },
+    {
+      authorizedUserUsername: users.johnDoe.username,
+      url: "/api/boards/search?iAmMemberOf=true",
+      searchResult: [boards.cleverBudgetiers, boards.productivePeople],
+    },
+    {
+      authorizedUserUsername: users.jessicaStark.username,
+      url: "/api/boards/search?iAmAdminOf=false",
+      searchResult: [boards.cleverBudgetiers, boards.productivePeople],
+    },
+    {
+      authorizedUserUsername: users.johnDoe.username,
+      url: "/api/boards/search?iAmMemberOf=false&iAmAdminOf=true",
+      searchResult: [],
+    },
+    {
+      authorizedUserUsername: users.jessicaStark.username,
+      url: `/api/boards/search?subjectId=${boardsSubjects.activities.id}&iAmMemberOf=true&iAmAdminOf=false`,
+      searchResult: [boards.productivePeople],
+    },
   ])("boards search for: $url", async ({ authorizedUserUsername, url, searchResult }) => {
     await authorize(authorizedUserUsername)
     const response = await fetchApi(url)

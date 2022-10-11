@@ -18,7 +18,43 @@ export class BoardsService {
     private boardSubjectsService: BoardSubjectsService
   ) {}
 
-  search({ query }: { query: SearchBoardsQueryDto }): Promise<BoardEntity[]> {
+  async search({
+    authorizedUser,
+    query,
+  }: {
+    authorizedUser: UserEntity
+    query: SearchBoardsQueryDto
+  }): Promise<BoardEntity[]> {
+    let boardIdsToSearchBy = (await this.boardsRepository.find()).map((board) => board.id)
+    const authorizedUserAdministratedBoardsIds = authorizedUser.administratedBoards.map((board) => board.id)
+    if (query.iAmAdminOf === "true") {
+      boardIdsToSearchBy = boardIdsToSearchBy.filter((boardId) => {
+        return authorizedUserAdministratedBoardsIds.includes(boardId)
+      })
+    }
+    if (query.iAmAdminOf === "false") {
+      boardIdsToSearchBy = boardIdsToSearchBy.filter((boardId) => {
+        return !authorizedUserAdministratedBoardsIds.includes(boardId)
+      })
+    }
+    const authorizedUserParticipatedBoardsIds = authorizedUser.boards.map((board) => board.id)
+    if (query.iAmMemberOf === "true") {
+      boardIdsToSearchBy = boardIdsToSearchBy.filter((boardId) => {
+        return authorizedUserParticipatedBoardsIds.includes(boardId)
+      })
+    }
+    if (query.iAmMemberOf === "false") {
+      boardIdsToSearchBy = boardIdsToSearchBy.filter((boardId) => {
+        return !authorizedUserParticipatedBoardsIds.includes(boardId)
+      })
+    }
+    if (query.id !== undefined) {
+      const queryId = query.id
+      boardIdsToSearchBy = boardIdsToSearchBy.filter((boardId) => {
+        return queryId.split(",").map(Number).includes(boardId)
+      })
+    }
+
     return this.boardsRepository.find({
       order: {
         id: "asc",
@@ -26,7 +62,7 @@ export class BoardsService {
       },
       relations: { admins: true, members: true, subject: true },
       where: {
-        ...(query.id !== undefined && { id: In(query.id.split(",")) }),
+        id: In(boardIdsToSearchBy),
         ...(query.subjectId !== undefined && { subject: In(query.subjectId.split(",")) }),
         ...(query.name !== undefined && { name: Like(`%${query.name}%`) }),
       },

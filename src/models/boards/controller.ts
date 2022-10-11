@@ -18,9 +18,11 @@ export class BoardsController {
   @Get("search")
   search(
     @Query()
-    query: SearchBoardsQueryDto
+    query: SearchBoardsQueryDto,
+    @AuthorizedUser()
+    authorizedUser: UserEntity
   ) {
-    return this.boardsService.search({ query })
+    return this.boardsService.search({ authorizedUser, query })
   }
 
   @Get(":id")
