@@ -206,6 +206,36 @@ export class BoardsService {
     return await this.find({ boardId })
   }
 
+  async removeMember({
+    authorizedUser,
+    boardId,
+    candidateForRemovingId,
+  }: {
+    authorizedUser: UserEntity
+    boardId: BoardEntity["id"]
+    candidateForRemovingId: UserEntity["id"]
+  }): Promise<BoardEntity> {
+    if (authorizedUser.administratedBoards.every((board) => board.id !== boardId)) {
+      throw new ForbiddenException({ message: "Access denied." })
+    }
+    const board = await this.find({ boardId })
+    if (board.admins.every((admin) => admin.id === candidateForRemovingId)) {
+      throw new ForbiddenException({
+        message: "The user can't be removed from this board because you are the only admin.",
+      })
+    }
+    const candidateToBeRemoved = await this.userService.find({
+      userId: candidateForRemovingId,
+      relations: { boards: true },
+    })
+    if (candidateToBeRemoved.boards.every((board) => board.id !== boardId)) {
+      throw new BadRequestException({ message: "The user is not a member of the board." })
+    }
+    board.members = board.members.filter((member) => member.id !== candidateForRemovingId)
+    await this.boardsRepository.save(board)
+    return await this.find({ boardId })
+  }
+
   // async join({
   //   authorizedUser,
   //   boardId,
@@ -222,23 +252,23 @@ export class BoardsService {
   //   return await this.find({ boardId })
   // }
 
-  async leave({
-    authorizedUser,
-    boardId,
-  }: {
-    authorizedUser: UserEntity
-    boardId: BoardEntity["id"]
-  }): Promise<BoardEntity> {
-    const board = await this.find({ boardId })
-    if (board.members.every((member) => member.id !== authorizedUser.id)) {
-      throw new BadRequestException({ message: "You can't leave this board because you are not it's member." })
-    }
-    if (board.admins.length === 1 && board.admins.every((admin) => admin.id === authorizedUser.id)) {
-      throw new BadRequestException({
-        message: "You can't leave a board where you are the only admin. You can delete the board.",
-      })
-    }
-    board.members = board.members.filter((member) => member.id !== authorizedUser.id)
-    return this.boardsRepository.save(board)
-  }
+  // async leave({
+  //   authorizedUser,
+  //   boardId,
+  // }: {
+  //   authorizedUser: UserEntity
+  //   boardId: BoardEntity["id"]
+  // }): Promise<BoardEntity> {
+  //   const board = await this.find({ boardId })
+  //   if (board.members.every((member) => member.id !== authorizedUser.id)) {
+  //     throw new BadRequestException({ message: "You can't leave this board because you are not it's member." })
+  //   }
+  //   if (board.admins.length === 1 && board.admins.every((admin) => admin.id === authorizedUser.id)) {
+  //     throw new BadRequestException({
+  //       message: "You can't leave a board where you are the only admin. You can delete the board.",
+  //     })
+  //   }
+  //   board.members = board.members.filter((member) => member.id !== authorizedUser.id)
+  //   return this.boardsRepository.save(board)
+  // }
 }

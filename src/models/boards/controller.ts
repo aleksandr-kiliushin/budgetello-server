@@ -59,14 +59,20 @@ export class BoardsController {
     })
   }
 
-  @Delete(":id/participating")
+  @Post(":boardId/remove-member/:candidateForRemovingId")
   leave(
-    @Param("id")
+    @Param("boardId")
     boardId: string,
+    @Param("candidateForRemovingId")
+    candidateForRemovingId: string,
     @AuthorizedUser()
     authorizedUser: UserEntity
   ) {
-    return this.boardsService.leave({ authorizedUser, boardId: parseInt(boardId) })
+    return this.boardsService.removeMember({
+      authorizedUser,
+      boardId: parseInt(boardId),
+      candidateForRemovingId: parseInt(candidateForRemovingId),
+    })
   }
 
   @Patch(":id")

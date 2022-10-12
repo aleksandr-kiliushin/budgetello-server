@@ -43,7 +43,7 @@ describe("Participating in a board", () => {
     })
   })
 
-  describe("Board leaving", () => {
+  describe("Remove user from a board", () => {
     test.each<{
       authorizedUserUsername: ITestUserUsername
       responseBody: Record<string, unknown>
@@ -52,33 +52,37 @@ describe("Participating in a board", () => {
     }>([
       {
         authorizedUserUsername: users.johnDoe.username,
-        responseBody: { message: "You can't leave this board because you are not it's member." },
-        status: 400,
-        url: `/api/boards/${boards.beautifulSportsmen.id}/participating`,
+        responseBody: { message: "The user can't be removed from this board because you are the only admin." },
+        status: 403,
+        url: `/api/boards/${boards.productivePeople.id}/remove-member/${users.johnDoe.id}`,
+      },
+      {
+        authorizedUserUsername: users.johnDoe.username,
+        responseBody: { message: "Access denied." },
+        status: 403,
+        url: `/api/boards/${boards.beautifulSportsmen.id}/remove-member/${users.jessicaStark.id}`,
       },
       {
         authorizedUserUsername: users.jessicaStark.username,
-        responseBody: {
-          message: "You can't leave a board where you are the only admin. You can delete the board.",
-        },
-        status: 400,
-        url: `/api/boards/${boards.beautifulSportsmen.id}/participating`,
+        responseBody: { message: "Access denied." },
+        status: 403,
+        url: `/api/boards/${boards.productivePeople.id}/remove-member/${users.johnDoe.id}`,
       },
       {
-        authorizedUserUsername: users.jessicaStark.username,
+        authorizedUserUsername: users.johnDoe.username,
         responseBody: {
           admins: [users.johnDoe],
-          id: boards.cleverBudgetiers.id,
+          id: boards.productivePeople.id,
           members: [users.johnDoe],
-          name: boards.cleverBudgetiers.name,
-          subject: boardsSubjects.budget,
+          name: boards.productivePeople.name,
+          subject: boardsSubjects.activities,
         },
-        status: 200,
-        url: `/api/boards/${boards.cleverBudgetiers.id}/participating`,
+        status: 201,
+        url: `/api/boards/${boards.productivePeople.id}/remove-member/${users.jessicaStark.id}`,
       },
     ])("case #%#", async ({ authorizedUserUsername, responseBody, status, url }) => {
       await authorize(authorizedUserUsername)
-      const response = await fetchApi(url, { method: "DELETE" })
+      const response = await fetchApi(url, { method: "POST" })
       expect(response.status).toEqual(status)
       expect(await response.json()).toEqual(responseBody)
     })
