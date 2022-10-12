@@ -52,7 +52,7 @@ describe("Participating in a board", () => {
     }>([
       {
         authorizedUserUsername: users.johnDoe.username,
-        responseBody: { message: "The user can't be removed from this board because you are the only admin." },
+        responseBody: { message: "The user can't be removed from this board because they are the only admin." },
         status: 403,
         url: `/api/boards/${boards.productivePeople.id}/remove-member/${users.johnDoe.id}`,
       },

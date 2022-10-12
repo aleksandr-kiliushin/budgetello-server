@@ -221,7 +221,7 @@ export class BoardsService {
     const board = await this.find({ boardId })
     if (board.admins.every((admin) => admin.id === candidateForRemovingId)) {
       throw new ForbiddenException({
-        message: "The user can't be removed from this board because you are the only admin.",
+        message: "The user can't be removed from this board because they are the only admin.",
       })
     }
     const candidateToBeRemoved = await this.userService.find({
