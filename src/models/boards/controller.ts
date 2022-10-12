@@ -43,14 +43,20 @@ export class BoardsController {
     return this.boardsService.create({ authorizedUser, requestBody })
   }
 
-  @Post(":id/participating")
-  join(
-    @Param("id")
+  @Post(":boardId/add-member/:candidateForMembershipId")
+  addMember(
+    @Param("boardId")
     boardId: string,
+    @Param("candidateForMembershipId")
+    candidateForMembershipId: string,
     @AuthorizedUser()
     authorizedUser: UserEntity
   ) {
-    return this.boardsService.join({ authorizedUser, boardId: parseInt(boardId) })
+    return this.boardsService.addMember({
+      authorizedUser,
+      boardId: parseInt(boardId),
+      candidateForMembershipId: parseInt(candidateForMembershipId),
+    })
   }
 
   @Delete(":id/participating")

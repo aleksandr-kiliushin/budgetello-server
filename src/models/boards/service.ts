@@ -4,6 +4,7 @@ import { In, Like, Repository } from "typeorm"
 
 import { BoardSubjectsService } from "#models/board-subjects/service"
 import { UserEntity } from "#models/user/entities/user.entity"
+import { UserService } from "#models/user/service"
 
 import { CreateBoardDto } from "./dto/create-board.dto"
 import { SearchBoardsQueryDto } from "./dto/search-boards-query.dto"
@@ -15,7 +16,8 @@ export class BoardsService {
   constructor(
     @InjectRepository(BoardEntity)
     private boardsRepository: Repository<BoardEntity>,
-    private boardSubjectsService: BoardSubjectsService
+    private boardSubjectsService: BoardSubjectsService,
+    private userService: UserService
   ) {}
 
   async search({
@@ -179,21 +181,46 @@ export class BoardsService {
     return board
   }
 
-  async join({
+  async addMember({
     authorizedUser,
     boardId,
+    candidateForMembershipId,
   }: {
     authorizedUser: UserEntity
     boardId: BoardEntity["id"]
+    candidateForMembershipId: UserEntity["id"]
   }): Promise<BoardEntity> {
-    const board = await this.find({ boardId })
-    if (board.members.some((member) => member.id === authorizedUser.id)) {
-      throw new BadRequestException({ message: "You are already a member of this board." })
+    if (authorizedUser.administratedBoards.every((board) => board.id !== boardId)) {
+      throw new ForbiddenException({ message: "Access denied." })
     }
-    board.members = [...board.members, authorizedUser]
+    const candidateToMembers = await this.userService.find({
+      userId: candidateForMembershipId,
+      relations: { boards: true },
+    })
+    if (candidateToMembers.boards.some((board) => board.id === boardId)) {
+      throw new BadRequestException({ message: "The user is already a member of the board." })
+    }
+    const board = await this.find({ boardId })
+    board.members = [...board.members, candidateToMembers]
     await this.boardsRepository.save(board)
     return await this.find({ boardId })
   }
+
+  // async join({
+  //   authorizedUser,
+  //   boardId,
+  // }: {
+  //   authorizedUser: UserEntity
+  //   boardId: BoardEntity["id"]
+  // }): Promise<BoardEntity> {
+  //   const board = await this.find({ boardId })
+  //   if (board.members.some((member) => member.id === authorizedUser.id)) {
+  //     throw new BadRequestException({ message: "You are already a member of this board." })
+  //   }
+  //   board.members = [...board.members, authorizedUser]
+  //   await this.boardsRepository.save(board)
+  //   return await this.find({ boardId })
+  // }
 
   async leave({
     authorizedUser,
