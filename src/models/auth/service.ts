@@ -5,18 +5,18 @@ import { UserService } from "#models/user/service"
 
 import { encrypt } from "#utils/crypto"
 
-import { LoginDto } from "./dto/login.dto"
+import { AuthorizeDto } from "./dto/authorize.dto"
 
 @Injectable()
 export class AuthService {
   constructor(private readonly userService: UserService) {}
 
-  async createToken(loginDto: LoginDto): Promise<{ authToken: string }> {
-    const user = await this.userService.find({ userUsername: loginDto.username }).catch(() => {
+  async createToken({ requestBody }: { requestBody: AuthorizeDto }): Promise<{ authToken: string }> {
+    const user = await this.userService.find({ userUsername: requestBody.username }).catch(() => {
       throw new BadRequestException({ fields: { username: "User not found." } })
     })
 
-    const hashedPassword = encrypt(loginDto.password)
+    const hashedPassword = encrypt(requestBody.password)
     const isPasswordValid = hashedPassword === user.password
 
     if (!isPasswordValid) throw new BadRequestException({ fields: { password: "Invalid password." } })

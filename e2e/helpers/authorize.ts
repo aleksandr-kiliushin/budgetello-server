@@ -7,7 +7,7 @@ export type ITestUserUsername = keyof typeof passwordByUsername
 
 export const authorize = async (username: ITestUserUsername): Promise<void> => {
   const password = passwordByUsername[username]
-  const authorizationResponse = await fetch("http://localhost:3080/api/login", {
+  const authorizationResponse = await fetch("http://localhost:3080/api/authorize", {
     body: JSON.stringify({ username, password }),
     headers: { "Content-Type": "application/json" },
     method: "POST",

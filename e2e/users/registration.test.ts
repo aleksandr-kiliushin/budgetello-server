@@ -50,12 +50,12 @@ describe("Registered user data and functions", () => {
       method: "POST",
     })
     const registerUserResponseData = await registerUserResponse.json()
-    const newlyRegisteredUserLoginResponse = await fetch("http://localhost:3080/api/login", {
+    const newlyRegisteredUserAuthResponse = await fetch("http://localhost:3080/api/authorize", {
       body: JSON.stringify({ username: "andrew-smith", password: "andrew-smith-password" }),
       headers: { "Content-Type": "application/json" },
       method: "POST",
     })
-    const { authToken } = await newlyRegisteredUserLoginResponse.json()
+    const { authToken } = await newlyRegisteredUserAuthResponse.json()
     newlyRegisteredUser = {
       id: registerUserResponseData.id,
       username: registerUserResponseData.username,

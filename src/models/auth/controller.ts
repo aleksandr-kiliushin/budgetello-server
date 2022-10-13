@@ -1,20 +1,19 @@
 import { Body, Controller, Post } from "@nestjs/common"
 
-import { JoiValidationPipe } from "#helpers/JoiValidationSchema"
+import { ValidationPipe } from "#helpers/validator.pipe"
 
-import { LoginDto } from "./dto/login.dto"
+import { AuthorizeDto } from "./dto/authorize.dto"
 import { AuthService } from "./service"
-import { authorizeValidator } from "./validators/authorize.validator"
 
-@Controller("login")
+@Controller("authorize")
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
   @Post()
-  async login(
-    @Body(new JoiValidationPipe(authorizeValidator))
-    loginDto: LoginDto
+  async authorize(
+    @Body(new ValidationPipe())
+    requestBody: AuthorizeDto
   ) {
-    return this.authService.createToken(loginDto)
+    return this.authService.createToken({ requestBody })
   }
 }

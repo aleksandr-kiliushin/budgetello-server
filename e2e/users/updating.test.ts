@@ -34,32 +34,32 @@ describe("User updating", () => {
     })
   })
 
-  it("user cannot login with the old credentials", async () => {
+  it("user cannot auth with the old credentials", async () => {
     await fetchApi(`/api/users/${users.johnDoe.id}`, {
       body: JSON.stringify({ username: "john-doe-is-cool", password: "john-doe-new-password" }),
       method: "PATCH",
     })
-    const loginWithTheOldCredentialsResponse = await fetch("http://localhost:3080/api/login", {
+    const authWithTheOldCredentialsResponse = await fetch("http://localhost:3080/api/auth", {
       body: JSON.stringify({ username: "john-doe", password: "john-doe-password" }),
       headers: { "Content-Type": "application/json" },
       method: "POST",
     })
-    expect(loginWithTheOldCredentialsResponse.status).toEqual(400)
-    expect(await loginWithTheOldCredentialsResponse.json()).toEqual({ fields: { username: "User not found." } })
+    expect(authWithTheOldCredentialsResponse.status).toEqual(400)
+    expect(await authWithTheOldCredentialsResponse.json()).toEqual({ fields: { username: "User not found." } })
   })
 
-  it("user can login with the new credentials", async () => {
+  it("user can auth with the new credentials", async () => {
     await fetchApi(`/api/users/${users.johnDoe.id}`, {
       body: JSON.stringify({ username: "john-doe-is-cool", password: "john-doe-new-password" }),
       method: "PATCH",
     })
-    const loginWithTheNewCredentialsResponse = await fetch("http://localhost:3080/api/login", {
+    const authWithTheNewCredentialsResponse = await fetch("http://localhost:3080/api/auth", {
       body: JSON.stringify({ username: "john-doe-is-cool", password: "john-doe-new-password" }),
       headers: { "Content-Type": "application/json" },
       method: "POST",
     })
-    expect(loginWithTheNewCredentialsResponse.status).toEqual(201)
-    expect(await loginWithTheNewCredentialsResponse.json()).toEqual({
+    expect(authWithTheNewCredentialsResponse.status).toEqual(201)
+    expect(await authWithTheNewCredentialsResponse.json()).toEqual({
       authToken: expect.stringMatching(".+"),
     })
   })
@@ -69,13 +69,13 @@ describe("User updating", () => {
       body: JSON.stringify({ username: "john-doe-is-cool", password: "john-doe-new-password" }),
       method: "PATCH",
     })
-    const loginWithTheNewCredentialsResponse = await fetch("http://localhost:3080/api/login", {
+    const authWithTheNewCredentialsResponse = await fetch("http://localhost:3080/api/auth", {
       body: JSON.stringify({ username: "john-doe-is-cool", password: "john-doe-new-password" }),
       headers: { "Content-Type": "application/json" },
       method: "POST",
     })
     const fetchAllUsersResponse = await fetch("http://localhost:3080/api/users/search", {
-      headers: { Authorization: (await loginWithTheNewCredentialsResponse.json()).authToken },
+      headers: { Authorization: (await authWithTheNewCredentialsResponse.json()).authToken },
     })
     expect(fetchAllUsersResponse.status).toEqual(200)
     const allUsers = await fetchAllUsersResponse.json()
