@@ -4,6 +4,22 @@ import { users } from "#e2e/constants/users"
 
 describe("User registration process", () => {
   it("can register and get correct data response after registration", async () => {
+    const response = await fetch("http://localhost:3080/api/users", {
+      body: JSON.stringify({ username: "" }),
+      headers: { "Content-Type": "application/json" },
+      method: "POST",
+    })
+
+    expect(response.status).toEqual(400)
+    expect(await response.json()).toEqual({
+      fields: {
+        username: '"Username" is not allowed to be empty',
+        password: '"Password" is required',
+      },
+    })
+  })
+
+  it("can register and get correct data response after registration", async () => {
     const registerUserResponse = await fetch("http://localhost:3080/api/users", {
       body: JSON.stringify({ username: "andrew-smith", password: "andrew-smith-password" }),
       headers: { "Content-Type": "application/json" },

@@ -62,8 +62,8 @@ export class UserService {
     })
   }
 
-  async create(createUserInput: CreateUserDto): Promise<UserEntity> {
-    const { password, username } = createUserInput
+  async create({ payload }: { payload: CreateUserDto }): Promise<UserEntity> {
+    const { password, username } = payload
     const hashedPassword = encrypt(password)
     const user = this.userRepository.create({ password: hashedPassword, username })
     return this.userRepository.save(user)
