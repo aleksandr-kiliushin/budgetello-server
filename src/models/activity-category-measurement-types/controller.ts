@@ -1,4 +1,4 @@
-import { Controller, Get, Param, UseGuards } from "@nestjs/common"
+import { Controller, Get, Param, ParseIntPipe, UseGuards } from "@nestjs/common"
 
 import { AuthGuard } from "#models/auth/guard"
 
@@ -14,13 +14,11 @@ export class ActivityCategoryMeasurementTypesController {
     return this.activityCategoryMeasurementTypeService.getAll()
   }
 
-  @Get(":id")
+  @Get(":typeId")
   find(
-    @Param("id")
-    measurementTypeId: string
+    @Param("typeId", ParseIntPipe)
+    typeId: number
   ) {
-    return this.activityCategoryMeasurementTypeService.find({
-      measurementTypeId: parseInt(measurementTypeId),
-    })
+    return this.activityCategoryMeasurementTypeService.find({ typeId })
   }
 }

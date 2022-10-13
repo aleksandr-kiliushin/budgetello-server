@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Param, Patch, Post, Query, UseGuards } from "@nestjs/common"
+import { Body, Controller, Delete, Get, Param, ParseIntPipe, Patch, Post, Query, UseGuards } from "@nestjs/common"
 
 import { AuthGuard } from "#models/auth/guard"
 import { UserEntity } from "#models/user/entities/user.entity"
@@ -25,14 +25,14 @@ export class ActivityCategoriesController {
     return this.activityCategoriesService.search({ authorizedUser, query })
   }
 
-  @Get(":id")
+  @Get(":categoryId")
   find(
-    @Param("id")
-    categoryId: string,
+    @Param("categoryId", ParseIntPipe)
+    categoryId: number,
     @AuthorizedUser()
     authorizedUser: UserEntity
   ) {
-    return this.activityCategoriesService.find({ authorizedUser, categoryId: parseInt(categoryId) })
+    return this.activityCategoriesService.find({ authorizedUser, categoryId })
   }
 
   @Post()
@@ -45,29 +45,25 @@ export class ActivityCategoriesController {
     return this.activityCategoriesService.create({ authorizedUser, requestBody })
   }
 
-  @Patch(":id")
+  @Patch(":categoryId")
   update(
-    @Param("id")
-    categoryId: string,
+    @Param("categoryId", ParseIntPipe)
+    categoryId: number,
     @Body()
     requestBody: UpdateActivityCategoryDto,
     @AuthorizedUser()
     authorizedUser: UserEntity
   ) {
-    return this.activityCategoriesService.update({
-      authorizedUser,
-      categoryId: parseInt(categoryId),
-      requestBody,
-    })
+    return this.activityCategoriesService.update({ authorizedUser, categoryId, requestBody })
   }
 
-  @Delete(":id")
+  @Delete(":categoryId")
   delete(
-    @Param("id")
-    categoryId: string,
+    @Param("categoryId", ParseIntPipe)
+    categoryId: number,
     @AuthorizedUser()
     authorizedUser: UserEntity
   ) {
-    return this.activityCategoriesService.delete({ authorizedUser, categoryId: parseInt(categoryId) })
+    return this.activityCategoriesService.delete({ authorizedUser, categoryId })
   }
 }

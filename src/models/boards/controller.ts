@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Param, Patch, Post, Query, UseGuards } from "@nestjs/common"
+import { Body, Controller, Delete, Get, Param, ParseIntPipe, Patch, Post, Query, UseGuards } from "@nestjs/common"
 
 import { AuthGuard } from "#models/auth/guard"
 import { UserEntity } from "#models/user/entities/user.entity"
@@ -25,12 +25,12 @@ export class BoardsController {
     return this.boardsService.search({ authorizedUser, query })
   }
 
-  @Get(":id")
+  @Get(":boardId")
   find(
-    @Param("id")
-    boardId: string
+    @Param("boardId", ParseIntPipe)
+    boardId: number
   ) {
-    return this.boardsService.find({ boardId: parseInt(boardId) })
+    return this.boardsService.find({ boardId })
   }
 
   @Post()
@@ -45,55 +45,47 @@ export class BoardsController {
 
   @Post(":boardId/add-member/:candidateForMembershipId")
   addMember(
-    @Param("boardId")
-    boardId: string,
-    @Param("candidateForMembershipId")
-    candidateForMembershipId: string,
+    @Param("boardId", ParseIntPipe)
+    boardId: number,
+    @Param("candidateForMembershipId", ParseIntPipe)
+    candidateForMembershipId: number,
     @AuthorizedUser()
     authorizedUser: UserEntity
   ) {
-    return this.boardsService.addMember({
-      authorizedUser,
-      boardId: parseInt(boardId),
-      candidateForMembershipId: parseInt(candidateForMembershipId),
-    })
+    return this.boardsService.addMember({ authorizedUser, boardId, candidateForMembershipId })
   }
 
   @Post(":boardId/remove-member/:candidateForRemovingId")
   leave(
-    @Param("boardId")
-    boardId: string,
-    @Param("candidateForRemovingId")
-    candidateForRemovingId: string,
+    @Param("boardId", ParseIntPipe)
+    boardId: number,
+    @Param("candidateForRemovingId", ParseIntPipe)
+    candidateForRemovingId: number,
     @AuthorizedUser()
     authorizedUser: UserEntity
   ) {
-    return this.boardsService.removeMember({
-      authorizedUser,
-      boardId: parseInt(boardId),
-      candidateForRemovingId: parseInt(candidateForRemovingId),
-    })
+    return this.boardsService.removeMember({ authorizedUser, boardId, candidateForRemovingId })
   }
 
-  @Patch(":id")
+  @Patch(":boardId")
   update(
-    @Param("id")
-    boardId: string,
+    @Param("boardId", ParseIntPipe)
+    boardId: number,
     @Body()
     requestBody: UpdateBoardDto,
     @AuthorizedUser()
     authorizedUser: UserEntity
   ) {
-    return this.boardsService.update({ authorizedUser, boardId: parseInt(boardId), requestBody })
+    return this.boardsService.update({ authorizedUser, boardId, requestBody })
   }
 
-  @Delete(":id")
+  @Delete(":boardId")
   delete(
-    @Param("id")
-    boardId: string,
+    @Param("boardId", ParseIntPipe)
+    boardId: number,
     @AuthorizedUser()
     authorizedUser: UserEntity
   ) {
-    return this.boardsService.delete({ authorizedUser, boardId: parseInt(boardId) })
+    return this.boardsService.delete({ authorizedUser, boardId })
   }
 }

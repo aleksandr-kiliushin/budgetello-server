@@ -1,4 +1,4 @@
-import { Controller, Get, Param, UseGuards } from "@nestjs/common"
+import { Controller, Get, Param, ParseIntPipe, UseGuards } from "@nestjs/common"
 
 import { AuthGuard } from "#models/auth/guard"
 
@@ -14,11 +14,11 @@ export class BoardSubjectsController {
     return this.boardSubjectsService.getAll()
   }
 
-  @Get(":id")
+  @Get(":subjectId")
   find(
-    @Param("id")
-    boardSubjectId: string
+    @Param("subjectId", ParseIntPipe)
+    subjectId: number
   ) {
-    return this.boardSubjectsService.find({ boardSubjectId: parseInt(boardSubjectId) })
+    return this.boardSubjectsService.find({ subjectId })
   }
 }

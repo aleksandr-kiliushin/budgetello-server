@@ -97,7 +97,7 @@ export class BoardsService {
     if (requestBody.subjectId === undefined) {
       throw new BadRequestException({ fields: { subjectId: "Required field." } })
     }
-    const subject = await this.boardSubjectsService.find({ boardSubjectId: requestBody.subjectId }).catch(() => {
+    const subject = await this.boardSubjectsService.find({ subjectId: requestBody.subjectId }).catch(() => {
       throw new BadRequestException({ fields: { subjectId: "Invalid subject." } })
     })
     const similarExistingBoard = await this.boardsRepository.findOne({
@@ -146,7 +146,7 @@ export class BoardsService {
     }
     if (requestBody.subjectId !== undefined) {
       try {
-        board.subject = await this.boardSubjectsService.find({ boardSubjectId: requestBody.subjectId })
+        board.subject = await this.boardSubjectsService.find({ subjectId: requestBody.subjectId })
       } catch {
         throw new BadRequestException({ fields: { subjectId: "Invalid board subject." } })
       }

@@ -115,7 +115,7 @@ export class ActivityCategoriesService {
       })
     }
     const measurementType = await this.activityCategoryMeasurementTypesService
-      .find({ measurementTypeId: requestBody.measurementTypeId })
+      .find({ typeId: requestBody.measurementTypeId })
       .catch(() => {
         throw new BadRequestException({ fields: { measurementTypeId: "Invalid value." } })
       })
@@ -186,7 +186,7 @@ export class ActivityCategoriesService {
     if (requestBody.measurementTypeId !== undefined) {
       try {
         category.measurementType = await this.activityCategoryMeasurementTypesService.find({
-          measurementTypeId: requestBody.measurementTypeId,
+          typeId: requestBody.measurementTypeId,
         })
       } catch {
         throw new BadRequestException({ fields: { measurementTypeId: "Invalid value." } })

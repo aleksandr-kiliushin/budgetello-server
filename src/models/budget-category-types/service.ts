@@ -15,7 +15,7 @@ export class BudgetCategoryTypesService {
     return this.budgetCategoryTypeRepository.find()
   }
 
-  find({ categoryTypeId }: { categoryTypeId: BudgetCategoryTypeEntity["id"] }): Promise<BudgetCategoryTypeEntity> {
-    return this.budgetCategoryTypeRepository.findOneOrFail({ where: { id: categoryTypeId } })
+  find({ typeId }: { typeId: BudgetCategoryTypeEntity["id"] }): Promise<BudgetCategoryTypeEntity> {
+    return this.budgetCategoryTypeRepository.findOneOrFail({ where: { id: typeId } })
   }
 }

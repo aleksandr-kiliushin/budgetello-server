@@ -69,20 +69,13 @@ export class UserService {
     return this.userRepository.save(user)
   }
 
-  async update({
-    updateUserDto,
-    userId,
-  }: {
-    updateUserDto: UpdateUserDto
-    userId: UserEntity["id"]
-  }): Promise<UserEntity> {
-    const { password, username } = updateUserDto
+  async update({ payload, userId }: { payload: UpdateUserDto; userId: UserEntity["id"] }): Promise<UserEntity> {
     const newUserData = { ...(await this.find({ userId })) }
-    if (username !== undefined) {
-      newUserData.username = username
+    if (payload.username !== undefined) {
+      newUserData.username = payload.username
     }
-    if (password !== undefined && password !== "") {
-      newUserData.password = encrypt(password)
+    if (payload.password !== undefined && payload.password !== "") {
+      newUserData.password = encrypt(payload.password)
     }
     return this.userRepository.save(newUserData)
   }

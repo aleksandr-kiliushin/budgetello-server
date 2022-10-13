@@ -1,4 +1,4 @@
-import { Controller, Get, Param, UseGuards } from "@nestjs/common"
+import { Controller, Get, Param, ParseIntPipe, UseGuards } from "@nestjs/common"
 
 import { AuthGuard } from "#models/auth/guard"
 
@@ -14,11 +14,11 @@ export class BudgetCategoryTypesController {
     return this.budgetCategoryTypesService.getAll()
   }
 
-  @Get(":id")
+  @Get(":typeId")
   find(
-    @Param("id")
-    categoryTypeId: string
+    @Param("typeId", ParseIntPipe)
+    typeId: number
   ) {
-    return this.budgetCategoryTypesService.find({ categoryTypeId: parseInt(categoryTypeId) })
+    return this.budgetCategoryTypesService.find({ typeId })
   }
 }

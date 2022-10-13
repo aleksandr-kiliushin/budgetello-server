@@ -91,7 +91,7 @@ export class BudgetCategoriesService {
     if (requestBody.boardId === undefined) {
       throw new BadRequestException({ fields: { boardId: "Required field." } })
     }
-    const type = await this.budgetCategoryTypesService.find({ categoryTypeId: requestBody.typeId }).catch(() => {
+    const type = await this.budgetCategoryTypesService.find({ typeId: requestBody.typeId }).catch(() => {
       throw new BadRequestException({ fields: { typeId: "Invalid value." } })
     })
     const board = await this.boardsService.find({ boardId: requestBody.boardId }).catch(() => {
@@ -140,7 +140,7 @@ export class BudgetCategoriesService {
     }
     if (requestBody.typeId !== undefined) {
       try {
-        category.type = await this.budgetCategoryTypesService.find({ categoryTypeId: requestBody.typeId })
+        category.type = await this.budgetCategoryTypesService.find({ typeId: requestBody.typeId })
       } catch {
         throw new BadRequestException({ fields: { typeId: "Invalid value." } })
       }

@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Param, Patch, Post, Query, UseGuards } from "@nestjs/common"
+import { Body, Controller, Delete, Get, Param, ParseIntPipe, Patch, Post, Query, UseGuards } from "@nestjs/common"
 
 import { AuthGuard } from "#models/auth/guard"
 import { UserEntity } from "#models/user/entities/user.entity"
@@ -25,14 +25,14 @@ export class BudgetRecordsController {
     return this.budgetRecordsService.search({ authorizedUser, query })
   }
 
-  @Get(":id")
+  @Get(":recordId")
   find(
-    @Param("id")
-    recordId: string,
+    @Param("recordId", ParseIntPipe)
+    recordId: number,
     @AuthorizedUser()
     authorizedUser: UserEntity
   ) {
-    return this.budgetRecordsService.find({ authorizedUser, recordId: parseInt(recordId) })
+    return this.budgetRecordsService.find({ authorizedUser, recordId })
   }
 
   @Post()
@@ -45,29 +45,25 @@ export class BudgetRecordsController {
     return this.budgetRecordsService.create({ authorizedUser, requestBody })
   }
 
-  @Patch(":id")
+  @Patch(":recordId")
   update(
-    @Param("id")
-    recordId: string,
+    @Param("recordId", ParseIntPipe)
+    recordId: number,
     @Body()
     requestBody: UpdateBudgetRecordDto,
     @AuthorizedUser()
     authorizedUser: UserEntity
   ) {
-    return this.budgetRecordsService.update({
-      authorizedUser,
-      recordId: parseInt(recordId),
-      requestBody,
-    })
+    return this.budgetRecordsService.update({ authorizedUser, recordId, requestBody })
   }
 
-  @Delete(":id")
+  @Delete(":recordId")
   delete(
-    @Param("id")
-    recordId: string,
+    @Param("recordId", ParseIntPipe)
+    recordId: number,
     @AuthorizedUser()
     authorizedUser: UserEntity
   ) {
-    return this.budgetRecordsService.delete({ authorizedUser, recordId: parseInt(recordId) })
+    return this.budgetRecordsService.delete({ authorizedUser, recordId })
   }
 }

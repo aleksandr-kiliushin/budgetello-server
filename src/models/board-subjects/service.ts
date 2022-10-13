@@ -15,7 +15,7 @@ export class BoardSubjectsService {
     return this.boardSubjectsRepository.find()
   }
 
-  find({ boardSubjectId }: { boardSubjectId: BoardSubjectEntity["id"] }): Promise<BoardSubjectEntity> {
-    return this.boardSubjectsRepository.findOneOrFail({ where: { id: boardSubjectId } })
+  find({ subjectId }: { subjectId: BoardSubjectEntity["id"] }): Promise<BoardSubjectEntity> {
+    return this.boardSubjectsRepository.findOneOrFail({ where: { id: subjectId } })
   }
 }

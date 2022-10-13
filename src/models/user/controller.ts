@@ -1,4 +1,16 @@
-import { Body, Controller, Delete, ForbiddenException, Get, Param, Patch, Post, Query, UseGuards } from "@nestjs/common"
+import {
+  Body,
+  Controller,
+  Delete,
+  ForbiddenException,
+  Get,
+  Param,
+  ParseIntPipe,
+  Patch,
+  Post,
+  Query,
+  UseGuards,
+} from "@nestjs/common"
 
 import { AuthGuard } from "#models/auth/guard"
 
@@ -44,21 +56,20 @@ export class UserController {
     return this.userService.create(createUserDto)
   }
 
-  @Patch(":id")
+  @Patch(":userId")
   @UseGuards(AuthGuard)
   update(
-    @Param("id")
-    id: string,
+    @Param("userId", ParseIntPipe)
+    userId: number,
     @Body()
-    updateUserDto: UpdateUserDto,
+    payload: UpdateUserDto,
     @AuthorizedUser()
     authorizedUser: UserEntity
   ) {
-    const userToBeUpdatedId = parseInt(id)
-    if (authorizedUser.id !== userToBeUpdatedId) {
+    if (authorizedUser.id !== userId) {
       throw new ForbiddenException({ message: "You are not allowed to update another user." })
     }
-    return this.userService.update({ userId: userToBeUpdatedId, updateUserDto })
+    return this.userService.update({ userId, payload })
   }
 
   @Delete(":id")

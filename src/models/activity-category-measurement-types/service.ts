@@ -16,12 +16,12 @@ export class ActivityCategoryMeasurementTypesService {
   }
 
   find({
-    measurementTypeId,
+    typeId,
   }: {
-    measurementTypeId: ActivityCategoryMeasurementTypeEntity["id"]
+    typeId: ActivityCategoryMeasurementTypeEntity["id"]
   }): Promise<ActivityCategoryMeasurementTypeEntity> {
     return this.activityCategoryMeasurementTypesRepository.findOneOrFail({
-      where: { id: measurementTypeId },
+      where: { id: typeId },
     })
   }
 }
