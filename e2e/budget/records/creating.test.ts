@@ -31,7 +31,7 @@ describe("Budget record creating", () => {
       response: {
         fields: {
           amount: "Should be positive.",
-          date: "Should have format YYYY-MM-DD",
+          date: "Should have format YYYY-MM-DD.",
         },
       },
       status: 400,

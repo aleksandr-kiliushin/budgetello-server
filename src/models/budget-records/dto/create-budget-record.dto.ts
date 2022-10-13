@@ -4,7 +4,7 @@ import { IsDefined, IsInt, IsNotEmpty, IsPositive, IsString, Matches } from "cla
 import { IBudgetCategory, IBudgetRecord } from "#interfaces/budget"
 
 export class CreateBudgetRecordDto {
-  @IsDefined()
+  @IsDefined({ message: ValidationError.REQUIRED })
   @IsPositive({ message: "Should be positive." })
   amount: IBudgetRecord["amount"]
 
