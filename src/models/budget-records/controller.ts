@@ -4,11 +4,13 @@ import { AuthGuard } from "#models/auth/guard"
 import { UserEntity } from "#models/user/entities/user.entity"
 
 import { AuthorizedUser } from "#helpers/AuthorizedUser.decorator"
+import { JoiValidationPipe } from "#helpers/JoiValidationSchema"
 
 import { CreateBudgetRecordDto } from "./dto/create-budget-record.dto"
 import { SearchBudgetRecordsQueryDto } from "./dto/search-budget-records-query.dto"
 import { UpdateBudgetRecordDto } from "./dto/update-budget-record.dto"
 import { BudgetRecordsService } from "./service"
+import { createRecordValidator } from "./validators/create-record.validator"
 
 @Controller("budget/records")
 @UseGuards(AuthGuard)
@@ -37,7 +39,7 @@ export class BudgetRecordsController {
 
   @Post()
   create(
-    @Body()
+    @Body(new JoiValidationPipe(createRecordValidator))
     requestBody: CreateBudgetRecordDto,
     @AuthorizedUser()
     authorizedUser: UserEntity

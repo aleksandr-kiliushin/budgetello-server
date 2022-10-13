@@ -107,23 +107,11 @@ export class BudgetRecordsService {
     authorizedUser: UserEntity
     requestBody: CreateBudgetRecordDto
   }): Promise<BudgetRecordEntity> {
-    if (typeof requestBody.amount !== "number" || requestBody.amount <= 0) {
-      throw new BadRequestException({ fields: { amount: "Should be a positive number." } })
-    }
-    if (requestBody.date === undefined) {
-      throw new BadRequestException({ fields: { date: "Required field." } })
-    }
-    if (requestBody.categoryId === undefined) {
-      throw new BadRequestException({ fields: { categoryId: "Required field." } })
-    }
     const category = await this.budgetCategoriesService
       .find({ authorizedUser, categoryId: requestBody.categoryId })
       .catch(() => {
         throw new BadRequestException({ fields: { categoryId: "Invalid category." } })
       })
-    if (!/\d\d\d\d-\d\d-\d\d/.test(requestBody.date)) {
-      throw new BadRequestException({ fields: { date: "Should have format YYYY-MM-DD." } })
-    }
     const record = this.budgetRecordsRepository.create(requestBody)
     record.category = category
     return this.budgetRecordsRepository.save(record)
