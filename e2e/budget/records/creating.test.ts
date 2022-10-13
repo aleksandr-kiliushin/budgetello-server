@@ -19,9 +19,9 @@ describe("Budget record creating", () => {
       payload: {},
       response: {
         fields: {
-          amount: '"Amount" is required',
-          categoryId: '"Category" is required',
-          date: '"Date" is required',
+          amount: "Required.",
+          categoryId: "Required.",
+          date: "Required.",
         },
       },
       status: 400,
@@ -30,8 +30,8 @@ describe("Budget record creating", () => {
       payload: { amount: 0, categoryId: budgetCategories.clothesExpense.id, date: "2022/08/05" },
       response: {
         fields: {
-          amount: '"Amount" is too low',
-          date: '"Date" should have format YYYY-MM-DD',
+          amount: "Should be positive.",
+          date: "Should have format YYYY-MM-DD",
         },
       },
       status: 400,

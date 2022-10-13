@@ -19,7 +19,7 @@ export class CreateActivityRecordDto {
   @IsNotEmpty({ message: ValidationError.REQUIRED })
   @IsString()
   @Matches(/^\d\d\d\d-\d\d-\d\d$/, { message: "Should have format YYYY-MM-DD." })
-  date: string
+  date: IActivityRecord["date"]
 
   @IsNumber()
   @IsOptional()
