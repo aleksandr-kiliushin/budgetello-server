@@ -40,9 +40,9 @@ describe("Activity record creating", () => {
       payload: {},
       responseBody: {
         fields: {
-          categoryId: '"Category" is required',
-          date: '"Date" is required',
-          comment: '"Comment" is required',
+          categoryId: "Required.",
+          date: "Required.",
+          comment: "Required.",
         },
       },
       status: 400,
@@ -56,7 +56,7 @@ describe("Activity record creating", () => {
         date: "2022/08/10",
         quantitativeValue: 4.5,
       },
-      responseBody: { fields: { date: '"Date" should have format YYYY-MM-DD' } },
+      responseBody: { fields: { date: "Should have format YYYY-MM-DD." } },
       status: 400,
     },
     {

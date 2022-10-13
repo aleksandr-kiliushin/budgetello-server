@@ -15,8 +15,18 @@ export class ValidationPipe implements PipeTransform<unknown> {
 
     errors.forEach((error) => {
       if (error.constraints === undefined) return
-      const errorText = Object.values(error.constraints)[0]
-      responseBody.fields[error.property] = errorText
+
+      if ("isDefined" in error.constraints) {
+        responseBody.fields[error.property] = error.constraints["isDefined"]
+        return
+      }
+
+      if ("isNotEmpty" in error.constraints) {
+        responseBody.fields[error.property] = error.constraints["isNotEmpty"]
+        return
+      }
+
+      responseBody.fields[error.property] = Object.values(error.constraints)[0]
     })
 
     throw new BadRequestException(responseBody)
