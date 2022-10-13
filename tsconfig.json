@@ -23,6 +23,7 @@
     "strictPropertyInitialization": false,
     "sourceMap": true,
     "paths": {
+      "#constants/*": ["src/constants/*"],
       "#e2e/*": ["e2e/*"],
       "#helpers/*": ["src/helpers/*"],
       "#interfaces/*": ["src/interfaces/*"],

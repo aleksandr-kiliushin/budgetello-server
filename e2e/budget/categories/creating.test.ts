@@ -17,11 +17,7 @@ describe("Budget category creating", () => {
     {
       payload: { name: "" },
       response: {
-        fields: {
-          boardId: '"Board" is required',
-          name: '"Name" is not allowed to be empty',
-          typeId: '"Type" is required',
-        },
+        fields: { boardId: "Required.", name: "Required.", typeId: "Required." },
       },
       status: 400,
     },
