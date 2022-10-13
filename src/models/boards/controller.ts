@@ -4,13 +4,12 @@ import { AuthGuard } from "#models/auth/guard"
 import { UserEntity } from "#models/user/entities/user.entity"
 
 import { AuthorizedUser } from "#helpers/AuthorizedUser.decorator"
-import { JoiValidationPipe } from "#helpers/JoiValidationSchema"
+import { ValidationPipe } from "#helpers/validator.pipe"
 
 import { CreateBoardDto } from "./dto/create-board.dto"
 import { SearchBoardsQueryDto } from "./dto/search-boards-query.dto"
 import { UpdateBoardDto } from "./dto/update-board.dto"
 import { BoardsService } from "./service"
-import { createBoardValidator } from "./validators/create-board.validator"
 
 @Controller("boards")
 @UseGuards(AuthGuard)
@@ -37,7 +36,7 @@ export class BoardsController {
 
   @Post()
   create(
-    @Body(new JoiValidationPipe(createBoardValidator))
+    @Body(new ValidationPipe())
     requestBody: CreateBoardDto,
     @AuthorizedUser()
     authorizedUser: UserEntity

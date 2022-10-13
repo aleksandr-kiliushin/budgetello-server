@@ -19,8 +19,8 @@ describe("Board creating", () => {
       payload: { name: "" },
       response: {
         fields: {
-          name: '"Name" is not allowed to be empty',
-          subjectId: '"Subject" is required',
+          name: "Required.",
+          subjectId: "Required.",
         },
       },
       status: 400,
