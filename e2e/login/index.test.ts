@@ -1,4 +1,20 @@
 describe("Login", () => {
+  it("validates fields", async () => {
+    const response = await fetch("http://localhost:3080/api/login", {
+      body: JSON.stringify({ password: "" }),
+      headers: { "Content-Type": "application/json" },
+      method: "POST",
+    })
+
+    expect(response.status).toEqual(400)
+    expect(await response.json()).toEqual({
+      fields: {
+        username: '"Username" is required',
+        password: '"Password" is not allowed to be empty',
+      },
+    })
+  })
+
   it("responds that the user not found", async () => {
     const response = await fetch("http://localhost:3080/api/login", {
       body: JSON.stringify({ username: "nonexistent-username", password: "some-password" }),
