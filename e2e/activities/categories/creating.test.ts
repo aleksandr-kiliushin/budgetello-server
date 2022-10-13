@@ -1,4 +1,3 @@
-// import { IActivityCategory } from "#interfaces/activities"
 import { activityCategoryMeasurementTypes } from "#e2e/constants/activities"
 import { boards } from "#e2e/constants/boards"
 import { users } from "#e2e/constants/users"
