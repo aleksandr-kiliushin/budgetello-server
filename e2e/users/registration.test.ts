@@ -13,8 +13,8 @@ describe("User registration process", () => {
     expect(response.status).toEqual(400)
     expect(await response.json()).toEqual({
       fields: {
-        username: '"Username" is not allowed to be empty',
-        password: '"Password" is required',
+        username: "Required.",
+        password: "Required.",
       },
     })
   })

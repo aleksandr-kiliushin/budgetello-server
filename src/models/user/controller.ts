@@ -15,14 +15,13 @@ import {
 import { AuthGuard } from "#models/auth/guard"
 
 import { AuthorizedUser } from "#helpers/AuthorizedUser.decorator"
-import { JoiValidationPipe } from "#helpers/JoiValidationSchema"
+import { ValidationPipe } from "#helpers/validator.pipe"
 
 import { CreateUserDto } from "./dto/create-user.dto"
 import { FindUsersDto } from "./dto/find-users.dto"
 import { UpdateUserDto } from "./dto/update-user.dto"
 import { UserEntity } from "./entities/user.entity"
 import { UserService } from "./service"
-import { createUserValidator } from "./validators/create-user.validator"
 
 @Controller("users")
 export class UserController {
@@ -52,7 +51,7 @@ export class UserController {
 
   @Post()
   register(
-    @Body(new JoiValidationPipe(createUserValidator))
+    @Body(new ValidationPipe())
     requestBody: CreateUserDto
   ) {
     return this.userService.create({ requestBody })
