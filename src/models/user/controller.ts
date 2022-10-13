@@ -53,9 +53,9 @@ export class UserController {
   @Post()
   register(
     @Body(new JoiValidationPipe(createUserValidator))
-    payload: CreateUserDto
+    requestBody: CreateUserDto
   ) {
-    return this.userService.create({ payload })
+    return this.userService.create({ requestBody })
   }
 
   @Patch(":userId")
@@ -64,14 +64,14 @@ export class UserController {
     @Param("userId", ParseIntPipe)
     userId: number,
     @Body()
-    payload: UpdateUserDto,
+    requestBody: UpdateUserDto,
     @AuthorizedUser()
     authorizedUser: UserEntity
   ) {
     if (authorizedUser.id !== userId) {
       throw new ForbiddenException({ message: "You are not allowed to update another user." })
     }
-    return this.userService.update({ userId, payload })
+    return this.userService.update({ userId, requestBody })
   }
 
   @Delete(":id")

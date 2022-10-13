@@ -62,20 +62,20 @@ export class UserService {
     })
   }
 
-  async create({ payload }: { payload: CreateUserDto }): Promise<UserEntity> {
-    const { password, username } = payload
+  async create({ requestBody }: { requestBody: CreateUserDto }): Promise<UserEntity> {
+    const { password, username } = requestBody
     const hashedPassword = encrypt(password)
     const user = this.userRepository.create({ password: hashedPassword, username })
     return this.userRepository.save(user)
   }
 
-  async update({ payload, userId }: { payload: UpdateUserDto; userId: UserEntity["id"] }): Promise<UserEntity> {
+  async update({ requestBody, userId }: { requestBody: UpdateUserDto; userId: UserEntity["id"] }): Promise<UserEntity> {
     const newUserData = { ...(await this.find({ userId })) }
-    if (payload.username !== undefined) {
-      newUserData.username = payload.username
+    if (requestBody.username !== undefined) {
+      newUserData.username = requestBody.username
     }
-    if (payload.password !== undefined && payload.password !== "") {
-      newUserData.password = encrypt(payload.password)
+    if (requestBody.password !== undefined && requestBody.password !== "") {
+      newUserData.password = encrypt(requestBody.password)
     }
     return this.userRepository.save(newUserData)
   }

@@ -135,9 +135,7 @@ export class BoardsService {
     if (board.admins.every((admin) => admin.id !== authorizedUser.id)) {
       throw new ForbiddenException({ message: "You are not allowed to to this action." })
     }
-    if (requestBody.name === undefined && requestBody.subjectId === undefined) {
-      return board
-    }
+    if (Object.keys(requestBody).length === 0) return board
     if (requestBody.name !== undefined) {
       if (requestBody.name === "") {
         throw new BadRequestException({ fields: { name: "Name cannot be empty." } })
@@ -145,11 +143,9 @@ export class BoardsService {
       board.name = requestBody.name
     }
     if (requestBody.subjectId !== undefined) {
-      try {
-        board.subject = await this.boardSubjectsService.find({ subjectId: requestBody.subjectId })
-      } catch {
+      board.subject = await this.boardSubjectsService.find({ subjectId: requestBody.subjectId }).catch(() => {
         throw new BadRequestException({ fields: { subjectId: "Invalid board subject." } })
-      }
+      })
     }
     const similarExistingBoard = await this.boardsRepository.findOne({
       relations: { subject: true },
@@ -235,40 +231,4 @@ export class BoardsService {
     await this.boardsRepository.save(board)
     return await this.find({ boardId })
   }
-
-  // async join({
-  //   authorizedUser,
-  //   boardId,
-  // }: {
-  //   authorizedUser: UserEntity
-  //   boardId: BoardEntity["id"]
-  // }): Promise<BoardEntity> {
-  //   const board = await this.find({ boardId })
-  //   if (board.members.some((member) => member.id === authorizedUser.id)) {
-  //     throw new BadRequestException({ message: "You are already a member of this board." })
-  //   }
-  //   board.members = [...board.members, authorizedUser]
-  //   await this.boardsRepository.save(board)
-  //   return await this.find({ boardId })
-  // }
-
-  // async leave({
-  //   authorizedUser,
-  //   boardId,
-  // }: {
-  //   authorizedUser: UserEntity
-  //   boardId: BoardEntity["id"]
-  // }): Promise<BoardEntity> {
-  //   const board = await this.find({ boardId })
-  //   if (board.members.every((member) => member.id !== authorizedUser.id)) {
-  //     throw new BadRequestException({ message: "You can't leave this board because you are not it's member." })
-  //   }
-  //   if (board.admins.length === 1 && board.admins.every((admin) => admin.id === authorizedUser.id)) {
-  //     throw new BadRequestException({
-  //       message: "You can't leave a board where you are the only admin. You can delete the board.",
-  //     })
-  //   }
-  //   board.members = board.members.filter((member) => member.id !== authorizedUser.id)
-  //   return this.boardsRepository.save(board)
-  // }
 }
