@@ -4,13 +4,12 @@ import { AuthGuard } from "#models/auth/guard"
 import { UserEntity } from "#models/user/entities/user.entity"
 
 import { AuthorizedUser } from "#helpers/AuthorizedUser.decorator"
-import { JoiValidationPipe } from "#helpers/JoiValidationSchema"
+import { ValidationPipe } from "#helpers/validator.pipe"
 
 import { CreateBudgetCategoryDto } from "./dto/create-budget-category.dto"
 import { SearchBudgetCategoriesQueryDto } from "./dto/seach-budget-categories-query.dto"
 import { UpdateBudgetCategoryDto } from "./dto/update-budget-category.dto"
 import { BudgetCategoriesService } from "./service"
-import { createCategoryValidator } from "./validators/create-category.validator"
 
 @Controller("budget/categories")
 @UseGuards(AuthGuard)
@@ -39,7 +38,7 @@ export class BudgetCategoriesController {
 
   @Post()
   create(
-    @Body(new JoiValidationPipe(createCategoryValidator))
+    @Body(new ValidationPipe())
     requestBody: CreateBudgetCategoryDto,
     @AuthorizedUser()
     authorizedUser: UserEntity
