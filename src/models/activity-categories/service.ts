@@ -145,14 +145,8 @@ export class ActivityCategoriesService {
       throw new ForbiddenException({ message: "Access denied." })
     }
 
-    if (
-      requestBody.boardId === undefined &&
-      requestBody.measurementTypeId === undefined &&
-      requestBody.name === undefined &&
-      requestBody.unit === undefined
-    ) {
-      return category
-    }
+    if (Object.keys(requestBody).length === 0) return category
+
     if (requestBody.measurementTypeId !== undefined) {
       try {
         category.measurementType = await this.activityCategoryMeasurementTypesService.find({
@@ -163,11 +157,9 @@ export class ActivityCategoriesService {
       }
     }
     if (requestBody.boardId !== undefined) {
-      try {
-        category.board = await this.boardsService.find({ boardId: requestBody.boardId })
-      } catch {
+      category.board = await this.boardsService.find({ boardId: requestBody.boardId }).catch(() => {
         throw new BadRequestException({ fields: { boardId: "Invalid value." } })
-      }
+      })
     }
     if (requestBody.name !== undefined) {
       if (requestBody.name === "") {

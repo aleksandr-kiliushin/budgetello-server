@@ -114,23 +114,6 @@ describe("Activity category updating", () => {
     expect(await response.json()).toEqual(responseBody)
   })
 
-  it("updated category is presented in all categories list", async () => {
-    await authorize(users.johnDoe.username)
-    await fetchApi(`/api/activities/categories/${activityCategories.reading.id}`, {
-      body: JSON.stringify({ unit: "hour" }),
-      method: "PATCH",
-    })
-    const getAllCategoriesResponse = await fetchApi("/api/activities/categories/search")
-    expect(await getAllCategoriesResponse.json()).toContainEqual<IActivityCategory>({
-      board: { id: boards.productivePeople.id, name: boards.productivePeople.name },
-      id: 5,
-      measurementType: activityCategoryMeasurementTypes.quantitative,
-      name: "reading",
-      owner: users.johnDoe,
-      unit: "hour",
-    })
-  })
-
   it("updated category category can be found by ID", async () => {
     await authorize(users.johnDoe.username)
     await fetchApi(`/api/activities/categories/${activityCategories.reading.id}`, {
