@@ -4,11 +4,13 @@ import { AuthGuard } from "#models/auth/guard"
 import { UserEntity } from "#models/user/entities/user.entity"
 
 import { AuthorizedUser } from "#helpers/AuthorizedUser.decorator"
+import { JoiValidationPipe } from "#helpers/JoiValidationSchema"
 
 import { CreateActivityCategoryDto } from "./dto/create-activity-category.dto"
 import { SearchActivityCategoriesQueryDto } from "./dto/seach-activity-categories-query.dto"
 import { UpdateActivityCategoryDto } from "./dto/update-activity-category.dto"
 import { ActivityCategoriesService } from "./service"
+import { createCategoryValidationSchema } from "./validators/createCategoryValidationSchema"
 
 @Controller("activities/categories")
 @UseGuards(AuthGuard)
@@ -37,7 +39,7 @@ export class ActivityCategoriesController {
 
   @Post()
   create(
-    @Body()
+    @Body(new JoiValidationPipe(createCategoryValidationSchema))
     requestBody: CreateActivityCategoryDto,
     @AuthorizedUser()
     authorizedUser: UserEntity

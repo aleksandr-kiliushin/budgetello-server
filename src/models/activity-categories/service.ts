@@ -84,36 +84,6 @@ export class ActivityCategoriesService {
     authorizedUser: UserEntity
     requestBody: CreateActivityCategoryDto
   }): Promise<ActivityCategoryEntity> {
-    if (requestBody.name === undefined || requestBody.name === "") {
-      throw new BadRequestException({ fields: { name: "Required field." } })
-    }
-    if (requestBody.measurementTypeId === undefined) {
-      throw new BadRequestException({ fields: { measurementTypeId: "Required field." } })
-    }
-    if (requestBody.boardId === undefined) {
-      throw new BadRequestException({ fields: { boardId: "Required field." } })
-    }
-    if (requestBody.unit === undefined) {
-      throw new BadRequestException({ fields: { unit: "Required field." } })
-    }
-    if (requestBody.measurementTypeId === 1) {
-      if (typeof requestBody.unit !== "string" || requestBody.unit === "") {
-        throw new BadRequestException({
-          fields: {
-            measurementTypeId: "«Quantitative» activity must be measured in units.",
-            unit: "Required for «Quantitative» activities.",
-          },
-        })
-      }
-    }
-    if (requestBody.measurementTypeId === 2 && requestBody.unit !== null) {
-      throw new BadRequestException({
-        fields: {
-          measurementTypeId: "«Yes / no» activity cannot be measured with any unit.",
-          unit: "«Yes / no» activity cannot be measured with any unit.",
-        },
-      })
-    }
     const measurementType = await this.activityCategoryMeasurementTypesService
       .find({ typeId: requestBody.measurementTypeId })
       .catch(() => {
