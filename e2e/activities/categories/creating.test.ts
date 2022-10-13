@@ -16,9 +16,9 @@ describe("Activity category creating", () => {
       payload: { name: "" },
       response: {
         fields: {
-          boardId: '"Board" is required',
-          measurementTypeId: '"Measurement type" is required',
-          name: '"Name" is not allowed to be empty',
+          boardId: "Required.",
+          measurementTypeId: "Required.",
+          name: "Required.",
         },
       },
       status: 400,

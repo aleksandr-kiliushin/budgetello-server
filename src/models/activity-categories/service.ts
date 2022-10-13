@@ -84,6 +84,13 @@ export class ActivityCategoriesService {
     authorizedUser: UserEntity
     requestBody: CreateActivityCategoryDto
   }): Promise<ActivityCategoryEntity> {
+    if (requestBody.measurementTypeId === 1) {
+      if (requestBody.unit === null || requestBody.unit.length === 0) {
+        throw new BadRequestException({
+          fields: { unit: "Required for «Quantitative» activities." },
+        })
+      }
+    }
     const measurementType = await this.activityCategoryMeasurementTypesService
       .find({ typeId: requestBody.measurementTypeId })
       .catch(() => {
