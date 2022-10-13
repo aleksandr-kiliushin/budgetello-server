@@ -14,9 +14,7 @@ describe("Activity category creating", () => {
   }>([
     {
       authorizedUserUsername: users.johnDoe.username,
-      payload: {
-        name: "",
-      },
+      payload: { name: "" },
       response: {
         fields: {
           boardId: '"Board" is required',

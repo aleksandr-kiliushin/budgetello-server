@@ -1,5 +1,3 @@
-import { IBudgetCategory } from "#interfaces/budget"
-
 import { boards } from "#e2e/constants/boards"
 import { budgetCategories, budgetCategoryTypes } from "#e2e/constants/budget"
 import { users } from "#e2e/constants/users"
@@ -17,36 +15,19 @@ describe("Budget category creating", () => {
     status: number
   }>([
     {
-      payload: {
-        boardId: boards.cleverBudgetiers.id,
-        name_WITH_A_TYPO: "food",
-        typeId: budgetCategoryTypes.expense.id,
+      payload: { name: "" },
+      response: {
+        fields: {
+          boardId: '"Board" is required',
+          name: '"Name" is not allowed to be empty',
+          typeId: '"Type" is required',
+        },
       },
-      response: { fields: { name: "Required field." } },
-      status: 400,
-    },
-    {
-      payload: { boardId: boards.cleverBudgetiers.id, name: "", typeId: budgetCategoryTypes.expense.id },
-      response: { fields: { name: "Required field." } },
-      status: 400,
-    },
-    {
-      payload: {
-        boardId: boards.cleverBudgetiers.id,
-        name: "food",
-        typeId_WITH_A_TYPO: budgetCategoryTypes.expense.id,
-      },
-      response: { fields: { typeId: "Required field." } },
       status: 400,
     },
     {
       payload: { boardId: boards.cleverBudgetiers.id, name: "food", typeId: 1234123 },
       response: { fields: { typeId: "Invalid value." } },
-      status: 400,
-    },
-    {
-      payload: { name: "education", typeId: budgetCategoryTypes.income.id },
-      response: { fields: { boardId: "Required field." } },
       status: 400,
     },
     {
@@ -77,24 +58,6 @@ describe("Budget category creating", () => {
     })
     expect(categoryCreatingResponse.status).toEqual(status)
     expect(await categoryCreatingResponse.json()).toEqual(response)
-  })
-
-  it("a newly created category is presented in all categories list", async () => {
-    await fetchApi("/api/budget/categories", {
-      body: JSON.stringify({
-        boardId: boards.cleverBudgetiers.id,
-        name: "food",
-        typeId: budgetCategoryTypes.expense.id,
-      }),
-      method: "POST",
-    })
-    const getAllCategoriesResponse = await fetchApi("/api/budget/categories/search")
-    expect(await getAllCategoriesResponse.json()).toContainEqual<IBudgetCategory>({
-      board: budgetCategories.educationExpense.board,
-      id: 6,
-      name: "food",
-      type: budgetCategoryTypes.expense,
-    })
   })
 
   it("a newly created category can be found by ID", async () => {

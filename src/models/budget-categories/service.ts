@@ -83,14 +83,6 @@ export class BudgetCategoriesService {
     authorizedUser: UserEntity
     requestBody: CreateBudgetCategoryDto
   }): Promise<BudgetCategoryEntity> {
-    if (requestBody.name === undefined || requestBody.name === "")
-      throw new BadRequestException({ fields: { name: "Required field." } })
-    if (requestBody.typeId === undefined) {
-      throw new BadRequestException({ fields: { typeId: "Required field." } })
-    }
-    if (requestBody.boardId === undefined) {
-      throw new BadRequestException({ fields: { boardId: "Required field." } })
-    }
     const type = await this.budgetCategoryTypesService.find({ typeId: requestBody.typeId }).catch(() => {
       throw new BadRequestException({ fields: { typeId: "Invalid value." } })
     })
@@ -139,18 +131,14 @@ export class BudgetCategoriesService {
       return category
     }
     if (requestBody.typeId !== undefined) {
-      try {
-        category.type = await this.budgetCategoryTypesService.find({ typeId: requestBody.typeId })
-      } catch {
+      category.type = await this.budgetCategoryTypesService.find({ typeId: requestBody.typeId }).catch(() => {
         throw new BadRequestException({ fields: { typeId: "Invalid value." } })
-      }
+      })
     }
     if (requestBody.boardId !== undefined) {
-      try {
-        category.board = await this.boardsService.find({ boardId: requestBody.boardId })
-      } catch {
+      category.board = await this.boardsService.find({ boardId: requestBody.boardId }).catch(() => {
         throw new BadRequestException({ fields: { boardId: "Invalid value." } })
-      }
+      })
     }
     if (requestBody.name !== undefined) {
       if (requestBody.name === "") {
