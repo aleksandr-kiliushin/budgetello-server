@@ -91,12 +91,6 @@ export class BoardsService {
     authorizedUser: UserEntity
     requestBody: CreateBoardDto
   }): Promise<BoardEntity> {
-    if (requestBody.name === undefined || requestBody.name === "") {
-      throw new BadRequestException({ fields: { name: "Required field." } })
-    }
-    if (requestBody.subjectId === undefined) {
-      throw new BadRequestException({ fields: { subjectId: "Required field." } })
-    }
     const subject = await this.boardSubjectsService.find({ subjectId: requestBody.subjectId }).catch(() => {
       throw new BadRequestException({ fields: { subjectId: "Invalid subject." } })
     })

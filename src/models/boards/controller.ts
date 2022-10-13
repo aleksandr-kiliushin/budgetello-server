@@ -4,11 +4,13 @@ import { AuthGuard } from "#models/auth/guard"
 import { UserEntity } from "#models/user/entities/user.entity"
 
 import { AuthorizedUser } from "#helpers/AuthorizedUser.decorator"
+import { JoiValidationPipe } from "#helpers/JoiValidationSchema"
 
 import { CreateBoardDto } from "./dto/create-board.dto"
 import { SearchBoardsQueryDto } from "./dto/search-boards-query.dto"
 import { UpdateBoardDto } from "./dto/update-board.dto"
 import { BoardsService } from "./service"
+import { createBoardValidator } from "./validators/create-board.validator"
 
 @Controller("boards")
 @UseGuards(AuthGuard)
@@ -35,7 +37,7 @@ export class BoardsController {
 
   @Post()
   create(
-    @Body()
+    @Body(new JoiValidationPipe(createBoardValidator))
     requestBody: CreateBoardDto,
     @AuthorizedUser()
     authorizedUser: UserEntity
@@ -56,7 +58,7 @@ export class BoardsController {
   }
 
   @Post(":boardId/remove-member/:candidateForRemovingId")
-  leave(
+  removeMember(
     @Param("boardId", ParseIntPipe)
     boardId: number,
     @Param("candidateForRemovingId", ParseIntPipe)

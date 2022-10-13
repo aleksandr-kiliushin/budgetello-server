@@ -16,18 +16,13 @@ describe("Board creating", () => {
     status: number
   }>([
     {
-      payload: { name_WITH_A_TYPO: "food", subjectId: boardsSubjects.budget.id },
-      response: { fields: { name: "Required field." } },
-      status: 400,
-    },
-    {
-      payload: { name: "", subjectId: boardsSubjects.budget.id },
-      response: { fields: { name: "Required field." } },
-      status: 400,
-    },
-    {
-      payload: { name: "food", subjectId_WITH_A_TYPO: boardsSubjects.budget.id },
-      response: { fields: { subjectId: "Required field." } },
+      payload: { name: "" },
+      response: {
+        fields: {
+          name: '"Name" is not allowed to be empty',
+          subjectId: '"Subject" is required',
+        },
+      },
       status: 400,
     },
     {
