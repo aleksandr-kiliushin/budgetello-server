@@ -37,26 +37,14 @@ describe("Activity record creating", () => {
   }>([
     {
       authorizedUserUsername: users.johnDoe.username,
-      payload: {
-        booleanValue: null,
-        categoryId_WITH_A_TYPO: activityCategories.reading.id,
-        comment: "read about backend",
-        date: "2022-08-10",
-        quantitativeValue: 4.5,
+      payload: {},
+      responseBody: {
+        fields: {
+          categoryId: '"Category" is required',
+          date: '"Date" is required',
+          comment: '"Comment" is required',
+        },
       },
-      responseBody: { fields: { categoryId: "Required field." } },
-      status: 400,
-    },
-    {
-      authorizedUserUsername: users.johnDoe.username,
-      payload: {
-        booleanValue: null,
-        categoryId: activityCategories.reading.id,
-        comment_WITH_A_TYPO: "read about backend",
-        date: "2022-08-10",
-        quantitativeValue: 4.5,
-      },
-      responseBody: { fields: { comment: "Required field." } },
       status: 400,
     },
     {
@@ -65,10 +53,10 @@ describe("Activity record creating", () => {
         booleanValue: null,
         categoryId: activityCategories.reading.id,
         comment: "read about backend",
-        date: "20_08_10qwer",
+        date: "2022/08/10",
         quantitativeValue: 4.5,
       },
-      responseBody: { fields: { date: "Should have format YYYY-MM-DD." } },
+      responseBody: { fields: { date: '"Date" should have format YYYY-MM-DD' } },
       status: 400,
     },
     {

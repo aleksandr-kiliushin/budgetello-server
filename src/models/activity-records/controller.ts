@@ -4,11 +4,13 @@ import { AuthGuard } from "#models/auth/guard"
 import { UserEntity } from "#models/user/entities/user.entity"
 
 import { AuthorizedUser } from "#helpers/AuthorizedUser.decorator"
+import { JoiValidationPipe } from "#helpers/JoiValidationSchema"
 
 import { CreateActivityRecordDto } from "./dto/create-activity-record.dto"
 import { SearchActivityRecordsQueryDto } from "./dto/search-activity-records-query.dto"
 import { UpdateActivityRecordDto } from "./dto/update-activity-record.dto"
 import { ActivityRecordsService } from "./service"
+import { createRecordValidator } from "./validators/create-record.validator"
 
 @Controller("activities/records")
 @UseGuards(AuthGuard)
@@ -37,7 +39,7 @@ export class ActivityRecordsController {
 
   @Post()
   create(
-    @Body()
+    @Body(new JoiValidationPipe(createRecordValidator))
     requestBody: CreateActivityRecordDto,
     @AuthorizedUser()
     authorizedUser: UserEntity

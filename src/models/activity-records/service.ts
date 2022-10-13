@@ -104,18 +104,6 @@ export class ActivityRecordsService {
     authorizedUser: UserEntity
     requestBody: CreateActivityRecordDto
   }): Promise<ActivityRecordEntity> {
-    if (requestBody.categoryId === undefined) {
-      throw new BadRequestException({ fields: { categoryId: "Required field." } })
-    }
-    if (typeof requestBody.comment !== "string") {
-      throw new BadRequestException({ fields: { comment: "Required field." } })
-    }
-    if (requestBody.date === undefined) {
-      throw new BadRequestException({ fields: { date: "Required field." } })
-    }
-    if (!/\d\d\d\d-\d\d-\d\d/.test(requestBody.date)) {
-      throw new BadRequestException({ fields: { date: "Should have format YYYY-MM-DD." } })
-    }
     const category = await this.activityCategoriesService
       .find({ authorizedUser, categoryId: requestBody.categoryId })
       .catch(() => {
