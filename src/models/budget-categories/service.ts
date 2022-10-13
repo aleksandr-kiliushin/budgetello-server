@@ -127,9 +127,8 @@ export class BudgetCategoriesService {
       throw new ForbiddenException({ message: "Access denied." })
     }
 
-    if (requestBody.boardId === undefined && requestBody.name === undefined && requestBody.typeId === undefined) {
-      return category
-    }
+    if (Object.keys(requestBody).length === 0) return category
+
     if (requestBody.typeId !== undefined) {
       category.type = await this.budgetCategoryTypesService.find({ typeId: requestBody.typeId }).catch(() => {
         throw new BadRequestException({ fields: { typeId: "Invalid value." } })
