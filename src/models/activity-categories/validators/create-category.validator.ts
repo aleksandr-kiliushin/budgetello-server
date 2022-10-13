@@ -1,6 +1,6 @@
 import * as joi from "joi"
 
-export const createCategoryValidationSchema = joi
+export const createCategoryValidator = joi
   .object({
     boardId: joi.number().required().label("Board"),
     measurementTypeId: joi.number().required().label("Measurement type"),

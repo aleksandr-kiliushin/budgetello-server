@@ -10,7 +10,7 @@ import { CreateActivityCategoryDto } from "./dto/create-activity-category.dto"
 import { SearchActivityCategoriesQueryDto } from "./dto/seach-activity-categories-query.dto"
 import { UpdateActivityCategoryDto } from "./dto/update-activity-category.dto"
 import { ActivityCategoriesService } from "./service"
-import { createCategoryValidationSchema } from "./validators/createCategoryValidationSchema"
+import { createCategoryValidator } from "./validators/create-category.validator"
 
 @Controller("activities/categories")
 @UseGuards(AuthGuard)
@@ -39,7 +39,7 @@ export class ActivityCategoriesController {
 
   @Post()
   create(
-    @Body(new JoiValidationPipe(createCategoryValidationSchema))
+    @Body(new JoiValidationPipe(createCategoryValidator))
     requestBody: CreateActivityCategoryDto,
     @AuthorizedUser()
     authorizedUser: UserEntity
