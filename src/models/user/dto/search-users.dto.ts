@@ -1,6 +1,6 @@
 import { IUser } from "#interfaces/user"
 
 export class SearchUsersDto {
-  id: IUser["id"]
+  ids: IUser["id"][]
   username: IUser["username"]
 }

@@ -1,6 +1,6 @@
 import { Injectable, NotFoundException } from "@nestjs/common"
 import { InjectRepository } from "@nestjs/typeorm"
-import { FindOptionsRelations, Like, Repository } from "typeorm"
+import { FindOptionsRelations, In, Like, Repository } from "typeorm"
 
 import { encrypt } from "#utils/crypto"
 
@@ -56,8 +56,8 @@ export class UserService {
 
   searchUsers({ query }: { query: SearchUsersDto }): Promise<UserEntity[]> {
     return this.userRepository.findBy({
-      ...(query.id !== -1 && { id: query.id }),
-      ...(query.username !== undefined && { username: Like(`%${query.username}%`) }),
+      ...(query.ids.length !== 0 && { id: In(query.ids) }),
+      username: Like(`%${query.username}%`),
     })
   }
 

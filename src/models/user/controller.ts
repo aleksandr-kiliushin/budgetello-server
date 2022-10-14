@@ -16,6 +16,7 @@ import {
 import { AuthGuard } from "#models/auth/guard"
 
 import { AuthorizedUser } from "#helpers/AuthorizedUser.decorator"
+import { ParseNumbersArrayPipe } from "#helpers/parse-numbers-array.pipe"
 import { ValidationPipe } from "#helpers/validator.pipe"
 
 import { CreateUserDto } from "./dto/create-user.dto"
@@ -31,10 +32,10 @@ export class UserController {
   @Get("search")
   @UseGuards(AuthGuard)
   searchUsers(
-    @Query("id", new DefaultValuePipe(-1), ParseIntPipe) id: SearchUsersDto["id"],
+    @Query("ids", ParseNumbersArrayPipe) ids: SearchUsersDto["ids"],
     @Query("username", new DefaultValuePipe("")) username: SearchUsersDto["username"]
   ) {
-    return this.userService.searchUsers({ query: { id, username } })
+    return this.userService.searchUsers({ query: { ids, username } })
   }
 
   @Get(":userIdentifier")
