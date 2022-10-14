@@ -63,7 +63,7 @@ describe("Boards search", () => {
     },
     {
       authorizedUserUsername: users.johnDoe.username,
-      url: `/api/boards/search?subjectIds=${boardsSubjects.budget.id}`,
+      url: `/api/boards/search?subjectsIds=${boardsSubjects.budget.id}`,
       searchResult: [boards.cleverBudgetiers, boards.megaEconomists],
     },
     {
@@ -93,13 +93,13 @@ describe("Boards search", () => {
     },
     {
       authorizedUserUsername: users.jessicaStark.username,
-      url: `/api/boards/search?subjectIds=${boardsSubjects.activities.id}&iAmMemberOf=true&iAmAdminOf=false`,
+      url: `/api/boards/search?subjectsIds=${boardsSubjects.activities.id}&iAmMemberOf=true&iAmAdminOf=false`,
       searchResult: [boards.productivePeople],
     },
   ])("boards search for: $url", async ({ authorizedUserUsername, url, searchResult }) => {
     await authorize(authorizedUserUsername)
     const response = await fetchApi(url)
-    expect(response.status).toEqual(200)
     expect(await response.json()).toEqual(searchResult)
+    expect(response.status).toEqual(200)
   })
 })

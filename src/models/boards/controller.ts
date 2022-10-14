@@ -1,22 +1,11 @@
-import {
-  Body,
-  Controller,
-  Delete,
-  Get,
-  Param,
-  ParseBoolPipe,
-  ParseIntPipe,
-  Patch,
-  Post,
-  Query,
-  UseGuards,
-} from "@nestjs/common"
+import { Body, Controller, Delete, Get, Param, ParseIntPipe, Patch, Post, Query, UseGuards } from "@nestjs/common"
 
 import { AuthGuard } from "#models/auth/guard"
 import { UserEntity } from "#models/users/entities/user.entity"
 
 import { AuthorizedUser } from "#helpers/AuthorizedUser.decorator"
 import { ParseNumbersArrayPipe } from "#helpers/parse-numbers-array.pipe"
+import { ParseOptionalBooleanPipe } from "#helpers/parse-optional-boolean.pipe"
 import { ValidationPipe } from "#helpers/validator.pipe"
 
 import { CreateBoardDto } from "./dto/create-board.dto"
@@ -31,9 +20,9 @@ export class BoardsController {
 
   @Get("search")
   search(
-    @Query("iAmAdminOf", ParseBoolPipe)
+    @Query("iAmAdminOf", ParseOptionalBooleanPipe)
     iAmAdminOf: SearchBoardsQueryDto["iAmAdminOf"],
-    @Query("iAmMemberOf", ParseBoolPipe)
+    @Query("iAmMemberOf", ParseOptionalBooleanPipe)
     iAmMemberOf: SearchBoardsQueryDto["iAmMemberOf"],
     @Query("ids", ParseNumbersArrayPipe)
     ids: SearchBoardsQueryDto["ids"],
