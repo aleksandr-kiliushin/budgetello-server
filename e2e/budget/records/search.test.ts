@@ -39,38 +39,59 @@ describe("Get budget record by ID", () => {
 })
 
 describe("Budget records search", () => {
-  test.each<{ url: string; searchResult: IBudgetRecord[] }>([
+  test.each<{ url: string; responseBody: unknown; responseStatus: number }>([
     {
       url: "/api/budget/records/search",
-      searchResult: [budgetRecords["3rd"], budgetRecords["2nd"], budgetRecords["1st"]],
+      responseBody: [budgetRecords["3rd"], budgetRecords["2nd"], budgetRecords["1st"]],
+      responseStatus: 200,
     },
     {
-      url: "/api/budget/records/search?boardId=1,666666",
-      searchResult: [budgetRecords["3rd"], budgetRecords["2nd"], budgetRecords["1st"]],
+      url: `/api/budget/records/search?boardsIds=${boards.cleverBudgetiers.id},666666`,
+      responseBody: [budgetRecords["3rd"], budgetRecords["2nd"], budgetRecords["1st"]],
+      responseStatus: 200,
     },
     {
-      url: "/api/budget/records/search?boardId=666666",
-      searchResult: [],
+      url: "/api/budget/records/search?boardsIds=666666",
+      responseBody: [],
+      responseStatus: 200,
     },
     {
-      url: `/api/budget/records/search?boardId=${boards.megaEconomists.id}`,
-      searchResult: [],
+      url: `/api/budget/records/search?boardsIds=${boards.megaEconomists.id}`,
+      responseBody: [],
+      responseStatus: 200,
     },
     {
-      url: `/api/budget/records/search?categoryId=${budgetCategories.educationExpense.id}`,
-      searchResult: [budgetRecords["3rd"], budgetRecords["2nd"]],
+      url: `/api/budget/records/search?categoriesIds=${budgetCategories.educationExpense.id}`,
+      responseBody: [budgetRecords["3rd"], budgetRecords["2nd"]],
+      responseStatus: 200,
     },
     {
-      url: `/api/budget/records/search?date=2022-08-01`,
-      searchResult: [budgetRecords["3rd"], budgetRecords["2nd"], budgetRecords["1st"]],
+      url: `/api/budget/records/search?dates=2022-08-01`,
+      responseBody: [budgetRecords["3rd"], budgetRecords["2nd"], budgetRecords["1st"]],
+      responseStatus: 200,
+    },
+    {
+      url: `/api/budget/records/search?amount=400`,
+      responseBody: [budgetRecords["2nd"]],
+      responseStatus: 200,
+    },
+    {
+      url: `/api/budget/records/search?isTrashed=hehe`,
+      responseBody: {
+        query: {
+          isTrashed: "Should be a boolean.",
+        },
+      },
+      responseStatus: 400,
     },
     {
       url: "/api/budget/records/search?orderingByDate=ASC&orderingById=ASC&isTrashed=true&skip=1&take=1",
-      searchResult: [budgetRecords["2nd"]],
+      responseBody: [budgetRecords["2nd"]],
+      responseStatus: 200,
     },
-  ])("find records for: $url", async ({ url, searchResult }) => {
+  ])("find records for: $url", async ({ url, responseBody, responseStatus }) => {
     const response = await fetchApi(url)
-    expect(response.status).toEqual(200)
-    expect(await response.json()).toEqual(searchResult)
+    expect(response.status).toEqual(responseStatus)
+    expect(await response.json()).toEqual(responseBody)
   })
 })

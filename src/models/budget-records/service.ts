@@ -1,6 +1,6 @@
 import { BadRequestException, ForbiddenException, Injectable, NotFoundException } from "@nestjs/common"
 import { InjectRepository } from "@nestjs/typeorm"
-import { In, Repository } from "typeorm"
+import { Equal, In, Repository } from "typeorm"
 
 import { BudgetCategoriesService } from "#models/budget-categories/service"
 import { UserEntity } from "#models/users/entities/user.entity"
@@ -33,12 +33,9 @@ export class BudgetRecordsService {
     ]
 
     const boardsIdsToSearchWith =
-      query.boardId === undefined
+      query.boardsIds === undefined
         ? accessibleBoardsIds
-        : query.boardId
-            .split(",")
-            .map((boardId) => parseInt(boardId))
-            .filter((boardIdFromQuery) => accessibleBoardsIds.includes(boardIdFromQuery))
+        : query.boardsIds.filter((boardIdFromQuery) => accessibleBoardsIds.includes(boardIdFromQuery))
 
     const accessibleCategoriesOfSelectedBoards = await this.budgetCategoriesService.search({
       authorizedUser,
@@ -46,12 +43,11 @@ export class BudgetRecordsService {
     })
     const accessibleCategoriesOfSelectedBoardsIds = accessibleCategoriesOfSelectedBoards.map((category) => category.id)
     const categoriesIdsToSearchWith =
-      query.categoryId === undefined
+      query.categoriesIds === undefined
         ? accessibleCategoriesOfSelectedBoardsIds
-        : query.categoryId
-            .split(",")
-            .map((boardId) => parseInt(boardId))
-            .filter((categoryIdFromQuery) => accessibleCategoriesOfSelectedBoardsIds.includes(categoryIdFromQuery))
+        : query.categoriesIds.filter((categoryIdFromQuery) => {
+            return accessibleCategoriesOfSelectedBoardsIds.includes(categoryIdFromQuery)
+          })
 
     return this.budgetRecordsRepository.find({
       order: {
@@ -59,14 +55,13 @@ export class BudgetRecordsService {
         date: query.orderingById ?? "desc",
       },
       relations: { category: { board: true, type: true } },
-      skip: query.skip === undefined ? 0 : parseInt(query.skip),
-      ...(query.take !== undefined && { take: parseInt(query.take) }),
+      skip: query.skip === undefined ? 0 : query.skip,
+      ...(query.take !== undefined && { take: query.take }),
       where: {
-        ...(query.amount !== undefined && { amount: In(query.amount.split(",")) }),
-        ...(query.date !== undefined && { date: In(query.date.split(",")) }),
-        ...(query.id !== undefined && { id: In(query.id.split(",")) }),
-        ...(query.isTrashed === "true" && { isTrashed: true }),
-        ...(query.isTrashed === "false" && { isTrashed: false }),
+        ...(query.amount !== undefined && { amount: Equal(query.amount) }), // TODO: Test it.
+        ...(query.dates !== undefined && { date: In(query.dates) }),
+        ...(query.ids !== undefined && { id: In(query.ids) }),
+        ...(query.isTrashed !== undefined && { isTrashed: query.isTrashed }),
         category: { id: In(categoriesIdsToSearchWith) },
       },
     })

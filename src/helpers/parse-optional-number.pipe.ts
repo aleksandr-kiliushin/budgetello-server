@@ -5,20 +5,15 @@ export class ParseOptionalNumberPipe implements PipeTransform<string, number | u
   transform(value: string, metadata: ArgumentMetadata) {
     if (metadata.data === undefined) return undefined
 
-    const errorResponse = {
-      query: {
-        [metadata.data]: "Should be a number.",
-      },
-    }
-
     if (value === undefined) return undefined
-    if (typeof value !== "string") {
-      throw new BadRequestException(errorResponse)
-    }
 
     const number = Number(value)
     if (isNaN(number)) {
-      throw new BadRequestException(errorResponse)
+      throw new BadRequestException({
+        query: {
+          [metadata.data]: "Should be a number.",
+        },
+      })
     }
 
     return number

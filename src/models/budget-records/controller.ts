@@ -4,6 +4,10 @@ import { AuthGuard } from "#models/auth/guard"
 import { UserEntity } from "#models/users/entities/user.entity"
 
 import { AuthorizedUser } from "#helpers/AuthorizedUser.decorator"
+import { ParseDatesArrayPipe } from "#helpers/parse-dates-array.pipe"
+import { ParseNumbersArrayPipe } from "#helpers/parse-numbers-array.pipe"
+import { ParseOptionalBooleanPipe } from "#helpers/parse-optional-boolean.pipe"
+import { ParseOptionalNumberPipe } from "#helpers/parse-optional-number.pipe"
 import { ValidationPipe } from "#helpers/validator.pipe"
 
 import { CreateBudgetRecordDto } from "./dto/create-budget-record.dto"
@@ -18,12 +22,33 @@ export class BudgetRecordsController {
 
   @Get("search")
   search(
-    @Query()
-    query: SearchBudgetRecordsQueryDto,
+    @Query("amount", ParseOptionalNumberPipe)
+    amount: SearchBudgetRecordsQueryDto["amount"],
+    @Query("boardsIds", ParseNumbersArrayPipe)
+    boardsIds: SearchBudgetRecordsQueryDto["boardsIds"],
+    @Query("categoriesIds", ParseNumbersArrayPipe)
+    categoriesIds: SearchBudgetRecordsQueryDto["categoriesIds"],
+    @Query("dates", ParseDatesArrayPipe)
+    dates: SearchBudgetRecordsQueryDto["dates"],
+    @Query("ids", ParseNumbersArrayPipe)
+    ids: SearchBudgetRecordsQueryDto["ids"],
+    @Query("isTrashed", ParseOptionalBooleanPipe)
+    isTrashed: SearchBudgetRecordsQueryDto["isTrashed"],
+    @Query("orderingByDate")
+    orderingByDate: SearchBudgetRecordsQueryDto["orderingByDate"],
+    @Query("orderingById")
+    orderingById: SearchBudgetRecordsQueryDto["orderingById"],
+    @Query("skip", ParseOptionalNumberPipe)
+    skip: SearchBudgetRecordsQueryDto["skip"],
+    @Query("take", ParseOptionalNumberPipe)
+    take: SearchBudgetRecordsQueryDto["take"],
     @AuthorizedUser()
     authorizedUser: UserEntity
   ) {
-    return this.budgetRecordsService.search({ authorizedUser, query })
+    return this.budgetRecordsService.search({
+      authorizedUser,
+      query: { amount, boardsIds, categoriesIds, dates, ids, isTrashed, orderingByDate, orderingById, skip, take },
+    })
   }
 
   @Get(":recordId")
