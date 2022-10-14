@@ -33,12 +33,9 @@ export class ActivityRecordsService {
     ]
 
     const boardsIdsToSearchWith =
-      query.boardId === undefined
+      query.boardsIds === undefined
         ? accessibleBoardsIds
-        : query.boardId
-            .split(",")
-            .map((boardId) => parseInt(boardId))
-            .filter((boardIdFromQuery) => accessibleBoardsIds.includes(boardIdFromQuery))
+        : query.boardsIds.filter((boardIdFromQuery) => accessibleBoardsIds.includes(boardIdFromQuery))
 
     const accessibleCategoriesOfSelectedBoards = await this.activityCategoriesService.search({
       authorizedUser,
@@ -46,12 +43,11 @@ export class ActivityRecordsService {
     })
     const accessibleCategoriesOfSelectedBoardsIds = accessibleCategoriesOfSelectedBoards.map((category) => category.id)
     const categoriesIdsToSearchWith =
-      query.categoryId === undefined
+      query.categorysIds === undefined
         ? accessibleCategoriesOfSelectedBoardsIds
-        : query.categoryId
-            .split(",")
-            .map((boardId) => parseInt(boardId))
-            .filter((categoryIdFromQuery) => accessibleCategoriesOfSelectedBoardsIds.includes(categoryIdFromQuery))
+        : query.categorysIds.filter((categoryIdFromQuery) => {
+            return accessibleCategoriesOfSelectedBoardsIds.includes(categoryIdFromQuery)
+          })
 
     return this.activityRecordsRepository.find({
       order: {
@@ -59,11 +55,11 @@ export class ActivityRecordsService {
         date: query.orderingById ?? "desc",
       },
       relations: { category: { board: true, owner: true, measurementType: true } },
-      skip: query.skip === undefined ? 0 : parseInt(query.skip),
-      ...(query.take !== undefined && { take: parseInt(query.take) }),
+      skip: query.skip === undefined ? 0 : query.skip,
+      ...(query.take !== undefined && { take: query.take }),
       where: {
-        ...(query.date !== undefined && { date: In(query.date.split(",")) }),
-        ...(query.id !== undefined && { id: In(query.id.split(",")) }),
+        ...(query.dates !== undefined && { date: In(query.dates) }),
+        ...(query.ids !== undefined && { id: In(query.ids) }),
         category: { id: In(categoriesIdsToSearchWith) },
       },
     })

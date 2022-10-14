@@ -1,13 +1,13 @@
 import { ArgumentMetadata, BadRequestException, Injectable, PipeTransform } from "@nestjs/common"
 
 @Injectable()
-export class ParseNumbersArrayPipe implements PipeTransform<string, number[] | undefined> {
+export class ParseDatesArrayPipe implements PipeTransform<string, string[] | undefined> {
   transform(value: string, metadata: ArgumentMetadata) {
     if (metadata.data === undefined) return undefined
 
     const errorResponse = {
       query: {
-        [metadata.data]: "An array of numbers expected.",
+        [metadata.data]: "An array of YYYY-MM-DD dates expected.",
       },
     }
 
@@ -16,11 +16,11 @@ export class ParseNumbersArrayPipe implements PipeTransform<string, number[] | u
       throw new BadRequestException(errorResponse)
     }
 
-    const numbers = value.split(",").map(Number)
-    if (numbers.some((number) => isNaN(number))) {
+    const dates = value.split(",")
+    if (dates.some((date) => !/\d\d\d\d-\d\d-\d\d/.test(date))) {
       throw new BadRequestException(errorResponse)
     }
 
-    return numbers
+    return dates
   }
 }

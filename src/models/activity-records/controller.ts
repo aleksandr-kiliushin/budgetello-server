@@ -4,6 +4,9 @@ import { AuthGuard } from "#models/auth/guard"
 import { UserEntity } from "#models/users/entities/user.entity"
 
 import { AuthorizedUser } from "#helpers/AuthorizedUser.decorator"
+import { ParseDatesArrayPipe } from "#helpers/parse-dates-array.pipe"
+import { ParseNumbersArrayPipe } from "#helpers/parse-numbers-array.pipe"
+import { ParseOptionalNumberPipe } from "#helpers/parse-optional-number.pipe"
 import { ValidationPipe } from "#helpers/validator.pipe"
 
 import { CreateActivityRecordDto } from "./dto/create-activity-record.dto"
@@ -18,12 +21,29 @@ export class ActivityRecordsController {
 
   @Get("search")
   search(
-    @Query()
-    query: SearchActivityRecordsQueryDto,
+    @Query("boardsIds", ParseNumbersArrayPipe)
+    boardsIds: SearchActivityRecordsQueryDto["boardsIds"],
+    @Query("categorysIds", ParseNumbersArrayPipe)
+    categorysIds: SearchActivityRecordsQueryDto["categorysIds"],
+    @Query("dates", ParseDatesArrayPipe)
+    dates: SearchActivityRecordsQueryDto["dates"],
+    @Query("ids", ParseNumbersArrayPipe)
+    ids: SearchActivityRecordsQueryDto["ids"],
+    @Query("orderingByDate")
+    orderingByDate: SearchActivityRecordsQueryDto["orderingByDate"],
+    @Query("orderingById")
+    orderingById: SearchActivityRecordsQueryDto["orderingById"],
+    @Query("skip", ParseOptionalNumberPipe)
+    skip: SearchActivityRecordsQueryDto["skip"],
+    @Query("take", ParseOptionalNumberPipe)
+    take: SearchActivityRecordsQueryDto["take"],
     @AuthorizedUser()
     authorizedUser: UserEntity
   ) {
-    return this.activityRecordsService.search({ authorizedUser, query })
+    return this.activityRecordsService.search({
+      authorizedUser,
+      query: { boardsIds, categorysIds, dates, ids, orderingByDate, orderingById, skip, take },
+    })
   }
 
   @Get(":recordId")
