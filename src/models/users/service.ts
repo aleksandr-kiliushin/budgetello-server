@@ -56,8 +56,8 @@ export class UsersService {
 
   searchUsers({ query }: { query: SearchUsersDto }): Promise<UserEntity[]> {
     return this.userRepository.findBy({
-      ...(query.ids.length !== 0 && { id: In(query.ids) }),
-      username: Like(`%${query.username}%`),
+      ...(query.ids !== undefined && { id: In(query.ids) }),
+      ...(query.username !== undefined && { username: Like(`%${query.username}%`) }),
     })
   }
 

@@ -1,7 +1,6 @@
 import {
   Body,
   Controller,
-  DefaultValuePipe,
   Delete,
   ForbiddenException,
   Get,
@@ -33,7 +32,7 @@ export class UsersController {
   @UseGuards(AuthGuard)
   searchUsers(
     @Query("ids", ParseNumbersArrayPipe) ids: SearchUsersDto["ids"],
-    @Query("username", new DefaultValuePipe("")) username: SearchUsersDto["username"]
+    @Query("username") username: SearchUsersDto["username"]
   ) {
     return this.usersService.searchUsers({ query: { ids, username } })
   }
