@@ -58,7 +58,7 @@ describe("User updating", () => {
       headers: { "Content-Type": "application/json" },
       method: "POST",
     })
-    // expect(authWithTheNewCredentialsResponse.status).toEqual(201)
+    expect(authWithTheNewCredentialsResponse.status).toEqual(201)
     expect(await authWithTheNewCredentialsResponse.json()).toEqual({
       authToken: expect.stringMatching(".+"),
     })
