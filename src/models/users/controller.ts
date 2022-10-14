@@ -23,11 +23,11 @@ import { CreateUserDto } from "./dto/create-user.dto"
 import { SearchUsersDto } from "./dto/search-users.dto"
 import { UpdateUserDto } from "./dto/update-user.dto"
 import { UserEntity } from "./entities/user.entity"
-import { UserService } from "./service"
+import { UsersService } from "./service"
 
 @Controller("users")
-export class UserController {
-  constructor(private readonly userService: UserService) {}
+export class UsersController {
+  constructor(private readonly usersService: UsersService) {}
 
   @Get("search")
   @UseGuards(AuthGuard)
@@ -35,7 +35,7 @@ export class UserController {
     @Query("ids", ParseNumbersArrayPipe) ids: SearchUsersDto["ids"],
     @Query("username", new DefaultValuePipe("")) username: SearchUsersDto["username"]
   ) {
-    return this.userService.searchUsers({ query: { ids, username } })
+    return this.usersService.searchUsers({ query: { ids, username } })
   }
 
   @Get(":userIdentifier")
@@ -48,10 +48,10 @@ export class UserController {
   ) {
     // If request to /api/users/john-doe.
     if (isNaN(parseInt(userIdentifier))) {
-      return this.userService.find({ authorizedUser, userUsername: userIdentifier })
+      return this.usersService.find({ authorizedUser, userUsername: userIdentifier })
     }
     // If request to /api/users/123.
-    return this.userService.find({ authorizedUser, userId: parseInt(userIdentifier) })
+    return this.usersService.find({ authorizedUser, userId: parseInt(userIdentifier) })
   }
 
   @Post()
@@ -59,7 +59,7 @@ export class UserController {
     @Body(new ValidationPipe())
     requestBody: CreateUserDto
   ) {
-    return this.userService.create({ requestBody })
+    return this.usersService.create({ requestBody })
   }
 
   @Patch(":userId")
@@ -75,7 +75,7 @@ export class UserController {
     if (authorizedUser.id !== userId) {
       throw new ForbiddenException({ message: "You are not allowed to update another user." })
     }
-    return this.userService.update({ userId, requestBody })
+    return this.usersService.update({ userId, requestBody })
   }
 
   @Delete(":id")
@@ -90,6 +90,6 @@ export class UserController {
     if (authorizedUser.id !== userToBeDeletedId) {
       throw new ForbiddenException({ message: "You are not allowed to delete another user." })
     }
-    return this.userService.delete({ userId: userToBeDeletedId })
+    return this.usersService.delete({ userId: userToBeDeletedId })
   }
 }

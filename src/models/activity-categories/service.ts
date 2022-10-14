@@ -4,7 +4,7 @@ import { In, IsNull, Repository } from "typeorm"
 
 import { ActivityCategoryMeasurementTypesService } from "#models/activity-category-measurement-types/service"
 import { BoardsService } from "#models/boards/service"
-import { UserEntity } from "#models/user/entities/user.entity"
+import { UserEntity } from "#models/users/entities/user.entity"
 
 import { CreateActivityCategoryDto } from "./dto/create-activity-category.dto"
 import { SearchActivityCategoriesQueryDto } from "./dto/seach-activity-categories-query.dto"

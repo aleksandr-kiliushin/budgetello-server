@@ -1,7 +1,7 @@
 import { Body, Controller, Delete, Get, Param, ParseIntPipe, Patch, Post, Query, UseGuards } from "@nestjs/common"
 
 import { AuthGuard } from "#models/auth/guard"
-import { UserEntity } from "#models/user/entities/user.entity"
+import { UserEntity } from "#models/users/entities/user.entity"
 
 import { AuthorizedUser } from "#helpers/AuthorizedUser.decorator"
 import { ValidationPipe } from "#helpers/validator.pipe"

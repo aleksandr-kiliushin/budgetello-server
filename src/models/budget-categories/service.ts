@@ -4,7 +4,7 @@ import { In, Repository } from "typeorm"
 
 import { BoardsService } from "#models/boards/service"
 import { BudgetCategoryTypesService } from "#models/budget-category-types/service"
-import { UserEntity } from "#models/user/entities/user.entity"
+import { UserEntity } from "#models/users/entities/user.entity"
 
 import { CreateBudgetCategoryDto } from "./dto/create-budget-category.dto"
 import { SearchBudgetCategoriesQueryDto } from "./dto/seach-budget-categories-query.dto"

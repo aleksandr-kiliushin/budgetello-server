@@ -3,7 +3,7 @@ import { TypeOrmModule } from "@nestjs/typeorm"
 
 import { ActivityCategoryMeasurementTypesModule } from "#models/activity-category-measurement-types/module"
 import { BoardsModule } from "#models/boards/module"
-import { UserModule } from "#models/user/module"
+import { UsersModule } from "#models/users/module"
 
 import { ActivityCategoriesController } from "./controller"
 import { ActivityCategoryEntity } from "./entities/activity-category.entity"
@@ -16,7 +16,7 @@ import { ActivityCategoriesService } from "./service"
     TypeOrmModule.forFeature([ActivityCategoryEntity]),
     ActivityCategoryMeasurementTypesModule,
     BoardsModule,
-    UserModule,
+    UsersModule,
   ],
   providers: [ActivityCategoriesController, ActivityCategoriesService],
 })

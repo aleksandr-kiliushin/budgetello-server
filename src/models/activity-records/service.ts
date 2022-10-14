@@ -3,7 +3,7 @@ import { InjectRepository } from "@nestjs/typeorm"
 import { In, Repository } from "typeorm"
 
 import { ActivityCategoriesService } from "#models/activity-categories/service"
-import { UserEntity } from "#models/user/entities/user.entity"
+import { UserEntity } from "#models/users/entities/user.entity"
 
 import { CreateActivityRecordDto } from "./dto/create-activity-record.dto"
 import { SearchActivityRecordsQueryDto } from "./dto/search-activity-records-query.dto"

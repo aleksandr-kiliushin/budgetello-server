@@ -7,11 +7,11 @@ import {
 } from "@nestjs/common"
 import * as jwt from "jsonwebtoken"
 
-import { UserService } from "#models/user/service"
+import { UsersService } from "#models/users/service"
 
 @Injectable()
 export class AuthGuard implements CanActivate {
-  constructor(private readonly userService: UserService) {}
+  constructor(private readonly usersService: UsersService) {}
 
   async canActivate(context: ExecutionContext) {
     const request = context.switchToHttp().getRequest()
@@ -27,7 +27,7 @@ export class AuthGuard implements CanActivate {
       const decodingResult = jwt.decode(authToken, { json: true })
       if (decodingResult === null) throw new Error()
       request.authorizedUserId = decodingResult.id
-      request.authorizedUser = await this.userService.find({
+      request.authorizedUser = await this.usersService.find({
         userId: decodingResult.id,
         relations: { administratedBoards: true, boards: true },
       })

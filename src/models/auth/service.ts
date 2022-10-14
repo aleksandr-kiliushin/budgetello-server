@@ -1,7 +1,7 @@
 import { BadRequestException, Injectable, ServiceUnavailableException } from "@nestjs/common"
 import * as jwt from "jsonwebtoken"
 
-import { UserService } from "#models/user/service"
+import { UsersService } from "#models/users/service"
 
 import { encrypt } from "#utils/crypto"
 
@@ -9,10 +9,10 @@ import { AuthorizeDto } from "./dto/authorize.dto"
 
 @Injectable()
 export class AuthService {
-  constructor(private readonly userService: UserService) {}
+  constructor(private readonly usersService: UsersService) {}
 
   async createToken({ requestBody }: { requestBody: AuthorizeDto }): Promise<{ authToken: string }> {
-    const user = await this.userService.find({ userUsername: requestBody.username }).catch(() => {
+    const user = await this.usersService.find({ userUsername: requestBody.username }).catch(() => {
       throw new BadRequestException({ fields: { username: "User not found." } })
     })
 

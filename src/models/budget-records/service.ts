@@ -3,7 +3,7 @@ import { InjectRepository } from "@nestjs/typeorm"
 import { In, Repository } from "typeorm"
 
 import { BudgetCategoriesService } from "#models/budget-categories/service"
-import { UserEntity } from "#models/user/entities/user.entity"
+import { UserEntity } from "#models/users/entities/user.entity"
 
 import { CreateBudgetRecordDto } from "./dto/create-budget-record.dto"
 import { SearchBudgetRecordsQueryDto } from "./dto/search-budget-records-query.dto"

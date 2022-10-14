@@ -3,8 +3,8 @@ import { InjectRepository } from "@nestjs/typeorm"
 import { In, Like, Repository } from "typeorm"
 
 import { BoardSubjectsService } from "#models/board-subjects/service"
-import { UserEntity } from "#models/user/entities/user.entity"
-import { UserService } from "#models/user/service"
+import { UserEntity } from "#models/users/entities/user.entity"
+import { UsersService } from "#models/users/service"
 
 import { CreateBoardDto } from "./dto/create-board.dto"
 import { SearchBoardsQueryDto } from "./dto/search-boards-query.dto"
@@ -17,7 +17,7 @@ export class BoardsService {
     @InjectRepository(BoardEntity)
     private boardsRepository: Repository<BoardEntity>,
     private boardSubjectsService: BoardSubjectsService,
-    private userService: UserService
+    private usersService: UsersService
   ) {}
 
   async search({
@@ -183,7 +183,7 @@ export class BoardsService {
     if (authorizedUser.administratedBoards.every((board) => board.id !== boardId)) {
       throw new ForbiddenException({ message: "Access denied." })
     }
-    const candidateToMembers = await this.userService.find({
+    const candidateToMembers = await this.usersService.find({
       userId: candidateForMembershipId,
       relations: { boards: true },
     })
@@ -214,7 +214,7 @@ export class BoardsService {
         message: "The user can't be removed from this board because they are the only admin.",
       })
     }
-    const candidateToBeRemoved = await this.userService.find({
+    const candidateToBeRemoved = await this.usersService.find({
       userId: candidateForRemovingId,
       relations: { boards: true },
     })
