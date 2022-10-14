@@ -4,6 +4,7 @@ import { AuthGuard } from "#models/auth/guard"
 import { UserEntity } from "#models/users/entities/user.entity"
 
 import { AuthorizedUser } from "#helpers/AuthorizedUser.decorator"
+import { ParseNumbersArrayPipe } from "#helpers/parse-numbers-array.pipe"
 import { ValidationPipe } from "#helpers/validator.pipe"
 
 import { CreateBudgetCategoryDto } from "./dto/create-budget-category.dto"
@@ -18,12 +19,14 @@ export class BudgetCategoriesController {
 
   @Get("search")
   search(
-    @Query()
-    query: SearchBudgetCategoriesQueryDto,
+    @Query("boardsIds", ParseNumbersArrayPipe)
+    boardsIds: SearchBudgetCategoriesQueryDto["boardsIds"],
+    @Query("ids", ParseNumbersArrayPipe)
+    ids: SearchBudgetCategoriesQueryDto["ids"],
     @AuthorizedUser()
     authorizedUser: UserEntity
   ) {
-    return this.budgetCategoriesService.search({ authorizedUser, query })
+    return this.budgetCategoriesService.search({ authorizedUser, query: { boardsIds, ids } })
   }
 
   @Get(":categoryId")

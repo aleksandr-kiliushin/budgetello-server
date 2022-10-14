@@ -42,7 +42,7 @@ export class BudgetRecordsService {
 
     const accessibleCategoriesOfSelectedBoards = await this.budgetCategoriesService.search({
       authorizedUser,
-      query: { boardId: boardsIdsToSearchWith.join(",") },
+      query: { boardsIds: boardsIdsToSearchWith },
     })
     const accessibleCategoriesOfSelectedBoardsIds = accessibleCategoriesOfSelectedBoards.map((category) => category.id)
     const categoriesIdsToSearchWith =

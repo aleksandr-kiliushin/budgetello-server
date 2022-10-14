@@ -40,19 +40,19 @@ describe("Responds with a budget category found by provided ID", () => {
 describe("Budget categoires search", () => {
   test.each<{ url: string; searchResult: IBudgetCategory[] }>([
     {
-      url: `/api/budget/categories/search?id=${budgetCategories.clothesExpense.id}`,
+      url: `/api/budget/categories/search?ids=${budgetCategories.clothesExpense.id}`,
       searchResult: [budgetCategories.clothesExpense],
     },
     {
-      url: `/api/budget/categories/search?boardId=${budgetCategories.clothesExpense.id},${budgetCategories.educationExpense.id}`,
+      url: `/api/budget/categories/search?boardsIds=${budgetCategories.clothesExpense.id},${budgetCategories.educationExpense.id}`,
       searchResult: [budgetCategories.clothesExpense, budgetCategories.educationExpense],
     },
     {
-      url: `/api/budget/categories/search?id=${budgetCategories.educationExpense.id},${budgetCategories.giftsExpense.id}`,
+      url: `/api/budget/categories/search?ids=${budgetCategories.educationExpense.id},${budgetCategories.giftsExpense.id}`,
       searchResult: [budgetCategories.educationExpense],
     },
     {
-      url: `/api/budget/categories/search?id=${budgetCategories.salaryIncome.id},666666`,
+      url: `/api/budget/categories/search?ids=${budgetCategories.salaryIncome.id},666666`,
       searchResult: [],
     },
     {

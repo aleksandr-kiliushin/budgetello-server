@@ -34,18 +34,15 @@ export class BudgetCategoriesService {
       ]),
     ]
     const boardsIdsToSearchWith =
-      query.boardId === undefined
+      query.boardsIds === undefined
         ? accessibleBoardsIds
-        : query.boardId
-            .split(",")
-            .map((boardId) => parseInt(boardId))
-            .filter((boardIdFromQuery) => accessibleBoardsIds.includes(boardIdFromQuery))
+        : query.boardsIds.filter((boardIdFromQuery) => accessibleBoardsIds.includes(boardIdFromQuery))
 
     return this.budgetCategoriesRepository.find({
       order: { id: "ASC", name: "ASC" },
       relations: { board: true, type: true },
       where: {
-        ...(query.id !== undefined && { id: In(query.id.split(",")) }),
+        ...(query.ids !== undefined && { id: In(query.ids) }),
         board: { id: In(boardsIdsToSearchWith) },
       },
     })
