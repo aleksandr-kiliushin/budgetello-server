@@ -35,20 +35,25 @@ describe("Returns a user by their identifier", () => {
 })
 
 describe("Users search", () => {
-  test.each<{ url: string; searchResult: IUser[] }>([
-    { url: "/api/users/search?ids=1", searchResult: [users.johnDoe] },
-    { url: "/api/users/search?ids=1,2", searchResult: [users.johnDoe, users.jessicaStark] },
-    { url: "/api/users/search?username=john-doe", searchResult: [users.johnDoe] },
-    { url: "/api/users/search?ids=1&username=john-doe", searchResult: [users.johnDoe] },
-    { url: "/api/users/search?username=john", searchResult: [users.johnDoe] },
-    { url: "/api/users/search?username=doe", searchResult: [users.johnDoe] },
-    { url: "/api/users/search?username=j", searchResult: [users.johnDoe, users.jessicaStark] },
-    { url: "/api/users/search?username=nonexistent-username", searchResult: [] },
-    { url: "/api/users/search?ids=666666", searchResult: [] },
-    { url: "/api/users/search", searchResult: [users.johnDoe, users.jessicaStark] },
-  ])("case: $url", async ({ url, searchResult }) => {
+  test.each<{ url: string; responseBody: unknown; responseStatus: number }>([
+    { url: "/api/users/search?ids=1", responseBody: [users.johnDoe], responseStatus: 200 },
+    { url: "/api/users/search?ids=1,2", responseBody: [users.johnDoe, users.jessicaStark], responseStatus: 200 },
+    { url: "/api/users/search?username=john-doe", responseBody: [users.johnDoe], responseStatus: 200 },
+    { url: "/api/users/search?ids=1&username=john-doe", responseBody: [users.johnDoe], responseStatus: 200 },
+    { url: "/api/users/search?username=john", responseBody: [users.johnDoe], responseStatus: 200 },
+    { url: "/api/users/search?username=doe", responseBody: [users.johnDoe], responseStatus: 200 },
+    { url: "/api/users/search?username=j", responseBody: [users.johnDoe, users.jessicaStark], responseStatus: 200 },
+    { url: "/api/users/search?username=nonexistent-username", responseBody: [], responseStatus: 200 },
+    { url: "/api/users/search?ids=666666", responseBody: [], responseStatus: 200 },
+    { url: "/api/users/search", responseBody: [users.johnDoe, users.jessicaStark], responseStatus: 200 },
+    {
+      url: "/api/users/search?ids=1,hello",
+      responseBody: { query: { ids: "An array of numbers expected." } },
+      responseStatus: 400,
+    },
+  ])("case: $url", async ({ url, responseBody, responseStatus }) => {
     const response = await fetchApi(url)
-    expect(response.status).toEqual(200)
-    expect(await response.json()).toEqual(searchResult)
+    expect(response.status).toEqual(responseStatus)
+    expect(await response.json()).toEqual(responseBody)
   })
 })
