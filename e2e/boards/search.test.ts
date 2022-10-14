@@ -22,7 +22,7 @@ describe("Responds with a board found by provided ID", () => {
       responseStatus: 404,
       responseBody: {},
     },
-  ])("board search for: $url", async ({ authorizedUserUsername, url, responseStatus, responseBody }) => {
+  ])("$url", async ({ authorizedUserUsername, url, responseStatus, responseBody }) => {
     await authorize(authorizedUserUsername)
     const response = await fetchApi(url)
     expect(response.status).toEqual(responseStatus)
@@ -38,17 +38,17 @@ describe("Boards search", () => {
   }>([
     {
       authorizedUserUsername: users.johnDoe.username,
-      url: `/api/boards/search?id=${boards.cleverBudgetiers.id}`,
+      url: `/api/boards/search?ids=${boards.cleverBudgetiers.id}`,
       searchResult: [boards.cleverBudgetiers],
     },
     {
       authorizedUserUsername: users.johnDoe.username,
-      url: `/api/boards/search?id=${boards.cleverBudgetiers.id},${boards.beautifulSportsmen.id}`,
+      url: `/api/boards/search?ids=${boards.cleverBudgetiers.id},${boards.beautifulSportsmen.id}`,
       searchResult: [boards.cleverBudgetiers, boards.beautifulSportsmen],
     },
     {
       authorizedUserUsername: users.johnDoe.username,
-      url: "/api/boards/search?id=666666",
+      url: "/api/boards/search?ids=666666",
       searchResult: [],
     },
     {
@@ -63,7 +63,7 @@ describe("Boards search", () => {
     },
     {
       authorizedUserUsername: users.johnDoe.username,
-      url: `/api/boards/search?subjectId=${boardsSubjects.budget.id}`,
+      url: `/api/boards/search?subjectIds=${boardsSubjects.budget.id}`,
       searchResult: [boards.cleverBudgetiers, boards.megaEconomists],
     },
     {
@@ -73,7 +73,7 @@ describe("Boards search", () => {
     },
     {
       authorizedUserUsername: users.johnDoe.username,
-      url: `/api/boards/search?name=me&subjectId=${boardsSubjects.budget.id}&id=${boards.megaEconomists.id}`,
+      url: `/api/boards/search?name=me&subjectsIds=${boardsSubjects.budget.id}&id=${boards.megaEconomists.id}`,
       searchResult: [boards.megaEconomists],
     },
     {
@@ -93,7 +93,7 @@ describe("Boards search", () => {
     },
     {
       authorizedUserUsername: users.jessicaStark.username,
-      url: `/api/boards/search?subjectId=${boardsSubjects.activities.id}&iAmMemberOf=true&iAmAdminOf=false`,
+      url: `/api/boards/search?subjectIds=${boardsSubjects.activities.id}&iAmMemberOf=true&iAmAdminOf=false`,
       searchResult: [boards.productivePeople],
     },
   ])("boards search for: $url", async ({ authorizedUserUsername, url, searchResult }) => {
