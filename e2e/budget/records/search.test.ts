@@ -1,7 +1,7 @@
 import { IBudgetRecord } from "#interfaces/budget"
 
 import { boards } from "#e2e/constants/boards"
-import { budgetRecords } from "#e2e/constants/budget"
+import { budgetCategories, budgetRecords } from "#e2e/constants/budget"
 import { users } from "#e2e/constants/users"
 import { authorize } from "#e2e/helpers/authorize"
 import { fetchApi } from "#e2e/helpers/fetchApi"
@@ -55,6 +55,14 @@ describe("Budget records search", () => {
     {
       url: `/api/budget/records/search?boardId=${boards.megaEconomists.id}`,
       searchResult: [],
+    },
+    {
+      url: `/api/budget/records/search?categoryId=${budgetCategories.educationExpense.id}`,
+      searchResult: [budgetRecords["3rd"], budgetRecords["2nd"]],
+    },
+    {
+      url: `/api/budget/records/search?date=2022-08-01`,
+      searchResult: [budgetRecords["3rd"], budgetRecords["2nd"], budgetRecords["1st"]],
     },
     {
       url: "/api/budget/records/search?orderingByDate=ASC&orderingById=ASC&isTrashed=true&skip=1&take=1",
