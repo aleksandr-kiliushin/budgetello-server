@@ -42,7 +42,7 @@ export class ActivityRecordsService {
 
     const accessibleCategoriesOfSelectedBoards = await this.activityCategoriesService.search({
       authorizedUser,
-      query: { boardId: boardsIdsToSearchWith.join(",") },
+      query: { boardsIds: boardsIdsToSearchWith },
     })
     const accessibleCategoriesOfSelectedBoardsIds = accessibleCategoriesOfSelectedBoards.map((category) => category.id)
     const categoriesIdsToSearchWith =

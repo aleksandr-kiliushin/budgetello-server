@@ -31,7 +31,7 @@ describe("Responds with a category found by provided ID", () => {
       responseStatus: 404,
       responseData: {},
     },
-  ])("category search for: $url", async ({ url, responseStatus, responseData }) => {
+  ])("$url", async ({ url, responseStatus, responseData }) => {
     const response = await fetchApi(url)
     expect(response.status).toEqual(responseStatus)
     expect(await response.json()).toEqual(responseData)
@@ -41,15 +41,15 @@ describe("Responds with a category found by provided ID", () => {
 describe("Activity categoires search", () => {
   test.each<{ url: string; searchResult: IActivityCategory[] }>([
     {
-      url: `/api/activities/categories/search?id=${activityCategories.running.id}`,
+      url: `/api/activities/categories/search?ids=${activityCategories.running.id}`,
       searchResult: [activityCategories.running],
     },
     {
-      url: `/api/activities/categories/search?boardId=${boards.productivePeople.id}`,
+      url: `/api/activities/categories/search?boardsIds=${boards.productivePeople.id}`,
       searchResult: [activityCategories.reading, activityCategories.meditate],
     },
     {
-      url: `/api/activities/categories/search?boardId=${boards.productivePeople.id},${boards.beautifulSportsmen.id}`,
+      url: `/api/activities/categories/search?boardsIds=${boards.productivePeople.id},${boards.beautifulSportsmen.id}`,
       searchResult: [
         activityCategories.running,
         activityCategories.pushups,
@@ -60,12 +60,25 @@ describe("Activity categoires search", () => {
       ],
     },
     {
-      url: `/api/activities/categories/search?id=${activityCategories.noSweets.id},${activityCategories.reading.id}`,
+      url: `/api/activities/categories/search?ids=${activityCategories.noSweets.id},${activityCategories.reading.id}`,
       searchResult: [activityCategories.noSweets, activityCategories.reading],
     },
     {
-      url: `/api/activities/categories/search?id=${activityCategories.sleep.id},666666`,
+      url: `/api/activities/categories/search?ids=${activityCategories.sleep.id},666666`,
       searchResult: [activityCategories.sleep],
+    },
+    {
+      url: `/api/activities/categories/search?ownersIds=${users.johnDoe.id}`,
+      searchResult: [activityCategories.reading],
+    },
+    {
+      url: `/api/activities/categories/search?boardsIds=${boards.beautifulSportsmen.id}&ownersIds=${users.jessicaStark.id}`,
+      searchResult: [
+        activityCategories.running,
+        activityCategories.pushups,
+        activityCategories.noSweets,
+        activityCategories.sleep,
+      ],
     },
     {
       url: "/api/activities/categories/search",
@@ -78,7 +91,7 @@ describe("Activity categoires search", () => {
         activityCategories.meditate,
       ],
     },
-  ])("categories search for: $url", async ({ url, searchResult }) => {
+  ])("$url", async ({ url, searchResult }) => {
     const response = await fetchApi(url)
     expect(response.status).toEqual(200)
     expect(await response.json()).toEqual(searchResult)

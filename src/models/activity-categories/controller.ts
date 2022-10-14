@@ -4,6 +4,7 @@ import { AuthGuard } from "#models/auth/guard"
 import { UserEntity } from "#models/users/entities/user.entity"
 
 import { AuthorizedUser } from "#helpers/AuthorizedUser.decorator"
+import { ParseNumbersArrayPipe } from "#helpers/parse-numbers-array.pipe"
 import { ValidationPipe } from "#helpers/validator.pipe"
 
 import { CreateActivityCategoryDto } from "./dto/create-activity-category.dto"
@@ -18,12 +19,16 @@ export class ActivityCategoriesController {
 
   @Get("search")
   search(
-    @Query()
-    query: SearchActivityCategoriesQueryDto,
+    @Query("boardsIds", ParseNumbersArrayPipe)
+    boardsIds: SearchActivityCategoriesQueryDto["boardsIds"],
+    @Query("ids", ParseNumbersArrayPipe)
+    ids: SearchActivityCategoriesQueryDto["ids"],
+    @Query("ownersIds", ParseNumbersArrayPipe)
+    ownersIds: SearchActivityCategoriesQueryDto["ownersIds"],
     @AuthorizedUser()
     authorizedUser: UserEntity
   ) {
-    return this.activityCategoriesService.search({ authorizedUser, query })
+    return this.activityCategoriesService.search({ authorizedUser, query: { boardsIds, ids, ownersIds } })
   }
 
   @Get(":categoryId")

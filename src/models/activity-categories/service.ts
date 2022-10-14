@@ -34,19 +34,16 @@ export class ActivityCategoriesService {
       ]),
     ]
     const boardsIdsToSearchWith =
-      query.boardId === undefined
+      query.boardsIds === undefined
         ? accessibleBoardsIds
-        : query.boardId
-            .split(",")
-            .map((boardId) => parseInt(boardId))
-            .filter((boardIdFromQuery) => accessibleBoardsIds.includes(boardIdFromQuery))
+        : query.boardsIds.filter((boardIdFromQuery) => accessibleBoardsIds.includes(boardIdFromQuery))
 
     return this.activityCategoriesRepository.find({
       order: { id: "ASC", name: "ASC" },
       relations: { board: true, measurementType: true, owner: true },
       where: {
-        ...(query.id !== undefined && { id: In(query.id.split(",")) }),
-        ...(query.ownerId !== undefined && { owner: In(query.ownerId.split(",")) }),
+        ...(query.ids !== undefined && { id: In(query.ids) }),
+        ...(query.ownersIds !== undefined && { owner: In(query.ownersIds) }),
         board: { id: In(boardsIdsToSearchWith) },
       },
     })
