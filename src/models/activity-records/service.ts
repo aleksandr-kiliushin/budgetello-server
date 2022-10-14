@@ -147,15 +147,7 @@ export class ActivityRecordsService {
     if (record.category.owner.id !== authorizedUser.id) {
       throw new ForbiddenException({ message: "Access denied." })
     }
-    if (
-      requestBody.booleanValue === undefined &&
-      requestBody.categoryId === undefined &&
-      requestBody.comment === undefined &&
-      requestBody.date === undefined &&
-      requestBody.quantitativeValue === undefined
-    ) {
-      return record
-    }
+    if (Object.keys(requestBody).length === 0) return record
     if (requestBody.booleanValue !== undefined) {
       record.booleanValue = requestBody.booleanValue
     }
@@ -175,12 +167,11 @@ export class ActivityRecordsService {
       record.date = requestBody.date
     }
     if (requestBody.categoryId !== undefined) {
-      const category = await this.activityCategoriesService
+      record.category = await this.activityCategoriesService
         .find({ authorizedUser, categoryId: requestBody.categoryId })
         .catch(() => {
           throw new BadRequestException({ fields: { categoryId: "Invalid value." } })
         })
-      record.category = category
     }
     if (record.category.measurementType.id === 1 && typeof record.quantitativeValue !== "number") {
       throw new BadRequestException({

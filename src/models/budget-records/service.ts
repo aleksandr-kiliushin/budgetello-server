@@ -143,14 +143,11 @@ export class BudgetRecordsService {
       record.date = requestBody.date
     }
     if (requestBody.categoryId !== undefined) {
-      try {
-        record.category = await this.budgetCategoriesService.find({
-          authorizedUser,
-          categoryId: requestBody.categoryId,
+      record.category = await this.budgetCategoriesService
+        .find({ authorizedUser, categoryId: requestBody.categoryId })
+        .catch(() => {
+          throw new BadRequestException({ fields: { categoryId: "Invalid category." } })
         })
-      } catch {
-        throw new BadRequestException({ fields: { categoryId: "Invalid category." } })
-      }
     }
     return this.budgetRecordsRepository.save(record)
   }

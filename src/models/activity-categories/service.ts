@@ -155,13 +155,11 @@ export class ActivityCategoriesService {
     if (Object.keys(requestBody).length === 0) return category
 
     if (requestBody.measurementTypeId !== undefined) {
-      try {
-        category.measurementType = await this.activityCategoryMeasurementTypesService.find({
-          typeId: requestBody.measurementTypeId,
+      category.measurementType = await this.activityCategoryMeasurementTypesService
+        .find({ typeId: requestBody.measurementTypeId })
+        .catch(() => {
+          throw new BadRequestException({ fields: { measurementTypeId: "Invalid value." } })
         })
-      } catch {
-        throw new BadRequestException({ fields: { measurementTypeId: "Invalid value." } })
-      }
     }
     if (requestBody.boardId !== undefined) {
       category.board = await this.boardsService.find({ boardId: requestBody.boardId }).catch(() => {
