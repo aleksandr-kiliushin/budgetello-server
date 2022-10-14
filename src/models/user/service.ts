@@ -7,7 +7,7 @@ import { encrypt } from "#utils/crypto"
 import { IUser } from "#interfaces/user"
 
 import { CreateUserDto } from "./dto/create-user.dto"
-import { FindUsersDto } from "./dto/find-users.dto"
+import { SearchUsersDto } from "./dto/search-users.dto"
 import { UpdateUserDto } from "./dto/update-user.dto"
 import { UserEntity } from "./entities/user.entity"
 
@@ -54,11 +54,10 @@ export class UserService {
     return user
   }
 
-  searchUsers(query: FindUsersDto): Promise<UserEntity[]> {
-    const { id, username } = query
+  searchUsers({ query }: { query: SearchUsersDto }): Promise<UserEntity[]> {
     return this.userRepository.findBy({
-      ...(id === undefined ? {} : { id: parseInt(id) }),
-      ...(username === undefined ? {} : { username: Like(`%${username}%`) }),
+      ...(query.id !== -1 && { id: query.id }),
+      ...(query.username !== undefined && { username: Like(`%${query.username}%`) }),
     })
   }
 

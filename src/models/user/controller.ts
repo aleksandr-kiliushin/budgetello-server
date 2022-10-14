@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  DefaultValuePipe,
   Delete,
   ForbiddenException,
   Get,
@@ -18,7 +19,7 @@ import { AuthorizedUser } from "#helpers/AuthorizedUser.decorator"
 import { ValidationPipe } from "#helpers/validator.pipe"
 
 import { CreateUserDto } from "./dto/create-user.dto"
-import { FindUsersDto } from "./dto/find-users.dto"
+import { SearchUsersDto } from "./dto/search-users.dto"
 import { UpdateUserDto } from "./dto/update-user.dto"
 import { UserEntity } from "./entities/user.entity"
 import { UserService } from "./service"
@@ -29,8 +30,11 @@ export class UserController {
 
   @Get("search")
   @UseGuards(AuthGuard)
-  searchUsers(@Query() query: FindUsersDto) {
-    return this.userService.searchUsers(query)
+  searchUsers(
+    @Query("id", new DefaultValuePipe(-1), ParseIntPipe) id: SearchUsersDto["id"],
+    @Query("username", new DefaultValuePipe("")) username: SearchUsersDto["username"]
+  ) {
+    return this.userService.searchUsers({ query: { id, username } })
   }
 
   @Get(":userIdentifier")
