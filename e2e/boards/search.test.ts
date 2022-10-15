@@ -14,6 +14,10 @@ describe("Responds with a board found by provided ID", () => {
       query: `{
         board(id: ${boards.cleverBudgetiers.id}) {
           id,
+          members {
+            id,
+            username
+          },
           name,
           subject {
             id,
@@ -25,6 +29,16 @@ describe("Responds with a board found by provided ID", () => {
         data: {
           board: {
             id: boards.cleverBudgetiers.id,
+            members: [
+              {
+                id: users.johnDoe.id,
+                username: users.johnDoe.username,
+              },
+              {
+                id: users.jessicaStark.id,
+                username: users.jessicaStark.username,
+              },
+            ],
             name: boards.cleverBudgetiers.name,
             subject: boards.cleverBudgetiers.subject,
           },

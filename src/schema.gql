@@ -23,6 +23,7 @@ type ActivityRecord {
 
 type Board {
   id: Int!
+  members: [User!]!
   name: String!
   subject: BoardSubject!
 }
