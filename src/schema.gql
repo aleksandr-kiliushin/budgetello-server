@@ -2,6 +2,11 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
+type ActivityCategoryMeasurementType {
+  id: Int!
+  name: String!
+}
+
 type Board {
   id: Int!
   name: String!
@@ -23,6 +28,8 @@ type BudgetCategoryType {
 }
 
 type Query {
+  activityCategoryMeasurementType(id: Int!): ActivityCategoryMeasurementType!
+  activityCategoryMeasurementTypes: [ActivityCategoryMeasurementType!]!
   board(id: Float!): Board!
   boardSubject(id: Int!): BoardSubject!
   boardSubjects: [BoardSubject!]!
