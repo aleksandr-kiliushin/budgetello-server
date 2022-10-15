@@ -22,6 +22,7 @@ type ActivityRecord {
 }
 
 type Board {
+  admins: [User!]!
   id: Int!
   members: [User!]!
   name: String!

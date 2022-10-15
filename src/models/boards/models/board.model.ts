@@ -5,8 +5,8 @@ import { User } from "#models/users/models/user.model"
 
 @ObjectType()
 export class Board {
-  // @ManyToMany(() => UserEntity, (user) => user.administratedBoards, { onDelete: "CASCADE" })
-  // admins: UserEntity[]
+  @Field(() => [User])
+  admins: User[]
 
   @Field((type) => Int)
   id: number
