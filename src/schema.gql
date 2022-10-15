@@ -24,6 +24,7 @@ type ActivityRecord {
 type Board {
   id: Int!
   name: String!
+  subject: BoardSubject!
 }
 
 type BoardSubject {

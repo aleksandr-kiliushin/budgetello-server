@@ -1,11 +1,13 @@
 import { Field, Int, ObjectType } from "@nestjs/graphql"
 
+import { BoardSubject } from "#models/board-subjects/models/board-subject.model"
+
 @ObjectType()
 export class Board {
   // @ManyToMany(() => UserEntity, (user) => user.administratedBoards, { onDelete: "CASCADE" })
   // admins: UserEntity[]
 
-  @Field(() => Int)
+  @Field((type) => Int)
   id: number
 
   // @ManyToMany(() => UserEntity, (user) => user.boards, { onDelete: "CASCADE" })
@@ -14,6 +16,6 @@ export class Board {
   @Field()
   name: string
 
-  // @ManyToOne(() => BoardSubjectEntity)
-  // subject: BoardSubjectEntity
+  @Field((type) => BoardSubject)
+  subject: BoardSubject[]
 }
