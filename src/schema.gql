@@ -2,6 +2,11 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
+type Board {
+  id: Int!
+  name: String!
+}
+
 type BoardSubject {
   id: Int!
   name: String!
@@ -13,8 +18,10 @@ type BudgetCategoryType {
 }
 
 type Query {
+  board(boardId: Float!): Board!
   boardSubject(id: Int!): BoardSubject!
   boardSubjects: [BoardSubject!]!
+  boards(iAmAdminOf: Boolean, iAmMemberOf: Boolean, ids: [Int!], name: String, subjectsIds: [Int!]): [Board!]!
   budgetCategoryType(id: Int!): BudgetCategoryType!
   budgetCategoryTypes: [BudgetCategoryType!]!
   user(id: Int, username: String): User!

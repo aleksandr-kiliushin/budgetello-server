@@ -7,7 +7,7 @@ import { UserEntity } from "#models/users/entities/user.entity"
 import { UsersService } from "#models/users/service"
 
 import { CreateBoardDto } from "./dto/create-board.dto"
-import { SearchBoardsQueryDto } from "./dto/search-boards-query.dto"
+import { SearchBoardsArgs } from "./dto/search-boards.args"
 import { UpdateBoardDto } from "./dto/update-board.dto"
 import { BoardEntity } from "./entities/board.entity"
 
@@ -22,36 +22,36 @@ export class BoardsService {
 
   async search({
     authorizedUser,
-    query,
+    args,
   }: {
     authorizedUser: UserEntity
-    query: SearchBoardsQueryDto
+    args: SearchBoardsArgs
   }): Promise<BoardEntity[]> {
     let boardIdsToSearchBy = (await this.boardsRepository.find()).map((board) => board.id)
     const authorizedUserAdministratedBoardsIds = authorizedUser.administratedBoards.map((board) => board.id)
-    if (query.iAmAdminOf === true) {
+    if (args.iAmAdminOf === true) {
       boardIdsToSearchBy = boardIdsToSearchBy.filter((boardId) => {
         return authorizedUserAdministratedBoardsIds.includes(boardId)
       })
     }
-    if (query.iAmAdminOf === false) {
+    if (args.iAmAdminOf === false) {
       boardIdsToSearchBy = boardIdsToSearchBy.filter((boardId) => {
         return !authorizedUserAdministratedBoardsIds.includes(boardId)
       })
     }
     const authorizedUserParticipatedBoardsIds = authorizedUser.boards.map((board) => board.id)
-    if (query.iAmMemberOf === true) {
+    if (args.iAmMemberOf === true) {
       boardIdsToSearchBy = boardIdsToSearchBy.filter((boardId) => {
         return authorizedUserParticipatedBoardsIds.includes(boardId)
       })
     }
-    if (query.iAmMemberOf === false) {
+    if (args.iAmMemberOf === false) {
       boardIdsToSearchBy = boardIdsToSearchBy.filter((boardId) => {
         return !authorizedUserParticipatedBoardsIds.includes(boardId)
       })
     }
-    if (query.ids !== undefined) {
-      const queryIds = query.ids
+    if (args.ids !== undefined) {
+      const queryIds = args.ids
       boardIdsToSearchBy = boardIdsToSearchBy.filter((boardId) => queryIds.includes(boardId))
     }
 
@@ -63,8 +63,8 @@ export class BoardsService {
       relations: { admins: true, members: true, subject: true },
       where: {
         id: In(boardIdsToSearchBy),
-        ...(query.subjectsIds !== undefined && { subject: In(query.subjectsIds) }),
-        ...(query.name !== undefined && { name: Like(`%${query.name}%`) }),
+        ...(args.subjectsIds !== undefined && { subject: In(args.subjectsIds) }),
+        ...(args.name !== undefined && { name: Like(`%${args.name}%`) }),
       },
     })
   }
