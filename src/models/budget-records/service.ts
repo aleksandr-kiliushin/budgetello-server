@@ -6,7 +6,7 @@ import { BudgetCategoriesService } from "#models/budget-categories/service"
 import { UserEntity } from "#models/users/entities/user.entity"
 
 import { CreateBudgetRecordDto } from "./dto/create-budget-record.dto"
-import { SearchBudgetRecordsQueryDto } from "./dto/search-budget-records-query.dto"
+import { SearchBudgetRecordsArgs } from "./dto/search-budget-records.args"
 import { UpdateBudgetRecordDto } from "./dto/update-budget-record.dto"
 import { BudgetRecordEntity } from "./entities/budget-record.entity"
 
@@ -19,11 +19,11 @@ export class BudgetRecordsService {
   ) {}
 
   async search({
+    args,
     authorizedUser,
-    query,
   }: {
+    args: SearchBudgetRecordsArgs
     authorizedUser: UserEntity
-    query: SearchBudgetRecordsQueryDto
   }): Promise<BudgetRecordEntity[]> {
     const accessibleBoardsIds = [
       ...new Set([
@@ -33,9 +33,9 @@ export class BudgetRecordsService {
     ]
 
     const boardsIdsToSearchWith =
-      query.boardsIds === undefined
+      args.boardsIds === undefined
         ? accessibleBoardsIds
-        : query.boardsIds.filter((boardIdFromQuery) => accessibleBoardsIds.includes(boardIdFromQuery))
+        : args.boardsIds.filter((boardIdFromQuery) => accessibleBoardsIds.includes(boardIdFromQuery))
 
     const accessibleCategoriesOfSelectedBoards = await this.budgetCategoriesService.search({
       args: { boardsIds: boardsIdsToSearchWith },
@@ -43,25 +43,25 @@ export class BudgetRecordsService {
     })
     const accessibleCategoriesOfSelectedBoardsIds = accessibleCategoriesOfSelectedBoards.map((category) => category.id)
     const categoriesIdsToSearchWith =
-      query.categoriesIds === undefined
+      args.categoriesIds === undefined
         ? accessibleCategoriesOfSelectedBoardsIds
-        : query.categoriesIds.filter((categoryIdFromQuery) => {
+        : args.categoriesIds.filter((categoryIdFromQuery) => {
             return accessibleCategoriesOfSelectedBoardsIds.includes(categoryIdFromQuery)
           })
 
     return this.budgetRecordsRepository.find({
       order: {
-        id: query.orderingById ?? "desc",
-        date: query.orderingById ?? "desc",
+        id: args.orderingById ?? "desc",
+        date: args.orderingById ?? "desc",
       },
       relations: { category: { board: true, type: true } },
-      skip: query.skip === undefined ? 0 : query.skip,
-      ...(query.take !== undefined && { take: query.take }),
+      skip: args.skip === undefined ? 0 : args.skip,
+      ...(args.take !== undefined && { take: args.take }),
       where: {
-        ...(query.amount !== undefined && { amount: Equal(query.amount) }), // TODO: Test it.
-        ...(query.dates !== undefined && { date: In(query.dates) }),
-        ...(query.ids !== undefined && { id: In(query.ids) }),
-        ...(query.isTrashed !== undefined && { isTrashed: query.isTrashed }),
+        ...(args.amount !== undefined && { amount: Equal(args.amount) }), // TODO: Test it.
+        ...(args.dates !== undefined && { date: In(args.dates) }),
+        ...(args.ids !== undefined && { id: In(args.ids) }),
+        ...(args.isTrashed !== undefined && { isTrashed: args.isTrashed }),
         category: { id: In(categoriesIdsToSearchWith) },
       },
     })

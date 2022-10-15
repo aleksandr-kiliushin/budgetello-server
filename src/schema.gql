@@ -33,6 +33,13 @@ type BudgetCategoryType {
   name: String!
 }
 
+type BudgetRecord {
+  amount: Float!
+  date: String!
+  id: Int!
+  isTrashed: Boolean!
+}
+
 type Query {
   activityCategories(boardsIds: [Int!], ids: [Int!], ownersIds: [Int!]): [ActivityCategory!]!
   activityCategory(id: Int!): [ActivityCategory!]!
@@ -46,6 +53,8 @@ type Query {
   budgetCategory(id: Int!): BudgetCategory!
   budgetCategoryType(id: Int!): BudgetCategoryType!
   budgetCategoryTypes: [BudgetCategoryType!]!
+  budgetRecord(id: Int!): BudgetRecord!
+  budgetRecords(amount: Float, boardsIds: [Int!], categoriesIds: [Int!], dates: [String!], ids: [Int!], isTrashed: Boolean, orderingByDate: String, orderingById: String, skip: Int, take: Int): [BudgetRecord!]!
   user(id: Int, username: String): User!
   users(ids: [Int!], username: String): [User!]!
 }
