@@ -1,5 +1,5 @@
 import { UseGuards } from "@nestjs/common"
-import { Args, Query, Resolver } from "@nestjs/graphql"
+import { Args, Int, Query, Resolver } from "@nestjs/graphql"
 
 import { AuthGuard } from "#models/auth/guard"
 import { UserEntity } from "#models/users/entities/user.entity"
@@ -27,7 +27,7 @@ export class BoardsResolver {
 
   @Query(() => Board, { name: "board" })
   find(
-    @Args("id")
+    @Args("id", { type: () => Int })
     boardId: number
   ) {
     return this.boardsService.find({ boardId })

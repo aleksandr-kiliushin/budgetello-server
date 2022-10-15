@@ -7,7 +7,7 @@ import { BoardsService } from "#models/boards/service"
 import { UserEntity } from "#models/users/entities/user.entity"
 
 import { CreateActivityCategoryDto } from "./dto/create-activity-category.dto"
-import { SearchActivityCategoriesQueryDto } from "./dto/seach-activity-categories-query.dto"
+import { SearchActivityCategoriesArgs } from "./dto/search-activity-categories.args"
 import { UpdateActivityCategoryDto } from "./dto/update-activity-category.dto"
 import { ActivityCategoryEntity } from "./entities/activity-category.entity"
 
@@ -21,11 +21,11 @@ export class ActivityCategoriesService {
   ) {}
 
   async search({
+    args,
     authorizedUser,
-    query,
   }: {
+    args: SearchActivityCategoriesArgs
     authorizedUser: UserEntity
-    query: SearchActivityCategoriesQueryDto
   }): Promise<ActivityCategoryEntity[]> {
     const accessibleBoardsIds = [
       ...new Set([
@@ -34,16 +34,16 @@ export class ActivityCategoriesService {
       ]),
     ]
     const boardsIdsToSearchWith =
-      query.boardsIds === undefined
+      args.boardsIds === undefined
         ? accessibleBoardsIds
-        : query.boardsIds.filter((boardIdFromQuery) => accessibleBoardsIds.includes(boardIdFromQuery))
+        : args.boardsIds.filter((boardIdFromQuery) => accessibleBoardsIds.includes(boardIdFromQuery))
 
     return this.activityCategoriesRepository.find({
       order: { id: "ASC", name: "ASC" },
       relations: { board: true, measurementType: true, owner: true },
       where: {
-        ...(query.ids !== undefined && { id: In(query.ids) }),
-        ...(query.ownersIds !== undefined && { owner: In(query.ownersIds) }),
+        ...(args.ids !== undefined && { id: In(args.ids) }),
+        ...(args.ownersIds !== undefined && { owner: In(args.ownersIds) }),
         board: { id: In(boardsIdsToSearchWith) },
       },
     })

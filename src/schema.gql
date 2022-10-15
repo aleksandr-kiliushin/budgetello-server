@@ -2,6 +2,12 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
+type ActivityCategory {
+  id: Int!
+  name: String!
+  unit: String
+}
+
 type ActivityCategoryMeasurementType {
   id: Int!
   name: String!
@@ -28,9 +34,11 @@ type BudgetCategoryType {
 }
 
 type Query {
+  activityCategories(boardsIds: [Int!], ids: [Int!], ownersIds: [Int!]): [ActivityCategory!]!
+  activityCategory(id: Int!): [ActivityCategory!]!
   activityCategoryMeasurementType(id: Int!): ActivityCategoryMeasurementType!
   activityCategoryMeasurementTypes: [ActivityCategoryMeasurementType!]!
-  board(id: Float!): Board!
+  board(id: Int!): Board!
   boardSubject(id: Int!): BoardSubject!
   boardSubjects: [BoardSubject!]!
   boards(iAmAdminOf: Boolean, iAmMemberOf: Boolean, ids: [Int!], name: String, subjectsIds: [Int!]): [Board!]!

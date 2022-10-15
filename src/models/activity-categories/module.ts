@@ -5,12 +5,11 @@ import { ActivityCategoryMeasurementTypesModule } from "#models/activity-categor
 import { BoardsModule } from "#models/boards/module"
 import { UsersModule } from "#models/users/module"
 
-import { ActivityCategoriesController } from "./controller"
 import { ActivityCategoryEntity } from "./entities/activity-category.entity"
+import { ActivityCategoriesResolver } from "./resolver"
 import { ActivityCategoriesService } from "./service"
 
 @Module({
-  controllers: [ActivityCategoriesController],
   exports: [ActivityCategoriesService],
   imports: [
     TypeOrmModule.forFeature([ActivityCategoryEntity]),
@@ -18,6 +17,6 @@ import { ActivityCategoriesService } from "./service"
     BoardsModule,
     UsersModule,
   ],
-  providers: [ActivityCategoriesController, ActivityCategoriesService],
+  providers: [ActivityCategoriesResolver, ActivityCategoriesService],
 })
 export class ActivityCategoriesModule {}
