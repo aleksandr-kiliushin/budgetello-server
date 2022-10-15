@@ -17,4 +17,12 @@ type Query {
   boardSubjects: [BoardSubject!]!
   budgetCategoryType(id: Int!): BudgetCategoryType!
   budgetCategoryTypes: [BudgetCategoryType!]!
+  user(id: Int, username: String): User!
+  users(ids: [Int!], username: String): [User!]!
+}
+
+type User {
+  id: Int!
+  password: String!
+  username: String!
 }

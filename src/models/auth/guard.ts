@@ -1,3 +1,4 @@
+// TODO: Move to src/helpers/guards.
 import {
   CanActivate,
   ExecutionContext,
@@ -14,10 +15,10 @@ import { UsersService } from "#models/users/service"
 export class AuthGuard implements CanActivate {
   constructor(private readonly usersService: UsersService) {}
 
-  async canActivate(context: ExecutionContext) {
-    const request = GqlExecutionContext.create(context).getContext().req
+  async canActivate(executionContext: ExecutionContext) {
+    const gqlExecutionContext = GqlExecutionContext.create(executionContext).getContext()
 
-    const authToken = request.headers.authorization
+    const authToken = gqlExecutionContext.req.headers.authorization
     if (authToken === undefined) return false
 
     const jwtSecret = process.env.JWT_SECRET
@@ -29,7 +30,7 @@ export class AuthGuard implements CanActivate {
       jwt.verify(authToken, jwtSecret)
       const decodingResult = jwt.decode(authToken, { json: true })
       if (decodingResult === null) throw new Error()
-      request.authorizedUser = await this.usersService.find({
+      gqlExecutionContext.authorizedUser = await this.usersService.find({
         userId: decodingResult.id,
         relations: { administratedBoards: true, boards: true },
       })
