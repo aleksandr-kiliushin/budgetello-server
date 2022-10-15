@@ -24,7 +24,7 @@ module.exports = {
       },
     ],
     "no-tabs": 1,
-    "no-unused-vars": "off",
+    "no-unused-vars": "error",
     "@typescript-eslint/explicit-function-return-type": "off",
     "@typescript-eslint/explicit-module-boundary-types": "off",
     "@typescript-eslint/naming-convention": [

@@ -9,7 +9,7 @@
     "incremental": true,
     "module": "CommonJS",
     "moduleResolution": "Node",
-    "noUnusedLocals": false,
+    "noUnusedLocals": true,
     "noUnusedParameters": false,
     "noEmitOnError": true,
     "noImplicitAny": true,
