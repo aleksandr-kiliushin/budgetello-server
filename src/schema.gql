@@ -2,12 +2,19 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
+type BoardSubject {
+  id: Int!
+  name: String!
+}
+
 type BudgetCategoryType {
   id: Int!
   name: String!
 }
 
 type Query {
+  boardSubject(id: Int!): BoardSubject!
+  boardSubjects: [BoardSubject!]!
   budgetCategoryType(id: Int!): BudgetCategoryType!
   budgetCategoryTypes: [BudgetCategoryType!]!
 }
