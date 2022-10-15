@@ -13,45 +13,16 @@ describe("Responds with a board found by provided ID", () => {
       authorizedUserUsername: users.johnDoe.username,
       query: `{
         board(id: ${boards.cleverBudgetiers.id}) {
-          admins {
-            id,
-            username
-          },
+          admins { id, password, username },
           id,
-          members {
-            id,
-            username
-          },
+          members { id, password, username },
           name,
-          subject {
-            id,
-            name
-          }
+          subject { id, name }
         }
       }`,
       responseBody: {
         data: {
-          board: {
-            admins: [
-              {
-                id: users.johnDoe.id,
-                username: users.johnDoe.username,
-              },
-            ],
-            id: boards.cleverBudgetiers.id,
-            members: [
-              {
-                id: users.johnDoe.id,
-                username: users.johnDoe.username,
-              },
-              {
-                id: users.jessicaStark.id,
-                username: users.jessicaStark.username,
-              },
-            ],
-            name: boards.cleverBudgetiers.name,
-            subject: boards.cleverBudgetiers.subject,
-          },
+          board: boards.cleverBudgetiers,
         },
       },
     },
