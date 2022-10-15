@@ -8,14 +8,14 @@ import { BudgetCategoryTypeEntity } from "./entities/budget-category-type.entity
 export class BudgetCategoryTypesService {
   constructor(
     @InjectRepository(BudgetCategoryTypeEntity)
-    private budgetCategoryTypeRepository: Repository<BudgetCategoryTypeEntity>
+    private budgetCategoryTypesRepository: Repository<BudgetCategoryTypeEntity>
   ) {}
 
   getAll(): Promise<BudgetCategoryTypeEntity[]> {
-    return this.budgetCategoryTypeRepository.find()
+    return this.budgetCategoryTypesRepository.find()
   }
 
   find({ typeId }: { typeId: BudgetCategoryTypeEntity["id"] }): Promise<BudgetCategoryTypeEntity> {
-    return this.budgetCategoryTypeRepository.findOneOrFail({ where: { id: typeId } })
+    return this.budgetCategoryTypesRepository.findOneOrFail({ where: { id: typeId } })
   }
 }
