@@ -1,4 +1,4 @@
-import { boards, boardsSubjects } from "#e2e/constants/boards"
+import { boardSubjects, boards } from "#e2e/constants/boards"
 import { users } from "#e2e/constants/users"
 import { ITestUserUsername, authorize } from "#e2e/helpers/authorize"
 import { fetchApi } from "#e2e/helpers/fetchApi"
@@ -63,7 +63,7 @@ describe("Boards search", () => {
     },
     {
       authorizedUserUsername: users.johnDoe.username,
-      url: `/api/boards/search?subjectsIds=${boardsSubjects.budget.id}`,
+      url: `/api/boards/search?subjectsIds=${boardSubjects.budget.id}`,
       searchResult: [boards.cleverBudgetiers, boards.megaEconomists],
     },
     {
@@ -73,7 +73,7 @@ describe("Boards search", () => {
     },
     {
       authorizedUserUsername: users.johnDoe.username,
-      url: `/api/boards/search?name=me&subjectsIds=${boardsSubjects.budget.id}&id=${boards.megaEconomists.id}`,
+      url: `/api/boards/search?name=me&subjectsIds=${boardSubjects.budget.id}&id=${boards.megaEconomists.id}`,
       searchResult: [boards.megaEconomists],
     },
     {
@@ -93,7 +93,7 @@ describe("Boards search", () => {
     },
     {
       authorizedUserUsername: users.jessicaStark.username,
-      url: `/api/boards/search?subjectsIds=${boardsSubjects.activities.id}&iAmMemberOf=true&iAmAdminOf=false`,
+      url: `/api/boards/search?subjectsIds=${boardSubjects.activities.id}&iAmMemberOf=true&iAmAdminOf=false`,
       searchResult: [boards.productivePeople],
     },
   ])("boards search for: $url", async ({ authorizedUserUsername, url, searchResult }) => {

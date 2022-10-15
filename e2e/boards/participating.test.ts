@@ -1,4 +1,4 @@
-import { boards, boardsSubjects } from "#e2e/constants/boards"
+import { boardSubjects, boards } from "#e2e/constants/boards"
 import { users } from "#e2e/constants/users"
 import { ITestUserUsername, authorize } from "#e2e/helpers/authorize"
 import { fetchApi } from "#e2e/helpers/fetchApi"
@@ -30,7 +30,7 @@ describe("Participating in a board", () => {
           id: boards.beautifulSportsmen.id,
           members: [users.johnDoe, users.jessicaStark],
           name: boards.beautifulSportsmen.name,
-          subject: boardsSubjects.activities,
+          subject: boardSubjects.activities,
         },
         status: 201,
         url: `/api/boards/${boards.beautifulSportsmen.id}/add-member/${users.johnDoe.id}`,
@@ -75,7 +75,7 @@ describe("Participating in a board", () => {
           id: boards.productivePeople.id,
           members: [users.johnDoe],
           name: boards.productivePeople.name,
-          subject: boardsSubjects.activities,
+          subject: boardSubjects.activities,
         },
         status: 201,
         url: `/api/boards/${boards.productivePeople.id}/remove-member/${users.jessicaStark.id}`,

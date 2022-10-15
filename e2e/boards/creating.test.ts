@@ -1,6 +1,6 @@
 import { BoardEntity } from "#models/boards/entities/board.entity"
 
-import { boardsSubjects } from "#e2e/constants/boards"
+import { boardSubjects } from "#e2e/constants/boards"
 import { users } from "#e2e/constants/users"
 import { authorize } from "#e2e/helpers/authorize"
 import { fetchApi } from "#e2e/helpers/fetchApi"
@@ -31,7 +31,7 @@ describe("Board creating", () => {
       status: 400,
     },
     {
-      payload: { name: "clever-budgetiers", subjectId: boardsSubjects.budget.id },
+      payload: { name: "clever-budgetiers", subjectId: boardSubjects.budget.id },
       response: {
         fields: {
           name: '"clever-budgetiers" budget board already exists.',
@@ -41,13 +41,13 @@ describe("Board creating", () => {
       status: 400,
     },
     {
-      payload: { name: "champions", subjectId: boardsSubjects.activities.id },
+      payload: { name: "champions", subjectId: boardSubjects.activities.id },
       response: {
         admins: [users.johnDoe],
         id: 5,
         members: [users.johnDoe],
         name: "champions",
-        subject: boardsSubjects.activities,
+        subject: boardSubjects.activities,
       },
       status: 201,
     },
@@ -62,7 +62,7 @@ describe("Board creating", () => {
 
   it("a newly created board can be found by ID", async () => {
     await fetchApi("/api/boards", {
-      body: JSON.stringify({ name: "champions", subjectId: boardsSubjects.activities.id }),
+      body: JSON.stringify({ name: "champions", subjectId: boardSubjects.activities.id }),
       method: "POST",
     })
     const getNewlyCreatedBoardResponse = await fetchApi("/api/boards/5")
@@ -71,7 +71,7 @@ describe("Board creating", () => {
       id: 5,
       members: [users.johnDoe],
       name: "champions",
-      subject: boardsSubjects.activities,
+      subject: boardSubjects.activities,
     })
   })
 })
