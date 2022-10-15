@@ -1,0 +1,13 @@
+# ------------------------------------------------------
+# THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+# ------------------------------------------------------
+
+type BudgetCategoryType {
+  id: Int!
+  name: String!
+}
+
+type Query {
+  budgetCategoryType(id: Int!): BudgetCategoryType!
+  budgetCategoryTypes: [BudgetCategoryType!]!
+}

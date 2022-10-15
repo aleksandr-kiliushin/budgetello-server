@@ -24,6 +24,7 @@ module.exports = {
       },
     ],
     "no-tabs": 1,
+    "no-unused-vars": "off",
     "@typescript-eslint/explicit-function-return-type": "off",
     "@typescript-eslint/explicit-module-boundary-types": "off",
     "@typescript-eslint/naming-convention": [
@@ -42,6 +43,6 @@ module.exports = {
     ],
     "@typescript-eslint/no-empty-function": "off",
     "@typescript-eslint/no-var-requires": "off",
-    "@typescript-eslint/no-unused-vars": 0,
+    "@typescript-eslint/no-unused-vars": "off",
   },
 }
