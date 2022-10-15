@@ -4,13 +4,12 @@ import { TypeOrmModule } from "@nestjs/typeorm"
 import { ActivityCategoriesModule } from "#models/activity-categories/module"
 import { UsersModule } from "#models/users/module"
 
-import { ActivityRecordsController } from "./controller"
 import { ActivityRecordEntity } from "./entities/activity-record.entity"
+import { ActivityRecordsResolver } from "./resolver"
 import { ActivityRecordsService } from "./service"
 
 @Module({
-  controllers: [ActivityRecordsController],
   imports: [TypeOrmModule.forFeature([ActivityRecordEntity]), ActivityCategoriesModule, UsersModule],
-  providers: [ActivityRecordsController, ActivityRecordsService],
+  providers: [ActivityRecordsResolver, ActivityRecordsService],
 })
 export class ActivityRecordsModule {}

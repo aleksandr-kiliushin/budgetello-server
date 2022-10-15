@@ -13,6 +13,14 @@ type ActivityCategoryMeasurementType {
   name: String!
 }
 
+type ActivityRecord {
+  booleanValue: Boolean
+  comment: String!
+  date: String!
+  id: Int!
+  quantitativeValue: Float
+}
+
 type Board {
   id: Int!
   name: String!
@@ -45,6 +53,8 @@ type Query {
   activityCategory(id: Int!): [ActivityCategory!]!
   activityCategoryMeasurementType(id: Int!): ActivityCategoryMeasurementType!
   activityCategoryMeasurementTypes: [ActivityCategoryMeasurementType!]!
+  activityRecord(id: Int!): ActivityRecord!
+  activityRecords(boardsIds: [Int!], categoriesIds: [Int!], dates: [String!], ids: [Int!], orderingByDate: String, orderingById: String, skip: Int, take: Int): [ActivityRecord!]!
   board(id: Int!): Board!
   boardSubject(id: Int!): BoardSubject!
   boardSubjects: [BoardSubject!]!

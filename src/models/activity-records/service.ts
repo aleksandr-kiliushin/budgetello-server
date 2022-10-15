@@ -6,7 +6,7 @@ import { ActivityCategoriesService } from "#models/activity-categories/service"
 import { UserEntity } from "#models/users/entities/user.entity"
 
 import { CreateActivityRecordDto } from "./dto/create-activity-record.dto"
-import { SearchActivityRecordsQueryDto } from "./dto/search-activity-records-query.dto"
+import { SearchActivityRecordsArgs } from "./dto/search-budget-records.args"
 import { UpdateActivityRecordDto } from "./dto/update-activity-record.dto"
 import { ActivityRecordEntity } from "./entities/activity-record.entity"
 
@@ -19,11 +19,11 @@ export class ActivityRecordsService {
   ) {}
 
   async search({
+    args,
     authorizedUser,
-    query,
   }: {
+    args: SearchActivityRecordsArgs
     authorizedUser: UserEntity
-    query: SearchActivityRecordsQueryDto
   }): Promise<ActivityRecordEntity[]> {
     const accessibleBoardsIds = [
       ...new Set([
@@ -33,9 +33,9 @@ export class ActivityRecordsService {
     ]
 
     const boardsIdsToSearchWith =
-      query.boardsIds === undefined
+      args.boardsIds === undefined
         ? accessibleBoardsIds
-        : query.boardsIds.filter((boardIdFromQuery) => accessibleBoardsIds.includes(boardIdFromQuery))
+        : args.boardsIds.filter((boardIdFromQuery) => accessibleBoardsIds.includes(boardIdFromQuery))
 
     const accessibleCategoriesOfSelectedBoards = await this.activityCategoriesService.search({
       args: { boardsIds: boardsIdsToSearchWith },
@@ -43,23 +43,23 @@ export class ActivityRecordsService {
     })
     const accessibleCategoriesOfSelectedBoardsIds = accessibleCategoriesOfSelectedBoards.map((category) => category.id)
     const categoriesIdsToSearchWith =
-      query.categorysIds === undefined
+      args.categoriesIds === undefined
         ? accessibleCategoriesOfSelectedBoardsIds
-        : query.categorysIds.filter((categoryIdFromQuery) => {
+        : args.categoriesIds.filter((categoryIdFromQuery) => {
             return accessibleCategoriesOfSelectedBoardsIds.includes(categoryIdFromQuery)
           })
 
     return this.activityRecordsRepository.find({
       order: {
-        id: query.orderingById ?? "desc",
-        date: query.orderingById ?? "desc",
+        id: args.orderingById ?? "desc",
+        date: args.orderingById ?? "desc",
       },
       relations: { category: { board: true, owner: true, measurementType: true } },
-      skip: query.skip === undefined ? 0 : query.skip,
-      ...(query.take !== undefined && { take: query.take }),
+      skip: args.skip === undefined ? 0 : args.skip,
+      ...(args.take !== undefined && { take: args.take }),
       where: {
-        ...(query.dates !== undefined && { date: In(query.dates) }),
-        ...(query.ids !== undefined && { id: In(query.ids) }),
+        ...(args.dates !== undefined && { date: In(args.dates) }),
+        ...(args.ids !== undefined && { id: In(args.ids) }),
         category: { id: In(categoriesIdsToSearchWith) },
       },
     })
