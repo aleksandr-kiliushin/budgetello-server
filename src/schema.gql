@@ -12,16 +12,23 @@ type BoardSubject {
   name: String!
 }
 
+type BudgetCategory {
+  id: Int!
+  name: String!
+}
+
 type BudgetCategoryType {
   id: Int!
   name: String!
 }
 
 type Query {
-  board(boardId: Float!): Board!
+  board(id: Float!): Board!
   boardSubject(id: Int!): BoardSubject!
   boardSubjects: [BoardSubject!]!
   boards(iAmAdminOf: Boolean, iAmMemberOf: Boolean, ids: [Int!], name: String, subjectsIds: [Int!]): [Board!]!
+  budgetCategories(boardsIds: [Int!], ids: [Int!]): [BudgetCategory!]!
+  budgetCategory(id: Int!): BudgetCategory!
   budgetCategoryType(id: Int!): BudgetCategoryType!
   budgetCategoryTypes: [BudgetCategoryType!]!
   user(id: Int, username: String): User!

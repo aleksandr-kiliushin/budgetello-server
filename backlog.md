@@ -1,0 +1,2 @@
+- Add return type for all resolver methods. Select IUser VS UserEntity VS User.
+- Remove all unused dto for query-string-search, etc.

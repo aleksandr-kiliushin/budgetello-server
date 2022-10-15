@@ -27,7 +27,7 @@ export class BoardsResolver {
 
   @Query(() => Board, { name: "board" })
   find(
-    @Args("boardId")
+    @Args("id")
     boardId: number
   ) {
     return this.boardsService.find({ boardId })

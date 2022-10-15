@@ -21,11 +21,11 @@ export class BudgetCategoriesService {
   ) {}
 
   async search({
+    args,
     authorizedUser,
-    query,
   }: {
+    args: SearchBudgetCategoriesQueryDto
     authorizedUser: UserEntity
-    query: SearchBudgetCategoriesQueryDto
   }): Promise<BudgetCategoryEntity[]> {
     const accessibleBoardsIds = [
       ...new Set([
@@ -34,15 +34,15 @@ export class BudgetCategoriesService {
       ]),
     ]
     const boardsIdsToSearchWith =
-      query.boardsIds === undefined
+      args.boardsIds === undefined
         ? accessibleBoardsIds
-        : query.boardsIds.filter((boardIdFromQuery) => accessibleBoardsIds.includes(boardIdFromQuery))
+        : args.boardsIds.filter((boardIdFromQuery) => accessibleBoardsIds.includes(boardIdFromQuery))
 
     return this.budgetCategoriesRepository.find({
       order: { id: "ASC", name: "ASC" },
       relations: { board: true, type: true },
       where: {
-        ...(query.ids !== undefined && { id: In(query.ids) }),
+        ...(args.ids !== undefined && { id: In(args.ids) }),
         board: { id: In(boardsIdsToSearchWith) },
       },
     })

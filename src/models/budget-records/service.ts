@@ -38,8 +38,8 @@ export class BudgetRecordsService {
         : query.boardsIds.filter((boardIdFromQuery) => accessibleBoardsIds.includes(boardIdFromQuery))
 
     const accessibleCategoriesOfSelectedBoards = await this.budgetCategoriesService.search({
+      args: { boardsIds: boardsIdsToSearchWith },
       authorizedUser,
-      query: { boardsIds: boardsIdsToSearchWith },
     })
     const accessibleCategoriesOfSelectedBoardsIds = accessibleCategoriesOfSelectedBoards.map((category) => category.id)
     const categoriesIdsToSearchWith =
