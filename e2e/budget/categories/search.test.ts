@@ -1,67 +1,105 @@
-import { IBudgetCategory } from "#interfaces/budget"
-
+import { boards } from "#e2e/constants/boards"
 import { budgetCategories } from "#e2e/constants/budget"
 import { users } from "#e2e/constants/users"
 import { authorize } from "#e2e/helpers/authorize"
-import { fetchApi } from "#e2e/helpers/fetchApi"
+import { fetchGqlApi } from "#e2e/helpers/fetchGqlApi"
 
 beforeEach(async () => {
   await authorize(users.johnDoe.username)
 })
 
 describe("Responds with a budget category found by provided ID", () => {
-  test.each<
-    | { url: string; responseStatus: 200; responseData: IBudgetCategory }
-    | { url: string; responseStatus: 403; responseData: Record<string, unknown> }
-    | { url: string; responseStatus: 404; responseData: Record<string, never> }
-  >([
+  test.each<{ query: string; responseBody: unknown }>([
     {
-      url: "/api/budget/categories/1",
-      responseStatus: 200,
-      responseData: budgetCategories.clothesExpense,
+      query: `{
+        budgetCategory(id: ${budgetCategories.clothesExpense.id}) {
+          board { id, name },
+          id,
+          name,
+          type { id, name }
+        }
+      }`,
+      responseBody: { data: { budgetCategory: budgetCategories.clothesExpense } },
     },
-    {
-      url: "/api/budget/categories/3",
-      responseStatus: 403,
-      responseData: { message: "Access denied." },
-    },
-    {
-      url: "/api/budget/categories/666666",
-      responseStatus: 404,
-      responseData: {},
-    },
-  ])("category search for: $url", async ({ url, responseStatus, responseData }) => {
-    const response = await fetchApi(url)
-    expect(response.status).toEqual(responseStatus)
-    expect(await response.json()).toEqual(responseData)
+    // {
+    //   query: "/api/budget/categories/3",
+    //   responseBody: { message: "Access denied." },
+    // },
+    // {
+    //   query: "/api/budget/categories/666666",
+    //   responseBody: {},
+    // },
+  ])("$query", async ({ query, responseBody }) => {
+    expect(await fetchGqlApi(query)).toEqual(responseBody)
   })
 })
 
 describe("Budget categoires search", () => {
-  test.each<{ url: string; searchResult: IBudgetCategory[] }>([
+  test.each<{ query: string; responseBody: unknown }>([
     {
-      url: `/api/budget/categories/search?ids=${budgetCategories.clothesExpense.id}`,
-      searchResult: [budgetCategories.clothesExpense],
+      query: `{
+        budgetCategories(ids: [${budgetCategories.clothesExpense.id}]) {
+          board { id, name },
+          id,
+          name,
+          type { id, name }
+        }
+      }`,
+      responseBody: { data: { budgetCategories: [budgetCategories.clothesExpense] } },
     },
     {
-      url: `/api/budget/categories/search?boardsIds=${budgetCategories.clothesExpense.id},${budgetCategories.educationExpense.id}`,
-      searchResult: [budgetCategories.clothesExpense, budgetCategories.educationExpense],
+      query: `{
+        budgetCategories(boardsIds: [${boards.cleverBudgetiers.id}]) {
+          board { id, name },
+          id,
+          name,
+          type { id, name }
+        }
+      }`,
+      responseBody: {
+        data: { budgetCategories: [budgetCategories.clothesExpense, budgetCategories.educationExpense] },
+      },
     },
     {
-      url: `/api/budget/categories/search?ids=${budgetCategories.educationExpense.id},${budgetCategories.giftsExpense.id}`,
-      searchResult: [budgetCategories.educationExpense],
+      query: `{
+        budgetCategories(ids: [${budgetCategories.educationExpense.id}, ${budgetCategories.giftsExpense.id}]) {
+          board { id, name },
+          id,
+          name,
+          type { id, name }
+        }
+      }`,
+      responseBody: {
+        data: { budgetCategories: [budgetCategories.educationExpense] },
+      },
     },
     {
-      url: `/api/budget/categories/search?ids=${budgetCategories.salaryIncome.id},666666`,
-      searchResult: [],
+      query: `{
+        budgetCategories(ids: [${budgetCategories.salaryIncome.id}, 666666]) {
+          board { id, name },
+          id,
+          name,
+          type { id, name }
+        }
+      }`,
+      responseBody: {
+        data: { budgetCategories: [] },
+      },
     },
     {
-      url: "/api/budget/categories/search",
-      searchResult: [budgetCategories.clothesExpense, budgetCategories.educationExpense],
+      query: `{
+        budgetCategories {
+          board { id, name },
+          id,
+          name,
+          type { id, name }
+        }
+      }`,
+      responseBody: {
+        data: { budgetCategories: [budgetCategories.clothesExpense, budgetCategories.educationExpense] },
+      },
     },
-  ])("categories search for: $url", async ({ url, searchResult }) => {
-    const response = await fetchApi(url)
-    expect(response.status).toEqual(200)
-    expect(await response.json()).toEqual(searchResult)
+  ])("$query", async ({ query, responseBody }) => {
+    expect(await fetchGqlApi(query)).toEqual(responseBody)
   })
 })

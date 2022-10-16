@@ -1,9 +1,12 @@
 import { Field, Int, ObjectType } from "@nestjs/graphql"
 
+import { Board } from "#models/boards/models/board.model"
+import { BudgetCategoryType } from "#models/budget-category-types/models/budget-category-type.model"
+
 @ObjectType()
 export class BudgetCategory {
-  //   @ManyToOne(() => BoardEntity, { onDelete: "CASCADE" })
-  //   board: BoardEntity
+  @Field(() => Board)
+  board: Board
 
   @Field(() => Int)
   id: number
@@ -11,6 +14,6 @@ export class BudgetCategory {
   @Field()
   name: string
 
-  //   @ManyToOne(() => BudgetCategoryTypeEntity)
-  //   type: BudgetCategoryTypeEntity
+  @Field(() => BudgetCategoryType)
+  type: BudgetCategoryType
 }

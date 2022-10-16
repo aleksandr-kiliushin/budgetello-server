@@ -35,8 +35,10 @@ type BoardSubject {
 }
 
 type BudgetCategory {
+  board: Board!
   id: Int!
   name: String!
+  type: BudgetCategoryType!
 }
 
 type BudgetCategoryType {

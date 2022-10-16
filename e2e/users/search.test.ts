@@ -18,7 +18,7 @@ describe("Returns a user by their identifier", () => {
     },
     {
       query: `{
-        user(id: 1) {
+        user(id: ${users.johnDoe.id}) {
           id, password, username
         }
       }`,
@@ -26,7 +26,7 @@ describe("Returns a user by their identifier", () => {
     },
     {
       query: `{
-        user(username: "john-doe") {
+        user(username: "${users.johnDoe.username}") {
           id, password, username
         }
       }`,
@@ -56,7 +56,7 @@ describe("Users search", () => {
   test.each<{ query: string; responseBody: unknown }>([
     {
       query: `{
-        users(ids: [1]) {
+        users(ids: [${users.johnDoe.id}]) {
           id,
           password,
           username
@@ -66,7 +66,7 @@ describe("Users search", () => {
     },
     {
       query: `{
-        users(ids: [1, 2]) {
+        users(ids: [${users.johnDoe.id}, ${users.jessicaStark.id}]) {
           id,
           password,
           username
@@ -76,7 +76,7 @@ describe("Users search", () => {
     },
     {
       query: `{
-        users(username: "john-doe") {
+        users(username: "${users.johnDoe.username}") {
           id,
           password,
           username
@@ -86,7 +86,7 @@ describe("Users search", () => {
     },
     {
       query: `{
-        users(ids: [1], username: "john-doe") {
+        users(ids: [${users.johnDoe.id}], username: "${users.johnDoe.username}") {
           id,
           password,
           username
