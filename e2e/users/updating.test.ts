@@ -40,7 +40,7 @@ describe("User updating", () => {
     })
     expect(response.status).toEqual(200)
     const responseBody = await response.json()
-    expect(responseBody.data.authorize).toEqual(expect.stringMatching(".+"))
+    expect(responseBody.data).toEqual({ authorize: expect.stringMatching(".+") })
   })
 
   it("authorization with the old credential is failed", async () => {
@@ -74,6 +74,6 @@ describe("User updating", () => {
         ${pickFields.user}
       }
     }`)
-    expect(fetchAnotherUserResponseBody.data.user).toEqual(users.jessicaStark)
+    expect(fetchAnotherUserResponseBody.data).toEqual({ user: users.jessicaStark })
   })
 })
