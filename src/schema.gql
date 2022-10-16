@@ -51,6 +51,7 @@ type BudgetCategoryType {
 
 type BudgetRecord {
   amount: Float!
+  category: BudgetCategory!
   date: String!
   id: Int!
   isTrashed: Boolean!

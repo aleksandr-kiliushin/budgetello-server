@@ -1,12 +1,14 @@
 import { Field, Float, Int, ObjectType } from "@nestjs/graphql"
 
+import { BudgetCategory } from "#models/budget-categories/models/budget-category.model"
+
 @ObjectType()
 export class BudgetRecord {
-  @Field(() => Float)
+  @Field((type) => Float)
   amount: number
 
-  // @ManyToOne(() => BudgetCategoryEntity, { onDelete: "CASCADE" })
-  // category: BudgetCategoryEntity
+  @Field((type) => BudgetCategory)
+  category: BudgetCategory
 
   @Field()
   date: string
@@ -14,6 +16,6 @@ export class BudgetRecord {
   @Field()
   isTrashed: boolean
 
-  @Field(() => Int)
+  @Field((type) => Int)
   id: number
 }
