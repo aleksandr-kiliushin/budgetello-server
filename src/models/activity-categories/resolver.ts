@@ -26,7 +26,7 @@ export class ActivityCategoriesResolver {
     return this.activityCategoriesService.search({ args, authorizedUser })
   }
 
-  @Query((returns) => [ActivityCategory], { name: "activityCategory" })
+  @Query((returns) => ActivityCategory, { name: "activityCategory" })
   find(
     @Args("id", { type: () => Int })
     categoryId: number,

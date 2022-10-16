@@ -3,8 +3,11 @@
 # ------------------------------------------------------
 
 type ActivityCategory {
+  board: Board!
   id: Int!
+  measurementType: ActivityCategoryMeasurementType!
   name: String!
+  owner: User!
   unit: String
 }
 
@@ -55,7 +58,7 @@ type BudgetRecord {
 
 type Query {
   activityCategories(boardsIds: [Int!], ids: [Int!], ownersIds: [Int!]): [ActivityCategory!]!
-  activityCategory(id: Int!): [ActivityCategory!]!
+  activityCategory(id: Int!): ActivityCategory!
   activityCategoryMeasurementType(id: Int!): ActivityCategoryMeasurementType!
   activityCategoryMeasurementTypes: [ActivityCategoryMeasurementType!]!
   activityRecord(id: Int!): ActivityRecord!

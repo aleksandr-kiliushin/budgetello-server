@@ -1,99 +1,200 @@
-import { IActivityCategory } from "#interfaces/activities"
-
 import { activityCategories } from "#e2e/constants/activities"
 import { boards } from "#e2e/constants/boards"
 import { users } from "#e2e/constants/users"
 import { authorize } from "#e2e/helpers/authorize"
-import { fetchApi } from "#e2e/helpers/fetchApi"
+import { fetchGqlApi } from "#e2e/helpers/fetchGqlApi"
 
 beforeEach(async () => {
   await authorize(users.jessicaStark.username)
 })
 
 describe("Responds with a category found by provided ID", () => {
-  test.each<
-    | { url: string; responseStatus: 200; responseData: IActivityCategory }
-    | { url: string; responseStatus: 403; responseData: Record<string, unknown> }
-    | { url: string; responseStatus: 404; responseData: Record<string, never> }
-  >([
+  test.each<{ query: string; responseBody: unknown }>([
     {
-      url: `/api/activities/categories/${activityCategories.running.id}`,
-      responseStatus: 200,
-      responseData: activityCategories.running,
+      query: `{
+        activityCategory(id: ${activityCategories.running.id}) {
+          board { id, name }
+          id,
+          name,
+          measurementType { id, name },
+          owner { id, password, username },
+          unit
+        }
+      }`,
+      responseBody: { data: { activityCategory: activityCategories.running } },
     },
     {
-      url: `/api/activities/categories/${activityCategories.reading.id}`,
-      responseStatus: 200,
-      responseData: activityCategories.reading,
+      query: `{
+        activityCategory(id: ${activityCategories.reading.id}) {
+          board { id, name }
+          id,
+          name,
+          measurementType { id, name },
+          owner { id, password, username },
+          unit
+        }
+      }`,
+      responseBody: { data: { activityCategory: activityCategories.reading } },
     },
-    {
-      url: "/api/activities/categories/666666",
-      responseStatus: 404,
-      responseData: {},
-    },
-  ])("$url", async ({ url, responseStatus, responseData }) => {
-    const response = await fetchApi(url)
-    expect(response.status).toEqual(responseStatus)
-    expect(await response.json()).toEqual(responseData)
+    // {
+    //   query: "/api/activities/categories/666666",
+    //   responseBody: {},
+    // },
+  ])("$query", async ({ query, responseBody }) => {
+    expect(await fetchGqlApi(query)).toEqual(responseBody)
   })
 })
 
 describe("Activity categoires search", () => {
-  test.each<{ url: string; searchResult: IActivityCategory[] }>([
+  test.each<{ query: string; responseBody: unknown }>([
     {
-      url: `/api/activities/categories/search?ids=${activityCategories.running.id}`,
-      searchResult: [activityCategories.running],
+      query: `{
+        activityCategories(ids: [${activityCategories.running.id}]) {
+          board { id, name }
+          id,
+          name,
+          measurementType { id, name },
+          owner { id, password, username },
+          unit
+        }
+      }`,
+      responseBody: { data: { activityCategories: [activityCategories.running] } },
     },
     {
-      url: `/api/activities/categories/search?boardsIds=${boards.productivePeople.id}`,
-      searchResult: [activityCategories.reading, activityCategories.meditate],
+      query: `{
+        activityCategories(boardsIds: [${boards.productivePeople.id}]) {
+          board { id, name }
+          id,
+          name,
+          measurementType { id, name },
+          owner { id, password, username },
+          unit
+        }
+      }`,
+      responseBody: { data: { activityCategories: [activityCategories.reading, activityCategories.meditate] } },
     },
     {
-      url: `/api/activities/categories/search?boardsIds=${boards.productivePeople.id},${boards.beautifulSportsmen.id}`,
-      searchResult: [
-        activityCategories.running,
-        activityCategories.pushups,
-        activityCategories.noSweets,
-        activityCategories.sleep,
-        activityCategories.reading,
-        activityCategories.meditate,
-      ],
+      query: `{
+        activityCategories(boardsIds: [${boards.productivePeople.id}, ${boards.beautifulSportsmen.id}]) {
+          board { id, name }
+          id,
+          name,
+          measurementType { id, name },
+          owner { id, password, username },
+          unit
+        }
+      }`,
+      responseBody: {
+        data: {
+          activityCategories: [
+            activityCategories.running,
+            activityCategories.pushups,
+            activityCategories.noSweets,
+            activityCategories.sleep,
+            activityCategories.reading,
+            activityCategories.meditate,
+          ],
+        },
+      },
     },
     {
-      url: `/api/activities/categories/search?ids=${activityCategories.noSweets.id},${activityCategories.reading.id}`,
-      searchResult: [activityCategories.noSweets, activityCategories.reading],
+      query: `{
+        activityCategories(ids: [${activityCategories.noSweets.id}, ${activityCategories.reading.id}]) {
+          board { id, name }
+          id,
+          name,
+          measurementType { id, name },
+          owner { id, password, username },
+          unit
+        }
+      }`,
+      responseBody: {
+        data: {
+          activityCategories: [activityCategories.noSweets, activityCategories.reading],
+        },
+      },
     },
     {
-      url: `/api/activities/categories/search?ids=${activityCategories.sleep.id},666666`,
-      searchResult: [activityCategories.sleep],
+      query: `{
+        activityCategories(ids: [${activityCategories.sleep.id}, 666666]) {
+          board { id, name }
+          id,
+          name,
+          measurementType { id, name },
+          owner { id, password, username },
+          unit
+        }
+      }`,
+      responseBody: {
+        data: {
+          activityCategories: [activityCategories.sleep],
+        },
+      },
     },
     {
-      url: `/api/activities/categories/search?ownersIds=${users.johnDoe.id}`,
-      searchResult: [activityCategories.reading],
+      query: `{
+        activityCategories(ownersIds: [${users.johnDoe.id}]) {
+          board { id, name }
+          id,
+          name,
+          measurementType { id, name },
+          owner { id, password, username },
+          unit
+        }
+      }`,
+      responseBody: {
+        data: {
+          activityCategories: [activityCategories.reading],
+        },
+      },
     },
     {
-      url: `/api/activities/categories/search?boardsIds=${boards.beautifulSportsmen.id}&ownersIds=${users.jessicaStark.id}`,
-      searchResult: [
-        activityCategories.running,
-        activityCategories.pushups,
-        activityCategories.noSweets,
-        activityCategories.sleep,
-      ],
+      query: `{
+        activityCategories(boardsIds: [${boards.beautifulSportsmen.id}], ownersIds: [${users.jessicaStark.id}]) {
+          board { id, name }
+          id,
+          name,
+          measurementType { id, name },
+          owner { id, password, username },
+          unit
+        }
+      }`,
+      responseBody: {
+        data: {
+          activityCategories: [
+            activityCategories.running,
+            activityCategories.pushups,
+            activityCategories.noSweets,
+            activityCategories.sleep,
+          ],
+        },
+      },
     },
     {
-      url: "/api/activities/categories/search",
-      searchResult: [
-        activityCategories.running,
-        activityCategories.pushups,
-        activityCategories.noSweets,
-        activityCategories.sleep,
-        activityCategories.reading,
-        activityCategories.meditate,
-      ],
+      query: `{
+        activityCategories {
+          board { id, name }
+          id,
+          name,
+          measurementType { id, name },
+          owner { id, password, username },
+          unit
+        }
+      }`,
+      responseBody: {
+        data: {
+          activityCategories: [
+            activityCategories.running,
+            activityCategories.pushups,
+            activityCategories.noSweets,
+            activityCategories.sleep,
+            activityCategories.reading,
+            activityCategories.meditate,
+          ],
+        },
+      },
     },
-  ])("$url", async ({ url, searchResult }) => {
-    const response = await fetchApi(url)
-    expect(response.status).toEqual(200)
-    expect(await response.json()).toEqual(searchResult)
+  ])("$query", async ({ query, responseBody }) => {
+    expect(await fetchGqlApi(query)).toEqual(responseBody)
   })
 })

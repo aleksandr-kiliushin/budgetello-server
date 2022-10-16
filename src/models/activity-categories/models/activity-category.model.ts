@@ -1,24 +1,25 @@
 import { Field, Int, ObjectType } from "@nestjs/graphql"
 
+import { ActivityCategoryMeasurementType } from "#models/activity-category-measurement-types/models/activity-category-measurement-type.model"
+import { Board } from "#models/boards/models/board.model"
+import { User } from "#models/users/models/user.model"
+
 @ObjectType()
 export class ActivityCategory {
-  //   @ManyToOne(() => BoardEntity, { onDelete: "CASCADE" })
-  //   board: BoardEntity
+  @Field((type) => Board)
+  board: Board
 
-  @Field(() => Int)
+  @Field((type) => Int)
   id: number
 
-  // @ManyToOne(() => ActivityCategoryMeasurementTypeEntity)
-  // measurementType: ActivityCategoryMeasurementTypeEntity
+  @Field((type) => ActivityCategoryMeasurementType)
+  measurementType: ActivityCategoryMeasurementType
 
   @Field()
   name: string
 
-  // @ManyToOne(() => UserEntity, { onDelete: "CASCADE" })
-  // owner: UserEntity
-
-  //   @ManyToOne(() => BudgetCategoryTypeEntity)
-  //   type: BudgetCategoryTypeEntity
+  @Field((type) => User)
+  owner: User
 
   @Field({ nullable: true })
   unit: string
