@@ -3,7 +3,7 @@ import { IUser } from "#interfaces/user"
 import { users } from "#e2e/constants/users"
 import { authorize } from "#e2e/helpers/authorize"
 import { fetchGqlApi } from "#e2e/helpers/fetchGqlApi"
-import { pickFields } from "#e2e/pickFields"
+import { pickFields } from "#e2e/helpers/pickFields"
 
 beforeEach(async () => {
   await authorize(users.johnDoe.id)

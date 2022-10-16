@@ -1,7 +1,7 @@
 import { users } from "#e2e/constants/users"
 import { authorize } from "#e2e/helpers/authorize"
 import { fetchGqlApi } from "#e2e/helpers/fetchGqlApi"
-import { pickFields } from "#e2e/pickFields"
+import { pickFields } from "#e2e/helpers/pickFields"
 
 describe("User creating process", () => {
   it("can create and get correct data response after creating", async () => {
