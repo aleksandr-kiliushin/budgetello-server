@@ -1,41 +1,45 @@
-import { IUser } from "#interfaces/user"
-
 import { users } from "#e2e/constants/users"
+import { authorize } from "#e2e/helpers/authorize"
+import { fetchGqlApi } from "#e2e/helpers/fetchGqlApi"
 
-describe("User registration process", () => {
-  it("can register and get correct data response after registration", async () => {
-    const response = await fetch("http://localhost:3080/api/users", {
-      body: JSON.stringify({ username: "" }),
-      headers: { "Content-Type": "application/json" },
-      method: "POST",
-    })
-
-    expect(response.status).toEqual(400)
-    expect(await response.json()).toEqual({
-      fields: {
-        username: "Required.",
-        password: "Required.",
+describe("User creating process", () => {
+  it("can create and get correct data response after creating", async () => {
+    const responseBody = await fetchGqlApi(`mutation CREATE_USER {
+      createUser(input: { username: "andrew-smith", password: "andrew-smith-password" }) {
+        id,
+        password,
+        username
+      }
+    }`)
+    expect(responseBody).toEqual({
+      data: {
+        createUser: {
+          id: 3,
+          password: expect.stringMatching(".+"),
+          username: "andrew-smith",
+        },
       },
     })
   })
 
-  it("can register and get correct data response after registration", async () => {
-    const registerUserResponse = await fetch("http://localhost:3080/api/users", {
-      body: JSON.stringify({ username: "andrew-smith", password: "andrew-smith-password" }),
-      headers: { "Content-Type": "application/json" },
-      method: "POST",
-    })
-
-    expect(await registerUserResponse.json()).toEqual<IUser>({
-      id: 3,
-      password: expect.stringMatching(".+"),
-      username: "andrew-smith",
-    })
-  })
+  // it("validates user creating input", async () => {
+  //   const response = await fetch("http://localhost:3080/api/users", {
+  //     body: JSON.stringify({ username: "" }),
+  //     headers: { "Content-Type": "application/json" },
+  //     method: "POST",
+  //   })
+  //   expect(response.status).toEqual(400)
+  //   expect(await response.json()).toEqual({
+  //     fields: {
+  //       username: "Required.",
+  //       password: "Required.",
+  //     },
+  //   })
+  // })
 })
 
-describe("Registered user data and functions", () => {
-  let newlyRegisteredUser = {
+describe("Created user data and operations", () => {
+  let newlyCreatedUser = {
     id: 0,
     username: "",
     password: "",
@@ -44,59 +48,75 @@ describe("Registered user data and functions", () => {
   }
 
   beforeEach(async () => {
-    const registerUserResponse = await fetch("http://localhost:3080/api/users", {
+    const creatingUserResponseBody = await fetchGqlApi(`mutation CREATE_USER {
+      createUser(input: { username: "andrew-smith", password: "andrew-smith-password" }) {
+        id,
+        password,
+        username
+      }
+    }`)
+    const newlyCreatedUserAuthorizationResponse = await fetch("http://localhost:3080/api/authorize", {
       body: JSON.stringify({ username: "andrew-smith", password: "andrew-smith-password" }),
       headers: { "Content-Type": "application/json" },
       method: "POST",
     })
-    const registerUserResponseData = await registerUserResponse.json()
-    const newlyRegisteredUserAuthResponse = await fetch("http://localhost:3080/api/authorize", {
-      body: JSON.stringify({ username: "andrew-smith", password: "andrew-smith-password" }),
-      headers: { "Content-Type": "application/json" },
-      method: "POST",
-    })
-    const { authToken } = await newlyRegisteredUserAuthResponse.json()
-    newlyRegisteredUser = {
-      id: registerUserResponseData.id,
-      username: registerUserResponseData.username,
+    const { authToken } = await newlyCreatedUserAuthorizationResponse.json()
+    newlyCreatedUser = {
+      id: creatingUserResponseBody.id,
+      username: creatingUserResponseBody.username,
       password: "andrew-smith-password",
-      hashedPassword: registerUserResponseData.password,
+      hashedPassword: creatingUserResponseBody.password,
       authToken,
     }
   })
 
-  it("a newly registered request their data", async () => {
-    const getLoggedInUserDataResponse = await fetch("http://localhost:3080/api/users/0", {
-      headers: { Authorization: newlyRegisteredUser.authToken },
+  it("a newly created user requests their data", async () => {
+    const response = await fetch("http://localhost:3080/graphql", {
+      body: JSON.stringify({
+        query: `{
+          user(id: 0) {
+            id,
+            password,
+            username
+          }
+        }`,
+      }),
+      headers: {
+        Accept: "application/json",
+        Authorization: newlyCreatedUser.authToken,
+        "Content-Type": "application/json",
+      },
+      method: "POST",
     })
-    expect(getLoggedInUserDataResponse.status).toEqual(200)
-    expect(await getLoggedInUserDataResponse.json()).toEqual<IUser>({
-      id: 3,
-      username: "andrew-smith",
-      password: newlyRegisteredUser.hashedPassword,
+    const responseBody = await response.json()
+    expect(responseBody).toEqual({
+      data: {
+        user: {
+          id: 3,
+          password: expect.stringMatching(".+"),
+          username: "andrew-smith",
+        },
+      },
     })
   })
 
-  it("finds newly registered user by id", async () => {
-    const findNewlyRegisteredUserByIdResponse = await fetch("http://localhost:3080/api/users/3", {
-      headers: { Authorization: newlyRegisteredUser.authToken },
+  it("finds newly created user by id", async () => {
+    await authorize(users.johnDoe.username)
+    const responseBody = await fetchGqlApi(`{
+      user(id: 3) {
+        id,
+        password,
+        username
+      }
+    }`)
+    expect(responseBody).toEqual({
+      data: {
+        user: {
+          id: 3,
+          password: expect.stringMatching(".+"),
+          username: "andrew-smith",
+        },
+      },
     })
-    expect(findNewlyRegisteredUserByIdResponse.status).toEqual(200)
-    expect(await findNewlyRegisteredUserByIdResponse.json()).toEqual<IUser>({
-      id: 3,
-      username: "andrew-smith",
-      password: newlyRegisteredUser.hashedPassword,
-    })
-  })
-
-  it("users list includes newly registered user", async () => {
-    const allUsersResponse = await fetch("http://localhost:3080/api/users/search", {
-      headers: { Authorization: newlyRegisteredUser.authToken },
-    })
-    expect(await allUsersResponse.json()).toEqual<IUser[]>([
-      users.johnDoe,
-      users.jessicaStark,
-      { id: 3, username: "andrew-smith", password: newlyRegisteredUser.hashedPassword },
-    ])
   })
 })

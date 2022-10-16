@@ -1,10 +1,11 @@
 import { BadRequestException, UseGuards } from "@nestjs/common"
-import { Args, Query, Resolver } from "@nestjs/graphql"
+import { Args, Mutation, Query, Resolver } from "@nestjs/graphql"
 
 import { AuthGuard } from "#models/auth/guard"
 
 import { AuthorizedUser } from "#helpers/AuthorizedUser.decorator"
 
+import { CreateUserInput } from "./dto/create-user.input"
 import { FindUserArgs } from "./dto/find-user.args"
 import { SearchUsersArgs } from "./dto/search-users.args"
 import { UserEntity } from "./entities/user.entity"
@@ -46,13 +47,13 @@ export class UsersResolver {
     })
   }
 
-  // @Post()
-  // register(
-  //   @Body(new ValidationPipe())
-  //   requestBody: CreateUserDto
-  // ) {
-  //   return this.usersService.create({ requestBody })
-  // }
+  @Mutation((returns) => User, { name: "createUser" })
+  create(
+    @Args("input")
+    input: CreateUserInput
+  ) {
+    return this.usersService.create({ requestBody: input })
+  }
 
   // @Patch(":userId")
   // @UseGuards(AuthGuard)

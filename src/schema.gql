@@ -58,6 +58,15 @@ type BudgetRecord {
   isTrashed: Boolean!
 }
 
+input CreateUserInput {
+  password: String!
+  username: String!
+}
+
+type Mutation {
+  createUser(input: CreateUserInput!): User!
+}
+
 type Query {
   activityCategories(boardsIds: [Int!], ids: [Int!], ownersIds: [Int!]): [ActivityCategory!]!
   activityCategory(id: Int!): ActivityCategory!

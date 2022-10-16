@@ -6,7 +6,7 @@ import { encrypt } from "#utils/crypto"
 
 import { IUser } from "#interfaces/user"
 
-import { CreateUserDto } from "./dto/create-user.dto"
+import { CreateUserInput } from "./dto/create-user.input"
 import { SearchUsersArgs } from "./dto/search-users.args"
 import { UpdateUserDto } from "./dto/update-user.dto"
 import { UserEntity } from "./entities/user.entity"
@@ -61,7 +61,7 @@ export class UsersService {
     })
   }
 
-  async create({ requestBody }: { requestBody: CreateUserDto }): Promise<UserEntity> {
+  async create({ requestBody }: { requestBody: CreateUserInput }): Promise<UserEntity> {
     const { password, username } = requestBody
     const hashedPassword = encrypt(password)
     const user = this.userRepository.create({ password: hashedPassword, username })
