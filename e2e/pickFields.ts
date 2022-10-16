@@ -1,3 +1,3 @@
-export const pickedFields = {
+export const pickFields = {
   user: "id, password, username",
 }

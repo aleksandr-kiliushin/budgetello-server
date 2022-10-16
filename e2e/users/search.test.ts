@@ -3,7 +3,7 @@ import { IUser } from "#interfaces/user"
 import { users } from "#e2e/constants/users"
 import { authorize } from "#e2e/helpers/authorize"
 import { fetchGqlApi } from "#e2e/helpers/fetchGqlApi"
-import { pickedFields } from "#e2e/pickedFields"
+import { pickFields } from "#e2e/pickFields"
 
 beforeEach(async () => {
   await authorize(users.johnDoe.id)
@@ -44,7 +44,7 @@ describe("Find a user", () => {
   ])("$queryNameAndArgs", async ({ queryNameAndArgs, foundUser, responseError }) => {
     const responseBody = await fetchGqlApi(`{
       ${queryNameAndArgs} {
-        ${pickedFields.user}
+        ${pickFields.user}
       }
     }`)
     expect(responseBody.data?.user).toEqual(foundUser)
@@ -102,7 +102,7 @@ describe("Search users", () => {
   ])("$queryNameAndArgs", async ({ queryNameAndArgs, foundUsers }) => {
     const responseBody = await fetchGqlApi(`{
       ${queryNameAndArgs} {
-        ${pickedFields.user}
+        ${pickFields.user}
       }
     }`)
     expect(responseBody.data.users).toEqual(foundUsers)
