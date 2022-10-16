@@ -47,14 +47,18 @@ describe("Authorization", () => {
     expect(responseBody).toEqual({ data: { authorize: expect.stringMatching(".+") } })
   })
 
-  // it("validates fields", async () => {
-  //   const response = await fetch("http://localhost:3080/api/authorize", {
-  //     body: JSON.stringify({ password: "" }),
-  //     headers: { "Content-Type": "application/json" },
+  // it("returns an authorization token on success", async () => {
+  //   const response = await fetch("http://localhost:3080/graphql", {
+  //     body: JSON.stringify({
+  //       query: `mutation AUTHORIZE {
+  //         authorize (input: { password: "" })
+  //       }`,
+  //     }),
+  //     headers: { "Content-Type": "application/json", Accept: "application/json" },
   //     method: "POST",
   //   })
-  //   expect(response.status).toEqual(400)
-  //   expect(await response.json()).toEqual({
+  //   const responseBody = await response.json()
+  //   expect(responseBody).toEqual({
   //     fields: {
   //       username: "Required.",
   //       password: "Required.",
