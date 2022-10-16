@@ -1,5 +1,5 @@
 import { BadRequestException, UseGuards } from "@nestjs/common"
-import { Args, Mutation, Query, Resolver } from "@nestjs/graphql"
+import { Args, Int, Mutation, Query, Resolver } from "@nestjs/graphql"
 
 import { AuthGuard } from "#models/auth/guard"
 
@@ -67,18 +67,14 @@ export class UsersResolver {
     return this.usersService.update({ authorizedUser, input })
   }
 
-  // @Delete(":id")
-  // @UseGuards(AuthGuard)
-  // delete(
-  //   @Param("id")
-  //   id: string,
-  //   @AuthorizedUser()
-  //   authorizedUser: UserEntity
-  // ) {
-  //   const userToBeDeletedId = parseInt(id)
-  //   if (authorizedUser.id !== userToBeDeletedId) {
-  //     throw new ForbiddenException({ message: "You are not allowed to delete another user." })
-  //   }
-  //   return this.usersService.delete({ userId: userToBeDeletedId })
-  // }
+  @Mutation((returns) => User, { name: "deleteUser" })
+  @UseGuards(AuthGuard)
+  delete(
+    @Args("id", { type: () => Int })
+    userId: number,
+    @AuthorizedUser()
+    authorizedUser: UserEntity
+  ) {
+    return this.usersService.delete({ authorizedUser, userId })
+  }
 }

@@ -50,7 +50,7 @@ export class UsersService {
       })
     }
 
-    if (user === null) throw new NotFoundException({})
+    if (user === null) throw new NotFoundException({ message: "Not found." })
     return user
   }
 
@@ -82,7 +82,16 @@ export class UsersService {
     return this.userRepository.save(newUserData)
   }
 
-  async delete({ userId }: { userId: UserEntity["id"] }): Promise<UserEntity> {
+  async delete({
+    authorizedUser,
+    userId,
+  }: {
+    authorizedUser: UserEntity
+    userId: UserEntity["id"]
+  }): Promise<UserEntity> {
+    if (authorizedUser.id !== userId) {
+      throw new ForbiddenException({ message: "Access denied." })
+    }
     const user = await this.find({ userId })
     await this.userRepository.delete(userId)
     return user
