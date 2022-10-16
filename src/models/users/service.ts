@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from "@nestjs/common"
+import { ForbiddenException, Injectable, NotFoundException } from "@nestjs/common"
 import { InjectRepository } from "@nestjs/typeorm"
 import { FindOptionsRelations, In, Like, Repository } from "typeorm"
 
@@ -8,7 +8,7 @@ import { IUser } from "#interfaces/user"
 
 import { CreateUserInput } from "./dto/create-user.input"
 import { SearchUsersArgs } from "./dto/search-users.args"
-import { UpdateUserDto } from "./dto/update-user.dto"
+import { UpdateUserInput } from "./dto/update-user.input"
 import { UserEntity } from "./entities/user.entity"
 
 @Injectable()
@@ -68,13 +68,16 @@ export class UsersService {
     return this.userRepository.save(user)
   }
 
-  async update({ requestBody, userId }: { requestBody: UpdateUserDto; userId: UserEntity["id"] }): Promise<UserEntity> {
-    const newUserData = { ...(await this.find({ userId })) }
-    if (requestBody.username !== undefined) {
-      newUserData.username = requestBody.username
+  async update({ authorizedUser, input }: { authorizedUser: UserEntity; input: UpdateUserInput }): Promise<UserEntity> {
+    if (authorizedUser.id !== input.id) {
+      throw new ForbiddenException({ message: "Access denied." })
     }
-    if (requestBody.password !== undefined && requestBody.password !== "") {
-      newUserData.password = encrypt(requestBody.password)
+    const newUserData = { ...(await this.find({ userId: input.id })) }
+    if (input.username !== undefined) {
+      newUserData.username = input.username
+    }
+    if (input.password !== undefined && input.password !== "") {
+      newUserData.password = encrypt(input.password)
     }
     return this.userRepository.save(newUserData)
   }

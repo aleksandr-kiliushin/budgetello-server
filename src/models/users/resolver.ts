@@ -8,6 +8,7 @@ import { AuthorizedUser } from "#helpers/AuthorizedUser.decorator"
 import { CreateUserInput } from "./dto/create-user.input"
 import { FindUserArgs } from "./dto/find-user.args"
 import { SearchUsersArgs } from "./dto/search-users.args"
+import { UpdateUserInput } from "./dto/update-user.input"
 import { UserEntity } from "./entities/user.entity"
 import { User } from "./models/user.model"
 import { UsersService } from "./service"
@@ -55,21 +56,16 @@ export class UsersResolver {
     return this.usersService.create({ requestBody: input })
   }
 
-  // @Patch(":userId")
-  // @UseGuards(AuthGuard)
-  // update(
-  //   @Param("userId", ParseIntPipe)
-  //   userId: number,
-  //   @Body()
-  //   requestBody: UpdateUserDto,
-  //   @AuthorizedUser()
-  //   authorizedUser: UserEntity
-  // ) {
-  //   if (authorizedUser.id !== userId) {
-  //     throw new ForbiddenException({ message: "You are not allowed to update another user." })
-  //   }
-  //   return this.usersService.update({ userId, requestBody })
-  // }
+  @Mutation((returns) => User, { name: "updateUser" })
+  @UseGuards(AuthGuard)
+  update(
+    @Args("input")
+    input: UpdateUserInput,
+    @AuthorizedUser()
+    authorizedUser: UserEntity
+  ) {
+    return this.usersService.update({ authorizedUser, input })
+  }
 
   // @Delete(":id")
   // @UseGuards(AuthGuard)

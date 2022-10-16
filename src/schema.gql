@@ -65,6 +65,7 @@ input CreateUserInput {
 
 type Mutation {
   createUser(input: CreateUserInput!): User!
+  updateUser(input: UpdateUserInput!): User!
 }
 
 type Query {
@@ -86,6 +87,12 @@ type Query {
   budgetRecords(amount: Float, boardsIds: [Int!], categoriesIds: [Int!], dates: [String!], ids: [Int!], isTrashed: Boolean, orderingByDate: String, orderingById: String, skip: Int, take: Int): [BudgetRecord!]!
   user(id: Int, username: String): User!
   users(ids: [Int!], username: String): [User!]!
+}
+
+input UpdateUserInput {
+  id: Int!
+  password: String
+  username: String
 }
 
 type User {
