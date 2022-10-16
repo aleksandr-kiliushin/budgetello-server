@@ -8,7 +8,7 @@ beforeEach(async () => {
 
 afterEach(() => {
   // TODO: Do not use global object to store data. Instead, incapsulate data in a module.
-  globalThis.authToken = ""
+  globalThis.authorizationToken = ""
 })
 
 afterAll(() => {

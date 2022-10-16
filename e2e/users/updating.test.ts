@@ -41,7 +41,7 @@ describe("User updating", () => {
     })
     expect(authorizeWithNewCredentialsResponse.status).toEqual(201)
     expect(await authorizeWithNewCredentialsResponse.json()).toEqual({
-      authToken: expect.stringMatching(".+"),
+      authorizationToken: expect.stringMatching(".+"),
     })
   })
 

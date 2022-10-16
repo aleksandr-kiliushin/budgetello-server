@@ -3,7 +3,7 @@ export const fetchGqlApi = async (query: string) => {
     body: JSON.stringify({ query }),
     headers: {
       Accept: "application/json",
-      Authorization: globalThis.authToken,
+      Authorization: globalThis.authorizationToken,
       "Content-Type": "application/json",
     },
     method: "POST",

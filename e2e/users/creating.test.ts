@@ -44,7 +44,7 @@ describe("Created user data and operations", () => {
     username: "",
     password: "",
     hashedPassword: "",
-    authToken: "",
+    authorizationToken: "",
   }
 
   beforeEach(async () => {
@@ -60,13 +60,13 @@ describe("Created user data and operations", () => {
       headers: { "Content-Type": "application/json" },
       method: "POST",
     })
-    const { authToken } = await newlyCreatedUserAuthorizationResponse.json()
+    const { authorizationToken } = await newlyCreatedUserAuthorizationResponse.json()
     newlyCreatedUser = {
       id: creatingUserResponseBody.id,
       username: creatingUserResponseBody.username,
       password: "andrew-smith-password",
       hashedPassword: creatingUserResponseBody.password,
-      authToken,
+      authorizationToken,
     }
   })
 
@@ -83,7 +83,7 @@ describe("Created user data and operations", () => {
       }),
       headers: {
         Accept: "application/json",
-        Authorization: newlyCreatedUser.authToken,
+        Authorization: newlyCreatedUser.authorizationToken,
         "Content-Type": "application/json",
       },
       method: "POST",

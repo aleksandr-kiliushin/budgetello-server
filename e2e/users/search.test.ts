@@ -1,6 +1,7 @@
 import { users } from "#e2e/constants/users"
 import { authorize } from "#e2e/helpers/authorize"
 import { fetchGqlApi } from "#e2e/helpers/fetchGqlApi"
+import { pickedFields } from "#e2e/pickedFields"
 
 beforeEach(async () => {
   await authorize(users.johnDoe.id)
@@ -11,7 +12,7 @@ describe("Returns a user by their identifier", () => {
     {
       query: `{
         user(id: 0) {
-          id, password, username
+          ${pickedFields.user}
         }
       }`,
       responseBody: { data: { user: users.johnDoe } },
@@ -19,7 +20,7 @@ describe("Returns a user by their identifier", () => {
     {
       query: `{
         user(id: ${users.johnDoe.id}) {
-          id, password, username
+          ${pickedFields.user}
         }
       }`,
       responseBody: { data: { user: users.johnDoe } },
@@ -27,7 +28,7 @@ describe("Returns a user by their identifier", () => {
     {
       query: `{
         user(username: "${users.johnDoe.username}") {
-          id, password, username
+          ${pickedFields.user}
         }
       }`,
       responseBody: { data: { user: users.johnDoe } },
@@ -47,7 +48,7 @@ describe("Returns a user by their identifier", () => {
     //   responseStatus: 404,
     //   responseBody: {},
     // },
-  ])("$url", async ({ query, responseBody }) => {
+  ])("$query", async ({ query, responseBody }) => {
     expect(await fetchGqlApi(query)).toEqual(responseBody)
   })
 })
@@ -57,9 +58,7 @@ describe("Users search", () => {
     {
       query: `{
         users(ids: [${users.johnDoe.id}]) {
-          id,
-          password,
-          username
+          ${pickedFields.user}
         }
       }`,
       responseBody: { data: { users: [users.johnDoe] } },
@@ -67,9 +66,7 @@ describe("Users search", () => {
     {
       query: `{
         users(ids: [${users.johnDoe.id}, ${users.jessicaStark.id}]) {
-          id,
-          password,
-          username
+          ${pickedFields.user}
         }
       }`,
       responseBody: { data: { users: [users.johnDoe, users.jessicaStark] } },
@@ -77,9 +74,7 @@ describe("Users search", () => {
     {
       query: `{
         users(username: "${users.johnDoe.username}") {
-          id,
-          password,
-          username
+          ${pickedFields.user}
         }
       }`,
       responseBody: { data: { users: [users.johnDoe] } },
@@ -87,9 +82,7 @@ describe("Users search", () => {
     {
       query: `{
         users(ids: [${users.johnDoe.id}], username: "${users.johnDoe.username}") {
-          id,
-          password,
-          username
+          ${pickedFields.user}
         }
       }`,
       responseBody: { data: { users: [users.johnDoe] } },
@@ -97,9 +90,7 @@ describe("Users search", () => {
     {
       query: `{
         users(username: "john") {
-          id,
-          password,
-          username
+          ${pickedFields.user}
         }
       }`,
       responseBody: { data: { users: [users.johnDoe] } },
@@ -107,9 +98,7 @@ describe("Users search", () => {
     {
       query: `{
         users(username: "doe") {
-          id,
-          password,
-          username
+          ${pickedFields.user}
         }
       }`,
       responseBody: { data: { users: [users.johnDoe] } },
@@ -117,9 +106,7 @@ describe("Users search", () => {
     {
       query: `{
         users(username: "j") {
-          id,
-          password,
-          username
+          ${pickedFields.user}
         }
       }`,
       responseBody: { data: { users: [users.johnDoe, users.jessicaStark] } },
@@ -127,9 +114,7 @@ describe("Users search", () => {
     {
       query: `{
         users {
-          id,
-          password,
-          username
+          ${pickedFields.user}
         }
       }`,
       responseBody: { data: { users: [users.johnDoe, users.jessicaStark] } },
@@ -142,7 +127,7 @@ describe("Users search", () => {
     //   responseBody: { query: { ids: "An array of numbers expected." } },
     //   responseStatus: 400,
     // },
-  ])("$url", async ({ query, responseBody }) => {
+  ])("$query", async ({ query, responseBody }) => {
     expect(await fetchGqlApi(query)).toEqual(responseBody)
   })
 })

@@ -18,8 +18,8 @@ export class AuthorizationGuard implements CanActivate {
   async canActivate(executionContext: ExecutionContext) {
     const gqlExecutionContext = GqlExecutionContext.create(executionContext).getContext()
 
-    const authToken = gqlExecutionContext.req.headers.authorization
-    if (authToken === undefined) return false
+    const authorizationToken = gqlExecutionContext.req.headers.authorization
+    if (authorizationToken === undefined) return false
 
     const jwtSecret = process.env.JWT_SECRET
     if (jwtSecret === undefined) {
@@ -27,8 +27,8 @@ export class AuthorizationGuard implements CanActivate {
     }
 
     try {
-      jwt.verify(authToken, jwtSecret)
-      const decodingResult = jwt.decode(authToken, { json: true })
+      jwt.verify(authorizationToken, jwtSecret)
+      const decodingResult = jwt.decode(authorizationToken, { json: true })
       if (decodingResult === null) throw new Error()
       gqlExecutionContext.authorizedUser = await this.usersService.find({
         userId: decodingResult.id,
