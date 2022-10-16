@@ -7,7 +7,7 @@ import { fetchApi } from "#e2e/helpers/fetchApi"
 
 describe("Activity record deleting", () => {
   it("returns a correct response after deleting", async () => {
-    await authorize(users.johnDoe)
+    await authorize(users.johnDoe.id)
     const recordDeletingResponse = await fetchApi(`/api/activities/records/${activityRecords["5th"].id}`, {
       method: "DELETE",
     })
@@ -16,7 +16,7 @@ describe("Activity record deleting", () => {
   })
 
   it("the deleted records are not presented in all records list", async () => {
-    await authorize(users.jessicaStark)
+    await authorize(users.jessicaStark.id)
     await fetchApi(`/api/activities/records/${activityRecords["1st"].id}`, { method: "DELETE" })
     await fetchApi(`/api/activities/records/${activityRecords["2nd"].id}`, { method: "DELETE" })
     await fetchApi(`/api/activities/records/${activityRecords["3rd"].id}`, { method: "DELETE" })
@@ -30,7 +30,7 @@ describe("Activity record deleting", () => {
   })
 
   test("a user cannot delete a record of a board that they is not a member of", async () => {
-    await authorize(users.johnDoe)
+    await authorize(users.johnDoe.id)
     const response = await fetchApi(`/api/activities/records/${activityRecords["1st"].id}`, { method: "DELETE" })
     expect(response.status).toEqual(403)
     expect(await response.json()).toEqual({ message: "Access denied." })

@@ -4,12 +4,12 @@ import { IActivityRecord } from "#interfaces/activities"
 
 import { activityCategories } from "#e2e/constants/activities"
 import { users } from "#e2e/constants/users"
-import { ITestUser, authorize } from "#e2e/helpers/authorize"
+import { ITestUserId, authorize } from "#e2e/helpers/authorize"
 import { fetchApi } from "#e2e/helpers/fetchApi"
 
 describe("Activity record creating", () => {
   it("a newly created record is presented in all records list", async () => {
-    await authorize(users.johnDoe)
+    await authorize(users.johnDoe.id)
     const createRecordPayload: CreateActivityRecordDto = {
       booleanValue: null,
       categoryId: activityCategories.reading.id,
@@ -30,13 +30,13 @@ describe("Activity record creating", () => {
   })
 
   test.each<{
-    authorizedUserUsername: ITestUser
+    authorizedUserId: ITestUserId
     payload: Record<string, unknown>
     responseBody: Record<string, unknown>
     status: number
   }>([
     {
-      authorizedUserUsername: users.johnDoe,
+      authorizedUserId: users.johnDoe.id,
       payload: {},
       responseBody: {
         fields: {
@@ -48,7 +48,7 @@ describe("Activity record creating", () => {
       status: 400,
     },
     {
-      authorizedUserUsername: users.johnDoe,
+      authorizedUserId: users.johnDoe.id,
       payload: {
         booleanValue: null,
         categoryId: activityCategories.reading.id,
@@ -60,7 +60,7 @@ describe("Activity record creating", () => {
       status: 400,
     },
     {
-      authorizedUserUsername: users.johnDoe,
+      authorizedUserId: users.johnDoe.id,
       payload: {
         booleanValue: true,
         categoryId: activityCategories.reading.id,
@@ -77,7 +77,7 @@ describe("Activity record creating", () => {
       status: 400,
     },
     {
-      authorizedUserUsername: users.jessicaStark,
+      authorizedUserId: users.jessicaStark.id,
       payload: {
         booleanValue: null,
         categoryId: activityCategories.noSweets.id,
@@ -94,7 +94,7 @@ describe("Activity record creating", () => {
       status: 400,
     },
     {
-      authorizedUserUsername: users.johnDoe,
+      authorizedUserId: users.johnDoe.id,
       payload: {
         booleanValue: null,
         categoryId: activityCategories.reading.id,
@@ -112,8 +112,8 @@ describe("Activity record creating", () => {
       },
       status: 201,
     },
-  ])("Budget record creating case #%#", async ({ authorizedUserUsername, payload, responseBody, status }) => {
-    await authorize(authorizedUserUsername)
+  ])("Budget record creating case #%#", async ({ authorizedUserId, payload, responseBody, status }) => {
+    await authorize(authorizedUserId)
     const response = await fetchApi("/api/activities/records", { body: JSON.stringify(payload), method: "POST" })
     expect(response.status).toEqual(status)
     expect(await response.json()).toEqual(responseBody)

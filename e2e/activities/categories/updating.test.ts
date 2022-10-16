@@ -3,19 +3,19 @@ import { IActivityCategory } from "#interfaces/activities"
 import { activityCategories, activityCategoryMeasurementTypes } from "#e2e/constants/activities"
 import { boards } from "#e2e/constants/boards"
 import { users } from "#e2e/constants/users"
-import { ITestUser, authorize } from "#e2e/helpers/authorize"
+import { ITestUserId, authorize } from "#e2e/helpers/authorize"
 import { fetchApi } from "#e2e/helpers/fetchApi"
 
 describe("Activity category updating", () => {
   test.each<{
-    authorizedUser: ITestUser
+    authorizedUserId: ITestUserId
     payload: Record<string, unknown>
     responseBody: Record<string, unknown>
     status: number
     url: string
   }>([
     {
-      authorizedUser: users.johnDoe,
+      authorizedUserId: users.johnDoe.id,
       payload: { unit: "" },
       responseBody: {
         fields: {
@@ -27,7 +27,7 @@ describe("Activity category updating", () => {
       url: `/api/activities/categories/${activityCategories.reading.id}`,
     },
     {
-      authorizedUser: users.johnDoe,
+      authorizedUserId: users.johnDoe.id,
       payload: { unit: null },
       responseBody: {
         fields: {
@@ -39,7 +39,7 @@ describe("Activity category updating", () => {
       url: `/api/activities/categories/${activityCategories.reading.id}`,
     },
     {
-      authorizedUser: users.johnDoe,
+      authorizedUserId: users.johnDoe.id,
       payload: { measurementTypeId: activityCategoryMeasurementTypes.boolean.id },
       responseBody: {
         fields: {
@@ -51,7 +51,7 @@ describe("Activity category updating", () => {
       url: `/api/activities/categories/${activityCategories.reading.id}`,
     },
     {
-      authorizedUser: users.jessicaStark,
+      authorizedUserId: users.jessicaStark.id,
       payload: {
         name: activityCategories.pushups.name,
         unit: activityCategories.pushups.unit,
@@ -68,28 +68,28 @@ describe("Activity category updating", () => {
       url: `/api/activities/categories/${activityCategories.running.id}`,
     },
     {
-      authorizedUser: users.johnDoe,
+      authorizedUserId: users.johnDoe.id,
       payload: { name: "write conspects" },
       responseBody: { message: "Access denied." },
       status: 403,
       url: `/api/activities/categories/${activityCategories.running.id}`,
     },
     {
-      authorizedUser: users.jessicaStark,
+      authorizedUserId: users.jessicaStark.id,
       payload: {},
       responseBody: { message: "Access denied." },
       status: 403,
       url: `/api/activities/categories/${activityCategories.reading.id}`,
     },
     {
-      authorizedUser: users.johnDoe,
+      authorizedUserId: users.johnDoe.id,
       payload: {},
       responseBody: activityCategories.reading,
       status: 200,
       url: `/api/activities/categories/${activityCategories.reading.id}`,
     },
     {
-      authorizedUser: users.jessicaStark,
+      authorizedUserId: users.jessicaStark.id,
       payload: {
         boardId: boards.productivePeople.id,
         measurementTypeId: activityCategoryMeasurementTypes.boolean.id,
@@ -107,15 +107,15 @@ describe("Activity category updating", () => {
       status: 200,
       url: `/api/activities/categories/${activityCategories.sleep.id}`,
     },
-  ])("case #%#", async ({ authorizedUser, payload, responseBody, status, url }) => {
-    await authorize(authorizedUser)
+  ])("case #%#", async ({ authorizedUserId, payload, responseBody, status, url }) => {
+    await authorize(authorizedUserId)
     const response = await fetchApi(url, { body: JSON.stringify(payload), method: "PATCH" })
     expect(response.status).toEqual(status)
     expect(await response.json()).toEqual(responseBody)
   })
 
   it("updated category category can be found by ID", async () => {
-    await authorize(users.johnDoe)
+    await authorize(users.johnDoe.id)
     await fetchApi(`/api/activities/categories/${activityCategories.reading.id}`, {
       body: JSON.stringify({ unit: "hour" }),
       method: "PATCH",

@@ -4,7 +4,7 @@ import { authorize } from "#e2e/helpers/authorize"
 import { fetchApi } from "#e2e/helpers/fetchApi"
 
 beforeEach(async () => {
-  await authorize(users.johnDoe)
+  await authorize(users.johnDoe.id)
 })
 
 /* Initial record. */

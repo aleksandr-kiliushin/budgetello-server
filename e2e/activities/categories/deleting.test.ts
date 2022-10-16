@@ -5,7 +5,7 @@ import { fetchApi } from "#e2e/helpers/fetchApi"
 
 describe("Activity category deleting", () => {
   it("returns a correct response after deleting", async () => {
-    await authorize(users.johnDoe)
+    await authorize(users.johnDoe.id)
     const response = await fetchApi(`/api/activities/categories/${activityCategories.reading.id}`, {
       method: "DELETE",
     })
@@ -14,7 +14,7 @@ describe("Activity category deleting", () => {
   })
 
   it("cannot be delete by a user who is not a member of the category's board", async () => {
-    await authorize(users.johnDoe)
+    await authorize(users.johnDoe.id)
     const response = await fetchApi(`/api/activities/categories/${activityCategories.running.id}`, {
       method: "DELETE",
     })
@@ -23,7 +23,7 @@ describe("Activity category deleting", () => {
   })
 
   it("cannot be delete by a user who does not own this category", async () => {
-    await authorize(users.jessicaStark)
+    await authorize(users.jessicaStark.id)
     const response = await fetchApi(`/api/activities/categories/${activityCategories.reading.id}`, {
       method: "DELETE",
     })
@@ -32,7 +32,7 @@ describe("Activity category deleting", () => {
   })
 
   it("the deleted category is not presented in all categories list", async () => {
-    await authorize(users.johnDoe)
+    await authorize(users.johnDoe.id)
     await fetchApi(`/api/activities/categories/${activityCategories.reading.id}`, {
       method: "DELETE",
     })

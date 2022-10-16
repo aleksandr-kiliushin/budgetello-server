@@ -4,12 +4,15 @@ import { IActivityRecord } from "#interfaces/activities"
 
 import { activityCategories, activityRecords } from "#e2e/constants/activities"
 import { users } from "#e2e/constants/users"
-import { ITestUser, authorize } from "#e2e/helpers/authorize"
+import { authorize } from "#e2e/helpers/authorize"
 import { fetchApi } from "#e2e/helpers/fetchApi"
+
+beforeEach(async () => {
+  await authorize(users.johnDoe.id)
+})
 
 describe("Activity record updating", () => {
   it("updated record can be found by ID", async () => {
-    await authorize(users.johnDoe)
     const updateRecordPayload: UpdateActivityRecordDto = {
       comment: "read about CI",
       date: "2022-08-11",
@@ -31,28 +34,24 @@ describe("Activity record updating", () => {
   })
 
   test.each<{
-    authorizedUser: ITestUser
     url: string
     payload: Record<string, unknown>
     responseBody: Record<string, unknown>
     status: number
   }>([
     {
-      authorizedUser: users.johnDoe,
       url: `/api/activities/records/${activityRecords["5th"].id}`,
       payload: { categoryId: 666666 },
       responseBody: { fields: { categoryId: "Invalid value." } },
       status: 400,
     },
     {
-      authorizedUser: users.johnDoe,
       url: `/api/activities/records/${activityRecords["5th"].id}`,
       payload: { date: "20_08_10qwer" },
       responseBody: { fields: { date: "Should have format YYYY-MM-DD." } },
       status: 400,
     },
     {
-      authorizedUser: users.johnDoe,
       url: `/api/activities/records/${activityRecords["5th"].id}`,
       payload: { quantitativeValue: null },
       responseBody: {
@@ -64,21 +63,18 @@ describe("Activity record updating", () => {
       status: 400,
     },
     {
-      authorizedUser: users.johnDoe,
       url: `/api/activities/records/${activityRecords["5th"].id}`,
       payload: {},
       responseBody: activityRecords["5th"],
       status: 200,
     },
     {
-      authorizedUser: users.johnDoe,
       url: `/api/activities/records/${activityRecords["1st"].id}`,
       payload: {},
       responseBody: { message: "Access denied." },
       status: 403,
     },
     {
-      authorizedUser: users.johnDoe,
       url: `/api/activities/records/${activityRecords["5th"].id}`,
       payload: {
         comment: "read about CI",
@@ -95,8 +91,7 @@ describe("Activity record updating", () => {
       },
       status: 200,
     },
-  ])("case #%#", async ({ authorizedUser, url, payload, responseBody, status }) => {
-    await authorize(authorizedUser)
+  ])("case #%#", async ({ url, payload, responseBody, status }) => {
     const response = await fetchApi(url, { body: JSON.stringify(payload), method: "PATCH" })
     expect(response.status).toEqual(status)
     expect(await response.json()).toEqual(responseBody)
