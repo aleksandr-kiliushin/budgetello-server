@@ -47,7 +47,7 @@ describe("Authorization", () => {
     expect(responseBody).toEqual({ data: { authorize: expect.stringMatching(".+") } })
   })
 
-  // it("returns an authorization token on success", async () => {
+  // it("validates authorization inputs", async () => {
   //   const response = await fetch("http://localhost:3080/graphql", {
   //     body: JSON.stringify({
   //       query: `mutation AUTHORIZE {
