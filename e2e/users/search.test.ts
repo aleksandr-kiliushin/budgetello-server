@@ -8,14 +8,15 @@ beforeEach(async () => {
 })
 
 describe("Returns a user by their identifier", () => {
-  test.each<{ query: string; responseBody: unknown }>([
+  test.each<{ query: string; responseData: unknown; responseError: unknown }>([
     {
       query: `{
         user(id: 0) {
           ${pickedFields.user}
         }
       }`,
-      responseBody: { data: { user: users.johnDoe } },
+      responseData: { user: users.johnDoe },
+      responseError: undefined,
     },
     {
       query: `{
@@ -23,7 +24,8 @@ describe("Returns a user by their identifier", () => {
           ${pickedFields.user}
         }
       }`,
-      responseBody: { data: { user: users.johnDoe } },
+      responseData: { user: users.johnDoe },
+      responseError: undefined,
     },
     {
       query: `{
@@ -31,37 +33,52 @@ describe("Returns a user by their identifier", () => {
           ${pickedFields.user}
         }
       }`,
-      responseBody: { data: { user: users.johnDoe } },
+      responseData: { user: users.johnDoe },
+      responseError: undefined,
     },
-    // {
-    //   url: "/api/users/123456789",
-    //   responseStatus: 404,
-    //   responseBody: {},
-    // },
-    // {
-    //   url: "/api/users/john",
-    //   responseStatus: 404,
-    //   responseBody: {},
-    // },
-    // {
-    //   url: "/api/users/nonexistent-username",
-    //   responseStatus: 404,
-    //   responseBody: {},
-    // },
-  ])("$query", async ({ query, responseBody }) => {
-    expect(await fetchGqlApi(query)).toEqual(responseBody)
+    {
+      query: `{
+        user(id: 666666) {
+          ${pickedFields.user}
+        }
+      }`,
+      responseData: null,
+      responseError: { message: "Not found." },
+    },
+    {
+      query: `{
+        user(username: "john") {
+          ${pickedFields.user}
+        }
+      }`,
+      responseData: null,
+      responseError: { message: "Not found." },
+    },
+    {
+      query: `{
+        user(username: "nonexistent-username") {
+          ${pickedFields.user}
+        }
+      }`,
+      responseData: null,
+      responseError: { message: "Not found." },
+    },
+  ])("$query", async ({ query, responseData, responseError }) => {
+    const responseBody = await fetchGqlApi(query)
+    expect(responseBody.data).toEqual(responseData)
+    expect(responseBody.errors?.[0]?.extensions?.exception?.response).toEqual(responseError)
   })
 })
 
 describe("Users search", () => {
-  test.each<{ query: string; responseBody: unknown }>([
+  test.each<{ query: string; responseData: unknown }>([
     {
       query: `{
         users(ids: [${users.johnDoe.id}]) {
           ${pickedFields.user}
         }
       }`,
-      responseBody: { data: { users: [users.johnDoe] } },
+      responseData: { users: [users.johnDoe] },
     },
     {
       query: `{
@@ -69,7 +86,7 @@ describe("Users search", () => {
           ${pickedFields.user}
         }
       }`,
-      responseBody: { data: { users: [users.johnDoe, users.jessicaStark] } },
+      responseData: { users: [users.johnDoe, users.jessicaStark] },
     },
     {
       query: `{
@@ -77,7 +94,7 @@ describe("Users search", () => {
           ${pickedFields.user}
         }
       }`,
-      responseBody: { data: { users: [users.johnDoe] } },
+      responseData: { users: [users.johnDoe] },
     },
     {
       query: `{
@@ -85,7 +102,7 @@ describe("Users search", () => {
           ${pickedFields.user}
         }
       }`,
-      responseBody: { data: { users: [users.johnDoe] } },
+      responseData: { users: [users.johnDoe] },
     },
     {
       query: `{
@@ -93,7 +110,7 @@ describe("Users search", () => {
           ${pickedFields.user}
         }
       }`,
-      responseBody: { data: { users: [users.johnDoe] } },
+      responseData: { users: [users.johnDoe] },
     },
     {
       query: `{
@@ -101,7 +118,7 @@ describe("Users search", () => {
           ${pickedFields.user}
         }
       }`,
-      responseBody: { data: { users: [users.johnDoe] } },
+      responseData: { users: [users.johnDoe] },
     },
     {
       query: `{
@@ -109,7 +126,23 @@ describe("Users search", () => {
           ${pickedFields.user}
         }
       }`,
-      responseBody: { data: { users: [users.johnDoe, users.jessicaStark] } },
+      responseData: { users: [users.johnDoe, users.jessicaStark] },
+    },
+    {
+      query: `{
+        users(username: "nonexistent-username") {
+          ${pickedFields.user}
+        }
+      }`,
+      responseData: { users: [] },
+    },
+    {
+      query: `{
+        users(ids: [666666]) {
+          ${pickedFields.user}
+        }
+      }`,
+      responseData: { users: [] },
     },
     {
       query: `{
@@ -117,17 +150,15 @@ describe("Users search", () => {
           ${pickedFields.user}
         }
       }`,
-      responseBody: { data: { users: [users.johnDoe, users.jessicaStark] } },
+      responseData: { users: [users.johnDoe, users.jessicaStark] },
     },
-    // { url: "/api/users/search?username=nonexistent-username", responseBody: [], responseStatus: 200 },
-    // { url: "/api/users/search?ids=666666", responseBody: [], responseStatus: 200 },
-    // { url: "/api/users/search", responseBody: [users.johnDoe, users.jessicaStark], responseStatus: 200 },
     // {
     //   url: "/api/users/search?ids=1,hello",
-    //   responseBody: { query: { ids: "An array of numbers expected." } },
+    //   responseData: { query: { ids: "An array of numbers expected." } },
     //   responseStatus: 400,
     // },
-  ])("$query", async ({ query, responseBody }) => {
-    expect(await fetchGqlApi(query)).toEqual(responseBody)
+  ])("$query", async ({ query, responseData }) => {
+    const responseBody = await fetchGqlApi(query)
+    expect(responseBody.data).toEqual(responseData)
   })
 })
