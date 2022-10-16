@@ -1,16 +1,20 @@
 import { IUser } from "#interfaces/user"
 
 import { users } from "#e2e/constants/users"
+import { QueryFields } from "#e2e/helpers/QueryFields"
 import { authorize } from "#e2e/helpers/authorize"
 import { fetchGqlApi } from "#e2e/helpers/fetchGqlApi"
-import { pickFields } from "#e2e/helpers/pickFields"
 
 beforeEach(async () => {
   await authorize(users.johnDoe.id)
 })
 
 describe("Find a user", () => {
-  test.each<{ queryNameAndArgs: string; foundUser: unknown; responseError: unknown }>([
+  test.each<{
+    queryNameAndArgs: string
+    foundUser: IUser | undefined
+    responseError: Record<string, unknown> | undefined
+  }>([
     {
       queryNameAndArgs: `user(id: 0)`,
       foundUser: users.johnDoe,
@@ -44,7 +48,7 @@ describe("Find a user", () => {
   ])("$queryNameAndArgs", async ({ queryNameAndArgs, foundUser, responseError }) => {
     const responseBody = await fetchGqlApi(`{
       ${queryNameAndArgs} {
-        ${pickFields.user}
+        ${QueryFields.user}
       }
     }`)
     expect(responseBody.data?.user).toEqual(foundUser)
@@ -102,7 +106,7 @@ describe("Search users", () => {
   ])("$queryNameAndArgs", async ({ queryNameAndArgs, foundUsers }) => {
     const responseBody = await fetchGqlApi(`{
       ${queryNameAndArgs} {
-        ${pickFields.user}
+        ${QueryFields.user}
       }
     }`)
     expect(responseBody.data.users).toEqual(foundUsers)

@@ -1,7 +1,7 @@
 import { users } from "#e2e/constants/users"
+import { QueryFields } from "#e2e/helpers/QueryFields"
 import { authorize } from "#e2e/helpers/authorize"
 import { fetchGqlApi } from "#e2e/helpers/fetchGqlApi"
-import { pickFields } from "#e2e/helpers/pickFields"
 
 beforeEach(async () => {
   await authorize(users.johnDoe.id)
@@ -11,7 +11,7 @@ describe("User updating", () => {
   it("allows the authorized user to update themselves", async () => {
     const responseBody = await fetchGqlApi(`mutation UPDATE_USER {
       updateUser(input: { id: ${users.johnDoe.id}, username: "john-doe-is-cool", password: "john-doe-new-password" }) {
-        ${pickFields.user}
+        ${QueryFields.user}
       }
     }`)
     expect(responseBody.data).toEqual({
@@ -26,7 +26,7 @@ describe("User updating", () => {
   it("authorization with the new credential is successful", async () => {
     await fetchGqlApi(`mutation UPDATE_USER {
       updateUser(input: { id: ${users.johnDoe.id}, username: "john-doe-is-cool", password: "john-doe-new-password" }) {
-        ${pickFields.user}
+        ${QueryFields.user}
       }
     }`)
     const response = await fetch("http://localhost:3080/graphql", {
@@ -46,7 +46,7 @@ describe("User updating", () => {
   it("authorization with the old credential is failed", async () => {
     await fetchGqlApi(`mutation UPDATE_USER {
       updateUser(input: { id: ${users.johnDoe.id}, username: "john-doe-is-cool", password: "john-doe-new-password" }) {
-        ${pickFields.user}
+        ${QueryFields.user}
       }
     }`)
     const response = await fetch("http://localhost:3080/graphql", {
@@ -65,13 +65,13 @@ describe("User updating", () => {
   it("updating another user is failed", async () => {
     const updateAnotherUserResponseBody = await fetchGqlApi(`mutation UPDATE_USER {
       updateUser(input: { id: ${users.jessicaStark.id}, username: "john-doe-is-cool", password: "john-doe-new-password" }) {
-        ${pickFields.user}
+        ${QueryFields.user}
       }
     }`)
     expect(updateAnotherUserResponseBody.errors[0].extensions.exception.response).toEqual({ message: "Access denied." })
     const fetchAnotherUserResponseBody = await fetchGqlApi(`{
       user(id: ${users.jessicaStark.id}) {
-        ${pickFields.user}
+        ${QueryFields.user}
       }
     }`)
     expect(fetchAnotherUserResponseBody.data).toEqual({ user: users.jessicaStark })

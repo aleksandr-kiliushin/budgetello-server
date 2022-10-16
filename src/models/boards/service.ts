@@ -78,7 +78,7 @@ export class BoardsService {
       relations: { admins: true, members: true, subject: true },
       where: { id: boardId },
     })
-    if (board === null) throw new NotFoundException({})
+    if (board === null) throw new NotFoundException({ message: "Not found." })
     return board
   }
 
