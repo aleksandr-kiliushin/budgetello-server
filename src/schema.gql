@@ -63,6 +63,11 @@ type BudgetRecord {
   isTrashed: Boolean!
 }
 
+input CreateBoardInput {
+  name: String!
+  subjectId: Int!
+}
+
 input CreateUserInput {
   password: String!
   username: String!
@@ -70,6 +75,7 @@ input CreateUserInput {
 
 type Mutation {
   authorize(input: AuthorizeInput!): String!
+  createBoard(input: CreateBoardInput!): Board!
   createUser(input: CreateUserInput!): User!
   deleteUser(id: Int!): User!
   updateUser(input: UpdateUserInput!): User!

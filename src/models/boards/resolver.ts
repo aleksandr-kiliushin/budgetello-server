@@ -1,12 +1,14 @@
 import { UseGuards } from "@nestjs/common"
-import { Args, Int, Query, Resolver } from "@nestjs/graphql"
+import { Args, Int, Mutation, Query, Resolver } from "@nestjs/graphql"
 
 import { AuthorizationGuard } from "#models/authorization/guard"
 import { UserEntity } from "#models/users/entities/user.entity"
 
 import { AuthorizedUser } from "#helpers/AuthorizedUser.decorator"
 
+import { CreateBoardInput } from "./dto/create-board.input"
 import { SearchBoardsArgs } from "./dto/search-boards.args"
+import { BoardEntity } from "./entities/board.entity"
 import { Board } from "./models/board.model"
 import { BoardsService } from "./service"
 
@@ -21,27 +23,27 @@ export class BoardsResolver {
     args: SearchBoardsArgs,
     @AuthorizedUser()
     authorizedUser: UserEntity
-  ) {
+  ): Promise<BoardEntity[]> {
     return this.boardsService.search({ args, authorizedUser })
   }
 
-  @Query(() => Board, { name: "board" })
+  @Query((returns) => Board, { name: "board" })
   find(
     @Args("id", { type: () => Int })
     boardId: number
-  ) {
+  ): Promise<BoardEntity> {
     return this.boardsService.find({ boardId })
   }
 
-  // @Post()
-  // create(
-  //   @Body(new ValidationPipe())
-  //   requestBody: CreateBoardDto,
-  //   @AuthorizedUser()
-  //   authorizedUser: UserEntity
-  // ) {
-  //   return this.boardsService.create({ authorizedUser, requestBody })
-  // }
+  @Mutation((returns) => Board, { name: "createBoard" })
+  create(
+    @Args("input")
+    input: CreateBoardInput,
+    @AuthorizedUser()
+    authorizedUser: UserEntity
+  ): Promise<BoardEntity> {
+    return this.boardsService.create({ authorizedUser, input })
+  }
 
   // @Post(":boardId/add-member/:candidateForMembershipId")
   // addMember(

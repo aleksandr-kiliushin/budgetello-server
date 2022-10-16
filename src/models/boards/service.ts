@@ -82,19 +82,13 @@ export class BoardsService {
     return board
   }
 
-  async create({
-    authorizedUser,
-    requestBody,
-  }: {
-    authorizedUser: UserEntity
-    requestBody: CreateBoardDto
-  }): Promise<BoardEntity> {
-    const subject = await this.boardSubjectsService.find({ subjectId: requestBody.subjectId }).catch(() => {
+  async create({ authorizedUser, input }: { authorizedUser: UserEntity; input: CreateBoardDto }): Promise<BoardEntity> {
+    const subject = await this.boardSubjectsService.find({ subjectId: input.subjectId }).catch(() => {
       throw new BadRequestException({ fields: { subjectId: "Invalid subject." } })
     })
     const similarExistingBoard = await this.boardsRepository.findOne({
       relations: { subject: true },
-      where: { name: requestBody.name, subject },
+      where: { name: input.name, subject },
     })
     if (similarExistingBoard !== null) {
       throw new BadRequestException({
@@ -107,7 +101,7 @@ export class BoardsService {
     const board = this.boardsRepository.create({
       admins: [authorizedUser],
       members: [authorizedUser],
-      name: requestBody.name,
+      name: input.name,
       subject,
     })
     const newlyCreatedBoard = await this.boardsRepository.save(board)

@@ -1,9 +1,8 @@
-import { BoardEntity } from "#models/boards/entities/board.entity"
-
-import { boardSubjects } from "#e2e/constants/boards"
+import { boardSubjects, boards } from "#e2e/constants/boards"
 import { users } from "#e2e/constants/users"
+import { QueryFields } from "#e2e/helpers/QueryFields"
 import { authorize } from "#e2e/helpers/authorize"
-import { fetchApi } from "#e2e/helpers/fetchApi"
+import { fetchGqlApi } from "#e2e/helpers/fetchGqlApi"
 
 beforeEach(async () => {
   await authorize(users.johnDoe.id)
@@ -11,67 +10,65 @@ beforeEach(async () => {
 
 describe("Board creating", () => {
   test.each<{
-    payload: Record<string, unknown>
-    response: Record<string, unknown>
-    status: number
+    queryNameAndInput: string
+    createdBoard: unknown
+    responseError: Record<string, unknown> | undefined
   }>([
     {
-      payload: { name: "" },
-      response: {
-        fields: {
-          name: "Required.",
-          subjectId: "Required.",
-        },
-      },
-      status: 400,
+      queryNameAndInput: `createBoard(input: { name: "food", subjectId: 1234123 })`,
+      createdBoard: undefined,
+      responseError: { fields: { subjectId: "Invalid subject." } },
     },
     {
-      payload: { name: "food", subjectId: 1234123 },
-      response: { fields: { subjectId: "Invalid subject." } },
-      status: 400,
-    },
-    {
-      payload: { name: "clever-budgetiers", subjectId: boardSubjects.budget.id },
-      response: {
+      queryNameAndInput: `createBoard(input: { name: "${boards.cleverBudgetiers.name}", subjectId: ${boards.cleverBudgetiers.subject.id} })`,
+      createdBoard: undefined,
+      responseError: {
         fields: {
           name: '"clever-budgetiers" budget board already exists.',
           subjectId: '"clever-budgetiers" budget board already exists.',
         },
       },
-      status: 400,
     },
     {
-      payload: { name: "champions", subjectId: boardSubjects.activities.id },
-      response: {
+      queryNameAndInput: `createBoard(input: { name: "champions", subjectId: ${boardSubjects.activities.id} })`,
+      createdBoard: {
         admins: [users.johnDoe],
         id: 5,
         members: [users.johnDoe],
         name: "champions",
         subject: boardSubjects.activities,
       },
-      status: 201,
+      responseError: undefined,
     },
-  ])("Board creating case #%#", async ({ payload, response, status }) => {
-    const getNewlyCreatedBoardResponse = await fetchApi("/api/boards", {
-      body: JSON.stringify(payload),
-      method: "POST",
-    })
-    expect(getNewlyCreatedBoardResponse.status).toEqual(status)
-    expect(await getNewlyCreatedBoardResponse.json()).toEqual(response)
+  ])("$queryNameAndInput", async ({ queryNameAndInput, createdBoard, responseError }) => {
+    const responseBody = await fetchGqlApi(`mutation CREATE_BOARD {
+      ${queryNameAndInput} {
+        ${QueryFields.board}
+      }
+    }`)
+    expect(responseBody.data?.createBoard).toEqual(createdBoard)
+    expect(responseBody.errors?.[0]?.extensions?.exception?.response).toEqual(responseError)
   })
 
-  it("a newly created board can be found by ID", async () => {
-    await fetchApi("/api/boards", {
-      body: JSON.stringify({ name: "champions", subjectId: boardSubjects.activities.id }),
-      method: "POST",
-    })
-    const getNewlyCreatedBoardResponse = await fetchApi("/api/boards/5")
-    expect(await getNewlyCreatedBoardResponse.json()).toEqual<BoardEntity | unknown>({
-      admins: [users.johnDoe],
-      id: 5,
-      members: [users.johnDoe],
-      name: "champions",
-      subject: boardSubjects.activities,
+  it("created board is found successfully", async () => {
+    await fetchGqlApi(`mutation CREATE_BOARD {
+      createBoard(input: { name: "champions", subjectId: ${boardSubjects.activities.id} }) {
+        ${QueryFields.board}
+      }
+    }`)
+    const fetchCreatedBoardResponseBody = await fetchGqlApi(`{
+      board(id: 5) {
+        ${QueryFields.board}
+      }
+    }`)
+    expect(fetchCreatedBoardResponseBody.data).toEqual({
+      board: {
+        admins: [users.johnDoe],
+        id: 5,
+        members: [users.johnDoe],
+        name: "champions",
+        subject: boardSubjects.activities,
+      },
     })
   })
 })
