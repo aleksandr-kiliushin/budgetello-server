@@ -3,7 +3,7 @@ import { authorize } from "#e2e/helpers/authorize"
 import { fetchGqlApi } from "#e2e/helpers/fetchGqlApi"
 
 beforeEach(async () => {
-  await authorize(users.johnDoe.username)
+  await authorize(users.johnDoe)
 })
 
 describe("Returns a user by their identifier", () => {

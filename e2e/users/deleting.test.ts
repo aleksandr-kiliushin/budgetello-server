@@ -3,7 +3,7 @@ import { authorize } from "#e2e/helpers/authorize"
 import { fetchGqlApi } from "#e2e/helpers/fetchGqlApi"
 
 beforeEach(async () => {
-  await authorize(users.johnDoe.username)
+  await authorize(users.johnDoe)
 })
 
 describe("User deletion", () => {
@@ -45,7 +45,7 @@ describe("User deletion", () => {
         username
       }
     }`)
-    await authorize(users.jessicaStark.username)
+    await authorize(users.jessicaStark)
     const fetchDeletedUserResponseBody = await fetchGqlApi(`{
       user(id: ${users.johnDoe.id}) {
         id,

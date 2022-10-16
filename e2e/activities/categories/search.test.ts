@@ -5,7 +5,7 @@ import { authorize } from "#e2e/helpers/authorize"
 import { fetchGqlApi } from "#e2e/helpers/fetchGqlApi"
 
 beforeEach(async () => {
-  await authorize(users.jessicaStark.username)
+  await authorize(users.jessicaStark)
 })
 
 describe("Responds with a category found by provided ID", () => {

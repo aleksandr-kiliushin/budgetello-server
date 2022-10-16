@@ -1,18 +1,18 @@
 import { activityCategoryMeasurementTypes } from "#e2e/constants/activities"
 import { boards } from "#e2e/constants/boards"
 import { users } from "#e2e/constants/users"
-import { ITestUserUsername, authorize } from "#e2e/helpers/authorize"
+import { ITestUser, authorize } from "#e2e/helpers/authorize"
 import { fetchApi } from "#e2e/helpers/fetchApi"
 
 describe("Activity category creating", () => {
   test.each<{
-    authorizedUserUsername: ITestUserUsername
+    authorizedUser: ITestUser
     payload: Record<string, unknown>
     response: Record<string, unknown>
     status: number
   }>([
     {
-      authorizedUserUsername: users.johnDoe.username,
+      authorizedUser: users.johnDoe,
       payload: { name: "" },
       response: {
         fields: {
@@ -24,7 +24,7 @@ describe("Activity category creating", () => {
       status: 400,
     },
     {
-      authorizedUserUsername: users.johnDoe.username,
+      authorizedUser: users.johnDoe,
       payload: {
         boardId: boards.productivePeople.id,
         measurementTypeId: activityCategoryMeasurementTypes.quantitative.id,
@@ -39,7 +39,7 @@ describe("Activity category creating", () => {
       status: 400,
     },
     {
-      authorizedUserUsername: users.johnDoe.username,
+      authorizedUser: users.johnDoe,
       payload: {
         boardId: boards.productivePeople.id,
         measurementTypeId: activityCategoryMeasurementTypes.quantitative.id,
@@ -57,7 +57,7 @@ describe("Activity category creating", () => {
       status: 400,
     },
     {
-      authorizedUserUsername: users.jessicaStark.username,
+      authorizedUser: users.jessicaStark,
       payload: {
         boardId: boards.productivePeople.id,
         measurementTypeId: activityCategoryMeasurementTypes.quantitative.id,
@@ -74,8 +74,8 @@ describe("Activity category creating", () => {
       },
       status: 201,
     },
-  ])("Case #%#", async ({ authorizedUserUsername, payload, response, status }) => {
-    await authorize(authorizedUserUsername)
+  ])("Case #%#", async ({ authorizedUser, payload, response, status }) => {
+    await authorize(authorizedUser)
     const categoryCreatingResponse = await fetchApi("/api/activities/categories", {
       body: JSON.stringify(payload),
       method: "POST",
@@ -85,7 +85,7 @@ describe("Activity category creating", () => {
   })
 
   it("a newly created category can be found by ID", async () => {
-    await authorize(users.jessicaStark.username)
+    await authorize(users.jessicaStark)
     await fetchApi("/api/activities/categories", {
       body: JSON.stringify({
         boardId: boards.productivePeople.id,

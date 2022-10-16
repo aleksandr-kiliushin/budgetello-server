@@ -7,7 +7,7 @@ import { fetchApi } from "#e2e/helpers/fetchApi"
 
 describe("Budget record deleting", () => {
   it("returns a correct response after deleting", async () => {
-    await authorize(users.jessicaStark.username)
+    await authorize(users.jessicaStark)
     const recordDeletingResponse = await fetchApi(`/api/budget/records/${budgetRecords["5th"].id}`, {
       method: "DELETE",
     })
@@ -16,7 +16,7 @@ describe("Budget record deleting", () => {
   })
 
   it("the deleted records are not presented in all records list", async () => {
-    await authorize(users.jessicaStark.username)
+    await authorize(users.jessicaStark)
     await fetchApi(`/api/budget/records/${budgetRecords["1st"].id}`, { method: "DELETE" })
     await fetchApi(`/api/budget/records/${budgetRecords["2nd"].id}`, { method: "DELETE" })
     await fetchApi(`/api/budget/records/${budgetRecords["3rd"].id}`, { method: "DELETE" })
@@ -26,7 +26,7 @@ describe("Budget record deleting", () => {
   })
 
   test("the user cannot delete a record of a board that they is not a member of", async () => {
-    await authorize(users.johnDoe.username)
+    await authorize(users.johnDoe)
     const recordUpdatingResponse = await fetchApi(`/api/budget/records/${budgetRecords["5th"].id}`, {
       method: "DELETE",
     })
