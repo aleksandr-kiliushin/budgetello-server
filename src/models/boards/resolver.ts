@@ -1,7 +1,7 @@
 import { UseGuards } from "@nestjs/common"
 import { Args, Int, Query, Resolver } from "@nestjs/graphql"
 
-import { AuthGuard } from "#models/auth/guard"
+import { AuthorizationGuard } from "#models/authorization/guard"
 import { UserEntity } from "#models/users/entities/user.entity"
 
 import { AuthorizedUser } from "#helpers/AuthorizedUser.decorator"
@@ -11,7 +11,7 @@ import { Board } from "./models/board.model"
 import { BoardsService } from "./service"
 
 @Resolver(() => Board)
-@UseGuards(AuthGuard)
+@UseGuards(AuthorizationGuard)
 export class BoardsResolver {
   constructor(private boardsService: BoardsService) {}
 

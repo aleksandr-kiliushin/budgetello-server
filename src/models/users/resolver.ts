@@ -1,7 +1,7 @@
 import { BadRequestException, UseGuards } from "@nestjs/common"
 import { Args, Int, Mutation, Query, Resolver } from "@nestjs/graphql"
 
-import { AuthGuard } from "#models/auth/guard"
+import { AuthorizationGuard } from "#models/authorization/guard"
 
 import { AuthorizedUser } from "#helpers/AuthorizedUser.decorator"
 
@@ -18,7 +18,7 @@ export class UsersResolver {
   constructor(private readonly usersService: UsersService) {}
 
   @Query((returns) => [User], { name: "users" })
-  @UseGuards(AuthGuard)
+  @UseGuards(AuthorizationGuard)
   search(
     @Args()
     args: SearchUsersArgs
@@ -27,7 +27,7 @@ export class UsersResolver {
   }
 
   @Query((returns) => User, { name: "user" })
-  @UseGuards(AuthGuard)
+  @UseGuards(AuthorizationGuard)
   find(
     @Args()
     args: FindUserArgs,
@@ -57,7 +57,7 @@ export class UsersResolver {
   }
 
   @Mutation((returns) => User, { name: "updateUser" })
-  @UseGuards(AuthGuard)
+  @UseGuards(AuthorizationGuard)
   update(
     @Args("input")
     input: UpdateUserInput,
@@ -68,7 +68,7 @@ export class UsersResolver {
   }
 
   @Mutation((returns) => User, { name: "deleteUser" })
-  @UseGuards(AuthGuard)
+  @UseGuards(AuthorizationGuard)
   delete(
     @Args("id", { type: () => Int })
     userId: number,

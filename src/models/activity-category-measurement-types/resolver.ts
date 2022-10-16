@@ -1,14 +1,14 @@
 import { UseGuards } from "@nestjs/common"
 import { Args, Int, Query, Resolver } from "@nestjs/graphql"
 
-import { AuthGuard } from "#models/auth/guard"
+import { AuthorizationGuard } from "#models/authorization/guard"
 
 import { ActivityCategoryMeasurementTypeEntity } from "./entities/activity-category-measurement-type.entity"
 import { ActivityCategoryMeasurementType } from "./models/activity-category-measurement-type.model"
 import { ActivityCategoryMeasurementTypesService } from "./service"
 
 @Resolver(() => ActivityCategoryMeasurementType)
-@UseGuards(AuthGuard)
+@UseGuards(AuthorizationGuard)
 export class ActivityCategoryMeasurementTypesResolver {
   constructor(private readonly activityCategoryMeasurementTypeService: ActivityCategoryMeasurementTypesService) {}
 

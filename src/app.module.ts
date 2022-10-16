@@ -7,7 +7,7 @@ import { join } from "node:path"
 import { ActivityCategoriesModule } from "#models/activity-categories/module"
 import { ActivityCategoryMeasurementTypesModule } from "#models/activity-category-measurement-types/module"
 import { ActivityRecordsModule } from "#models/activity-records/module"
-import { AuthModule } from "#models/auth/module"
+import { AuthorizationModule } from "#models/authorization/module"
 import { BoardSubjectsModule } from "#models/board-subjects/module"
 import { BoardsModule } from "#models/boards/module"
 import { BudgetCategoriesModule } from "#models/budget-categories/module"
@@ -39,7 +39,7 @@ import { ormConfig } from "./config/ormConfig"
     ActivityCategoriesModule,
     ActivityCategoryMeasurementTypesModule,
     ActivityRecordsModule,
-    AuthModule,
+    AuthorizationModule,
     BoardsModule,
     BoardSubjectsModule,
     BudgetCategoriesModule,

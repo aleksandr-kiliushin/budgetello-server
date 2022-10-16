@@ -1,7 +1,7 @@
 import { UseGuards } from "@nestjs/common"
 import { Args, Int, Query, Resolver } from "@nestjs/graphql"
 
-import { AuthGuard } from "#models/auth/guard"
+import { AuthorizationGuard } from "#models/authorization/guard"
 import { UserEntity } from "#models/users/entities/user.entity"
 
 import { AuthorizedUser } from "#helpers/AuthorizedUser.decorator"
@@ -12,7 +12,7 @@ import { ActivityCategory } from "./models/activity-category.model"
 import { ActivityCategoriesService } from "./service"
 
 @Resolver(() => ActivityCategory)
-@UseGuards(AuthGuard)
+@UseGuards(AuthorizationGuard)
 export class ActivityCategoriesResolver {
   constructor(private activityCategoriesService: ActivityCategoriesService) {}
 

@@ -12,7 +12,7 @@ import * as jwt from "jsonwebtoken"
 import { UsersService } from "#models/users/service"
 
 @Injectable()
-export class AuthGuard implements CanActivate {
+export class AuthorizationGuard implements CanActivate {
   constructor(private readonly usersService: UsersService) {}
 
   async canActivate(executionContext: ExecutionContext) {
