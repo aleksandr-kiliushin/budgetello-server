@@ -1,101 +1,192 @@
-import { IActivityRecord } from "#interfaces/activities"
-
 import { activityRecords } from "#e2e/constants/activities"
 import { boards } from "#e2e/constants/boards"
 import { users } from "#e2e/constants/users"
 import { ITestUserUsername, authorize } from "#e2e/helpers/authorize"
-import { fetchApi } from "#e2e/helpers/fetchApi"
+import { fetchGqlApi } from "#e2e/helpers/fetchGqlApi"
 
 describe("Get activity record by ID", () => {
-  test.each<
-    | { authorizedUserUsername: ITestUserUsername; url: string; responseStatus: 200; responseBody: IActivityRecord }
-    | { authorizedUserUsername: ITestUserUsername; url: string; responseStatus: 403; responseBody: { message: string } }
-    | { authorizedUserUsername: ITestUserUsername; url: string; responseStatus: 404; responseBody: { message: string } }
-  >([
+  test.each<{
+    authorizedUserUsername: ITestUserUsername
+    query: string
+    responseBody: unknown
+  }>([
     {
       authorizedUserUsername: users.johnDoe.username,
-      url: `/api/activities/records/${activityRecords["5th"].id}`,
-      responseStatus: 200,
-      responseBody: activityRecords["5th"],
+      query: `{
+        activityRecord(id: ${activityRecords["5th"].id}) {
+          booleanValue,
+          category {
+            board { id, name },
+            id,
+            measurementType { id, name },
+            name,
+            owner { id, password, username },
+            unit
+          }
+          comment,
+          date,
+          id,
+          quantitativeValue,
+        }
+      }`,
+      responseBody: { data: { activityRecord: activityRecords["5th"] } },
     },
-    {
-      authorizedUserUsername: users.johnDoe.username,
-      url: `/api/activities/records/${activityRecords["1st"].id}`,
-      responseStatus: 403,
-      responseBody: { message: "Access denied." },
-    },
-    {
-      authorizedUserUsername: users.johnDoe.username,
-      url: "/api/activities/records/666",
-      responseStatus: 404,
-      responseBody: { message: "Record with ID '666' not found." },
-    },
-  ])("$url", async ({ authorizedUserUsername, url, responseStatus, responseBody }) => {
+    // {
+    //   authorizedUserUsername: users.johnDoe.username,
+    //   url: `/api/activities/records/${activityRecords["1st"].id}`,
+    //   responseStatus: 403,
+    //   responseBody: { message: "Access denied." },
+    // },
+    // {
+    //   authorizedUserUsername: users.johnDoe.username,
+    //   url: "/api/activities/records/666",
+    //   responseStatus: 404,
+    //   responseBody: { message: "Record with ID '666' not found." },
+    // },
+  ])("$url", async ({ authorizedUserUsername, query, responseBody }) => {
     await authorize(authorizedUserUsername)
-    const response = await fetchApi(url)
-    expect(response.status).toEqual(responseStatus)
-    expect(await response.json()).toEqual(responseBody)
+    expect(await fetchGqlApi(query)).toEqual(responseBody)
   })
 })
 
 describe("Activity records search", () => {
-  test.each<{ authorizedUserUsername: ITestUserUsername; url: string; responseBody: unknown; responseStatus: number }>([
+  test.each<{ authorizedUserUsername: ITestUserUsername; query: string; responseBody: unknown }>([
     {
       authorizedUserUsername: users.johnDoe.username,
-      url: "/api/activities/records/search",
-      responseBody: [activityRecords["7th"], activityRecords["5th"]],
-      responseStatus: 200,
+      query: `{
+        activityRecords {
+          booleanValue,
+          category {
+            board { id, name },
+            id,
+            measurementType { id, name },
+            name,
+            owner { id, password, username },
+            unit
+          }
+          comment,
+          date,
+          id,
+          quantitativeValue,
+        }
+      }`,
+      responseBody: { data: { activityRecords: [activityRecords["7th"], activityRecords["5th"]] } },
     },
     {
       authorizedUserUsername: users.johnDoe.username,
-      url: `/api/activities/records/search?boardsIds=${boards.beautifulSportsmen.id},666`,
-      responseBody: [],
-      responseStatus: 200,
+      query: `{
+        activityRecords(boardsIds: [${boards.beautifulSportsmen.id}, 666666]) {
+          booleanValue,
+          category {
+            board { id, name },
+            id,
+            measurementType { id, name },
+            name,
+            owner { id, password, username },
+            unit
+          }
+          comment,
+          date,
+          id,
+          quantitativeValue,
+        }
+      }`,
+      responseBody: { data: { activityRecords: [] } },
     },
     {
       authorizedUserUsername: users.jessicaStark.username,
-      url: `/api/activities/records/search?boardsIds=${boards.beautifulSportsmen.id}`,
-      responseBody: [
-        activityRecords["6th"],
-        activityRecords["4th"],
-        activityRecords["3rd"],
-        activityRecords["2nd"],
-        activityRecords["1st"],
-      ],
-      responseStatus: 200,
-    },
-    {
-      authorizedUserUsername: users.johnDoe.username,
-      url: "/api/activities/records/search?dates=2022_01_15",
+      query: `{
+        activityRecords(boardsIds: [${boards.beautifulSportsmen.id}]) {
+          booleanValue,
+          category {
+            board { id, name },
+            id,
+            measurementType { id, name },
+            name,
+            owner { id, password, username },
+            unit
+          }
+          comment,
+          date,
+          id,
+          quantitativeValue,
+        }
+      }`,
       responseBody: {
-        query: { dates: "An array of YYYY-MM-DD dates expected." },
+        data: {
+          activityRecords: [
+            activityRecords["6th"],
+            activityRecords["4th"],
+            activityRecords["3rd"],
+            activityRecords["2nd"],
+            activityRecords["1st"],
+          ],
+        },
       },
-      responseStatus: 400,
     },
     {
       authorizedUserUsername: users.jessicaStark.username,
-      url: "/api/activities/records/search",
-      responseBody: [
-        activityRecords["7th"],
-        activityRecords["6th"],
-        activityRecords["5th"],
-        activityRecords["4th"],
-        activityRecords["3rd"],
-        activityRecords["2nd"],
-        activityRecords["1st"],
-      ],
-      responseStatus: 200,
+      query: `{
+        activityRecords {
+          booleanValue,
+          category {
+            board { id, name },
+            id,
+            measurementType { id, name },
+            name,
+            owner { id, password, username },
+            unit
+          }
+          comment,
+          date,
+          id,
+          quantitativeValue,
+        }
+      }`,
+      responseBody: {
+        data: {
+          activityRecords: [
+            activityRecords["7th"],
+            activityRecords["6th"],
+            activityRecords["5th"],
+            activityRecords["4th"],
+            activityRecords["3rd"],
+            activityRecords["2nd"],
+            activityRecords["1st"],
+          ],
+        },
+      },
     },
     {
       authorizedUserUsername: users.jessicaStark.username,
-      url: "/api/activities/records/search?boardsIds=3&date=2022-08-01&orderingByDate=ASC&orderingById=ASC&skip=1&take=1",
-      responseBody: [activityRecords["2nd"]],
-      responseStatus: 200,
+      query: `{
+        activityRecords(boardsIds: [${boards.beautifulSportsmen.id}], dates: ["2022-08-01"], orderingByDate: "ASC", orderingById: "ASC", skip: 1, take: 1) {
+          booleanValue,
+          category {
+            board { id, name },
+            id,
+            measurementType { id, name },
+            name,
+            owner { id, password, username },
+            unit
+          }
+          comment,
+          date,
+          id,
+          quantitativeValue,
+        }
+      }`,
+      responseBody: { data: { activityRecords: [activityRecords["2nd"]] } },
     },
-  ])("$url", async ({ authorizedUserUsername, url, responseBody, responseStatus }) => {
+    // {
+    //   url: "/api/activities/records/search?dates=2022_01_15",
+    //   responseBody: {
+    //     query: { dates: "An array of YYYY-MM-DD dates expected." },
+    //   },
+    //   responseStatus: 400,
+    // },
+  ])("$url", async ({ authorizedUserUsername, query, responseBody }) => {
     await authorize(authorizedUserUsername)
-    const response = await fetchApi(url)
-    expect(response.status).toEqual(responseStatus)
-    expect(await response.json()).toEqual(responseBody)
+    expect(await fetchGqlApi(query)).toEqual(responseBody)
   })
 })

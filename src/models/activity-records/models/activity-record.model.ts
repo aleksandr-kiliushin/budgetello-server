@@ -1,12 +1,14 @@
 import { Field, Float, Int, ObjectType } from "@nestjs/graphql"
 
+import { ActivityCategory } from "#models/activity-categories/models/activity-category.model"
+
 @ObjectType()
 export class ActivityRecord {
   @Field({ nullable: true })
   booleanValue: boolean
 
-  // @ManyToOne(() => ActivityCategoryEntity, { onDelete: "CASCADE" })
-  // category: ActivityCategoryEntity
+  @Field((type) => ActivityCategory)
+  category: ActivityCategory
 
   @Field()
   comment: string
@@ -14,9 +16,9 @@ export class ActivityRecord {
   @Field()
   date: string
 
-  @Field(() => Int)
+  @Field((type) => Int)
   id: number
 
-  @Field(() => Float, { nullable: true })
+  @Field((type) => Float, { nullable: true })
   quantitativeValue: number
 }

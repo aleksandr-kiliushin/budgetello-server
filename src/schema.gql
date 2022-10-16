@@ -18,6 +18,7 @@ type ActivityCategoryMeasurementType {
 
 type ActivityRecord {
   booleanValue: Boolean
+  category: ActivityCategory!
   comment: String!
   date: String!
   id: Int!
