@@ -51,7 +51,7 @@ export class ActivityRecordsResolver {
 
   @Mutation((returns) => ActivityRecord, { name: "updateActivityRecord" })
   update(
-    @Args("input")
+    @Args("input", ValidationPipe)
     input: UpdateActivityRecordInput,
     @AuthorizedUser()
     authorizedUser: UserEntity
