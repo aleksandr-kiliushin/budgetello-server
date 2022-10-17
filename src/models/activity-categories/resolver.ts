@@ -58,6 +58,16 @@ export class ActivityCategoriesResolver {
     return this.activityCategoriesService.update({ authorizedUser, input })
   }
 
+  @Mutation((returns) => ActivityCategory, { name: "deleteActivityCategory" })
+  delete(
+    @Args("id", { type: () => Int })
+    categoryId: number,
+    @AuthorizedUser()
+    authorizedUser: UserEntity
+  ): Promise<ActivityCategoryEntity> {
+    return this.activityCategoriesService.delete({ authorizedUser, categoryId })
+  }
+
   // @Post()
   // create(
   //   @Body(new ValidationPipe())

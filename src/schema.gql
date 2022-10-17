@@ -105,6 +105,7 @@ type Mutation {
   createBudgetCategory(input: CreateBudgetCategoryInput!): BudgetCategory!
   createBudgetRecord(input: CreateBudgetRecordInput!): BudgetRecord!
   createUser(input: CreateUserInput!): User!
+  deleteActivityCategory(id: Int!): ActivityCategory!
   deleteBoard(id: Int!): Board!
   deleteBudgetCategory(id: Int!): BudgetCategory!
   deleteBudgetRecord(id: Int!): BudgetRecord!
