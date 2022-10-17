@@ -39,4 +39,12 @@ export class QueryFields {
     id,
     name
   `
+  static activityCategory = `
+    board { id, name }
+    id,
+    name,
+    measurementType { id, name },
+    owner { id, password, username },
+    unit
+  `
 }
