@@ -30,7 +30,7 @@ describe("Find budget category", () => {
       foundCategory: undefined,
       responseError: { message: "Not found." },
     },
-  ])("$query", async ({ queryNameAndArgs, foundCategory, responseError }) => {
+  ])("$queryNameAndArgs", async ({ queryNameAndArgs, foundCategory, responseError }) => {
     const responseBody = await fetchGqlApi(`{
       ${queryNameAndArgs} {
         ${QueryFields.budgetCategory}
@@ -66,7 +66,7 @@ describe("Search budget categories", () => {
       queryNameAndArgs: `budgetCategories`,
       foundCategories: [budgetCategories.clothesExpense, budgetCategories.educationExpense],
     },
-  ])("$query", async ({ queryNameAndArgs, foundCategories }) => {
+  ])("$queryNameAndArgs", async ({ queryNameAndArgs, foundCategories }) => {
     const responseBody = await fetchGqlApi(`{
       ${queryNameAndArgs} {
         ${QueryFields.budgetCategory}

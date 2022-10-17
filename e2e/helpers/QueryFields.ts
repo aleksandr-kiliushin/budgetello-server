@@ -1,4 +1,5 @@
 // TODO: Query all board fields for budget and activity categories in tests.
+// TODO: class -> object, remove links.
 
 export class QueryFields {
   static user = `
@@ -26,5 +27,12 @@ export class QueryFields {
     id,
     name,
     type { id, name }
+  `
+  static budgetRecord = `
+    amount,
+    category { ${this.budgetCategory} },
+    date,
+    id,
+    isTrashed
   `
 }

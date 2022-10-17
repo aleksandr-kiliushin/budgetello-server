@@ -1,3 +1,4 @@
 - Add return type for all resolver methods. Select IUser VS UserEntity VS User.
 - Remove all unused dto for query-string-search, etc.
 - Get all `relations` in TypeORM queries. Allow clients to define queries that are needed.
+- Sort items by ASC by default.

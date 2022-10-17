@@ -77,7 +77,7 @@ export class ActivityRecordsService {
       where: { id: recordId },
     })
     if (record === null) {
-      throw new NotFoundException({ message: `Record with ID '${recordId}' not found.` })
+      throw new NotFoundException({ message: "Not found." })
     }
 
     const accessibleBoardsIds = [
