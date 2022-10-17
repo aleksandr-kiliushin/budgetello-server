@@ -5,11 +5,18 @@ import { fetchGqlApi } from "#e2e/helpers/fetchGqlApi"
 
 describe("User creating process", () => {
   it("can create and get correct data response after creating", async () => {
-    const responseBody = await fetchGqlApi(`mutation CREATE_USER {
-      createUser(input: { username: "andrew-smith", password: "andrew-smith-password" }) {
-        ${QueryFields.user}
-      }
-    }`)
+    const response = await fetch("http://localhost:3080/graphql", {
+      body: JSON.stringify({
+        query: `mutation CREATE_USER {
+          createUser(input: { username: "andrew-smith", password: "andrew-smith-password" }) {
+            ${QueryFields.user}
+          }
+        }`,
+      }),
+      headers: { Accept: "application/json", "Content-Type": "application/json" },
+      method: "POST",
+    })
+    const responseBody = await response.json()
     expect(responseBody.data).toEqual({
       createUser: {
         id: 3,
@@ -19,20 +26,26 @@ describe("User creating process", () => {
     })
   })
 
-  // it("validates user creating input", async () => {
-  //   const response = await fetch("http://localhost:3080/api/users", {
-  //     body: JSON.stringify({ username: "" }),
-  //     headers: { "Content-Type": "application/json" },
-  //     method: "POST",
-  //   })
-  //   expect(response.status).toEqual(400)
-  //   expect(await response.json()).toEqual({
-  //     fields: {
-  //       username: "Required.",
-  //       password: "Required.",
-  //     },
-  //   })
-  // })
+  it("validates user creating input", async () => {
+    const response = await fetch("http://localhost:3080/graphql", {
+      body: JSON.stringify({
+        query: `mutation CREATE_USER {
+          createUser(input: { username: "", password: "" }) {
+            ${QueryFields.user}
+          }
+        }`,
+      }),
+      headers: { Accept: "application/json", "Content-Type": "application/json" },
+      method: "POST",
+    })
+    const responseBody = await response.json()
+    expect(responseBody.errors[0].extensions.exception.response).toEqual({
+      fields: {
+        username: "Required.",
+        password: "Required.",
+      },
+    })
+  })
 })
 
 describe("Created user data and operations", () => {

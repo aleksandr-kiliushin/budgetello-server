@@ -4,6 +4,7 @@ import { Args, Int, Mutation, Query, Resolver } from "@nestjs/graphql"
 import { AuthorizationGuard } from "#models/authorization/guard"
 
 import { AuthorizedUser } from "#helpers/AuthorizedUser.decorator"
+import { ValidationPipe } from "#helpers/validation.pipe"
 
 import { CreateUserInput } from "./dto/create-user.input"
 import { FindUserArgs } from "./dto/find-user.args"
@@ -22,7 +23,7 @@ export class UsersResolver {
   search(
     @Args()
     args: SearchUsersArgs
-  ): Promise<User[]> {
+  ): Promise<UserEntity[]> {
     return this.usersService.search({ args })
   }
 
@@ -33,7 +34,7 @@ export class UsersResolver {
     args: FindUserArgs,
     @AuthorizedUser()
     authorizedUser: UserEntity
-  ): Promise<User> {
+  ): Promise<UserEntity> {
     if (args.id !== undefined) {
       return this.usersService.find({ authorizedUser, userId: args.id })
     }
@@ -50,20 +51,20 @@ export class UsersResolver {
 
   @Mutation((returns) => User, { name: "createUser" })
   create(
-    @Args("input")
+    @Args("input", ValidationPipe)
     input: CreateUserInput
-  ) {
+  ): Promise<UserEntity> {
     return this.usersService.create({ input })
   }
 
   @Mutation((returns) => User, { name: "updateUser" })
   @UseGuards(AuthorizationGuard)
   update(
-    @Args("input")
+    @Args("input", ValidationPipe)
     input: UpdateUserInput,
     @AuthorizedUser()
     authorizedUser: UserEntity
-  ) {
+  ): Promise<UserEntity> {
     return this.usersService.update({ authorizedUser, input })
   }
 
@@ -74,7 +75,7 @@ export class UsersResolver {
     userId: number,
     @AuthorizedUser()
     authorizedUser: UserEntity
-  ) {
+  ): Promise<UserEntity> {
     return this.usersService.delete({ authorizedUser, userId })
   }
 }

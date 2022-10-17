@@ -98,11 +98,6 @@ describe("Search users", () => {
       queryNameAndArgs: `users`,
       foundUsers: [users.johnDoe, users.jessicaStark],
     },
-    // {
-    //   url: "/api/users/search?ids=1,hello",
-    //   foundUsers: { queryNameAndArgs: { ids: "An array of numbers expected." } },
-    //   responseStatus: 400,
-    // },
   ])("$queryNameAndArgs", async ({ queryNameAndArgs, foundUsers }) => {
     const responseBody = await fetchGqlApi(`{
       ${queryNameAndArgs} {
