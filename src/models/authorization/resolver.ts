@@ -11,7 +11,7 @@ export class AuthorizationResolver {
 
   @Mutation(() => String, { name: "authorize" })
   authorize(
-    @Args("input", new ValidationPipe())
+    @Args("input", ValidationPipe)
     input: AuthorizeInput
   ): Promise<string> {
     return this.authorizationService.createToken({ input })
