@@ -47,4 +47,19 @@ export class QueryFields {
     owner { id, password, username },
     unit
   `
+  static activityRecord = `
+    booleanValue,
+    category {
+      board { id, name },
+      id,
+      measurementType { id, name },
+      name,
+      owner { id, password, username },
+      unit
+    }
+    comment,
+    date,
+    id,
+    quantitativeValue
+  `
 }
