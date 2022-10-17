@@ -70,4 +70,28 @@ describe("Activity record creating", () => {
     expect(responseBody.data?.createActivityRecord).toEqual(createdRecord)
     expect(responseBody.errors?.[0]?.extensions?.exception?.response).toEqual(responseError)
   })
+
+  it("created category can be found by ID", async () => {
+    await authorize(users.johnDoe.id)
+    await fetchGqlApi(`mutation CREATE_ACTIVITY_RECORD {
+      createActivityRecord(input: { booleanValue: null, categoryId: ${activityCategories.reading.id}, comment: "read about backend", date: "2022-08-10", quantitativeValue: 4.5 }) {
+        ${QueryFields.activityRecord}
+      }
+    }`)
+    const responseBody = await fetchGqlApi(`{
+      activityRecord(id: 8) {
+        ${QueryFields.activityRecord}
+      }
+    }`)
+    expect(responseBody.data).toEqual({
+      activityRecord: {
+        booleanValue: null,
+        category: activityCategories.reading,
+        comment: "read about backend",
+        date: "2022-08-10",
+        id: 8,
+        quantitativeValue: 4.5,
+      },
+    })
+  })
 })
