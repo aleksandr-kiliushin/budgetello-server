@@ -73,6 +73,12 @@ input CreateBoardInput {
   subjectId: Int!
 }
 
+input CreateBudgetCategoryInput {
+  boardId: Int!
+  name: String!
+  typeId: Int!
+}
+
 input CreateUserInput {
   password: String!
   username: String!
@@ -82,6 +88,7 @@ type Mutation {
   addBoardMember(input: AddMemberInput!): Board!
   authorize(input: AuthorizeInput!): String!
   createBoard(input: CreateBoardInput!): Board!
+  createBudgetCategory(input: CreateBudgetCategoryInput!): BudgetCategory!
   createUser(input: CreateUserInput!): User!
   deleteBoard(id: Int!): Board!
   deleteUser(id: Int!): User!

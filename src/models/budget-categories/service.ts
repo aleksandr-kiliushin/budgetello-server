@@ -6,7 +6,7 @@ import { BoardsService } from "#models/boards/service"
 import { BudgetCategoryTypesService } from "#models/budget-category-types/service"
 import { UserEntity } from "#models/users/entities/user.entity"
 
-import { CreateBudgetCategoryDto } from "./dto/create-budget-category.dto"
+import { CreateBudgetCategoryInput } from "./dto/create-budget-category.input"
 import { SearchBudgetCategoriesQueryDto } from "./dto/seach-budget-categories-query.dto"
 import { UpdateBudgetCategoryDto } from "./dto/update-budget-category.dto"
 import { BudgetCategoryEntity } from "./entities/budget-category.entity"
@@ -75,20 +75,20 @@ export class BudgetCategoriesService {
 
   async create({
     authorizedUser,
-    requestBody,
+    input,
   }: {
     authorizedUser: UserEntity
-    requestBody: CreateBudgetCategoryDto
+    input: CreateBudgetCategoryInput
   }): Promise<BudgetCategoryEntity> {
-    const type = await this.budgetCategoryTypesService.find({ typeId: requestBody.typeId }).catch(() => {
+    const type = await this.budgetCategoryTypesService.find({ typeId: input.typeId }).catch(() => {
       throw new BadRequestException({ fields: { typeId: "Invalid value." } })
     })
-    const board = await this.boardsService.find({ boardId: requestBody.boardId }).catch(() => {
+    const board = await this.boardsService.find({ boardId: input.boardId }).catch(() => {
       throw new BadRequestException({ fields: { boardId: "Invalid value." } })
     })
     const similarExistingCategory = await this.budgetCategoriesRepository.findOne({
       relations: { board: true, type: true },
-      where: { board, name: requestBody.name, type },
+      where: { board, name: input.name, type },
     })
     if (similarExistingCategory !== null) {
       throw new BadRequestException({
@@ -99,7 +99,7 @@ export class BudgetCategoriesService {
         },
       })
     }
-    const category = this.budgetCategoriesRepository.create({ board, name: requestBody.name, type })
+    const category = this.budgetCategoriesRepository.create({ board, name: input.name, type })
     const createdCategory = await this.budgetCategoriesRepository.save(category)
     return await this.find({ authorizedUser, categoryId: createdCategory.id })
   }

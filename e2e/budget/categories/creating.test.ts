@@ -1,8 +1,9 @@
 import { boards } from "#e2e/constants/boards"
-import { budgetCategories, budgetCategoryTypes } from "#e2e/constants/budget"
+import { budgetCategoryTypes } from "#e2e/constants/budget"
 import { users } from "#e2e/constants/users"
+import { QueryFields } from "#e2e/helpers/QueryFields"
 import { authorize } from "#e2e/helpers/authorize"
-import { fetchApi } from "#e2e/helpers/fetchApi"
+import { fetchGqlApi } from "#e2e/helpers/fetchGqlApi"
 
 beforeEach(async () => {
   await authorize(users.johnDoe.id)
@@ -10,67 +11,64 @@ beforeEach(async () => {
 
 describe("Budget category creating", () => {
   test.each<{
-    payload: Record<string, unknown>
-    response: Record<string, unknown>
-    status: number
+    queryNameAndInput: string
+    createdCategory: unknown
+    responseError: unknown
   }>([
     {
-      payload: { name: "" },
-      response: {
-        fields: { boardId: "Required.", name: "Required.", typeId: "Required." },
-      },
-      status: 400,
+      queryNameAndInput: `createBudgetCategory(input: { boardId: ${boards.cleverBudgetiers.id}, name: "food", typeId: 666666 })`,
+      createdCategory: undefined,
+      responseError: { fields: { typeId: "Invalid value." } },
     },
     {
-      payload: { boardId: boards.cleverBudgetiers.id, name: "food", typeId: 1234123 },
-      response: { fields: { typeId: "Invalid value." } },
-      status: 400,
-    },
-    {
-      payload: { boardId: boards.cleverBudgetiers.id, name: "education", typeId: budgetCategoryTypes.expense.id },
-      response: {
+      queryNameAndInput: `createBudgetCategory(input: { boardId: ${boards.cleverBudgetiers.id}, name: "education", typeId: ${budgetCategoryTypes.expense.id} })`,
+      createdCategory: undefined,
+      responseError: {
         fields: {
           boardId: '"education" expense category already exists in this board.',
           name: '"education" expense category already exists in this board.',
           typeId: '"education" expense category already exists in this board.',
         },
       },
-      status: 400,
     },
     {
-      payload: { boardId: boards.cleverBudgetiers.id, name: "education", typeId: budgetCategoryTypes.income.id },
-      response: {
+      queryNameAndInput: `createBudgetCategory(input: { boardId: ${boards.cleverBudgetiers.id}, name: "food", typeId: ${budgetCategoryTypes.expense.id} })`,
+      createdCategory: {
         board: { id: boards.cleverBudgetiers.id, name: boards.cleverBudgetiers.name },
         id: 6,
-        name: "education",
-        type: budgetCategoryTypes.income,
+        name: "food",
+        type: budgetCategoryTypes.expense,
       },
-      status: 201,
+      responseError: undefined,
     },
-  ])("Category creating case #%#", async ({ payload, response, status }) => {
-    const categoryCreatingResponse = await fetchApi("/api/budget/categories", {
-      body: JSON.stringify(payload),
-      method: "POST",
-    })
-    expect(categoryCreatingResponse.status).toEqual(status)
-    expect(await categoryCreatingResponse.json()).toEqual(response)
+  ])("$queryNameAndInput", async ({ queryNameAndInput, createdCategory, responseError }) => {
+    const responseBody = await fetchGqlApi(`mutation CREATE_BUDGET_CATEGORY {
+      ${queryNameAndInput} {
+        ${QueryFields.budgetCategory}
+      }
+    }`)
+    expect(responseBody.data?.createBudgetCategory).toEqual(createdCategory)
+    expect(responseBody.errors?.[0]?.extensions?.exception?.response).toEqual(responseError)
   })
 
-  it("a newly created category can be found by ID", async () => {
-    await fetchApi("/api/budget/categories", {
-      body: JSON.stringify({
-        boardId: boards.cleverBudgetiers.id,
+  it("created category found successfully", async () => {
+    await fetchGqlApi(`mutation CREATE_BUDGET_CATEGORY {
+      createBudgetCategory(input: { boardId: ${boards.cleverBudgetiers.id}, name: "food", typeId: ${budgetCategoryTypes.expense.id} }) {
+        ${QueryFields.budgetCategory}
+      }
+    }`)
+    const responseBody = await fetchGqlApi(`{
+      budgetCategory(id: 6) {
+        ${QueryFields.budgetCategory}
+      }
+    }`)
+    expect(responseBody.data).toEqual({
+      budgetCategory: {
+        board: { id: boards.cleverBudgetiers.id, name: boards.cleverBudgetiers.name },
+        id: 6,
         name: "food",
-        typeId: budgetCategoryTypes.expense.id,
-      }),
-      method: "POST",
-    })
-    const getNewlyCreatedCategoryResponse = await fetchApi("/api/budget/categories/6")
-    expect(await getNewlyCreatedCategoryResponse.json()).toEqual({
-      board: budgetCategories.educationExpense.board,
-      id: 6,
-      name: "food",
-      type: budgetCategoryTypes.expense,
+        type: budgetCategoryTypes.expense,
+      },
     })
   })
 })

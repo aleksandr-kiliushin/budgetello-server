@@ -1,11 +1,12 @@
 import { UseGuards } from "@nestjs/common"
-import { Args, Int, Query, Resolver } from "@nestjs/graphql"
+import { Args, Int, Mutation, Query, Resolver } from "@nestjs/graphql"
 
 import { AuthorizationGuard } from "#models/authorization/guard"
 import { UserEntity } from "#models/users/entities/user.entity"
 
 import { AuthorizedUser } from "#helpers/AuthorizedUser.decorator"
 
+import { CreateBudgetCategoryInput } from "./dto/create-budget-category.input"
 import { SearchBudgetCategoriesArgs } from "./dto/search-budget-categories.args"
 import { BudgetCategoryEntity } from "./entities/budget-category.entity"
 import { BudgetCategory } from "./models/budget-category.model"
@@ -36,15 +37,15 @@ export class BudgetCategoriesResolver {
     return this.budgetCategoriesService.find({ authorizedUser, categoryId })
   }
 
-  // @Post()
-  // create(
-  //   @Body(new ValidationPipe())
-  //   requestBody: CreateBudgetCategoryDto,
-  //   @AuthorizedUser()
-  //   authorizedUser: UserEntity
-  // ) {
-  //   return this.budgetCategoriesService.create({ authorizedUser, requestBody })
-  // }
+  @Mutation((returns) => BudgetCategory, { name: "createBudgetCategory" })
+  create(
+    @Args("input")
+    input: CreateBudgetCategoryInput,
+    @AuthorizedUser()
+    authorizedUser: UserEntity
+  ): Promise<BudgetCategoryEntity> {
+    return this.budgetCategoriesService.create({ authorizedUser, input })
+  }
 
   // @Patch(":categoryId")
   // update(
