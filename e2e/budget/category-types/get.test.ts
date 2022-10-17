@@ -1,5 +1,6 @@
 import { budgetCategoryTypes } from "#e2e/constants/budget"
 import { users } from "#e2e/constants/users"
+import { QueryFields } from "#e2e/helpers/QueryFields"
 import { authorize } from "#e2e/helpers/authorize"
 import { fetchGqlApi } from "#e2e/helpers/fetchGqlApi"
 
@@ -7,32 +8,26 @@ beforeEach(async () => {
   await authorize(users.johnDoe.id)
 })
 
-describe("get budget category types", () => {
-  it("responds with all budget category types list", async () => {
-    const response = await fetchGqlApi(`{
-      budgetCategoryTypes {
-        id,
-        name
+describe("Get budget category types", () => {
+  it("Find", async () => {
+    const responseBody = await fetchGqlApi(`{
+      budgetCategoryType(id: ${budgetCategoryTypes.income.id}) {
+        ${QueryFields.budgetCategoryType}
       }
     }`)
-    expect(response).toEqual({
-      data: {
-        budgetCategoryTypes: [budgetCategoryTypes.expense, budgetCategoryTypes.income],
-      },
+    expect(responseBody.data).toEqual({
+      budgetCategoryType: budgetCategoryTypes.income,
     })
   })
 
-  it("responds with a budget category type for a given id", async () => {
-    const response = await fetchGqlApi(`{
-      budgetCategoryType(id: ${budgetCategoryTypes.income.id}) {
-        id,
-        name
+  it("Get all", async () => {
+    const responseBody = await fetchGqlApi(`{
+      budgetCategoryTypes {
+        ${QueryFields.budgetCategoryType}
       }
     }`)
-    expect(response).toEqual({
-      data: {
-        budgetCategoryType: budgetCategoryTypes.income,
-      },
+    expect(responseBody.data).toEqual({
+      budgetCategoryTypes: [budgetCategoryTypes.expense, budgetCategoryTypes.income],
     })
   })
 })

@@ -8,7 +8,7 @@ describe("Find a board", () => {
   test.each<{
     queryNameAndArgs: string
     foundBoard: unknown
-    responseError: Record<string, unknown> | undefined
+    responseError: unknown
   }>([
     {
       queryNameAndArgs: `board(id: ${boards.cleverBudgetiers.id})`,
