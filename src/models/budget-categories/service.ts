@@ -57,7 +57,7 @@ export class BudgetCategoriesService {
     categoryId: BudgetCategoryEntity["id"]
   }): Promise<BudgetCategoryEntity> {
     const category = await this.budgetCategoriesRepository.findOne({
-      relations: { board: true, type: true },
+      relations: { board: { admins: true, members: true, subject: true }, type: true },
       where: { id: categoryId },
     })
     if (category === null) throw new NotFoundException({ message: "Not found." })
@@ -166,6 +166,9 @@ export class BudgetCategoriesService {
     categoryId: BudgetCategoryEntity["id"]
   }): Promise<BudgetCategoryEntity> {
     const category = await this.find({ authorizedUser, categoryId })
+    if (category.board.admins.every((admin) => admin.id !== authorizedUser.id)) {
+      throw new ForbiddenException({ message: "Access denied." })
+    }
     await this.budgetCategoriesRepository.delete(categoryId)
     return category
   }

@@ -58,6 +58,16 @@ export class BudgetCategoriesResolver {
     return this.budgetCategoriesService.update({ authorizedUser, input })
   }
 
+  @Mutation((returns) => BudgetCategory, { name: "deleteBudgetCategory" })
+  delete(
+    @Args("id", { type: () => Int })
+    categoryId: number,
+    @AuthorizedUser()
+    authorizedUser: UserEntity
+  ): Promise<BudgetCategoryEntity> {
+    return this.budgetCategoriesService.delete({ authorizedUser, categoryId })
+  }
+
   // @Patch(":categoryId")
   // update(
   //   @Param("categoryId", ParseIntPipe)
