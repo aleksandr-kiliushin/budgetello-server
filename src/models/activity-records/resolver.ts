@@ -58,6 +58,16 @@ export class ActivityRecordsResolver {
     return this.activityRecordsService.update({ authorizedUser, input })
   }
 
+  @Mutation((returns) => ActivityRecord, { name: "deleteActivityRecord" })
+  delete(
+    @Args("id", { type: () => Int })
+    recordId: number,
+    @AuthorizedUser()
+    authorizedUser: UserEntity
+  ): Promise<ActivityRecordEntity> {
+    return this.activityRecordsService.delete({ authorizedUser, recordId })
+  }
+
   // @Post()
   // create(
   //   @Body(new ValidationPipe())
