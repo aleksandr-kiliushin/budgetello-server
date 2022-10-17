@@ -51,18 +51,15 @@ describe("Authorization", () => {
   //   const response = await fetch("http://localhost:3080/graphql", {
   //     body: JSON.stringify({
   //       query: `mutation AUTHORIZE {
-  //         authorize (input: { password: "" })
+  //         authorize (input: { username: "", password: "" })
   //       }`,
   //     }),
   //     headers: { "Content-Type": "application/json", Accept: "application/json" },
   //     method: "POST",
   //   })
   //   const responseBody = await response.json()
-  //   expect(responseBody).toEqual({
-  //     fields: {
-  //       username: "Required.",
-  //       password: "Required.",
-  //     },
+  //   expect(responseBody.errors?.[0]?.extensions?.exception?.response).toEqual({
+  //     fields: { username: "Required.", password: "Required." },
   //   })
   // })
 })
