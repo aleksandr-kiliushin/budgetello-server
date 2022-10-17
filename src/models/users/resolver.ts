@@ -53,7 +53,7 @@ export class UsersResolver {
     @Args("input")
     input: CreateUserInput
   ) {
-    return this.usersService.create({ requestBody: input })
+    return this.usersService.create({ input })
   }
 
   @Mutation((returns) => User, { name: "updateUser" })

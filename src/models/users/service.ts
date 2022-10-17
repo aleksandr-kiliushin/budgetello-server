@@ -61,10 +61,9 @@ export class UsersService {
     })
   }
 
-  async create({ requestBody }: { requestBody: CreateUserInput }): Promise<UserEntity> {
-    const { password, username } = requestBody
-    const hashedPassword = encrypt(password)
-    const user = this.userRepository.create({ password: hashedPassword, username })
+  async create({ input }: { input: CreateUserInput }): Promise<UserEntity> {
+    const hashedPassword = encrypt(input.password)
+    const user = this.userRepository.create({ password: hashedPassword, username: input.username })
     return this.userRepository.save(user)
   }
 
