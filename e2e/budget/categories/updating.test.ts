@@ -1,10 +1,9 @@
-import { IBudgetCategory } from "#interfaces/budget"
-
 import { boards } from "#e2e/constants/boards"
 import { budgetCategories, budgetCategoryTypes } from "#e2e/constants/budget"
 import { users } from "#e2e/constants/users"
+import { QueryFields } from "#e2e/helpers/QueryFields"
 import { authorize } from "#e2e/helpers/authorize"
-import { fetchApi } from "#e2e/helpers/fetchApi"
+import { fetchGqlApi } from "#e2e/helpers/fetchGqlApi"
 
 beforeEach(async () => {
   await authorize(users.johnDoe.id)
@@ -12,98 +11,89 @@ beforeEach(async () => {
 
 describe("Budget category updating", () => {
   test.each<{
-    payload: Record<string, unknown>
-    response: Record<string, unknown>
-    status: number
-    url: string
+    queryNameAndInput: string
+    updatedCategory: unknown
+    responseError: unknown
   }>([
     {
-      payload: { name: "" },
-      response: { fields: { name: "Category name cannot be empty." } },
-      status: 400,
-      url: `/api/budget/categories/${budgetCategories.educationExpense.id}`,
+      queryNameAndInput: `updateBudgetCategory(input: { id: ${budgetCategories.educationExpense.id}, name: "" })`,
+      updatedCategory: undefined,
+      responseError: { fields: { name: "Required." } },
     },
     {
-      payload: { name: "food", typeId: 1234123 },
-      response: { fields: { typeId: "Invalid value." } },
-      status: 400,
-      url: `/api/budget/categories/${budgetCategories.educationExpense.id}`,
+      queryNameAndInput: `updateBudgetCategory(input: { id: ${budgetCategories.educationExpense.id}, typeId: 666666 })`,
+      updatedCategory: undefined,
+      responseError: { fields: { typeId: "Invalid value." } },
     },
     {
-      payload: { boardId: 666666 },
-      response: { fields: { boardId: "Invalid value." } },
-      status: 400,
-      url: `/api/budget/categories/${budgetCategories.educationExpense.id}`,
+      queryNameAndInput: `updateBudgetCategory(input: { id: ${budgetCategories.educationExpense.id}, boardId: 666666 })`,
+      updatedCategory: undefined,
+      responseError: { fields: { boardId: "Invalid value." } },
     },
     {
-      payload: { name: "clothes" },
-      response: {
+      queryNameAndInput: `updateBudgetCategory(input: { id: ${budgetCategories.educationExpense.id}, name: "${budgetCategories.clothesExpense.name}" })`,
+      updatedCategory: undefined,
+      responseError: {
         fields: {
           boardId: '"clothes" expense category already exists in this board.',
           name: '"clothes" expense category already exists in this board.',
           typeId: '"clothes" expense category already exists in this board.',
         },
       },
-      status: 400,
-      url: `/api/budget/categories/${budgetCategories.educationExpense.id}`,
     },
     {
-      payload: { name: "clothes" },
-      response: { message: "Access denied." },
-      status: 403,
-      url: `/api/budget/categories/${budgetCategories.giftsIncome.id}`,
+      queryNameAndInput: `updateBudgetCategory(input: { id: ${budgetCategories.giftsIncome.id}, name: "toys" })`,
+      updatedCategory: undefined,
+      responseError: { message: "Access denied." },
     },
     {
-      payload: {},
-      response: budgetCategories.educationExpense,
-      status: 200,
-      url: `/api/budget/categories/${budgetCategories.educationExpense.id}`,
+      queryNameAndInput: `updateBudgetCategory(input: { id: ${budgetCategories.giftsIncome.id}, boardId: ${boards.megaEconomists.id} })`,
+      updatedCategory: undefined,
+      responseError: { message: "Access denied." },
     },
     {
-      payload: { boardId: boards.megaEconomists.id },
-      response: { message: "Access denied." },
-      status: 403,
-      url: `/api/budget/categories/${budgetCategories.educationExpense.id}`,
+      queryNameAndInput: `updateBudgetCategory(input: { id: ${budgetCategories.educationExpense.id} })`,
+      updatedCategory: budgetCategories.educationExpense,
+      responseError: undefined,
     },
     {
-      payload: { name: "teaching", typeId: budgetCategoryTypes.income.id },
-      response: {
+      queryNameAndInput: `updateBudgetCategory(input: { id: ${budgetCategories.educationExpense.id}, name: "teaching", typeId: ${budgetCategoryTypes.income.id} })`,
+      updatedCategory: {
         board: budgetCategories.educationExpense.board,
         id: budgetCategories.educationExpense.id,
         name: "teaching",
         type: budgetCategoryTypes.income,
       },
-      status: 200,
-      url: `/api/budget/categories/${budgetCategories.educationExpense.id}`,
+      responseError: undefined,
     },
-  ])("Category editing case #%#", async ({ payload, response, status, url }) => {
-    const categoryUpdatingResponse = await fetchApi(url, { body: JSON.stringify(payload), method: "PATCH" })
-    expect(categoryUpdatingResponse.status).toEqual(status)
-    expect(await categoryUpdatingResponse.json()).toEqual(response)
+  ])("$queryNameAndInput", async ({ queryNameAndInput, updatedCategory, responseError }) => {
+    const responseBody = await fetchGqlApi(`mutation UPDATE_BUDGET_CATEGORY {
+      ${queryNameAndInput} {
+        ${QueryFields.budgetCategory}
+      }
+    }`)
+    expect(responseBody.data?.updateBudgetCategory).toEqual(updatedCategory)
+    expect(responseBody.errors?.[0]?.extensions?.exception?.response).toEqual(responseError)
   })
 
-  it("updated category is presented in all categories list", async () => {
-    await fetchApi(`/api/budget/categories/${budgetCategories.educationExpense.id}`, {
-      body: JSON.stringify({ name: "drugs" }),
-      method: "PATCH",
-    })
-    const getAllCategoriesResponse = await fetchApi("/api/budget/categories/search")
-    expect(await getAllCategoriesResponse.json()).toContainEqual<IBudgetCategory>({
-      board: budgetCategories.educationExpense.board,
-      id: budgetCategories.educationExpense.id,
-      name: "drugs",
-      type: budgetCategoryTypes.expense,
-    })
-  })
-
-  it("updated category category can be found by ID", async () => {
-    await fetchApi("/api/budget/categories/2", { body: JSON.stringify({ typeId: 2 }), method: "PATCH" })
-    const getUpdatedCategoryResponse = await fetchApi(`/api/budget/categories/${budgetCategories.educationExpense.id}`)
-    expect(await getUpdatedCategoryResponse.json()).toEqual<IBudgetCategory>({
-      board: budgetCategories.educationExpense.board,
-      id: budgetCategories.educationExpense.id,
-      name: "education",
-      type: budgetCategoryTypes.income,
+  it("updated category can be found by ID", async () => {
+    await fetchGqlApi(`mutation UPDATE_BUDGET_CATEGORY {
+      updateBudgetCategory(input: { id: ${budgetCategories.educationExpense.id}, name: "teaching", typeId: ${budgetCategoryTypes.income.id} }) {
+        ${QueryFields.budgetCategory}
+      }
+    }`)
+    const responseBody = await fetchGqlApi(`{
+      budgetCategory(id: ${budgetCategories.educationExpense.id}) {
+        ${QueryFields.budgetCategory}
+      }
+    }`)
+    expect(responseBody.data).toEqual({
+      budgetCategory: {
+        board: budgetCategories.educationExpense.board,
+        id: budgetCategories.educationExpense.id,
+        name: "teaching",
+        type: budgetCategoryTypes.income,
+      },
     })
   })
 })

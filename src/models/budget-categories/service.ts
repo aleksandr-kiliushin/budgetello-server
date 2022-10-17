@@ -1,3 +1,4 @@
+import { ValidationError } from "#constants/ValidationError"
 import { BadRequestException, ForbiddenException, Injectable, NotFoundException } from "@nestjs/common"
 import { InjectRepository } from "@nestjs/typeorm"
 import { In, Repository } from "typeorm"
@@ -8,7 +9,7 @@ import { UserEntity } from "#models/users/entities/user.entity"
 
 import { CreateBudgetCategoryInput } from "./dto/create-budget-category.input"
 import { SearchBudgetCategoriesQueryDto } from "./dto/seach-budget-categories-query.dto"
-import { UpdateBudgetCategoryDto } from "./dto/update-budget-category.dto"
+import { UpdateBudgetCategoryInput } from "./dto/update-budget-category.input"
 import { BudgetCategoryEntity } from "./entities/budget-category.entity"
 
 @Injectable()
@@ -106,14 +107,12 @@ export class BudgetCategoriesService {
 
   async update({
     authorizedUser,
-    categoryId,
-    requestBody,
+    input,
   }: {
     authorizedUser: UserEntity
-    categoryId: BudgetCategoryEntity["id"]
-    requestBody: UpdateBudgetCategoryDto
+    input: UpdateBudgetCategoryInput
   }): Promise<BudgetCategoryEntity> {
-    const category = await this.find({ authorizedUser, categoryId })
+    const category = await this.find({ authorizedUser, categoryId: input.id })
 
     const isAuthorizedUserBoardAdmin = authorizedUser.administratedBoards.some((board) => {
       return board.id === category.board.id
@@ -124,23 +123,23 @@ export class BudgetCategoriesService {
       throw new ForbiddenException({ message: "Access denied." })
     }
 
-    if (Object.keys(requestBody).length === 0) return category
+    if (input.boardId === undefined && input.name === undefined && input.typeId === undefined) return category
 
-    if (requestBody.typeId !== undefined) {
-      category.type = await this.budgetCategoryTypesService.find({ typeId: requestBody.typeId }).catch(() => {
+    if (input.typeId !== undefined) {
+      category.type = await this.budgetCategoryTypesService.find({ typeId: input.typeId }).catch(() => {
         throw new BadRequestException({ fields: { typeId: "Invalid value." } })
       })
     }
-    if (requestBody.boardId !== undefined) {
-      category.board = await this.boardsService.find({ boardId: requestBody.boardId }).catch(() => {
+    if (input.boardId !== undefined) {
+      category.board = await this.boardsService.find({ boardId: input.boardId }).catch(() => {
         throw new BadRequestException({ fields: { boardId: "Invalid value." } })
       })
     }
-    if (requestBody.name !== undefined) {
-      if (requestBody.name === "") {
-        throw new BadRequestException({ fields: { name: "Category name cannot be empty." } })
+    if (input.name !== undefined) {
+      if (input.name === "") {
+        throw new BadRequestException({ fields: { name: ValidationError.REQUIRED } })
       }
-      category.name = requestBody.name
+      category.name = input.name
     }
     const similarExistingCategory = await this.budgetCategoriesRepository.findOne({
       relations: { board: true, type: true },
@@ -156,7 +155,7 @@ export class BudgetCategoriesService {
       })
     }
     await this.budgetCategoriesRepository.save(category)
-    return await this.find({ authorizedUser, categoryId })
+    return await this.find({ authorizedUser, categoryId: input.id })
   }
 
   async delete({

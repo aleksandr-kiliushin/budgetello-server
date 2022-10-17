@@ -8,6 +8,7 @@ import { AuthorizedUser } from "#helpers/AuthorizedUser.decorator"
 
 import { CreateBudgetCategoryInput } from "./dto/create-budget-category.input"
 import { SearchBudgetCategoriesArgs } from "./dto/search-budget-categories.args"
+import { UpdateBudgetCategoryInput } from "./dto/update-budget-category.input"
 import { BudgetCategoryEntity } from "./entities/budget-category.entity"
 import { BudgetCategory } from "./models/budget-category.model"
 import { BudgetCategoriesService } from "./service"
@@ -45,6 +46,16 @@ export class BudgetCategoriesResolver {
     authorizedUser: UserEntity
   ): Promise<BudgetCategoryEntity> {
     return this.budgetCategoriesService.create({ authorizedUser, input })
+  }
+
+  @Mutation((returns) => BudgetCategory, { name: "updateBudgetCategory" })
+  update(
+    @Args("input")
+    input: UpdateBudgetCategoryInput,
+    @AuthorizedUser()
+    authorizedUser: UserEntity
+  ): Promise<BudgetCategoryEntity> {
+    return this.budgetCategoriesService.update({ authorizedUser, input })
   }
 
   // @Patch(":categoryId")
