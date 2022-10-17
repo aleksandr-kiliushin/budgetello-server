@@ -35,4 +35,8 @@ export class QueryFields {
     id,
     isTrashed
   `
+  static activityCategoryMeasurementType = `
+    id,
+    name
+  `
 }
