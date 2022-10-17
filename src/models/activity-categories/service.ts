@@ -8,7 +8,7 @@ import { UserEntity } from "#models/users/entities/user.entity"
 
 import { CreateActivityCategoryInput } from "./dto/create-activity-category.input"
 import { SearchActivityCategoriesArgs } from "./dto/search-activity-categories.args"
-import { UpdateActivityCategoryDto } from "./dto/update-activity-category.dto"
+import { UpdateActivityCategoryInput } from "./dto/update-activity-category.input"
 import { ActivityCategoryEntity } from "./entities/activity-category.entity"
 
 @Injectable()
@@ -132,14 +132,12 @@ export class ActivityCategoriesService {
 
   async update({
     authorizedUser,
-    categoryId,
-    requestBody,
+    input,
   }: {
     authorizedUser: UserEntity
-    categoryId: ActivityCategoryEntity["id"]
-    requestBody: UpdateActivityCategoryDto
+    input: UpdateActivityCategoryInput
   }): Promise<ActivityCategoryEntity> {
-    const category = await this.find({ authorizedUser, categoryId })
+    const category = await this.find({ authorizedUser, categoryId: input.id })
 
     const isAuthorizedUserBoardAdmin = authorizedUser.administratedBoards.some((board) => {
       return board.id === category.board.id
@@ -151,47 +149,45 @@ export class ActivityCategoriesService {
     if (!canAuthorizedUserEditThisCategory) {
       throw new ForbiddenException({ message: "Access denied." })
     }
+    if (
+      input.boardId === undefined &&
+      input.measurementTypeId === undefined &&
+      input.name === undefined &&
+      input.unit === undefined
+    ) {
+      return category
+    }
 
-    if (Object.keys(requestBody).length === 0) return category
-
-    if (requestBody.measurementTypeId !== undefined) {
+    if (input.measurementTypeId !== undefined) {
       category.measurementType = await this.activityCategoryMeasurementTypesService
-        .find({ typeId: requestBody.measurementTypeId })
+        .find({ typeId: input.measurementTypeId })
         .catch(() => {
           throw new BadRequestException({ fields: { measurementTypeId: "Invalid value." } })
         })
     }
-    if (requestBody.boardId !== undefined) {
-      category.board = await this.boardsService.find({ boardId: requestBody.boardId }).catch(() => {
+    if (input.boardId !== undefined) {
+      category.board = await this.boardsService.find({ boardId: input.boardId }).catch(() => {
         throw new BadRequestException({ fields: { boardId: "Invalid value." } })
       })
     }
-    if (requestBody.name !== undefined) {
-      if (requestBody.name === "") {
+    if (input.name !== undefined) {
+      if (input.name === "") {
         throw new BadRequestException({ fields: { name: "Cannot be empty." } })
       }
-      category.name = requestBody.name
+      category.name = input.name
     }
-    if (requestBody.unit !== undefined) {
-      category.unit = requestBody.unit
+    if (input.unit !== undefined) {
+      category.unit = input.unit
     }
     if (category.measurementType.id === 1) {
       if (typeof category.unit !== "string" || category.unit === "") {
         throw new BadRequestException({
           fields: {
-            measurementTypeId: "«Quantitative» activity must be measured in units.",
-            unit: "Required for «Quantitative» activities.",
+            measurementTypeId: "Unit is required for «Quantitative» activities.",
+            unit: "Unit is required for «Quantitative» activities.",
           },
         })
       }
-    }
-    if (category.measurementType.id === 2 && category.unit !== null) {
-      throw new BadRequestException({
-        fields: {
-          measurementTypeId: "«Yes / no» activity cannot be measured with any unit.",
-          unit: "«Yes / no» activity cannot be measured with any unit.",
-        },
-      })
     }
     const similarExistingCategory = await this.activityCategoriesRepository.findOne({
       relations: { board: true, measurementType: true, owner: true },
@@ -214,7 +210,7 @@ export class ActivityCategoriesService {
       })
     }
     await this.activityCategoriesRepository.save(category)
-    return await this.find({ authorizedUser, categoryId })
+    return await this.find({ authorizedUser, categoryId: input.id })
   }
 
   async delete({

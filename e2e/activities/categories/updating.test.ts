@@ -1,62 +1,44 @@
-import { IActivityCategory } from "#interfaces/activities"
-
 import { activityCategories, activityCategoryMeasurementTypes } from "#e2e/constants/activities"
 import { boards } from "#e2e/constants/boards"
 import { users } from "#e2e/constants/users"
+import { QueryFields } from "#e2e/helpers/QueryFields"
 import { ITestUserId, authorize } from "#e2e/helpers/authorize"
-import { fetchApi } from "#e2e/helpers/fetchApi"
+import { fetchGqlApi } from "#e2e/helpers/fetchGqlApi"
 
 describe("Activity category updating", () => {
   test.each<{
     authorizedUserId: ITestUserId
-    payload: Record<string, unknown>
-    responseBody: Record<string, unknown>
-    status: number
-    url: string
+    queryNameAndInput: string
+    updatedCategory: unknown
+    responseError: unknown
   }>([
     {
       authorizedUserId: users.johnDoe.id,
-      payload: { unit: "" },
-      responseBody: {
+      queryNameAndInput: `updateActivityCategory(input: { id: ${activityCategories.reading.id}, unit: "" })`,
+      updatedCategory: undefined,
+      responseError: {
         fields: {
-          measurementTypeId: "«Quantitative» activity must be measured in units.",
-          unit: "Required for «Quantitative» activities.",
+          measurementTypeId: "Unit is required for «Quantitative» activities.",
+          unit: "Unit is required for «Quantitative» activities.",
         },
       },
-      status: 400,
-      url: `/api/activities/categories/${activityCategories.reading.id}`,
     },
     {
       authorizedUserId: users.johnDoe.id,
-      payload: { unit: null },
-      responseBody: {
+      queryNameAndInput: `updateActivityCategory(input: { id: ${activityCategories.reading.id}, unit: null })`,
+      updatedCategory: undefined,
+      responseError: {
         fields: {
-          measurementTypeId: "«Quantitative» activity must be measured in units.",
-          unit: "Required for «Quantitative» activities.",
+          measurementTypeId: "Unit is required for «Quantitative» activities.",
+          unit: "Unit is required for «Quantitative» activities.",
         },
       },
-      status: 400,
-      url: `/api/activities/categories/${activityCategories.reading.id}`,
-    },
-    {
-      authorizedUserId: users.johnDoe.id,
-      payload: { measurementTypeId: activityCategoryMeasurementTypes.boolean.id },
-      responseBody: {
-        fields: {
-          measurementTypeId: "«Yes / no» activity cannot be measured with any unit.",
-          unit: "«Yes / no» activity cannot be measured with any unit.",
-        },
-      },
-      status: 400,
-      url: `/api/activities/categories/${activityCategories.reading.id}`,
     },
     {
       authorizedUserId: users.jessicaStark.id,
-      payload: {
-        name: activityCategories.pushups.name,
-        unit: activityCategories.pushups.unit,
-      },
-      responseBody: {
+      queryNameAndInput: `updateActivityCategory(input: { id: ${activityCategories.running.id}, name: "${activityCategories.pushups.name}", unit: "${activityCategories.pushups.unit}" })`,
+      updatedCategory: undefined,
+      responseError: {
         fields: {
           boardId: "Similar «pushups» category already exists in this board.",
           measurementType: "Similar «pushups» category already exists in this board.",
@@ -64,39 +46,29 @@ describe("Activity category updating", () => {
           unit: "Similar «pushups» category already exists in this board.",
         },
       },
-      status: 400,
-      url: `/api/activities/categories/${activityCategories.running.id}`,
     },
     {
       authorizedUserId: users.johnDoe.id,
-      payload: { name: "write conspects" },
-      responseBody: { message: "Access denied." },
-      status: 403,
-      url: `/api/activities/categories/${activityCategories.running.id}`,
+      queryNameAndInput: `updateActivityCategory(input: { id: ${activityCategories.running.id}, name: "writing conspects" })`,
+      updatedCategory: undefined,
+      responseError: { message: "Access denied." },
     },
     {
       authorizedUserId: users.jessicaStark.id,
-      payload: {},
-      responseBody: { message: "Access denied." },
-      status: 403,
-      url: `/api/activities/categories/${activityCategories.reading.id}`,
+      queryNameAndInput: `updateActivityCategory(input: { id: ${activityCategories.reading.id} })`,
+      updatedCategory: undefined,
+      responseError: { message: "Access denied." },
     },
     {
       authorizedUserId: users.johnDoe.id,
-      payload: {},
-      responseBody: activityCategories.reading,
-      status: 200,
-      url: `/api/activities/categories/${activityCategories.reading.id}`,
+      queryNameAndInput: `updateActivityCategory(input: { id: ${activityCategories.reading.id} })`,
+      updatedCategory: activityCategories.reading,
+      responseError: undefined,
     },
     {
       authorizedUserId: users.jessicaStark.id,
-      payload: {
-        boardId: boards.productivePeople.id,
-        measurementTypeId: activityCategoryMeasurementTypes.boolean.id,
-        name: "meditate",
-        unit: null,
-      },
-      responseBody: {
+      queryNameAndInput: `updateActivityCategory(input: { id: ${activityCategories.sleep.id}, boardId: ${boards.productivePeople.id}, measurementTypeId: ${activityCategoryMeasurementTypes.boolean.id}, name: "meditate", unit: null })`,
+      updatedCategory: {
         board: { id: boards.productivePeople.id, name: boards.productivePeople.name },
         id: 4,
         measurementType: activityCategoryMeasurementTypes.boolean,
@@ -104,30 +76,16 @@ describe("Activity category updating", () => {
         owner: users.jessicaStark,
         unit: null,
       },
-      status: 200,
-      url: `/api/activities/categories/${activityCategories.sleep.id}`,
+      responseError: undefined,
     },
-  ])("case #%#", async ({ authorizedUserId, payload, responseBody, status, url }) => {
+  ])("$queryNameAndInput", async ({ authorizedUserId, queryNameAndInput, updatedCategory, responseError }) => {
     await authorize(authorizedUserId)
-    const response = await fetchApi(url, { body: JSON.stringify(payload), method: "PATCH" })
-    expect(response.status).toEqual(status)
-    expect(await response.json()).toEqual(responseBody)
-  })
-
-  it("updated category category can be found by ID", async () => {
-    await authorize(users.johnDoe.id)
-    await fetchApi(`/api/activities/categories/${activityCategories.reading.id}`, {
-      body: JSON.stringify({ unit: "hour" }),
-      method: "PATCH",
-    })
-    const getUpdatedCategoryResponse = await fetchApi(`/api/activities/categories/${activityCategories.reading.id}`)
-    expect(await getUpdatedCategoryResponse.json()).toEqual<IActivityCategory>({
-      board: { id: boards.productivePeople.id, name: boards.productivePeople.name },
-      id: 5,
-      measurementType: activityCategoryMeasurementTypes.quantitative,
-      name: "reading",
-      owner: users.johnDoe,
-      unit: "hour",
-    })
+    const responseBody = await fetchGqlApi(`mutation UPDATE_ACTIVITY_CATEGORY {
+      ${queryNameAndInput} {
+        ${QueryFields.activityCategory}
+      }
+    }`)
+    expect(responseBody.data?.updateActivityCategory).toEqual(updatedCategory)
+    expect(responseBody.errors?.[0]?.extensions?.exception?.response).toEqual(responseError)
   })
 })

@@ -110,6 +110,7 @@ type Mutation {
   deleteBudgetRecord(id: Int!): BudgetRecord!
   deleteUser(id: Int!): User!
   removeBoardMember(input: RemoveMemberInput!): Board!
+  updateActivityCategory(input: UpdateActivityCategoryInput!): ActivityCategory!
   updateBoard(input: UpdateBoardInput!): Board!
   updateBudgetCategory(input: UpdateBudgetCategoryInput!): BudgetCategory!
   updateBudgetRecord(input: UpdateBudgetRecordInput!): BudgetRecord!
@@ -140,6 +141,14 @@ type Query {
 input RemoveMemberInput {
   boardId: Int!
   memberId: Int!
+}
+
+input UpdateActivityCategoryInput {
+  boardId: Int
+  id: Int!
+  measurementTypeId: Int
+  name: String
+  unit: String
 }
 
 input UpdateBoardInput {

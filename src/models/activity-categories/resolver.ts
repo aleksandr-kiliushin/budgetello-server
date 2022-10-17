@@ -8,6 +8,7 @@ import { AuthorizedUser } from "#helpers/AuthorizedUser.decorator"
 
 import { CreateActivityCategoryInput } from "./dto/create-activity-category.input"
 import { SearchActivityCategoriesArgs } from "./dto/search-activity-categories.args"
+import { UpdateActivityCategoryInput } from "./dto/update-activity-category.input"
 import { ActivityCategoryEntity } from "./entities/activity-category.entity"
 import { ActivityCategory } from "./models/activity-category.model"
 import { ActivityCategoriesService } from "./service"
@@ -45,6 +46,16 @@ export class ActivityCategoriesResolver {
     authorizedUser: UserEntity
   ): Promise<ActivityCategoryEntity> {
     return this.activityCategoriesService.create({ authorizedUser, input })
+  }
+
+  @Mutation((returns) => ActivityCategory, { name: "updateActivityCategory" })
+  update(
+    @Args("input")
+    input: UpdateActivityCategoryInput,
+    @AuthorizedUser()
+    authorizedUser: UserEntity
+  ): Promise<ActivityCategoryEntity> {
+    return this.activityCategoriesService.update({ authorizedUser, input })
   }
 
   // @Post()
