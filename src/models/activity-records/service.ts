@@ -149,15 +149,9 @@ export class ActivityRecordsService {
       record.quantitativeValue = input.quantitativeValue
     }
     if (input.comment !== undefined) {
-      if (typeof input.comment !== "string") {
-        throw new BadRequestException({ fields: { comment: "Must be a string." } })
-      }
       record.comment = input.comment
     }
     if (input.date !== undefined) {
-      if (!/\d\d\d\d-\d\d-\d\d/.test(input.date)) {
-        throw new BadRequestException({ fields: { date: "Should have format YYYY-MM-DD." } })
-      }
       record.date = input.date
     }
     if (input.categoryId !== undefined) {

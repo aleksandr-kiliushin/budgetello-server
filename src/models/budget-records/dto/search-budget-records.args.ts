@@ -1,4 +1,5 @@
 import { ArgsType, Field, Float, Int } from "@nestjs/graphql"
+import { IsOptional, Matches } from "class-validator"
 
 import { IOrdering } from "#interfaces/common"
 
@@ -14,6 +15,8 @@ export class SearchBudgetRecordsArgs {
   categoriesIds?: number[]
 
   @Field(() => [String], { nullable: true })
+  @Matches(/^\d\d\d\d-\d\d-\d\d$/, { each: true, message: "An array of YYYY-MM-DD dates expected." })
+  @IsOptional()
   dates?: string[]
 
   @Field(() => [Int], { nullable: true })
@@ -23,10 +26,10 @@ export class SearchBudgetRecordsArgs {
   isTrashed?: boolean
 
   @Field({ nullable: true })
-  orderingByDate?: IOrdering // Maybe `"ASC" | "DESC"` ?
+  orderingByDate?: IOrdering
 
   @Field({ nullable: true })
-  orderingById?: IOrdering // Maybe `"ASC" | "DESC"` ?
+  orderingById?: IOrdering
 
   @Field(() => Int, { nullable: true })
   skip?: number

@@ -8,7 +8,7 @@ import { BudgetCategoryTypesService } from "#models/budget-category-types/servic
 import { UserEntity } from "#models/users/entities/user.entity"
 
 import { CreateBudgetCategoryInput } from "./dto/create-budget-category.input"
-import { SearchBudgetCategoriesQueryDto } from "./dto/seach-budget-categories-query.dto"
+import { SearchBudgetCategoriesArgs } from "./dto/search-budget-categories.args"
 import { UpdateBudgetCategoryInput } from "./dto/update-budget-category.input"
 import { BudgetCategoryEntity } from "./entities/budget-category.entity"
 
@@ -25,7 +25,7 @@ export class BudgetCategoriesService {
     args,
     authorizedUser,
   }: {
-    args: SearchBudgetCategoriesQueryDto
+    args: SearchBudgetCategoriesArgs
     authorizedUser: UserEntity
   }): Promise<BudgetCategoryEntity[]> {
     const accessibleBoardsIds = [

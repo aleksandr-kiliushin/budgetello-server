@@ -121,9 +121,6 @@ export class BudgetRecordsService {
   }): Promise<BudgetRecordEntity> {
     const record = await this.find({ authorizedUser, recordId: input.id })
     if (input.amount !== undefined) {
-      if (typeof input.amount !== "number" || input.amount <= 0) {
-        throw new BadRequestException({ fields: { amount: "Should be a positive number." } })
-      }
       record.amount = input.amount
     }
     if (typeof input.isTrashed === "boolean") {

@@ -5,6 +5,7 @@ import { AuthorizationGuard } from "#models/authorization/guard"
 import { UserEntity } from "#models/users/entities/user.entity"
 
 import { AuthorizedUser } from "#helpers/AuthorizedUser.decorator"
+import { ValidationPipe } from "#helpers/validation.pipe"
 
 import { CreateBudgetRecordInput } from "./dto/create-budget-record.input"
 import { SearchBudgetRecordsArgs } from "./dto/search-budget-records.args"
@@ -40,7 +41,7 @@ export class BudgetRecordsResolver {
 
   @Mutation((returns) => BudgetRecord, { name: "createBudgetRecord" })
   create(
-    @Args("input")
+    @Args("input", ValidationPipe)
     input: CreateBudgetRecordInput,
     @AuthorizedUser()
     authorizedUser: UserEntity
@@ -50,7 +51,7 @@ export class BudgetRecordsResolver {
 
   @Mutation((returns) => BudgetRecord, { name: "updateBudgetRecord" })
   update(
-    @Args("input")
+    @Args("input", ValidationPipe)
     input: UpdateBudgetRecordInput,
     @AuthorizedUser()
     authorizedUser: UserEntity
@@ -67,36 +68,4 @@ export class BudgetRecordsResolver {
   ): Promise<BudgetRecordEntity> {
     return this.budgetRecordsService.delete({ authorizedUser, recordId })
   }
-
-  // @Post()
-  // create(
-  //   @Body(new ValidationPipe())
-  //   requestBody: CreateBudgetRecordDto,
-  //   @AuthorizedUser()
-  //   authorizedUser: UserEntity
-  // ) {
-  //   return this.budgetRecordsService.create({ authorizedUser, requestBody })
-  // }
-
-  // @Patch(":recordId")
-  // update(
-  //   @Param("recordId", ParseIntPipe)
-  //   recordId: number,
-  //   @Body()
-  //   requestBody: UpdateBudgetRecordDto,
-  //   @AuthorizedUser()
-  //   authorizedUser: UserEntity
-  // ) {
-  //   return this.budgetRecordsService.update({ authorizedUser, recordId, requestBody })
-  // }
-
-  // @Delete(":recordId")
-  // delete(
-  //   @Param("recordId", ParseIntPipe)
-  //   recordId: number,
-  //   @AuthorizedUser()
-  //   authorizedUser: UserEntity
-  // ) {
-  //   return this.budgetRecordsService.delete({ authorizedUser, recordId })
-  // }
 }

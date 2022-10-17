@@ -20,6 +20,16 @@ describe("Budget record creating", () => {
       responseError: { fields: { categoryId: "Invalid value." } },
     },
     {
+      queryNameAndInput: `createBudgetRecord(input: { amount: -200, categoryId: ${budgetCategories.clothesExpense.id}, date: "2022|08|05" })`,
+      createdRecord: undefined,
+      responseError: {
+        fields: {
+          amount: "Should be positive.",
+          date: "Should have format YYYY-MM-DD.",
+        },
+      },
+    },
+    {
       queryNameAndInput: `createBudgetRecord(input: { amount: 200, categoryId: ${budgetCategories.clothesExpense.id}, date: "2022-08-05" })`,
       createdRecord: {
         amount: 200,
@@ -30,27 +40,6 @@ describe("Budget record creating", () => {
       },
       responseError: undefined,
     },
-    // {
-    //   payload: {},
-    //   response: {
-    //     fields: {
-    //       amount: "Required.",
-    //       categoryId: "Required.",
-    //       date: "Required.",
-    //     },
-    //   },
-    //   status: 400,
-    // },
-    // {
-    //   payload: { amount: 0, categoryId: budgetCategories.clothesExpense.id, date: "2022/08/05" },
-    //   response: {
-    //     fields: {
-    //       amount: "Should be positive.",
-    //       date: "Should have format YYYY-MM-DD.",
-    //     },
-    //   },
-    //   status: 400,
-    // },
   ])("$queryNameAndInput", async ({ queryNameAndInput, createdRecord, responseError }) => {
     const responseBody = await fetchGqlApi(`mutation CREATE_BUDGET_RECORD {
       ${queryNameAndInput} {

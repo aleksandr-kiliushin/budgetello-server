@@ -67,26 +67,4 @@ export class BudgetCategoriesResolver {
   ): Promise<BudgetCategoryEntity> {
     return this.budgetCategoriesService.delete({ authorizedUser, categoryId })
   }
-
-  // @Patch(":categoryId")
-  // update(
-  //   @Param("categoryId", ParseIntPipe)
-  //   categoryId: number,
-  //   @Body()
-  //   requestBody: UpdateBudgetCategoryDto,
-  //   @AuthorizedUser()
-  //   authorizedUser: UserEntity
-  // ) {
-  //   return this.budgetCategoriesService.update({ authorizedUser, categoryId, requestBody })
-  // }
-
-  // @Delete(":categoryId")
-  // delete(
-  //   @Param("categoryId", ParseIntPipe)
-  //   categoryId: number,
-  //   @AuthorizedUser()
-  //   authorizedUser: UserEntity
-  // ) {
-  //   return this.budgetCategoriesService.delete({ authorizedUser, categoryId })
-  // }
 }

@@ -15,6 +15,16 @@ describe("Budget record updating", () => {
     responseError: unknown
   }>([
     {
+      queryNameAndInput: `updateBudgetRecord(input: { id: ${budgetRecords["1st"].id}, amount: -100, date: "2022/08/05" })`,
+      updatedRecord: undefined,
+      responseError: {
+        fields: {
+          amount: "Should be positive.",
+          date: "Should have format YYYY-MM-DD.",
+        },
+      },
+    },
+    {
       queryNameAndInput: `updateBudgetRecord(input: { id: ${budgetRecords["1st"].id}, categoryId: 666666 })`,
       updatedRecord: undefined,
       responseError: { fields: { categoryId: "Invalid value." } },
@@ -40,16 +50,6 @@ describe("Budget record updating", () => {
       },
       responseError: undefined,
     },
-    // {
-    //   payload: { amount: 0, categoryId: budgetCategories.clothesExpense.id, date: "2022-08-05" },
-    //   response: { fields: { amount: "Should be a positive number." } },
-    //   status: 400,
-    // },
-    // {
-    //   payload: { date: "2022/08/05" },
-    //   response: { fields: { date: "Should have format YYYY-MM-DD." } },
-    //   status: 400,
-    // },
   ])("$queryNameAndInput", async ({ queryNameAndInput, updatedRecord, responseError }) => {
     const responseBody = await fetchGqlApi(`mutation UPDATE_BUDGET_RECORD {
       ${queryNameAndInput} {

@@ -96,7 +96,7 @@ describe("Created user data and operations", () => {
     })
   })
 
-  it("finds newly created user by ID", async () => {
+  it("finds created user by ID", async () => {
     await authorize(users.johnDoe.id)
     const responseBody = await fetchGqlApi(`{
       user(id: 3) {

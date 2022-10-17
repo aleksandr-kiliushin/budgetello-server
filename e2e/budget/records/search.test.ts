@@ -78,15 +78,6 @@ describe("Search budget records", () => {
       queryNameAndArgs: `budgetRecords(orderingByDate: "ASC", orderingById: "ASC", isTrashed: true, skip: 1, take: 1)`,
       foundRecords: [budgetRecords["2nd"]],
     },
-    // {
-    //   url: `/api/budget/records/search?isTrashed=hehe`,
-    //   responseBody: {
-    //     fields: {
-    //       isTrashed: "Should be a boolean.",
-    //     },
-    //   },
-    //   responseStatus: 400,
-    // },
   ])("$queryNameAndArgs", async ({ queryNameAndArgs, foundRecords }) => {
     const responseBody = await fetchGqlApi(`{
       ${queryNameAndArgs} {
