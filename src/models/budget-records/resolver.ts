@@ -8,6 +8,7 @@ import { AuthorizedUser } from "#helpers/AuthorizedUser.decorator"
 
 import { CreateBudgetRecordInput } from "./dto/create-budget-record.input"
 import { SearchBudgetRecordsArgs } from "./dto/search-budget-records.args"
+import { UpdateBudgetRecordInput } from "./dto/update-budget-record.input"
 import { BudgetRecordEntity } from "./entities/budget-record.entity"
 import { BudgetRecord } from "./models/budget-record.model"
 import { BudgetRecordsService } from "./service"
@@ -45,6 +46,16 @@ export class BudgetRecordsResolver {
     authorizedUser: UserEntity
   ): Promise<BudgetRecordEntity> {
     return this.budgetRecordsService.create({ authorizedUser, input })
+  }
+
+  @Mutation((returns) => BudgetRecord, { name: "updateBudgetRecord" })
+  update(
+    @Args("input")
+    input: UpdateBudgetRecordInput,
+    @AuthorizedUser()
+    authorizedUser: UserEntity
+  ): Promise<BudgetRecordEntity> {
+    return this.budgetRecordsService.update({ authorizedUser, input })
   }
 
   // @Post()

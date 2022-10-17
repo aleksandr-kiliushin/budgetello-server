@@ -7,7 +7,7 @@ import { UserEntity } from "#models/users/entities/user.entity"
 
 import { CreateBudgetRecordInput } from "./dto/create-budget-record.input"
 import { SearchBudgetRecordsArgs } from "./dto/search-budget-records.args"
-import { UpdateBudgetRecordDto } from "./dto/update-budget-record.dto"
+import { UpdateBudgetRecordInput } from "./dto/update-budget-record.input"
 import { BudgetRecordEntity } from "./entities/budget-record.entity"
 
 @Injectable()
@@ -114,32 +114,30 @@ export class BudgetRecordsService {
 
   async update({
     authorizedUser,
-    recordId,
-    requestBody,
+    input,
   }: {
     authorizedUser: UserEntity
-    recordId: BudgetRecordEntity["id"]
-    requestBody: UpdateBudgetRecordDto
+    input: UpdateBudgetRecordInput
   }): Promise<BudgetRecordEntity> {
-    const record = await this.find({ authorizedUser, recordId })
-    if (requestBody.amount !== undefined) {
-      if (typeof requestBody.amount !== "number" || requestBody.amount <= 0) {
+    const record = await this.find({ authorizedUser, recordId: input.id })
+    if (input.amount !== undefined) {
+      if (typeof input.amount !== "number" || input.amount <= 0) {
         throw new BadRequestException({ fields: { amount: "Should be a positive number." } })
       }
-      record.amount = requestBody.amount
+      record.amount = input.amount
     }
-    if (typeof requestBody.isTrashed === "boolean") {
-      record.isTrashed = requestBody.isTrashed
+    if (typeof input.isTrashed === "boolean") {
+      record.isTrashed = input.isTrashed
     }
-    if (requestBody.date !== undefined) {
-      if (!/\d\d\d\d-\d\d-\d\d/.test(requestBody.date)) {
+    if (input.date !== undefined) {
+      if (!/\d\d\d\d-\d\d-\d\d/.test(input.date)) {
         throw new BadRequestException({ fields: { date: "Should have format YYYY-MM-DD." } })
       }
-      record.date = requestBody.date
+      record.date = input.date
     }
-    if (requestBody.categoryId !== undefined) {
+    if (input.categoryId !== undefined) {
       record.category = await this.budgetCategoriesService
-        .find({ authorizedUser, categoryId: requestBody.categoryId })
+        .find({ authorizedUser, categoryId: input.categoryId })
         .catch(() => {
           throw new BadRequestException({ fields: { categoryId: "Invalid value." } })
         })

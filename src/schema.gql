@@ -103,6 +103,7 @@ type Mutation {
   removeBoardMember(input: RemoveMemberInput!): Board!
   updateBoard(input: UpdateBoardInput!): Board!
   updateBudgetCategory(input: UpdateBudgetCategoryInput!): BudgetCategory!
+  updateBudgetRecord(input: UpdateBudgetRecordInput!): BudgetRecord!
   updateUser(input: UpdateUserInput!): User!
 }
 
@@ -143,6 +144,14 @@ input UpdateBudgetCategoryInput {
   id: Int!
   name: String
   typeId: Int
+}
+
+input UpdateBudgetRecordInput {
+  amount: Float
+  categoryId: Int
+  date: String
+  id: Int!
+  isTrashed: Boolean
 }
 
 input UpdateUserInput {
