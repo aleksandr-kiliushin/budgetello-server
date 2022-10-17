@@ -8,6 +8,7 @@ import { AuthorizedUser } from "#helpers/AuthorizedUser.decorator"
 
 import { CreateActivityRecordInput } from "./dto/create-activity-record.input"
 import { SearchActivityRecordsArgs } from "./dto/search-budget-records.args"
+import { UpdateActivityRecordInput } from "./dto/update-activity-record.input"
 import { ActivityRecordEntity } from "./entities/activity-record.entity"
 import { ActivityRecord } from "./models/activity-record.model"
 import { ActivityRecordsService } from "./service"
@@ -45,6 +46,16 @@ export class ActivityRecordsResolver {
     authorizedUser: UserEntity
   ): Promise<ActivityRecordEntity> {
     return this.activityRecordsService.create({ authorizedUser, input })
+  }
+
+  @Mutation((returns) => ActivityRecord, { name: "updateActivityRecord" })
+  update(
+    @Args("input")
+    input: UpdateActivityRecordInput,
+    @AuthorizedUser()
+    authorizedUser: UserEntity
+  ): Promise<ActivityRecordEntity> {
+    return this.activityRecordsService.update({ authorizedUser, input })
   }
 
   // @Post()

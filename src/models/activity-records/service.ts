@@ -7,7 +7,7 @@ import { UserEntity } from "#models/users/entities/user.entity"
 
 import { CreateActivityRecordInput } from "./dto/create-activity-record.input"
 import { SearchActivityRecordsArgs } from "./dto/search-budget-records.args"
-import { UpdateActivityRecordDto } from "./dto/update-activity-record.dto"
+import { UpdateActivityRecordInput } from "./dto/update-activity-record.input"
 import { ActivityRecordEntity } from "./entities/activity-record.entity"
 
 @Injectable()
@@ -132,39 +132,37 @@ export class ActivityRecordsService {
 
   async update({
     authorizedUser,
-    recordId,
-    requestBody,
+    input,
   }: {
     authorizedUser: UserEntity
-    recordId: ActivityRecordEntity["id"]
-    requestBody: UpdateActivityRecordDto
+    input: UpdateActivityRecordInput
   }): Promise<ActivityRecordEntity> {
-    const record = await this.find({ authorizedUser, recordId })
+    const record = await this.find({ authorizedUser, recordId: input.id })
     if (record.category.owner.id !== authorizedUser.id) {
       throw new ForbiddenException({ message: "Access denied." })
     }
-    if (Object.keys(requestBody).length === 0) return record
-    if (requestBody.booleanValue !== undefined) {
-      record.booleanValue = requestBody.booleanValue
+    if (Object.keys(input).length === 0) return record
+    if (input.booleanValue !== undefined) {
+      record.booleanValue = input.booleanValue
     }
-    if (requestBody.quantitativeValue !== undefined) {
-      record.quantitativeValue = requestBody.quantitativeValue
+    if (input.quantitativeValue !== undefined) {
+      record.quantitativeValue = input.quantitativeValue
     }
-    if (requestBody.comment !== undefined) {
-      if (typeof requestBody.comment !== "string") {
+    if (input.comment !== undefined) {
+      if (typeof input.comment !== "string") {
         throw new BadRequestException({ fields: { comment: "Must be a string." } })
       }
-      record.comment = requestBody.comment
+      record.comment = input.comment
     }
-    if (requestBody.date !== undefined) {
-      if (!/\d\d\d\d-\d\d-\d\d/.test(requestBody.date)) {
+    if (input.date !== undefined) {
+      if (!/\d\d\d\d-\d\d-\d\d/.test(input.date)) {
         throw new BadRequestException({ fields: { date: "Should have format YYYY-MM-DD." } })
       }
-      record.date = requestBody.date
+      record.date = input.date
     }
-    if (requestBody.categoryId !== undefined) {
+    if (input.categoryId !== undefined) {
       record.category = await this.activityCategoriesService
-        .find({ authorizedUser, categoryId: requestBody.categoryId })
+        .find({ authorizedUser, categoryId: input.categoryId })
         .catch(() => {
           throw new BadRequestException({ fields: { categoryId: "Invalid value." } })
         })

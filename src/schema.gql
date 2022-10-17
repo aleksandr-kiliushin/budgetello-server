@@ -121,6 +121,7 @@ type Mutation {
   deleteUser(id: Int!): User!
   removeBoardMember(input: RemoveMemberInput!): Board!
   updateActivityCategory(input: UpdateActivityCategoryInput!): ActivityCategory!
+  updateActivityRecord(input: UpdateActivityRecordInput!): ActivityRecord!
   updateBoard(input: UpdateBoardInput!): Board!
   updateBudgetCategory(input: UpdateBudgetCategoryInput!): BudgetCategory!
   updateBudgetRecord(input: UpdateBudgetRecordInput!): BudgetRecord!
@@ -159,6 +160,15 @@ input UpdateActivityCategoryInput {
   measurementTypeId: Int
   name: String
   unit: String
+}
+
+input UpdateActivityRecordInput {
+  booleanValue: Boolean
+  categoryId: Int
+  comment: String
+  date: String
+  id: Int!
+  quantitativeValue: Float
 }
 
 input UpdateBoardInput {
