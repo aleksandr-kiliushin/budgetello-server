@@ -2,3 +2,5 @@
 - Remove all unused dto for query-string-search, etc.
 - Get all `relations` in TypeORM queries. Allow clients to define queries that are needed.
 - Sort items by ASC by default.
+- Move guard to helpers
+- Remove ParsePipes

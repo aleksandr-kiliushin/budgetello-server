@@ -5,6 +5,7 @@ import { AuthorizationGuard } from "#models/authorization/guard"
 import { UserEntity } from "#models/users/entities/user.entity"
 
 import { AuthorizedUser } from "#helpers/AuthorizedUser.decorator"
+import { ValidationPipe } from "#helpers/validation.pipe"
 
 import { AddMemberInput } from "./dto/add-member.input"
 import { CreateBoardInput } from "./dto/create-board.input"
@@ -40,7 +41,7 @@ export class BoardsResolver {
 
   @Mutation((returns) => Board, { name: "createBoard" })
   create(
-    @Args("input")
+    @Args("input", ValidationPipe)
     input: CreateBoardInput,
     @AuthorizedUser()
     authorizedUser: UserEntity
@@ -50,7 +51,7 @@ export class BoardsResolver {
 
   @Mutation((returns) => Board, { name: "updateBoard" })
   update(
-    @Args("input")
+    @Args("input", ValidationPipe)
     input: UpdateBoardInput,
     @AuthorizedUser()
     authorizedUser: UserEntity
@@ -87,50 +88,4 @@ export class BoardsResolver {
   ): Promise<BoardEntity> {
     return this.boardsService.removeMember({ authorizedUser, input })
   }
-
-  // @Post(":boardId/add-member/:candidateForMembershipId")
-  // addMember(
-  //   @Param("boardId", ParseIntPipe)
-  //   boardId: number,
-  //   @Param("candidateForMembershipId", ParseIntPipe)
-  //   candidateForMembershipId: number,
-  //   @AuthorizedUser()
-  //   authorizedUser: UserEntity
-  // ) {
-  //   return this.boardsService.addMember({ authorizedUser, boardId, candidateForMembershipId })
-  // }
-
-  // @Post(":boardId/remove-member/:candidateForRemovingId")
-  // removeMember(
-  //   @Param("boardId", ParseIntPipe)
-  //   boardId: number,
-  //   @Param("candidateForRemovingId", ParseIntPipe)
-  //   candidateForRemovingId: number,
-  //   @AuthorizedUser()
-  //   authorizedUser: UserEntity
-  // ) {
-  //   return this.boardsService.removeMember({ authorizedUser, boardId, candidateForRemovingId })
-  // }
-
-  // @Patch(":boardId")
-  // update(
-  //   @Param("boardId", ParseIntPipe)
-  //   boardId: number,
-  //   @Body()
-  //   requestBody: UpdateBoardDto,
-  //   @AuthorizedUser()
-  //   authorizedUser: UserEntity
-  // ) {
-  //   return this.boardsService.update({ authorizedUser, boardId, requestBody })
-  // }
-
-  // @Delete(":boardId")
-  // delete(
-  //   @Param("boardId", ParseIntPipe)
-  //   boardId: number,
-  //   @AuthorizedUser()
-  //   authorizedUser: UserEntity
-  // ) {
-  //   return this.boardsService.delete({ authorizedUser, boardId })
-  // }
 }

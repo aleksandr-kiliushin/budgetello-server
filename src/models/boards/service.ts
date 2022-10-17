@@ -8,7 +8,7 @@ import { UserEntity } from "#models/users/entities/user.entity"
 import { UsersService } from "#models/users/service"
 
 import { AddMemberInput } from "./dto/add-member.input"
-import { CreateBoardDto } from "./dto/create-board.dto"
+import { CreateBoardInput } from "./dto/create-board.input"
 import { RemoveMemberInput } from "./dto/remove-member.input"
 import { SearchBoardsArgs } from "./dto/search-boards.args"
 import { UpdateBoardInput } from "./dto/update-board.input"
@@ -85,7 +85,13 @@ export class BoardsService {
     return board
   }
 
-  async create({ authorizedUser, input }: { authorizedUser: UserEntity; input: CreateBoardDto }): Promise<BoardEntity> {
+  async create({
+    authorizedUser,
+    input,
+  }: {
+    authorizedUser: UserEntity
+    input: CreateBoardInput
+  }): Promise<BoardEntity> {
     const subject = await this.boardSubjectsService.find({ subjectId: input.subjectId }).catch(() => {
       throw new BadRequestException({ fields: { subjectId: "Invalid subject." } })
     })
