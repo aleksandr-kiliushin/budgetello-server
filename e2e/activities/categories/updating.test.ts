@@ -14,6 +14,16 @@ describe("Activity category updating", () => {
   }>([
     {
       authorizedUserId: users.johnDoe.id,
+      queryNameAndInput: `updateActivityCategory(input: { id: ${activityCategories.reading.id}, name: "" })`,
+      updatedCategory: undefined,
+      responseError: {
+        fields: {
+          name: "Required.",
+        },
+      },
+    },
+    {
+      authorizedUserId: users.johnDoe.id,
       queryNameAndInput: `updateActivityCategory(input: { id: ${activityCategories.reading.id}, unit: "" })`,
       updatedCategory: undefined,
       responseError: {

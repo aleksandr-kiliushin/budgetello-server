@@ -5,6 +5,7 @@ import { AuthorizationGuard } from "#models/authorization/guard"
 import { UserEntity } from "#models/users/entities/user.entity"
 
 import { AuthorizedUser } from "#helpers/AuthorizedUser.decorator"
+import { ValidationPipe } from "#helpers/validation.pipe"
 
 import { CreateActivityCategoryInput } from "./dto/create-activity-category.input"
 import { SearchActivityCategoriesArgs } from "./dto/search-activity-categories.args"
@@ -40,7 +41,7 @@ export class ActivityCategoriesResolver {
 
   @Mutation((returns) => ActivityCategory, { name: "createActivityCategory" })
   create(
-    @Args("input")
+    @Args("input", ValidationPipe)
     input: CreateActivityCategoryInput,
     @AuthorizedUser()
     authorizedUser: UserEntity
@@ -50,7 +51,7 @@ export class ActivityCategoriesResolver {
 
   @Mutation((returns) => ActivityCategory, { name: "updateActivityCategory" })
   update(
-    @Args("input")
+    @Args("input", ValidationPipe)
     input: UpdateActivityCategoryInput,
     @AuthorizedUser()
     authorizedUser: UserEntity
@@ -67,36 +68,4 @@ export class ActivityCategoriesResolver {
   ): Promise<ActivityCategoryEntity> {
     return this.activityCategoriesService.delete({ authorizedUser, categoryId })
   }
-
-  // @Post()
-  // create(
-  //   @Body(new ValidationPipe())
-  //   requestBody: CreateActivityCategoryDto,
-  //   @AuthorizedUser()
-  //   authorizedUser: UserEntity
-  // ) {
-  //   return this.activityCategoriesService.create({ authorizedUser, requestBody })
-  // }
-
-  // @Patch(":categoryId")
-  // update(
-  //   @Param("categoryId", ParseIntPipe)
-  //   categoryId: number,
-  //   @Body()
-  //   requestBody: UpdateActivityCategoryDto,
-  //   @AuthorizedUser()
-  //   authorizedUser: UserEntity
-  // ) {
-  //   return this.activityCategoriesService.update({ authorizedUser, categoryId, requestBody })
-  // }
-
-  // @Delete(":categoryId")
-  // delete(
-  //   @Param("categoryId", ParseIntPipe)
-  //   categoryId: number,
-  //   @AuthorizedUser()
-  //   authorizedUser: UserEntity
-  // ) {
-  //   return this.activityCategoriesService.delete({ authorizedUser, categoryId })
-  // }
 }

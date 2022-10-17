@@ -49,18 +49,6 @@ describe("Activity category creating", () => {
       },
       responseError: undefined,
     },
-    // {
-    //   authorizedUserId: users.johnDoe.id,
-    //   payload: { name: "" },
-    //   response: {
-    //     fields: {
-    //       boardId: "Required.",
-    //       measurementTypeId: "Required.",
-    //       name: "Required.",
-    //     },
-    //   },
-    //   status: 400,
-    // },
   ])("$queryNameAndInput", async ({ authorizedUserId, queryNameAndInput, createdCategory, responseError }) => {
     await authorize(authorizedUserId)
     const responseBody = await fetchGqlApi(`mutation CREATE_ACTIVITY_CATEGORY {

@@ -171,9 +171,6 @@ export class ActivityCategoriesService {
       })
     }
     if (input.name !== undefined) {
-      if (input.name === "") {
-        throw new BadRequestException({ fields: { name: "Cannot be empty." } })
-      }
       category.name = input.name
     }
     if (input.unit !== undefined) {
