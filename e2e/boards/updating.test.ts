@@ -9,7 +9,7 @@ describe("Board updating", () => {
     authorizedUserId: ITestUserId
     queryNameAndInput: string
     updatedBoard: unknown
-    responseError: Record<string, unknown> | undefined
+    responseError: unknown
   }>([
     {
       authorizedUserId: users.jessicaStark.id,

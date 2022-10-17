@@ -25,6 +25,11 @@ type ActivityRecord {
   quantitativeValue: Float
 }
 
+input AddMemberInput {
+  boardId: Int!
+  userId: Int!
+}
+
 input AuthorizeInput {
   password: String!
   username: String!
@@ -74,6 +79,7 @@ input CreateUserInput {
 }
 
 type Mutation {
+  addMemberToBoard(input: AddMemberInput!): Board!
   authorize(input: AuthorizeInput!): String!
   createBoard(input: CreateBoardInput!): Board!
   createUser(input: CreateUserInput!): User!

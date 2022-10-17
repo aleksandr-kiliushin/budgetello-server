@@ -7,6 +7,7 @@ import { BoardSubjectsService } from "#models/board-subjects/service"
 import { UserEntity } from "#models/users/entities/user.entity"
 import { UsersService } from "#models/users/service"
 
+import { AddMemberInput } from "./dto/add-member.input"
 import { CreateBoardDto } from "./dto/create-board.dto"
 import { SearchBoardsArgs } from "./dto/search-boards.args"
 import { UpdateBoardInput } from "./dto/update-board.input"
@@ -164,27 +165,25 @@ export class BoardsService {
 
   async addMember({
     authorizedUser,
-    boardId,
-    candidateForMembershipId,
+    input,
   }: {
     authorizedUser: UserEntity
-    boardId: BoardEntity["id"]
-    candidateForMembershipId: UserEntity["id"]
+    input: AddMemberInput
   }): Promise<BoardEntity> {
-    if (authorizedUser.administratedBoards.every((board) => board.id !== boardId)) {
+    if (authorizedUser.administratedBoards.every((board) => board.id !== input.boardId)) {
       throw new ForbiddenException({ message: "Access denied." })
     }
     const candidateToMembers = await this.usersService.find({
-      userId: candidateForMembershipId,
+      userId: input.userId,
       relations: { boards: true },
     })
-    if (candidateToMembers.boards.some((board) => board.id === boardId)) {
+    if (candidateToMembers.boards.some((board) => board.id === input.boardId)) {
       throw new BadRequestException({ message: "The user is already a member of the board." })
     }
-    const board = await this.find({ boardId })
+    const board = await this.find({ boardId: input.boardId })
     board.members = [...board.members, candidateToMembers]
     await this.boardsRepository.save(board)
-    return await this.find({ boardId })
+    return await this.find({ boardId: input.boardId })
   }
 
   async removeMember({

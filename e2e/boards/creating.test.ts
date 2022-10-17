@@ -12,7 +12,7 @@ describe("Board creating", () => {
   test.each<{
     queryNameAndInput: string
     createdBoard: unknown
-    responseError: Record<string, unknown> | undefined
+    responseError: unknown
   }>([
     {
       queryNameAndInput: `createBoard(input: { name: "food", subjectId: 1234123 })`,
