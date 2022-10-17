@@ -75,6 +75,14 @@ input CreateActivityCategoryInput {
   unit: String
 }
 
+input CreateActivityRecordInput {
+  booleanValue: Boolean
+  categoryId: Int!
+  comment: String!
+  date: String!
+  quantitativeValue: Float
+}
+
 input CreateBoardInput {
   name: String!
   subjectId: Int!
@@ -101,6 +109,7 @@ type Mutation {
   addBoardMember(input: AddMemberInput!): Board!
   authorize(input: AuthorizeInput!): String!
   createActivityCategory(input: CreateActivityCategoryInput!): ActivityCategory!
+  createActivityRecord(input: CreateActivityRecordInput!): ActivityRecord!
   createBoard(input: CreateBoardInput!): Board!
   createBudgetCategory(input: CreateBudgetCategoryInput!): BudgetCategory!
   createBudgetRecord(input: CreateBudgetRecordInput!): BudgetRecord!

@@ -1,11 +1,12 @@
 import { UseGuards } from "@nestjs/common"
-import { Args, Int, Query, Resolver } from "@nestjs/graphql"
+import { Args, Int, Mutation, Query, Resolver } from "@nestjs/graphql"
 
 import { AuthorizationGuard } from "#models/authorization/guard"
 import { UserEntity } from "#models/users/entities/user.entity"
 
 import { AuthorizedUser } from "#helpers/AuthorizedUser.decorator"
 
+import { CreateActivityRecordInput } from "./dto/create-activity-record.input"
 import { SearchActivityRecordsArgs } from "./dto/search-budget-records.args"
 import { ActivityRecordEntity } from "./entities/activity-record.entity"
 import { ActivityRecord } from "./models/activity-record.model"
@@ -34,6 +35,16 @@ export class ActivityRecordsResolver {
     authorizedUser: UserEntity
   ): Promise<ActivityRecordEntity> {
     return this.activityRecordsService.find({ authorizedUser, recordId })
+  }
+
+  @Mutation((returns) => ActivityRecord, { name: "createActivityRecord" })
+  create(
+    @Args("input")
+    input: CreateActivityRecordInput,
+    @AuthorizedUser()
+    authorizedUser: UserEntity
+  ): Promise<ActivityRecordEntity> {
+    return this.activityRecordsService.create({ authorizedUser, input })
   }
 
   // @Post()

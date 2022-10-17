@@ -5,7 +5,7 @@ import { In, Repository } from "typeorm"
 import { ActivityCategoriesService } from "#models/activity-categories/service"
 import { UserEntity } from "#models/users/entities/user.entity"
 
-import { CreateActivityRecordDto } from "./dto/create-activity-record.dto"
+import { CreateActivityRecordInput } from "./dto/create-activity-record.input"
 import { SearchActivityRecordsArgs } from "./dto/search-budget-records.args"
 import { UpdateActivityRecordDto } from "./dto/update-activity-record.dto"
 import { ActivityRecordEntity } from "./entities/activity-record.entity"
@@ -95,20 +95,20 @@ export class ActivityRecordsService {
 
   async create({
     authorizedUser,
-    requestBody,
+    input,
   }: {
     authorizedUser: UserEntity
-    requestBody: CreateActivityRecordDto
+    input: CreateActivityRecordInput
   }): Promise<ActivityRecordEntity> {
     const category = await this.activityCategoriesService
-      .find({ authorizedUser, categoryId: requestBody.categoryId })
+      .find({ authorizedUser, categoryId: input.categoryId })
       .catch(() => {
         throw new BadRequestException({ fields: { categoryId: "Invalid value." } })
       })
     if (category.owner.id !== authorizedUser.id) {
       throw new ForbiddenException({ message: "Access denied." })
     }
-    if (category.measurementType.id === 1 && typeof requestBody.quantitativeValue !== "number") {
+    if (category.measurementType.id === 1 && typeof input.quantitativeValue !== "number") {
       throw new BadRequestException({
         fields: {
           categoryId: "Amount should be filled for «Quantitative» activity.",
@@ -116,7 +116,7 @@ export class ActivityRecordsService {
         },
       })
     }
-    if (category.measurementType.id === 2 && typeof requestBody.booleanValue !== "boolean") {
+    if (category.measurementType.id === 2 && typeof input.booleanValue !== "boolean") {
       throw new BadRequestException({
         fields: {
           categoryId: "Yes-no option should be filled for «Yes / no» activity.",
@@ -124,7 +124,7 @@ export class ActivityRecordsService {
         },
       })
     }
-    const record = this.activityRecordsRepository.create(requestBody)
+    const record = this.activityRecordsRepository.create(input)
     record.category = category
     const createdRecord = await this.activityRecordsRepository.save(record)
     return await this.find({ authorizedUser, recordId: createdRecord.id })

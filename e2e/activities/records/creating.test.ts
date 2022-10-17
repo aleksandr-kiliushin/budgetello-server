@@ -1,108 +1,31 @@
-import { CreateActivityRecordDto } from "#models/activity-records/dto/create-activity-record.dto"
-
-import { IActivityRecord } from "#interfaces/activities"
-
 import { activityCategories } from "#e2e/constants/activities"
 import { users } from "#e2e/constants/users"
+import { QueryFields } from "#e2e/helpers/QueryFields"
 import { ITestUserId, authorize } from "#e2e/helpers/authorize"
-import { fetchApi } from "#e2e/helpers/fetchApi"
+import { fetchGqlApi } from "#e2e/helpers/fetchGqlApi"
 
 describe("Activity record creating", () => {
-  it("a newly created record is presented in all records list", async () => {
-    await authorize(users.johnDoe.id)
-    const createRecordPayload: CreateActivityRecordDto = {
-      booleanValue: null,
-      categoryId: activityCategories.reading.id,
-      comment: "read about backend",
-      date: "2022-08-10",
-      quantitativeValue: 4.5,
-    }
-    await fetchApi("/api/activities/records", { body: JSON.stringify(createRecordPayload), method: "POST" })
-    const getAllCategoriesResponse = await fetchApi("/api/activities/records/search")
-    expect(await getAllCategoriesResponse.json()).toContainEqual<IActivityRecord>({
-      booleanValue: null,
-      category: activityCategories.reading,
-      comment: "read about backend",
-      date: "2022-08-10",
-      id: 8,
-      quantitativeValue: 4.5,
-    })
-  })
-
   test.each<{
     authorizedUserId: ITestUserId
-    payload: Record<string, unknown>
-    responseBody: Record<string, unknown>
-    status: number
+    queryNameAndInput: string
+    createdRecord: unknown
+    responseError: unknown
   }>([
     {
       authorizedUserId: users.johnDoe.id,
-      payload: {},
-      responseBody: {
-        fields: {
-          categoryId: "Required.",
-          date: "Required.",
-          comment: "Required.",
-        },
-      },
-      status: 400,
-    },
-    {
-      authorizedUserId: users.johnDoe.id,
-      payload: {
-        booleanValue: null,
-        categoryId: activityCategories.reading.id,
-        comment: "read about backend",
-        date: "2022/08/10",
-        quantitativeValue: 4.5,
-      },
-      responseBody: { fields: { date: "Should have format YYYY-MM-DD." } },
-      status: 400,
-    },
-    {
-      authorizedUserId: users.johnDoe.id,
-      payload: {
-        booleanValue: true,
-        categoryId: activityCategories.reading.id,
-        comment: "read about backend",
-        date: "2022-08-10",
-        quantitativeValue: null,
-      },
-      responseBody: {
+      queryNameAndInput: `createActivityRecord(input: { booleanValue: true, categoryId: ${activityCategories.reading.id}, comment: "read about backend", date: "2022-08-10", quantitativeValue: null })`,
+      createdRecord: undefined,
+      responseError: {
         fields: {
           categoryId: "Amount should be filled for «Quantitative» activity.",
           quantitativeValue: "Amount should be filled for «Quantitative» activity.",
         },
       },
-      status: 400,
-    },
-    {
-      authorizedUserId: users.jessicaStark.id,
-      payload: {
-        booleanValue: null,
-        categoryId: activityCategories.noSweets.id,
-        comment: "Yes, I did it today!",
-        date: "2022-08-10",
-        quantitativeValue: 1,
-      },
-      responseBody: {
-        fields: {
-          categoryId: "Yes-no option should be filled for «Yes / no» activity.",
-          booleanValue: "Yes-no option should be filled for «Yes / no» activity.",
-        },
-      },
-      status: 400,
     },
     {
       authorizedUserId: users.johnDoe.id,
-      payload: {
-        booleanValue: null,
-        categoryId: activityCategories.reading.id,
-        comment: "read about backend",
-        date: "2022-08-10",
-        quantitativeValue: 4.5,
-      },
-      responseBody: {
+      queryNameAndInput: `createActivityRecord(input: { booleanValue: null, categoryId: ${activityCategories.reading.id}, comment: "read about backend", date: "2022-08-10", quantitativeValue: 4.5 })`,
+      createdRecord: {
         booleanValue: null,
         category: activityCategories.reading,
         comment: "read about backend",
@@ -110,12 +33,41 @@ describe("Activity record creating", () => {
         id: 8,
         quantitativeValue: 4.5,
       },
-      status: 201,
+      responseError: undefined,
     },
-  ])("Budget record creating case #%#", async ({ authorizedUserId, payload, responseBody, status }) => {
+
+    // {
+    //   authorizedUserId: users.johnDoe.id,
+    //   payload: {},
+    //   responseBody: {
+    //     fields: {
+    //       categoryId: "Required.",
+    //       date: "Required.",
+    //       comment: "Required.",
+    //     },
+    //   },
+    //   status: 400,
+    // },
+    // {
+    //   authorizedUserId: users.johnDoe.id,
+    //   payload: {
+    //     booleanValue: null,
+    //     categoryId: activityCategories.reading.id,
+    //     comment: "read about backend",
+    //     date: "2022/08/10",
+    //     quantitativeValue: 4.5,
+    //   },
+    //   responseBody: { fields: { date: "Should have format YYYY-MM-DD." } },
+    //   status: 400,
+    // },
+  ])("$queryNameAndInput", async ({ authorizedUserId, queryNameAndInput, createdRecord, responseError }) => {
     await authorize(authorizedUserId)
-    const response = await fetchApi("/api/activities/records", { body: JSON.stringify(payload), method: "POST" })
-    expect(response.status).toEqual(status)
-    expect(await response.json()).toEqual(responseBody)
+    const responseBody = await fetchGqlApi(`mutation CREATE_ACTIVITY_RECORD {
+      ${queryNameAndInput} {
+        ${QueryFields.activityRecord}
+      }
+    }`)
+    expect(responseBody.data?.createActivityRecord).toEqual(createdRecord)
+    expect(responseBody.errors?.[0]?.extensions?.exception?.response).toEqual(responseError)
   })
 })
