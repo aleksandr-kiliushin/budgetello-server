@@ -6,7 +6,7 @@ import { ActivityCategoryMeasurementTypesService } from "#models/activity-catego
 import { BoardsService } from "#models/boards/service"
 import { UserEntity } from "#models/users/entities/user.entity"
 
-import { CreateActivityCategoryDto } from "./dto/create-activity-category.dto"
+import { CreateActivityCategoryInput } from "./dto/create-activity-category.input"
 import { SearchActivityCategoriesArgs } from "./dto/search-activity-categories.args"
 import { UpdateActivityCategoryDto } from "./dto/update-activity-category.dto"
 import { ActivityCategoryEntity } from "./entities/activity-category.entity"
@@ -76,24 +76,27 @@ export class ActivityCategoriesService {
 
   async create({
     authorizedUser,
-    requestBody,
+    input,
   }: {
     authorizedUser: UserEntity
-    requestBody: CreateActivityCategoryDto
+    input: CreateActivityCategoryInput
   }): Promise<ActivityCategoryEntity> {
-    if (requestBody.measurementTypeId === 1) {
-      if (requestBody.unit === null || requestBody.unit.length === 0) {
+    if (input.measurementTypeId === 1) {
+      if (input.unit === null || input.unit.length === 0) {
         throw new BadRequestException({
-          fields: { unit: "Required for «Quantitative» activities." },
+          fields: {
+            measurementTypeId: "Unit is required for «Quantitative» activities.",
+            unit: "Unit is required for «Quantitative» activities.",
+          },
         })
       }
     }
     const measurementType = await this.activityCategoryMeasurementTypesService
-      .find({ typeId: requestBody.measurementTypeId })
+      .find({ typeId: input.measurementTypeId })
       .catch(() => {
         throw new BadRequestException({ fields: { measurementTypeId: "Invalid value." } })
       })
-    const board = await this.boardsService.find({ boardId: requestBody.boardId }).catch(() => {
+    const board = await this.boardsService.find({ boardId: input.boardId }).catch(() => {
       throw new BadRequestException({ fields: { boardId: "Invalid value." } })
     })
     const similarExistingCategory = await this.activityCategoriesRepository.findOne({
@@ -101,9 +104,9 @@ export class ActivityCategoriesService {
       where: {
         board,
         measurementType,
-        name: requestBody.name,
+        name: input.name,
         owner: authorizedUser,
-        unit: requestBody.unit === null ? IsNull() : requestBody.unit,
+        unit: input.unit === null ? IsNull() : input.unit,
       },
     })
     if (similarExistingCategory !== null) {
@@ -119,9 +122,9 @@ export class ActivityCategoriesService {
     const category = this.activityCategoriesRepository.create({
       board,
       measurementType,
-      name: requestBody.name,
+      name: input.name,
       owner: authorizedUser,
-      unit: requestBody.unit,
+      unit: input.unit,
     })
     const createdCategory = await this.activityCategoriesRepository.save(category)
     return await this.find({ authorizedUser, categoryId: createdCategory.id })

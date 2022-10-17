@@ -1,11 +1,12 @@
 import { UseGuards } from "@nestjs/common"
-import { Args, Int, Query, Resolver } from "@nestjs/graphql"
+import { Args, Int, Mutation, Query, Resolver } from "@nestjs/graphql"
 
 import { AuthorizationGuard } from "#models/authorization/guard"
 import { UserEntity } from "#models/users/entities/user.entity"
 
 import { AuthorizedUser } from "#helpers/AuthorizedUser.decorator"
 
+import { CreateActivityCategoryInput } from "./dto/create-activity-category.input"
 import { SearchActivityCategoriesArgs } from "./dto/search-activity-categories.args"
 import { ActivityCategoryEntity } from "./entities/activity-category.entity"
 import { ActivityCategory } from "./models/activity-category.model"
@@ -34,6 +35,16 @@ export class ActivityCategoriesResolver {
     authorizedUser: UserEntity
   ): Promise<ActivityCategoryEntity> {
     return this.activityCategoriesService.find({ authorizedUser, categoryId })
+  }
+
+  @Mutation((returns) => ActivityCategory, { name: "createActivityCategory" })
+  create(
+    @Args("input")
+    input: CreateActivityCategoryInput,
+    @AuthorizedUser()
+    authorizedUser: UserEntity
+  ): Promise<ActivityCategoryEntity> {
+    return this.activityCategoriesService.create({ authorizedUser, input })
   }
 
   // @Post()

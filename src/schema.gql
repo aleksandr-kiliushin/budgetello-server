@@ -68,6 +68,13 @@ type BudgetRecord {
   isTrashed: Boolean!
 }
 
+input CreateActivityCategoryInput {
+  boardId: Int!
+  measurementTypeId: Int!
+  name: String!
+  unit: String
+}
+
 input CreateBoardInput {
   name: String!
   subjectId: Int!
@@ -93,6 +100,7 @@ input CreateUserInput {
 type Mutation {
   addBoardMember(input: AddMemberInput!): Board!
   authorize(input: AuthorizeInput!): String!
+  createActivityCategory(input: CreateActivityCategoryInput!): ActivityCategory!
   createBoard(input: CreateBoardInput!): Board!
   createBudgetCategory(input: CreateBudgetCategoryInput!): BudgetCategory!
   createBudgetRecord(input: CreateBudgetRecordInput!): BudgetRecord!
