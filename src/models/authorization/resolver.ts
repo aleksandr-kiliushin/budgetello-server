@@ -1,5 +1,7 @@
 import { Args, Mutation, Resolver } from "@nestjs/graphql"
 
+import { ValidationPipe } from "#helpers/validation.pipe"
+
 import { AuthorizeInput } from "./dto/authorize.input"
 import { AuthorizationService } from "./service"
 
@@ -9,7 +11,7 @@ export class AuthorizationResolver {
 
   @Mutation(() => String, { name: "authorize" })
   authorize(
-    @Args("input")
+    @Args("input", new ValidationPipe())
     input: AuthorizeInput
   ): Promise<string> {
     return this.authorizationService.createToken({ input })
