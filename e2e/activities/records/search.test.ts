@@ -42,17 +42,20 @@ describe("Search for activity records", () => {
   test.each<{
     authorizedUserId: ITestUserId
     queryNameAndArgs: string
-    foundRecords: unknown[]
+    foundRecords: unknown
+    responseError: unknown
   }>([
     {
       authorizedUserId: users.johnDoe.id,
       queryNameAndArgs: `activityRecords`,
       foundRecords: [activityRecords["7th"], activityRecords["5th"]],
+      responseError: undefined,
     },
     {
       authorizedUserId: users.johnDoe.id,
       queryNameAndArgs: `activityRecords(boardsIds: [${boards.beautifulSportsmen.id}])`,
       foundRecords: [],
+      responseError: undefined,
     },
     {
       authorizedUserId: users.jessicaStark.id,
@@ -64,6 +67,7 @@ describe("Search for activity records", () => {
         activityRecords["2nd"],
         activityRecords["1st"],
       ],
+      responseError: undefined,
     },
     {
       authorizedUserId: users.jessicaStark.id,
@@ -77,26 +81,28 @@ describe("Search for activity records", () => {
         activityRecords["2nd"],
         activityRecords["1st"],
       ],
+      responseError: undefined,
     },
     {
       authorizedUserId: users.jessicaStark.id,
       queryNameAndArgs: `activityRecords(boardsIds: [${boards.beautifulSportsmen.id}], dates: ["2022-08-01"], orderingByDate: "ASC", orderingById: "ASC", skip: 1, take: 1)`,
       foundRecords: [activityRecords["2nd"]],
+      responseError: undefined,
     },
-    // {
-    //   url: "/api/activities/records/search?dates=2022_01_15",
-    //   responseBody: {
-    //     query: { dates: "An array of YYYY-MM-DD dates expected." },
-    //   },
-    //   responseStatus: 400,
-    // },
-  ])("$queryNameAndArgs", async ({ authorizedUserId, queryNameAndArgs, foundRecords }) => {
+    {
+      authorizedUserId: users.johnDoe.id,
+      queryNameAndArgs: `activityRecords(dates: ["2022-08-01", "Hello"])`,
+      foundRecords: undefined,
+      responseError: { fields: { dates: "An array of YYYY-MM-DD dates expected." } },
+    },
+  ])("$queryNameAndArgs", async ({ authorizedUserId, queryNameAndArgs, foundRecords, responseError }) => {
     await authorize(authorizedUserId)
     const responseBody = await fetchGqlApi(`{
       ${queryNameAndArgs} {
         ${QueryFields.activityRecord}
       }
     }`)
-    expect(responseBody.data.activityRecords).toEqual(foundRecords)
+    expect(responseBody.data?.activityRecords).toEqual(foundRecords)
+    expect(responseBody.errors?.[0]?.extensions?.exception?.response).toEqual(responseError)
   })
 })

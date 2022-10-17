@@ -1,18 +1,25 @@
 import { activityCategories } from "#e2e/constants/activities"
 import { users } from "#e2e/constants/users"
 import { QueryFields } from "#e2e/helpers/QueryFields"
-import { ITestUserId, authorize } from "#e2e/helpers/authorize"
+import { authorize } from "#e2e/helpers/authorize"
 import { fetchGqlApi } from "#e2e/helpers/fetchGqlApi"
+
+beforeEach(async () => {
+  await authorize(users.johnDoe.id)
+})
 
 describe("Activity record creating", () => {
   test.each<{
-    authorizedUserId: ITestUserId
     queryNameAndInput: string
     createdRecord: unknown
     responseError: unknown
   }>([
     {
-      authorizedUserId: users.johnDoe.id,
+      queryNameAndInput: `createActivityRecord(input: { booleanValue: true, categoryId: ${activityCategories.reading.id}, comment: "read about backend", date: "2022/08/10", quantitativeValue: 123 })`,
+      createdRecord: undefined,
+      responseError: { fields: { date: "Should have format YYYY-MM-DD." } },
+    },
+    {
       queryNameAndInput: `createActivityRecord(input: { booleanValue: true, categoryId: ${activityCategories.reading.id}, comment: "read about backend", date: "2022-08-10", quantitativeValue: null })`,
       createdRecord: undefined,
       responseError: {
@@ -23,7 +30,6 @@ describe("Activity record creating", () => {
       },
     },
     {
-      authorizedUserId: users.johnDoe.id,
       queryNameAndInput: `createActivityRecord(input: { booleanValue: null, categoryId: ${activityCategories.reading.id}, comment: "read about backend", date: "2022-08-10", quantitativeValue: 4.5 })`,
       createdRecord: {
         booleanValue: null,
@@ -35,33 +41,7 @@ describe("Activity record creating", () => {
       },
       responseError: undefined,
     },
-
-    // {
-    //   authorizedUserId: users.johnDoe.id,
-    //   payload: {},
-    //   responseBody: {
-    //     fields: {
-    //       categoryId: "Required.",
-    //       date: "Required.",
-    //       comment: "Required.",
-    //     },
-    //   },
-    //   status: 400,
-    // },
-    // {
-    //   authorizedUserId: users.johnDoe.id,
-    //   payload: {
-    //     booleanValue: null,
-    //     categoryId: activityCategories.reading.id,
-    //     comment: "read about backend",
-    //     date: "2022/08/10",
-    //     quantitativeValue: 4.5,
-    //   },
-    //   responseBody: { fields: { date: "Should have format YYYY-MM-DD." } },
-    //   status: 400,
-    // },
-  ])("$queryNameAndInput", async ({ authorizedUserId, queryNameAndInput, createdRecord, responseError }) => {
-    await authorize(authorizedUserId)
+  ])("$queryNameAndInput", async ({ queryNameAndInput, createdRecord, responseError }) => {
     const responseBody = await fetchGqlApi(`mutation CREATE_ACTIVITY_RECORD {
       ${queryNameAndInput} {
         ${QueryFields.activityRecord}
@@ -72,7 +52,6 @@ describe("Activity record creating", () => {
   })
 
   it("created category can be found by ID", async () => {
-    await authorize(users.johnDoe.id)
     await fetchGqlApi(`mutation CREATE_ACTIVITY_RECORD {
       createActivityRecord(input: { booleanValue: null, categoryId: ${activityCategories.reading.id}, comment: "read about backend", date: "2022-08-10", quantitativeValue: 4.5 }) {
         ${QueryFields.activityRecord}

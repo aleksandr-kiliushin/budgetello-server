@@ -81,7 +81,7 @@ describe("Search budget records", () => {
     // {
     //   url: `/api/budget/records/search?isTrashed=hehe`,
     //   responseBody: {
-    //     query: {
+    //     fields: {
     //       isTrashed: "Should be a boolean.",
     //     },
     //   },

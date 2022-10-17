@@ -5,6 +5,7 @@ import { AuthorizationGuard } from "#models/authorization/guard"
 import { UserEntity } from "#models/users/entities/user.entity"
 
 import { AuthorizedUser } from "#helpers/AuthorizedUser.decorator"
+import { ValidationPipe } from "#helpers/validation.pipe"
 
 import { CreateActivityRecordInput } from "./dto/create-activity-record.input"
 import { SearchActivityRecordsArgs } from "./dto/search-budget-records.args"
@@ -20,7 +21,7 @@ export class ActivityRecordsResolver {
 
   @Query((returns) => [ActivityRecord], { name: "activityRecords" })
   search(
-    @Args()
+    @Args(ValidationPipe)
     args: SearchActivityRecordsArgs,
     @AuthorizedUser()
     authorizedUser: UserEntity
@@ -40,7 +41,7 @@ export class ActivityRecordsResolver {
 
   @Mutation((returns) => ActivityRecord, { name: "createActivityRecord" })
   create(
-    @Args("input")
+    @Args("input", ValidationPipe)
     input: CreateActivityRecordInput,
     @AuthorizedUser()
     authorizedUser: UserEntity
@@ -67,36 +68,4 @@ export class ActivityRecordsResolver {
   ): Promise<ActivityRecordEntity> {
     return this.activityRecordsService.delete({ authorizedUser, recordId })
   }
-
-  // @Post()
-  // create(
-  //   @Body(new ValidationPipe())
-  //   requestBody: CreateActivityRecordDto,
-  //   @AuthorizedUser()
-  //   authorizedUser: UserEntity
-  // ) {
-  //   return this.activityRecordsService.create({ authorizedUser, requestBody })
-  // }
-
-  // @Patch(":recordId")
-  // update(
-  //   @Param("recordId", ParseIntPipe)
-  //   recordId: number,
-  //   @Body()
-  //   requestBody: UpdateActivityRecordDto,
-  //   @AuthorizedUser()
-  //   authorizedUser: UserEntity
-  // ) {
-  //   return this.activityRecordsService.update({ authorizedUser, requestBody, recordId })
-  // }
-
-  // @Delete(":recordId")
-  // delete(
-  //   @Param("recordId", ParseIntPipe)
-  //   recordId: number,
-  //   @AuthorizedUser()
-  //   authorizedUser: UserEntity
-  // ) {
-  //   return this.activityRecordsService.delete({ authorizedUser, recordId })
-  // }
 }

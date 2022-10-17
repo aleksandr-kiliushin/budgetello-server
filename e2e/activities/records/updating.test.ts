@@ -15,6 +15,11 @@ describe("Activity record updating", () => {
     responseError: unknown
   }>([
     {
+      queryNameAndInput: `updateActivityRecord(input: { id: ${activityRecords["5th"].id}, date: "20_08_10qwer" })`,
+      updatedRecord: undefined,
+      responseError: { fields: { date: "Should have format YYYY-MM-DD." } },
+    },
+    {
       queryNameAndInput: `updateActivityRecord(input: { id: ${activityRecords["5th"].id}, categoryId: 666666 })`,
       updatedRecord: undefined,
       responseError: { fields: { categoryId: "Invalid value." } },
@@ -51,12 +56,6 @@ describe("Activity record updating", () => {
       },
       responseError: undefined,
     },
-    // {
-    //   url: `/api/activities/records/${activityRecords["5th"].id}`,
-    //   payload: { date: "20_08_10qwer" },
-    //   responseBody: { fields: { date: "Should have format YYYY-MM-DD." } },
-    //   status: 400,
-    // },
   ])("$queryNameAndInput", async ({ queryNameAndInput, updatedRecord, responseError }) => {
     const responseBody = await fetchGqlApi(`mutation UPDATE_ACTIVITY_RECORD {
       ${queryNameAndInput} {

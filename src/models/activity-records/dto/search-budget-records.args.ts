@@ -1,4 +1,5 @@
 import { ArgsType, Field, Int } from "@nestjs/graphql"
+import { IsOptional, Matches } from "class-validator"
 
 import { IOrdering } from "#interfaces/common"
 
@@ -11,6 +12,8 @@ export class SearchActivityRecordsArgs {
   categoriesIds?: number[]
 
   @Field(() => [String], { nullable: true })
+  @Matches(/^\d\d\d\d-\d\d-\d\d$/, { each: true, message: "An array of YYYY-MM-DD dates expected." })
+  @IsOptional()
   dates?: string[]
 
   @Field(() => [Int], { nullable: true })
