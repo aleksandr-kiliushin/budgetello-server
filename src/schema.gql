@@ -99,6 +99,7 @@ type Mutation {
   createUser(input: CreateUserInput!): User!
   deleteBoard(id: Int!): Board!
   deleteBudgetCategory(id: Int!): BudgetCategory!
+  deleteBudgetRecord(id: Int!): BudgetRecord!
   deleteUser(id: Int!): User!
   removeBoardMember(input: RemoveMemberInput!): Board!
   updateBoard(input: UpdateBoardInput!): Board!

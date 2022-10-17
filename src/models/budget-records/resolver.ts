@@ -58,6 +58,16 @@ export class BudgetRecordsResolver {
     return this.budgetRecordsService.update({ authorizedUser, input })
   }
 
+  @Mutation((returns) => BudgetRecord, { name: "deleteBudgetRecord" })
+  delete(
+    @Args("id", { type: () => Int })
+    recordId: number,
+    @AuthorizedUser()
+    authorizedUser: UserEntity
+  ): Promise<BudgetRecordEntity> {
+    return this.budgetRecordsService.delete({ authorizedUser, recordId })
+  }
+
   // @Post()
   // create(
   //   @Body(new ValidationPipe())

@@ -1,36 +1,43 @@
-import { IBudgetRecord } from "#interfaces/budget"
-
 import { budgetRecords } from "#e2e/constants/budget"
 import { users } from "#e2e/constants/users"
+import { QueryFields } from "#e2e/helpers/QueryFields"
 import { authorize } from "#e2e/helpers/authorize"
-import { fetchApi } from "#e2e/helpers/fetchApi"
+import { fetchGqlApi } from "#e2e/helpers/fetchGqlApi"
+
+beforeEach(async () => {
+  await authorize(users.johnDoe.id)
+})
 
 describe("Budget record deleting", () => {
-  it("returns a correct response after deleting", async () => {
-    await authorize(users.jessicaStark.id)
-    const recordDeletingResponse = await fetchApi(`/api/budget/records/${budgetRecords["5th"].id}`, {
-      method: "DELETE",
-    })
-    expect(recordDeletingResponse.status).toEqual(200)
-    expect(await recordDeletingResponse.json()).toEqual<IBudgetRecord>(budgetRecords["5th"])
+  it("deleting returns a correct response", async () => {
+    const responseBody = await fetchGqlApi(`mutation DELETE_BUDGET_RECORD {
+      deleteBudgetRecord(id: ${budgetRecords["2nd"].id}) {
+        ${QueryFields.budgetRecord}
+      }
+    }`)
+    expect(responseBody.data).toEqual({ deleteBudgetRecord: budgetRecords["2nd"] })
   })
 
-  it("the deleted records are not presented in all records list", async () => {
-    await authorize(users.jessicaStark.id)
-    await fetchApi(`/api/budget/records/${budgetRecords["1st"].id}`, { method: "DELETE" })
-    await fetchApi(`/api/budget/records/${budgetRecords["2nd"].id}`, { method: "DELETE" })
-    await fetchApi(`/api/budget/records/${budgetRecords["3rd"].id}`, { method: "DELETE" })
-    await fetchApi(`/api/budget/records/${budgetRecords["6th"].id}`, { method: "DELETE" })
-    const getAllRecordsResponse = await fetchApi("/api/budget/records/search")
-    expect(await getAllRecordsResponse.json()).toEqual<IBudgetRecord[]>([budgetRecords["5th"], budgetRecords["4th"]])
+  it("deleted record not found", async () => {
+    await fetchGqlApi(`mutation DELETE_BUDGET_RECORD {
+      deleteBudgetRecord(id: ${budgetRecords["2nd"].id}) {
+        ${QueryFields.budgetRecord}
+      }
+    }`)
+    const responseBody = await fetchGqlApi(`{
+      budgetRecord(id: ${budgetRecords["2nd"].id}) {
+        ${QueryFields.budgetRecord}
+      }
+    }`)
+    expect(responseBody.errors?.[0]?.extensions?.exception?.response).toEqual({ message: "Not found." })
   })
 
-  test("the user cannot delete a record of a board that they is not a member of", async () => {
-    await authorize(users.johnDoe.id)
-    const recordUpdatingResponse = await fetchApi(`/api/budget/records/${budgetRecords["5th"].id}`, {
-      method: "DELETE",
-    })
-    expect(recordUpdatingResponse.status).toEqual(403)
-    expect(await recordUpdatingResponse.json()).toEqual({ message: "Access denied." })
+  it("a user cannot delete a record of a board that they is not a member of", async () => {
+    const responseBody = await fetchGqlApi(`mutation DELETE_BUDGET_RECORD {
+      deleteBudgetRecord(id: ${budgetRecords["5th"].id}) {
+        ${QueryFields.budgetRecord}
+      }
+    }`)
+    expect(responseBody.errors?.[0]?.extensions?.exception?.response).toEqual({ message: "Access denied." })
   })
 })
