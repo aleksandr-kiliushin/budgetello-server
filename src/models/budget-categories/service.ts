@@ -59,7 +59,7 @@ export class BudgetCategoriesService {
       relations: { board: true, type: true },
       where: { id: categoryId },
     })
-    if (category === null) throw new NotFoundException({})
+    if (category === null) throw new NotFoundException({ message: "Not found." })
 
     const isAuthorizedUserBoardAdmin = authorizedUser.administratedBoards.some((board) => {
       return board.id === category.board.id

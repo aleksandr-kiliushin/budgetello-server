@@ -21,10 +21,10 @@ export class QueryFields {
     id,
     name
   `
-  // static budgetCategory = `
-  //   board { id, name },
-  //   id,
-  //   name,
-  //   type { id, name }
-  // `
+  static budgetCategory = `
+    board { id, name },
+    id,
+    name,
+    type { id, name }
+  `
 }
