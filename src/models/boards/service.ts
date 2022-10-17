@@ -9,6 +9,7 @@ import { UsersService } from "#models/users/service"
 
 import { AddMemberInput } from "./dto/add-member.input"
 import { CreateBoardDto } from "./dto/create-board.dto"
+import { RemoveMemberInput } from "./dto/remove-member.input"
 import { SearchBoardsArgs } from "./dto/search-boards.args"
 import { UpdateBoardInput } from "./dto/update-board.input"
 import { BoardEntity } from "./entities/board.entity"
@@ -188,31 +189,24 @@ export class BoardsService {
 
   async removeMember({
     authorizedUser,
-    boardId,
-    candidateForRemovingId,
+    input,
   }: {
     authorizedUser: UserEntity
-    boardId: BoardEntity["id"]
-    candidateForRemovingId: UserEntity["id"]
+    input: RemoveMemberInput
   }): Promise<BoardEntity> {
-    if (authorizedUser.administratedBoards.every((board) => board.id !== boardId)) {
+    if (authorizedUser.administratedBoards.every((board) => board.id !== input.boardId)) {
       throw new ForbiddenException({ message: "Access denied." })
     }
-    const board = await this.find({ boardId })
-    if (board.admins.every((admin) => admin.id === candidateForRemovingId)) {
-      throw new ForbiddenException({
-        message: "The user can't be removed from this board because they are the only admin.",
-      })
-    }
+    const board = await this.find({ boardId: input.boardId })
     const candidateToBeRemoved = await this.usersService.find({
-      userId: candidateForRemovingId,
+      userId: input.memberId,
       relations: { boards: true },
     })
-    if (candidateToBeRemoved.boards.every((board) => board.id !== boardId)) {
+    if (candidateToBeRemoved.boards.every((board) => board.id !== input.boardId)) {
       throw new BadRequestException({ message: "The user is not a member of the board." })
     }
-    board.members = board.members.filter((member) => member.id !== candidateForRemovingId)
+    board.members = board.members.filter((member) => member.id !== input.memberId)
     await this.boardsRepository.save(board)
-    return await this.find({ boardId })
+    return await this.find({ boardId: input.boardId })
   }
 }
