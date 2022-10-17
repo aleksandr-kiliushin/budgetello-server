@@ -78,6 +78,7 @@ type Mutation {
   createBoard(input: CreateBoardInput!): Board!
   createUser(input: CreateUserInput!): User!
   deleteUser(id: Int!): User!
+  updateBoard(input: UpdateBoardInput!): Board!
   updateUser(input: UpdateUserInput!): User!
 }
 
@@ -100,6 +101,12 @@ type Query {
   budgetRecords(amount: Float, boardsIds: [Int!], categoriesIds: [Int!], dates: [String!], ids: [Int!], isTrashed: Boolean, orderingByDate: String, orderingById: String, skip: Int, take: Int): [BudgetRecord!]!
   user(id: Int, username: String): User!
   users(ids: [Int!], username: String): [User!]!
+}
+
+input UpdateBoardInput {
+  id: Int!
+  name: String
+  subjectId: Int
 }
 
 input UpdateUserInput {

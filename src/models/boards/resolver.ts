@@ -8,6 +8,7 @@ import { AuthorizedUser } from "#helpers/AuthorizedUser.decorator"
 
 import { CreateBoardInput } from "./dto/create-board.input"
 import { SearchBoardsArgs } from "./dto/search-boards.args"
+import { UpdateBoardInput } from "./dto/update-board.input"
 import { BoardEntity } from "./entities/board.entity"
 import { Board } from "./models/board.model"
 import { BoardsService } from "./service"
@@ -43,6 +44,16 @@ export class BoardsResolver {
     authorizedUser: UserEntity
   ): Promise<BoardEntity> {
     return this.boardsService.create({ authorizedUser, input })
+  }
+
+  @Mutation((returns) => Board, { name: "updateBoard" })
+  update(
+    @Args("input")
+    input: UpdateBoardInput,
+    @AuthorizedUser()
+    authorizedUser: UserEntity
+  ): Promise<BoardEntity> {
+    return this.boardsService.update({ authorizedUser, input })
   }
 
   // @Post(":boardId/add-member/:candidateForMembershipId")

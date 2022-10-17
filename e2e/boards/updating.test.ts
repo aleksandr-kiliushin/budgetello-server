@@ -1,91 +1,94 @@
-import { BoardEntity } from "#models/boards/entities/board.entity"
-
 import { boardSubjects, boards } from "#e2e/constants/boards"
 import { users } from "#e2e/constants/users"
+import { QueryFields } from "#e2e/helpers/QueryFields"
 import { ITestUserId, authorize } from "#e2e/helpers/authorize"
-import { fetchApi } from "#e2e/helpers/fetchApi"
+import { fetchGqlApi } from "#e2e/helpers/fetchGqlApi"
 
-describe("Boards updating", () => {
+describe("Board updating", () => {
   test.each<{
     authorizedUserId: ITestUserId
-    payload: Record<string, unknown>
-    response: Record<string, unknown>
-    status: number
-    url: string
+    queryNameAndInput: string
+    updatedBoard: unknown
+    responseError: Record<string, unknown> | undefined
   }>([
     {
       authorizedUserId: users.jessicaStark.id,
-      payload: {},
-      response: { message: "You are not allowed to to this action." },
-      status: 403,
-      url: `/api/boards/${boards.cleverBudgetiers.id}`,
+      queryNameAndInput: `updateBoard(input: { id: ${boards.cleverBudgetiers.id} })`,
+      updatedBoard: undefined,
+      responseError: { message: "Access denied." },
     },
     {
       authorizedUserId: users.johnDoe.id,
-      payload: { name: "" },
-      response: { fields: { name: "Name cannot be empty." } },
-      status: 400,
-      url: `/api/boards/${boards.cleverBudgetiers.id}`,
+      queryNameAndInput: `updateBoard(input: { id: ${boards.cleverBudgetiers.id}, name: "" })`,
+      updatedBoard: undefined,
+      responseError: { fields: { name: "Required." } },
     },
     {
       authorizedUserId: users.johnDoe.id,
-      payload: { subjectId: 666666 },
-      response: { fields: { subjectId: "Invalid board subject." } },
-      status: 400,
-      url: `/api/boards/${boards.cleverBudgetiers.id}`,
+      queryNameAndInput: `updateBoard(input: { id: ${boards.cleverBudgetiers.id}, subjectId: 666666 })`,
+      updatedBoard: undefined,
+      responseError: { fields: { subjectId: "Invalid board subject." } },
     },
     {
       authorizedUserId: users.johnDoe.id,
-      payload: { name: boards.megaEconomists.name },
-      response: {
+      queryNameAndInput: `updateBoard(input: { id: ${boards.cleverBudgetiers.id}, name: "${boards.megaEconomists.name}" })`,
+      updatedBoard: undefined,
+      responseError: {
         fields: {
           name: '"mega-economists" budget board already exists.',
           subjectId: '"mega-economists" budget board already exists.',
         },
       },
-      status: 400,
-      url: `/api/boards/${boards.cleverBudgetiers.id}`,
     },
     {
       authorizedUserId: users.johnDoe.id,
-      payload: {},
-      response: boards.cleverBudgetiers,
-      status: 200,
-      url: `/api/boards/${boards.cleverBudgetiers.id}`,
+      queryNameAndInput: `updateBoard(input: { id: ${boards.cleverBudgetiers.id} })`,
+      updatedBoard: boards.cleverBudgetiers,
+      responseError: undefined,
     },
     {
       authorizedUserId: users.johnDoe.id,
-      payload: { name: "champions", subjectId: boardSubjects.activities.id },
-      response: {
+      queryNameAndInput: `updateBoard(input: { id: ${boards.cleverBudgetiers.id}, name: "champions", subjectId: ${boardSubjects.activities.id} })`,
+      updatedBoard: {
         admins: [users.johnDoe],
         id: boards.cleverBudgetiers.id,
         members: [users.johnDoe, users.jessicaStark],
         name: "champions",
         subject: boardSubjects.activities,
       },
-      status: 200,
-      url: `/api/boards/${boards.cleverBudgetiers.id}`,
+      responseError: undefined,
     },
-  ])("Board updating case #%#", async ({ authorizedUserId, payload, response, status, url }) => {
+  ])("$queryNameAndInput", async ({ authorizedUserId, queryNameAndInput, updatedBoard, responseError }) => {
     await authorize(authorizedUserId)
-    const boardUpdatingResponse = await fetchApi(url, { body: JSON.stringify(payload), method: "PATCH" })
-    expect(boardUpdatingResponse.status).toEqual(status)
-    expect(await boardUpdatingResponse.json()).toEqual(response)
+    const responseBody = await fetchGqlApi(`mutation UPDATE_BOARD {
+      ${queryNameAndInput} {
+        ${QueryFields.board}
+      }
+    }`)
+    expect(responseBody.data?.updateBoard).toEqual(updatedBoard)
+    expect(responseBody.errors?.[0]?.extensions?.exception?.response).toEqual(responseError)
   })
 
-  it("updated boards can be found by ID", async () => {
+  it("fetching updated board returns actual data", async () => {
     await authorize(users.johnDoe.id)
-    await fetchApi(`/api/boards/${boards.cleverBudgetiers.id}`, {
-      body: JSON.stringify({ name: "champions", subjectId: boardSubjects.activities.id }),
-      method: "PATCH",
-    })
-    const response = await fetchApi(`/api/boards/${boards.cleverBudgetiers.id}`)
-    expect(await response.json()).toEqual<BoardEntity | unknown>({
-      admins: [users.johnDoe],
-      id: boards.cleverBudgetiers.id,
-      members: [users.johnDoe, users.jessicaStark],
-      name: "champions",
-      subject: boardSubjects.activities,
+    await fetchGqlApi(`mutation UPDATE_BOARD {
+      updateBoard(input: { id: ${boards.cleverBudgetiers.id}, name: "champions", subjectId: ${boardSubjects.activities.id} }) {
+        ${QueryFields.board}
+      }
+    }`)
+    const responseBody = await fetchGqlApi(`{
+      board(id: ${boards.cleverBudgetiers.id}) {
+        ${QueryFields.board}
+      }
+    }`)
+    expect(responseBody.data).toEqual({
+      board: {
+        admins: [users.johnDoe],
+        id: boards.cleverBudgetiers.id,
+        members: [users.johnDoe, users.jessicaStark],
+        name: "champions",
+        subject: boardSubjects.activities,
+      },
     })
   })
 })

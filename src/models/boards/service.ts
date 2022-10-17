@@ -1,3 +1,4 @@
+import { ValidationError } from "#constants/ValidationError"
 import { BadRequestException, ForbiddenException, Injectable, NotFoundException } from "@nestjs/common"
 import { InjectRepository } from "@nestjs/typeorm"
 import { In, Like, Repository } from "typeorm"
@@ -8,7 +9,7 @@ import { UsersService } from "#models/users/service"
 
 import { CreateBoardDto } from "./dto/create-board.dto"
 import { SearchBoardsArgs } from "./dto/search-boards.args"
-import { UpdateBoardDto } from "./dto/update-board.dto"
+import { UpdateBoardInput } from "./dto/update-board.input"
 import { BoardEntity } from "./entities/board.entity"
 
 @Injectable()
@@ -110,26 +111,24 @@ export class BoardsService {
 
   async update({
     authorizedUser,
-    boardId,
-    requestBody,
+    input,
   }: {
     authorizedUser: UserEntity
-    boardId: BoardEntity["id"]
-    requestBody: UpdateBoardDto
+    input: UpdateBoardInput
   }): Promise<BoardEntity> {
-    const board = await this.find({ boardId })
+    const board = await this.find({ boardId: input.id })
     if (board.admins.every((admin) => admin.id !== authorizedUser.id)) {
-      throw new ForbiddenException({ message: "You are not allowed to to this action." })
+      throw new ForbiddenException({ message: "Access denied." })
     }
-    if (Object.keys(requestBody).length === 0) return board
-    if (requestBody.name !== undefined) {
-      if (requestBody.name === "") {
-        throw new BadRequestException({ fields: { name: "Name cannot be empty." } })
+    if (input.name === undefined && input.subjectId === undefined) return board
+    if (input.name !== undefined) {
+      if (input.name === "") {
+        throw new BadRequestException({ fields: { name: ValidationError.REQUIRED } })
       }
-      board.name = requestBody.name
+      board.name = input.name
     }
-    if (requestBody.subjectId !== undefined) {
-      board.subject = await this.boardSubjectsService.find({ subjectId: requestBody.subjectId }).catch(() => {
+    if (input.subjectId !== undefined) {
+      board.subject = await this.boardSubjectsService.find({ subjectId: input.subjectId }).catch(() => {
         throw new BadRequestException({ fields: { subjectId: "Invalid board subject." } })
       })
     }
