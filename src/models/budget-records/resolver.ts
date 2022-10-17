@@ -1,11 +1,12 @@
 import { UseGuards } from "@nestjs/common"
-import { Args, Int, Query, Resolver } from "@nestjs/graphql"
+import { Args, Int, Mutation, Query, Resolver } from "@nestjs/graphql"
 
 import { AuthorizationGuard } from "#models/authorization/guard"
 import { UserEntity } from "#models/users/entities/user.entity"
 
 import { AuthorizedUser } from "#helpers/AuthorizedUser.decorator"
 
+import { CreateBudgetRecordInput } from "./dto/create-budget-record.input"
 import { SearchBudgetRecordsArgs } from "./dto/search-budget-records.args"
 import { BudgetRecordEntity } from "./entities/budget-record.entity"
 import { BudgetRecord } from "./models/budget-record.model"
@@ -34,6 +35,16 @@ export class BudgetRecordsResolver {
     authorizedUser: UserEntity
   ): Promise<BudgetRecordEntity> {
     return this.budgetRecordsService.find({ authorizedUser, recordId })
+  }
+
+  @Mutation((returns) => BudgetRecord, { name: "createBudgetRecord" })
+  create(
+    @Args("input")
+    input: CreateBudgetRecordInput,
+    @AuthorizedUser()
+    authorizedUser: UserEntity
+  ): Promise<BudgetRecordEntity> {
+    return this.budgetRecordsService.create({ authorizedUser, input })
   }
 
   // @Post()

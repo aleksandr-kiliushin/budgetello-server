@@ -5,7 +5,7 @@ import { Equal, In, Repository } from "typeorm"
 import { BudgetCategoriesService } from "#models/budget-categories/service"
 import { UserEntity } from "#models/users/entities/user.entity"
 
-import { CreateBudgetRecordDto } from "./dto/create-budget-record.dto"
+import { CreateBudgetRecordInput } from "./dto/create-budget-record.input"
 import { SearchBudgetRecordsArgs } from "./dto/search-budget-records.args"
 import { UpdateBudgetRecordDto } from "./dto/update-budget-record.dto"
 import { BudgetRecordEntity } from "./entities/budget-record.entity"
@@ -97,17 +97,17 @@ export class BudgetRecordsService {
 
   async create({
     authorizedUser,
-    requestBody,
+    input,
   }: {
     authorizedUser: UserEntity
-    requestBody: CreateBudgetRecordDto
+    input: CreateBudgetRecordInput
   }): Promise<BudgetRecordEntity> {
     const category = await this.budgetCategoriesService
-      .find({ authorizedUser, categoryId: requestBody.categoryId })
+      .find({ authorizedUser, categoryId: input.categoryId })
       .catch(() => {
-        throw new BadRequestException({ fields: { categoryId: "Invalid category." } })
+        throw new BadRequestException({ fields: { categoryId: "Invalid value." } })
       })
-    const record = this.budgetRecordsRepository.create(requestBody)
+    const record = this.budgetRecordsRepository.create(input)
     record.category = category
     return this.budgetRecordsRepository.save(record)
   }
@@ -141,7 +141,7 @@ export class BudgetRecordsService {
       record.category = await this.budgetCategoriesService
         .find({ authorizedUser, categoryId: requestBody.categoryId })
         .catch(() => {
-          throw new BadRequestException({ fields: { categoryId: "Invalid category." } })
+          throw new BadRequestException({ fields: { categoryId: "Invalid value." } })
         })
     }
     return this.budgetRecordsRepository.save(record)

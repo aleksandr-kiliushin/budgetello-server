@@ -29,7 +29,7 @@ describe("Budget record updating", () => {
     },
     {
       payload: { amount: 2000, categoryId: 666666, date: "2022-08-05" },
-      response: { fields: { categoryId: "Invalid category." } },
+      response: { fields: { categoryId: "Invalid value." } },
       status: 400,
     },
     {

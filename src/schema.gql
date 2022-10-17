@@ -79,6 +79,12 @@ input CreateBudgetCategoryInput {
   typeId: Int!
 }
 
+input CreateBudgetRecordInput {
+  amount: Float!
+  categoryId: Int!
+  date: String!
+}
+
 input CreateUserInput {
   password: String!
   username: String!
@@ -89,6 +95,7 @@ type Mutation {
   authorize(input: AuthorizeInput!): String!
   createBoard(input: CreateBoardInput!): Board!
   createBudgetCategory(input: CreateBudgetCategoryInput!): BudgetCategory!
+  createBudgetRecord(input: CreateBudgetRecordInput!): BudgetRecord!
   createUser(input: CreateUserInput!): User!
   deleteBoard(id: Int!): Board!
   deleteBudgetCategory(id: Int!): BudgetCategory!

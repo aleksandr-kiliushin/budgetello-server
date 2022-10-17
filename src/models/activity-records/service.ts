@@ -103,7 +103,7 @@ export class ActivityRecordsService {
     const category = await this.activityCategoriesService
       .find({ authorizedUser, categoryId: requestBody.categoryId })
       .catch(() => {
-        throw new BadRequestException({ fields: { categoryId: "Invalid category." } })
+        throw new BadRequestException({ fields: { categoryId: "Invalid value." } })
       })
     if (category.owner.id !== authorizedUser.id) {
       throw new ForbiddenException({ message: "Access denied." })
