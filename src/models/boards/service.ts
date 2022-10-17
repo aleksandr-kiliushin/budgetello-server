@@ -156,7 +156,7 @@ export class BoardsService {
   }): Promise<BoardEntity> {
     const board = await this.find({ boardId })
     if (board.admins.every((admin) => admin.id !== authorizedUser.id)) {
-      throw new ForbiddenException({ message: "You are not allowed to to this action." })
+      throw new ForbiddenException({ message: "Access denied." })
     }
     await this.boardsRepository.delete(boardId)
     return board

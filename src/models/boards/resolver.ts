@@ -56,6 +56,16 @@ export class BoardsResolver {
     return this.boardsService.update({ authorizedUser, input })
   }
 
+  @Mutation((returns) => Board, { name: "deleteBoard" })
+  delete(
+    @Args("id", { type: () => Int })
+    boardId: number,
+    @AuthorizedUser()
+    authorizedUser: UserEntity
+  ): Promise<BoardEntity> {
+    return this.boardsService.delete({ authorizedUser, boardId })
+  }
+
   // @Post(":boardId/add-member/:candidateForMembershipId")
   // addMember(
   //   @Param("boardId", ParseIntPipe)

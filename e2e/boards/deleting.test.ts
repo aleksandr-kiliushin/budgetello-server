@@ -1,27 +1,43 @@
 import { boards } from "#e2e/constants/boards"
 import { users } from "#e2e/constants/users"
+import { QueryFields } from "#e2e/helpers/QueryFields"
 import { authorize } from "#e2e/helpers/authorize"
-import { fetchApi } from "#e2e/helpers/fetchApi"
+import { fetchGqlApi } from "#e2e/helpers/fetchGqlApi"
+
+beforeEach(async () => {
+  await authorize(users.johnDoe.id)
+})
 
 describe("Board deleting", () => {
-  it("returns a correct response after deleting", async () => {
-    await authorize(users.jessicaStark.id)
-    const response = await fetchApi(`/api/boards/${boards.cleverBudgetiers.id}`, { method: "DELETE" })
-    expect(response.status).toEqual(403)
-    expect(await response.json()).toEqual({ message: "You are not allowed to to this action." })
+  it("restricts deleting others' boards", async () => {
+    const responseBody = await fetchGqlApi(`mutation DELETE_BOARD {
+      deleteBoard(id: ${boards.beautifulSportsmen.id}) {
+        ${QueryFields.board}
+      }
+    }`)
+    expect(responseBody.errors[0].extensions.exception.response).toEqual({ message: "Access denied." })
   })
 
-  it("returns a correct response after deleting", async () => {
-    await authorize(users.johnDoe.id)
-    const response = await fetchApi(`/api/boards/${boards.cleverBudgetiers.id}`, { method: "DELETE" })
-    expect(response.status).toEqual(200)
-    expect(await response.json()).toEqual(boards.cleverBudgetiers)
+  it("deleting returns a correct response", async () => {
+    const responseBody = await fetchGqlApi(`mutation DELETE_BOARD {
+      deleteBoard(id: ${boards.cleverBudgetiers.id}) {
+        ${QueryFields.board}
+      }
+    }`)
+    expect(responseBody.data).toEqual({ deleteBoard: boards.cleverBudgetiers })
   })
 
-  it("the deleted board is not presented in all categories list", async () => {
-    await authorize(users.johnDoe.id)
-    await fetchApi(`/api/boards/${boards.cleverBudgetiers.id}`, { method: "DELETE" })
-    const response = await fetchApi("/api/boards/search")
-    expect(await response.json()).toEqual([boards.megaEconomists, boards.beautifulSportsmen, boards.productivePeople])
+  it("the deleted board is not found", async () => {
+    await fetchGqlApi(`mutation DELETE_BOARD {
+      deleteBoard(id: ${boards.cleverBudgetiers.id}) {
+        ${QueryFields.board}
+      }
+    }`)
+    const responseBody = await fetchGqlApi(`{
+      board(id: ${boards.cleverBudgetiers.id}) {
+        ${QueryFields.board}
+      }
+    }`)
+    expect(responseBody.errors[0].extensions.exception.response).toEqual({ message: "Not found." })
   })
 })
