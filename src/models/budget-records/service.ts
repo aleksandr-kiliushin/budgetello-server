@@ -63,7 +63,7 @@ export class BudgetRecordsService {
       skip: args.skip === undefined ? 0 : args.skip,
       ...(args.take !== undefined && { take: args.take }),
       where: {
-        ...(args.amount !== undefined && { amount: Equal(args.amount) }), // TODO: Test it.
+        ...(args.amount !== undefined && { amount: Equal(args.amount) }),
         ...(args.dates !== undefined && { date: In(args.dates) }),
         ...(args.ids !== undefined && { id: In(args.ids) }),
         ...(args.isTrashed !== undefined && { isTrashed: args.isTrashed }),

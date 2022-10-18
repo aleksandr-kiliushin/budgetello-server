@@ -1,5 +1,4 @@
 // I have no idea how it works.
-// TODO: Make encrypting impossible.
 import { ServiceUnavailableException } from "@nestjs/common"
 import * as crypto from "node:crypto"
 

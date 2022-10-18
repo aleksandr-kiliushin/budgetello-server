@@ -1,5 +1,3 @@
-// TODO: Query all board fields for budget and activity categories in tests.
-
 export const pickFields = {
   user: "id, password, username",
   boardSubject: "id, name",
@@ -31,7 +29,7 @@ export const pickFields = {
   `,
   activityCategoryMeasurementType: "id, name",
   activityCategory: `
-    board { id, name }
+    board { id, name },
     id,
     name,
     measurementType { id, name },
@@ -47,7 +45,7 @@ export const pickFields = {
       name,
       owner { id, password, username },
       unit
-    }
+    },
     comment,
     date,
     id,

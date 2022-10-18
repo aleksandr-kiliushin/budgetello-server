@@ -1,4 +1,3 @@
-// TODO: Move to src/helpers/guards.
 import {
   CanActivate,
   ExecutionContext,
