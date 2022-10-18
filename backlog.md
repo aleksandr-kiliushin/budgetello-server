@@ -1,1 +1,0 @@
-- Get all `relations` in TypeORM queries. Allow clients to define queries that are needed.
