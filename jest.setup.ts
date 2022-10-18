@@ -1,3 +1,5 @@
+import { setAuthorizationToken } from "#e2e/helpers/authorization-token"
+
 const { execSync } = require("child_process")
 
 beforeEach(async () => {
@@ -7,8 +9,7 @@ beforeEach(async () => {
 })
 
 afterEach(() => {
-  // TODO: Do not use global object to store data. Instead, incapsulate data in a module.
-  globalThis.authorizationToken = ""
+  setAuthorizationToken("")
 })
 
 afterAll(() => {

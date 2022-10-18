@@ -1,4 +1,5 @@
 import { users } from "../constants/users"
+import { setAuthorizationToken } from "./authorization-token"
 import { fetchGqlApi } from "./fetchGqlApi"
 
 type ITestUser = typeof users[keyof typeof users]
@@ -27,5 +28,5 @@ export const authorize = async (testUserId: ITestUserId): Promise<void> => {
 Username: [${testUserCredentials.username}], password: [${testUserCredentials.password}].
 `)
   }
-  globalThis.authorizationToken = authorizationToken
+  setAuthorizationToken(authorizationToken)
 }

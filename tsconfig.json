@@ -32,6 +32,5 @@
     },
     "target": "es6"
   },
-  "files": ["declarations/tests.d.ts"],
   "include": ["src", "e2e", ".eslintrc.js", "jest.config.ts", "jest.setup.ts"]
 }
