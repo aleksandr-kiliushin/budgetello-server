@@ -60,8 +60,8 @@ export class BoardsService {
 
     return this.boardsRepository.find({
       order: {
-        id: "asc",
-        members: { id: "asc" },
+        id: "ASC",
+        members: { id: "ASC" },
       },
       relations: { admins: true, members: true, subject: true },
       where: {
@@ -75,8 +75,8 @@ export class BoardsService {
   async find({ boardId }: { boardId: BoardEntity["id"] }): Promise<BoardEntity> {
     const board = await this.boardsRepository.findOne({
       order: {
-        admins: { id: "asc" },
-        members: { id: "asc" },
+        admins: { id: "ASC" },
+        members: { id: "ASC" },
       },
       relations: { admins: true, members: true, subject: true },
       where: { id: boardId },

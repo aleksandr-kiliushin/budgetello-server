@@ -48,11 +48,11 @@ describe("Search budget records", () => {
   }>([
     {
       queryNameAndArgs: `budgetRecords`,
-      foundRecords: [budgetRecords["3rd"], budgetRecords["2nd"], budgetRecords["1st"]],
+      foundRecords: [budgetRecords["1st"], budgetRecords["2nd"], budgetRecords["3rd"]],
     },
     {
       queryNameAndArgs: `budgetRecords(boardsIds: [${boards.cleverBudgetiers.id}, 666666])`,
-      foundRecords: [budgetRecords["3rd"], budgetRecords["2nd"], budgetRecords["1st"]],
+      foundRecords: [budgetRecords["1st"], budgetRecords["2nd"], budgetRecords["3rd"]],
     },
     {
       queryNameAndArgs: `budgetRecords(boardsIds: [666666])`,
@@ -64,11 +64,11 @@ describe("Search budget records", () => {
     },
     {
       queryNameAndArgs: `budgetRecords(categoriesIds: [${budgetCategories.educationExpense.id}])`,
-      foundRecords: [budgetRecords["3rd"], budgetRecords["2nd"]],
+      foundRecords: [budgetRecords["2nd"], budgetRecords["3rd"]],
     },
     {
       queryNameAndArgs: `budgetRecords(dates: ["2022-08-01"])`,
-      foundRecords: [budgetRecords["3rd"], budgetRecords["2nd"], budgetRecords["1st"]],
+      foundRecords: [budgetRecords["1st"], budgetRecords["2nd"], budgetRecords["3rd"]],
     },
     {
       queryNameAndArgs: `budgetRecords(amount: ${budgetRecords["2nd"].amount})`,

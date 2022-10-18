@@ -51,8 +51,8 @@ export class BudgetRecordsService {
 
     return this.budgetRecordsRepository.find({
       order: {
-        id: args.orderingById ?? "desc",
-        date: args.orderingById ?? "desc",
+        id: args.orderingById ?? "ASC",
+        date: args.orderingById ?? "ASC",
       },
       relations: { category: { board: true, type: true } },
       skip: args.skip === undefined ? 0 : args.skip,
@@ -127,9 +127,6 @@ export class BudgetRecordsService {
       record.isTrashed = input.isTrashed
     }
     if (input.date !== undefined) {
-      if (!/\d\d\d\d-\d\d-\d\d/.test(input.date)) {
-        throw new BadRequestException({ fields: { date: "Should have format YYYY-MM-DD." } })
-      }
       record.date = input.date
     }
     if (input.categoryId !== undefined) {

@@ -51,8 +51,8 @@ export class ActivityRecordsService {
 
     return this.activityRecordsRepository.find({
       order: {
-        id: args.orderingById ?? "desc",
-        date: args.orderingById ?? "desc",
+        id: args.orderingById ?? "ASC",
+        date: args.orderingById ?? "ASC",
       },
       relations: { category: { board: true, owner: true, measurementType: true } },
       skip: args.skip === undefined ? 0 : args.skip,
