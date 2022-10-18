@@ -1,8 +1,8 @@
 import { budgetCategories } from "#e2e/constants/budget"
 import { users } from "#e2e/constants/users"
-import { QueryFields } from "#e2e/helpers/QueryFields"
 import { authorize } from "#e2e/helpers/authorize"
 import { fetchGqlApi } from "#e2e/helpers/fetchGqlApi"
+import { pickFields } from "#e2e/helpers/pickFields"
 
 beforeEach(async () => {
   await authorize(users.johnDoe.id)
@@ -43,7 +43,7 @@ describe("Budget record creating", () => {
   ])("$queryNameAndInput", async ({ queryNameAndInput, createdRecord, responseError }) => {
     const responseBody = await fetchGqlApi(`mutation CREATE_BUDGET_RECORD {
       ${queryNameAndInput} {
-        ${QueryFields.budgetRecord}
+        ${pickFields.budgetRecord}
       }
     }`)
     expect(responseBody.data?.createBudgetRecord).toEqual(createdRecord)
@@ -53,12 +53,12 @@ describe("Budget record creating", () => {
   it("created record fetched successfully", async () => {
     await fetchGqlApi(`mutation CREATE_BUDGET_RECORD {
       createBudgetRecord(input: { amount: 200, categoryId: ${budgetCategories.clothesExpense.id}, date: "2022-08-05" }) {
-        ${QueryFields.budgetRecord}
+        ${pickFields.budgetRecord}
       }
     }`)
     const responseBody = await fetchGqlApi(`{
       budgetRecord(id: 7) {
-        ${QueryFields.budgetRecord}
+        ${pickFields.budgetRecord}
       }
     }`)
     expect(responseBody.data).toEqual({

@@ -1,8 +1,8 @@
 import { budgetCategories, budgetRecords } from "#e2e/constants/budget"
 import { users } from "#e2e/constants/users"
-import { QueryFields } from "#e2e/helpers/QueryFields"
 import { authorize } from "#e2e/helpers/authorize"
 import { fetchGqlApi } from "#e2e/helpers/fetchGqlApi"
+import { pickFields } from "#e2e/helpers/pickFields"
 
 beforeEach(async () => {
   await authorize(users.johnDoe.id)
@@ -53,7 +53,7 @@ describe("Budget record updating", () => {
   ])("$queryNameAndInput", async ({ queryNameAndInput, updatedRecord, responseError }) => {
     const responseBody = await fetchGqlApi(`mutation UPDATE_BUDGET_RECORD {
       ${queryNameAndInput} {
-        ${QueryFields.budgetRecord}
+        ${pickFields.budgetRecord}
       }
     }`)
     expect(responseBody.data?.updateBudgetRecord).toEqual(updatedRecord)

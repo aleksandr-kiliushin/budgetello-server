@@ -1,9 +1,9 @@
 import { boards } from "#e2e/constants/boards"
 import { budgetCategories } from "#e2e/constants/budget"
 import { users } from "#e2e/constants/users"
-import { QueryFields } from "#e2e/helpers/QueryFields"
 import { authorize } from "#e2e/helpers/authorize"
 import { fetchGqlApi } from "#e2e/helpers/fetchGqlApi"
+import { pickFields } from "#e2e/helpers/pickFields"
 
 beforeEach(async () => {
   await authorize(users.johnDoe.id)
@@ -33,7 +33,7 @@ describe("Find budget category", () => {
   ])("$queryNameAndArgs", async ({ queryNameAndArgs, foundCategory, responseError }) => {
     const responseBody = await fetchGqlApi(`{
       ${queryNameAndArgs} {
-        ${QueryFields.budgetCategory}
+        ${pickFields.budgetCategory}
       }
     }`)
     expect(responseBody.data?.budgetCategory).toEqual(foundCategory)
@@ -69,7 +69,7 @@ describe("Search budget categories", () => {
   ])("$queryNameAndArgs", async ({ queryNameAndArgs, foundCategories }) => {
     const responseBody = await fetchGqlApi(`{
       ${queryNameAndArgs} {
-        ${QueryFields.budgetCategory}
+        ${pickFields.budgetCategory}
       }
     }`)
     expect(responseBody.data?.budgetCategories).toEqual(foundCategories)

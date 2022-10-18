@@ -1,9 +1,9 @@
 import { boards } from "#e2e/constants/boards"
 import { budgetCategories, budgetCategoryTypes } from "#e2e/constants/budget"
 import { users } from "#e2e/constants/users"
-import { QueryFields } from "#e2e/helpers/QueryFields"
 import { authorize } from "#e2e/helpers/authorize"
 import { fetchGqlApi } from "#e2e/helpers/fetchGqlApi"
+import { pickFields } from "#e2e/helpers/pickFields"
 
 beforeEach(async () => {
   await authorize(users.johnDoe.id)
@@ -69,7 +69,7 @@ describe("Budget category updating", () => {
   ])("$queryNameAndInput", async ({ queryNameAndInput, updatedCategory, responseError }) => {
     const responseBody = await fetchGqlApi(`mutation UPDATE_BUDGET_CATEGORY {
       ${queryNameAndInput} {
-        ${QueryFields.budgetCategory}
+        ${pickFields.budgetCategory}
       }
     }`)
     expect(responseBody.data?.updateBudgetCategory).toEqual(updatedCategory)
@@ -79,12 +79,12 @@ describe("Budget category updating", () => {
   it("updated category can be found by ID", async () => {
     await fetchGqlApi(`mutation UPDATE_BUDGET_CATEGORY {
       updateBudgetCategory(input: { id: ${budgetCategories.educationExpense.id}, name: "teaching", typeId: ${budgetCategoryTypes.income.id} }) {
-        ${QueryFields.budgetCategory}
+        ${pickFields.budgetCategory}
       }
     }`)
     const responseBody = await fetchGqlApi(`{
       budgetCategory(id: ${budgetCategories.educationExpense.id}) {
-        ${QueryFields.budgetCategory}
+        ${pickFields.budgetCategory}
       }
     }`)
     expect(responseBody.data).toEqual({

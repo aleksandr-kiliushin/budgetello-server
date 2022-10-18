@@ -1,8 +1,8 @@
 import { boardSubjects, boards } from "#e2e/constants/boards"
 import { users } from "#e2e/constants/users"
-import { QueryFields } from "#e2e/helpers/QueryFields"
 import { ITestUserId, authorize } from "#e2e/helpers/authorize"
 import { fetchGqlApi } from "#e2e/helpers/fetchGqlApi"
+import { pickFields } from "#e2e/helpers/pickFields"
 
 describe("Board updating", () => {
   test.each<{
@@ -62,7 +62,7 @@ describe("Board updating", () => {
     await authorize(authorizedUserId)
     const responseBody = await fetchGqlApi(`mutation UPDATE_BOARD {
       ${queryNameAndInput} {
-        ${QueryFields.board}
+        ${pickFields.board}
       }
     }`)
     expect(responseBody.data?.updateBoard).toEqual(updatedBoard)
@@ -73,12 +73,12 @@ describe("Board updating", () => {
     await authorize(users.johnDoe.id)
     await fetchGqlApi(`mutation UPDATE_BOARD {
       updateBoard(input: { id: ${boards.cleverBudgetiers.id}, name: "champions", subjectId: ${boardSubjects.activities.id} }) {
-        ${QueryFields.board}
+        ${pickFields.board}
       }
     }`)
     const responseBody = await fetchGqlApi(`{
       board(id: ${boards.cleverBudgetiers.id}) {
-        ${QueryFields.board}
+        ${pickFields.board}
       }
     }`)
     expect(responseBody.data).toEqual({

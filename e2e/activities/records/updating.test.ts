@@ -1,8 +1,8 @@
 import { activityCategories, activityRecords } from "#e2e/constants/activities"
 import { users } from "#e2e/constants/users"
-import { QueryFields } from "#e2e/helpers/QueryFields"
 import { authorize } from "#e2e/helpers/authorize"
 import { fetchGqlApi } from "#e2e/helpers/fetchGqlApi"
+import { pickFields } from "#e2e/helpers/pickFields"
 
 beforeEach(async () => {
   await authorize(users.johnDoe.id)
@@ -59,7 +59,7 @@ describe("Activity record updating", () => {
   ])("$queryNameAndInput", async ({ queryNameAndInput, updatedRecord, responseError }) => {
     const responseBody = await fetchGqlApi(`mutation UPDATE_ACTIVITY_RECORD {
       ${queryNameAndInput} {
-        ${QueryFields.activityRecord}
+        ${pickFields.activityRecord}
       }
     }`)
     expect(responseBody.data?.updateActivityRecord).toEqual(updatedRecord)
@@ -69,12 +69,12 @@ describe("Activity record updating", () => {
   it("updated record can be found by ID", async () => {
     await fetchGqlApi(`mutation UPDATE_ACTIVITY_RECORD {
       updateActivityRecord(input: { id: ${activityRecords["5th"].id}, comment: "read about CI", date: "2030-01-02", quantitativeValue: 6 }) {
-        ${QueryFields.activityRecord}
+        ${pickFields.activityRecord}
       }
     }`)
     const responseBody = await fetchGqlApi(`{
       activityRecord(id: ${activityRecords["5th"].id}) {
-        ${QueryFields.activityRecord}
+        ${pickFields.activityRecord}
       }
     }`)
     expect(responseBody.data).toEqual({

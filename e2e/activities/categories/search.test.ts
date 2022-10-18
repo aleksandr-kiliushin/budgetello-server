@@ -1,9 +1,9 @@
 import { activityCategories } from "#e2e/constants/activities"
 import { boards } from "#e2e/constants/boards"
 import { users } from "#e2e/constants/users"
-import { QueryFields } from "#e2e/helpers/QueryFields"
 import { authorize } from "#e2e/helpers/authorize"
 import { fetchGqlApi } from "#e2e/helpers/fetchGqlApi"
+import { pickFields } from "#e2e/helpers/pickFields"
 
 describe("Find an activity category", () => {
   test.each<{
@@ -30,7 +30,7 @@ describe("Find an activity category", () => {
     await authorize(users.johnDoe.id)
     const responseBody = await fetchGqlApi(`{
       ${queryNameAndArgs} {
-        ${QueryFields.activityCategory}
+        ${pickFields.activityCategory}
       }
     }`)
     expect(responseBody.data?.activityCategory).toEqual(foundCategory)
@@ -98,7 +98,7 @@ describe("Search for activity categories", () => {
     await authorize(users.jessicaStark.id)
     const responseBody = await fetchGqlApi(`{
       ${queryNameAndArgs} {
-        ${QueryFields.activityCategory}
+        ${pickFields.activityCategory}
       }
     }`)
     expect(responseBody.data.activityCategories).toEqual(foundCategories)

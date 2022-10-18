@@ -1,9 +1,9 @@
 import { activityCategoryMeasurementTypes } from "#e2e/constants/activities"
 import { boards } from "#e2e/constants/boards"
 import { users } from "#e2e/constants/users"
-import { QueryFields } from "#e2e/helpers/QueryFields"
 import { ITestUserId, authorize } from "#e2e/helpers/authorize"
 import { fetchGqlApi } from "#e2e/helpers/fetchGqlApi"
+import { pickFields } from "#e2e/helpers/pickFields"
 
 describe("Activity category creating", () => {
   test.each<{
@@ -53,7 +53,7 @@ describe("Activity category creating", () => {
     await authorize(authorizedUserId)
     const responseBody = await fetchGqlApi(`mutation CREATE_ACTIVITY_CATEGORY {
       ${queryNameAndInput} {
-        ${QueryFields.activityCategory}
+        ${pickFields.activityCategory}
       }
     }`)
     expect(responseBody.data?.createActivityCategory).toEqual(createdCategory)
@@ -64,12 +64,12 @@ describe("Activity category creating", () => {
     await authorize(users.jessicaStark.id)
     await fetchGqlApi(`mutation CREATE_ACTIVITY_CATEGORY {
       createActivityCategory(input: { boardId: ${boards.productivePeople.id}, measurementTypeId: ${activityCategoryMeasurementTypes.quantitative.id}, name: "reading", unit: "page" }) {
-        ${QueryFields.activityCategory}
+        ${pickFields.activityCategory}
       }
     }`)
     const responseBody = await fetchGqlApi(`{
       activityCategory(id: 7) {
-        ${QueryFields.activityCategory}
+        ${pickFields.activityCategory}
       }
     }`)
     expect(responseBody.data).toEqual({

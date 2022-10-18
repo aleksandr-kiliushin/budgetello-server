@@ -1,9 +1,9 @@
 import { boards } from "#e2e/constants/boards"
 import { budgetCategories, budgetRecords } from "#e2e/constants/budget"
 import { users } from "#e2e/constants/users"
-import { QueryFields } from "#e2e/helpers/QueryFields"
 import { authorize } from "#e2e/helpers/authorize"
 import { fetchGqlApi } from "#e2e/helpers/fetchGqlApi"
+import { pickFields } from "#e2e/helpers/pickFields"
 
 beforeEach(async () => {
   await authorize(users.johnDoe.id)
@@ -33,7 +33,7 @@ describe("Find budget record", () => {
   ])("$queryNameAndArgs", async ({ queryNameAndArgs, foundRecord, responseError }) => {
     const responseBody = await fetchGqlApi(`{
       ${queryNameAndArgs} {
-        ${QueryFields.budgetRecord}
+        ${pickFields.budgetRecord}
       }
     }`)
     expect(responseBody.data?.budgetRecord).toEqual(foundRecord)
@@ -81,7 +81,7 @@ describe("Search budget records", () => {
   ])("$queryNameAndArgs", async ({ queryNameAndArgs, foundRecords }) => {
     const responseBody = await fetchGqlApi(`{
       ${queryNameAndArgs} {
-        ${QueryFields.budgetRecord}
+        ${pickFields.budgetRecord}
       }
     }`)
     expect(responseBody.data.budgetRecords).toEqual(foundRecords)

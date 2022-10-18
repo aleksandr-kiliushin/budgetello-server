@@ -1,9 +1,9 @@
 import { activityCategories, activityCategoryMeasurementTypes } from "#e2e/constants/activities"
 import { boards } from "#e2e/constants/boards"
 import { users } from "#e2e/constants/users"
-import { QueryFields } from "#e2e/helpers/QueryFields"
 import { ITestUserId, authorize } from "#e2e/helpers/authorize"
 import { fetchGqlApi } from "#e2e/helpers/fetchGqlApi"
+import { pickFields } from "#e2e/helpers/pickFields"
 
 describe("Activity category updating", () => {
   test.each<{
@@ -92,7 +92,7 @@ describe("Activity category updating", () => {
     await authorize(authorizedUserId)
     const responseBody = await fetchGqlApi(`mutation UPDATE_ACTIVITY_CATEGORY {
       ${queryNameAndInput} {
-        ${QueryFields.activityCategory}
+        ${pickFields.activityCategory}
       }
     }`)
     expect(responseBody.data?.updateActivityCategory).toEqual(updatedCategory)

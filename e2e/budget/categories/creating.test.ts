@@ -1,9 +1,9 @@
 import { boards } from "#e2e/constants/boards"
 import { budgetCategoryTypes } from "#e2e/constants/budget"
 import { users } from "#e2e/constants/users"
-import { QueryFields } from "#e2e/helpers/QueryFields"
 import { authorize } from "#e2e/helpers/authorize"
 import { fetchGqlApi } from "#e2e/helpers/fetchGqlApi"
+import { pickFields } from "#e2e/helpers/pickFields"
 
 beforeEach(async () => {
   await authorize(users.johnDoe.id)
@@ -44,7 +44,7 @@ describe("Budget category creating", () => {
   ])("$queryNameAndInput", async ({ queryNameAndInput, createdCategory, responseError }) => {
     const responseBody = await fetchGqlApi(`mutation CREATE_BUDGET_CATEGORY {
       ${queryNameAndInput} {
-        ${QueryFields.budgetCategory}
+        ${pickFields.budgetCategory}
       }
     }`)
     expect(responseBody.data?.createBudgetCategory).toEqual(createdCategory)
@@ -54,12 +54,12 @@ describe("Budget category creating", () => {
   it("created category found successfully", async () => {
     await fetchGqlApi(`mutation CREATE_BUDGET_CATEGORY {
       createBudgetCategory(input: { boardId: ${boards.cleverBudgetiers.id}, name: "food", typeId: ${budgetCategoryTypes.expense.id} }) {
-        ${QueryFields.budgetCategory}
+        ${pickFields.budgetCategory}
       }
     }`)
     const responseBody = await fetchGqlApi(`{
       budgetCategory(id: 6) {
-        ${QueryFields.budgetCategory}
+        ${pickFields.budgetCategory}
       }
     }`)
     expect(responseBody.data).toEqual({

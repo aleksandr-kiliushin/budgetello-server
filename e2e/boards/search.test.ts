@@ -1,8 +1,8 @@
 import { boardSubjects, boards } from "#e2e/constants/boards"
 import { users } from "#e2e/constants/users"
-import { QueryFields } from "#e2e/helpers/QueryFields"
 import { ITestUserId, authorize } from "#e2e/helpers/authorize"
 import { fetchGqlApi } from "#e2e/helpers/fetchGqlApi"
+import { pickFields } from "#e2e/helpers/pickFields"
 
 describe("Find a board", () => {
   test.each<{
@@ -24,7 +24,7 @@ describe("Find a board", () => {
     await authorize(users.johnDoe.id)
     const responseBody = await fetchGqlApi(`{
       ${queryNameAndArgs} {
-        ${QueryFields.board}
+        ${pickFields.board}
       }
     }`)
     expect(responseBody.data?.board).toEqual(foundBoard)
@@ -92,7 +92,7 @@ describe("Search boards", () => {
     await authorize(authorizedUserId)
     const responseBody = await fetchGqlApi(`{
       ${queryNameAndArgs} {
-        ${QueryFields.board}
+        ${pickFields.board}
       }
     }`)
     expect(responseBody.data.boards).toEqual(foundBoards)

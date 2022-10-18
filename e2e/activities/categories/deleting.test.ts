@@ -1,15 +1,15 @@
 import { activityCategories } from "#e2e/constants/activities"
 import { users } from "#e2e/constants/users"
-import { QueryFields } from "#e2e/helpers/QueryFields"
 import { authorize } from "#e2e/helpers/authorize"
 import { fetchGqlApi } from "#e2e/helpers/fetchGqlApi"
+import { pickFields } from "#e2e/helpers/pickFields"
 
 describe("Activity category deleting", () => {
   it("returns a correct response after deleting", async () => {
     await authorize(users.johnDoe.id)
     const responseBody = await fetchGqlApi(`mutation DELETE_ACTIVITY_CATEGORY {
       deleteActivityCategory(id: ${activityCategories.reading.id}) {
-        ${QueryFields.activityCategory}
+        ${pickFields.activityCategory}
       }
     }`)
     expect(responseBody.data).toEqual({ deleteActivityCategory: activityCategories.reading })
@@ -19,7 +19,7 @@ describe("Activity category deleting", () => {
     await authorize(users.johnDoe.id)
     const responseBody = await fetchGqlApi(`mutation DELETE_ACTIVITY_CATEGORY {
       deleteActivityCategory(id: ${activityCategories.running.id}) {
-        ${QueryFields.activityCategory}
+        ${pickFields.activityCategory}
       }
     }`)
     expect(responseBody.errors?.[0]?.extensions?.exception?.response).toEqual({ message: "Access denied." })
@@ -29,7 +29,7 @@ describe("Activity category deleting", () => {
     await authorize(users.jessicaStark.id)
     const responseBody = await fetchGqlApi(`mutation DELETE_ACTIVITY_CATEGORY {
       deleteActivityCategory(id: ${activityCategories.reading.id}) {
-        ${QueryFields.activityCategory}
+        ${pickFields.activityCategory}
       }
     }`)
     expect(responseBody.errors?.[0]?.extensions?.exception?.response).toEqual({ message: "Access denied." })
@@ -39,12 +39,12 @@ describe("Activity category deleting", () => {
     await authorize(users.johnDoe.id)
     await fetchGqlApi(`mutation DELETE_ACTIVITY_CATEGORY {
       deleteActivityCategory(id: ${activityCategories.reading.id}) {
-        ${QueryFields.activityCategory}
+        ${pickFields.activityCategory}
       }
     }`)
     const responseBody = await fetchGqlApi(`{
       activityCategory(id: ${activityCategories.reading.id}) {
-        ${QueryFields.activityCategory}
+        ${pickFields.activityCategory}
       }
     }`)
     expect(responseBody.errors?.[0]?.extensions?.exception?.response).toEqual({ message: "Not found." })

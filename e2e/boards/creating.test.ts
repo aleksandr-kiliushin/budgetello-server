@@ -1,8 +1,8 @@
 import { boardSubjects, boards } from "#e2e/constants/boards"
 import { users } from "#e2e/constants/users"
-import { QueryFields } from "#e2e/helpers/QueryFields"
 import { authorize } from "#e2e/helpers/authorize"
 import { fetchGqlApi } from "#e2e/helpers/fetchGqlApi"
+import { pickFields } from "#e2e/helpers/pickFields"
 
 beforeEach(async () => {
   await authorize(users.johnDoe.id)
@@ -43,7 +43,7 @@ describe("Board creating", () => {
   ])("$queryNameAndInput", async ({ queryNameAndInput, createdBoard, responseError }) => {
     const responseBody = await fetchGqlApi(`mutation CREATE_BOARD {
       ${queryNameAndInput} {
-        ${QueryFields.board}
+        ${pickFields.board}
       }
     }`)
     expect(responseBody.data?.createBoard).toEqual(createdBoard)
@@ -53,12 +53,12 @@ describe("Board creating", () => {
   it("created board is found successfully", async () => {
     await fetchGqlApi(`mutation CREATE_BOARD {
       createBoard(input: { name: "champions", subjectId: ${boardSubjects.activities.id} }) {
-        ${QueryFields.board}
+        ${pickFields.board}
       }
     }`)
     const fetchCreatedBoardResponseBody = await fetchGqlApi(`{
       board(id: 5) {
-        ${QueryFields.board}
+        ${pickFields.board}
       }
     }`)
     expect(fetchCreatedBoardResponseBody.data).toEqual({

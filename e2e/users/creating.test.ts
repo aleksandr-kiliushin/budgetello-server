@@ -1,7 +1,7 @@
 import { users } from "#e2e/constants/users"
-import { QueryFields } from "#e2e/helpers/QueryFields"
 import { authorize } from "#e2e/helpers/authorize"
 import { fetchGqlApi } from "#e2e/helpers/fetchGqlApi"
+import { pickFields } from "#e2e/helpers/pickFields"
 
 describe("User creating process", () => {
   it("can create and get correct data response after creating", async () => {
@@ -9,7 +9,7 @@ describe("User creating process", () => {
       body: JSON.stringify({
         query: `mutation CREATE_USER {
           createUser(input: { username: "andrew-smith", password: "andrew-smith-password" }) {
-            ${QueryFields.user}
+            ${pickFields.user}
           }
         }`,
       }),
@@ -31,7 +31,7 @@ describe("User creating process", () => {
       body: JSON.stringify({
         query: `mutation CREATE_USER {
           createUser(input: { username: "", password: "" }) {
-            ${QueryFields.user}
+            ${pickFields.user}
           }
         }`,
       }),
@@ -54,7 +54,7 @@ describe("Created user data and operations", () => {
       body: JSON.stringify({
         query: `mutation CREATE_USER {
           createUser(input: { username: "andrew-smith", password: "andrew-smith-password" }) {
-            ${QueryFields.user}
+            ${pickFields.user}
           }
         }`,
       }),
@@ -79,7 +79,7 @@ describe("Created user data and operations", () => {
       body: JSON.stringify({
         query: `{
           user(id: 0) {
-            ${QueryFields.user}
+            ${pickFields.user}
           }
         }`,
       }),
@@ -100,7 +100,7 @@ describe("Created user data and operations", () => {
     await authorize(users.johnDoe.id)
     const responseBody = await fetchGqlApi(`{
       user(id: 3) {
-        ${QueryFields.user}
+        ${pickFields.user}
       }
     }`)
     expect(responseBody.data).toEqual({

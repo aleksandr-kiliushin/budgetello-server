@@ -1,9 +1,9 @@
 import { activityRecords } from "#e2e/constants/activities"
 import { boards } from "#e2e/constants/boards"
 import { users } from "#e2e/constants/users"
-import { QueryFields } from "#e2e/helpers/QueryFields"
 import { ITestUserId, authorize } from "#e2e/helpers/authorize"
 import { fetchGqlApi } from "#e2e/helpers/fetchGqlApi"
+import { pickFields } from "#e2e/helpers/pickFields"
 
 describe("Find an activity record", () => {
   test.each<{
@@ -30,7 +30,7 @@ describe("Find an activity record", () => {
     await authorize(users.johnDoe.id)
     const responseBody = await fetchGqlApi(`{
       ${queryNameAndArgs} {
-        ${QueryFields.activityRecord}
+        ${pickFields.activityRecord}
       }
     }`)
     expect(responseBody.data?.activityRecord).toEqual(foundRecord)
@@ -99,7 +99,7 @@ describe("Search for activity records", () => {
     await authorize(authorizedUserId)
     const responseBody = await fetchGqlApi(`{
       ${queryNameAndArgs} {
-        ${QueryFields.activityRecord}
+        ${pickFields.activityRecord}
       }
     }`)
     expect(responseBody.data?.activityRecords).toEqual(foundRecords)
