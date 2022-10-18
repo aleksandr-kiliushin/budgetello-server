@@ -1,10 +1,10 @@
 import { UseGuards } from "@nestjs/common"
 import { Args, Int, Mutation, Query, Resolver } from "@nestjs/graphql"
 
-import { AuthorizationGuard } from "#models/authorization/guard"
 import { UserEntity } from "#models/users/entities/user.entity"
 
-import { AuthorizedUser } from "#helpers/AuthorizedUser.decorator"
+import { AuthorizationGuard } from "#helpers/authorization.guard"
+import { AuthorizedUser } from "#helpers/authorized-user.decorator"
 
 import { CreateBudgetCategoryInput } from "./dto/create-budget-category.input"
 import { SearchBudgetCategoriesArgs } from "./dto/search-budget-categories.args"

@@ -1,9 +1,8 @@
 import { BadRequestException, UseGuards } from "@nestjs/common"
 import { Args, Int, Mutation, Query, Resolver } from "@nestjs/graphql"
 
-import { AuthorizationGuard } from "#models/authorization/guard"
-
-import { AuthorizedUser } from "#helpers/AuthorizedUser.decorator"
+import { AuthorizationGuard } from "#helpers/authorization.guard"
+import { AuthorizedUser } from "#helpers/authorized-user.decorator"
 import { ValidationPipe } from "#helpers/validation.pipe"
 
 import { CreateUserInput } from "./dto/create-user.input"

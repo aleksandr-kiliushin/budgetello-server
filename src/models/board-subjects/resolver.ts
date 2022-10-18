@@ -1,10 +1,11 @@
 import { UseGuards } from "@nestjs/common"
 import { Args, Int, Query, Resolver } from "@nestjs/graphql"
 
-import { AuthorizationGuard } from "#models/authorization/guard"
+import { AuthorizationGuard } from "#helpers/authorization.guard"
 
 import { IBudgetCategoryType } from "#interfaces/budget"
 
+import { BoardSubjectEntity } from "./entities/board-subject.entity"
 import { BoardSubject } from "./models/board-subject.model"
 import { BoardSubjectsService } from "./service"
 
@@ -14,7 +15,7 @@ export class BoardSubjectsResolver {
   constructor(private boardSubjectsService: BoardSubjectsService) {}
 
   @Query((returns) => [BoardSubject], { name: "boardSubjects" })
-  getAll() {
+  getAll(): Promise<BoardSubjectEntity[]> {
     return this.boardSubjectsService.getAll()
   }
 
@@ -22,7 +23,7 @@ export class BoardSubjectsResolver {
   find(
     @Args("id", { type: () => Int })
     id: IBudgetCategoryType["id"]
-  ) {
+  ): Promise<BoardSubjectEntity> {
     return this.boardSubjectsService.find({ subjectId: id })
   }
 }

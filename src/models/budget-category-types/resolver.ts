@@ -1,10 +1,11 @@
 import { UseGuards } from "@nestjs/common"
 import { Args, Int, Query, Resolver } from "@nestjs/graphql"
 
-import { AuthorizationGuard } from "#models/authorization/guard"
+import { AuthorizationGuard } from "#helpers/authorization.guard"
 
 import { IBudgetCategoryType } from "#interfaces/budget"
 
+import { BudgetCategoryTypeEntity } from "./entities/budget-category-type.entity"
 import { BudgetCategoryType } from "./models/budget-category-type.model"
 import { BudgetCategoryTypesService } from "./service"
 
@@ -14,7 +15,7 @@ export class BudgetCategoryTypesResolver {
   constructor(private budgetCategoryTypesService: BudgetCategoryTypesService) {}
 
   @Query((returns) => [BudgetCategoryType], { name: "budgetCategoryTypes" })
-  getAll() {
+  getAll(): Promise<BudgetCategoryTypeEntity[]> {
     return this.budgetCategoryTypesService.getAll()
   }
 
@@ -22,7 +23,7 @@ export class BudgetCategoryTypesResolver {
   find(
     @Args("id", { type: () => Int })
     id: IBudgetCategoryType["id"]
-  ) {
+  ): Promise<BudgetCategoryTypeEntity> {
     return this.budgetCategoryTypesService.find({ typeId: id })
   }
 }

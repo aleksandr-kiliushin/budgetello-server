@@ -1,7 +1,7 @@
 import { UseGuards } from "@nestjs/common"
 import { Args, Int, Query, Resolver } from "@nestjs/graphql"
 
-import { AuthorizationGuard } from "#models/authorization/guard"
+import { AuthorizationGuard } from "#helpers/authorization.guard"
 
 import { ActivityCategoryMeasurementTypeEntity } from "./entities/activity-category-measurement-type.entity"
 import { ActivityCategoryMeasurementType } from "./models/activity-category-measurement-type.model"

@@ -1,5 +1,2 @@
-- Add return type for all resolver methods. Select IUser VS UserEntity VS User.
 - Get all `relations` in TypeORM queries. Allow clients to define queries that are needed.
 - Sort items by ASC by default.
-- Move guard to helpers
-- Remove ParsePipes
