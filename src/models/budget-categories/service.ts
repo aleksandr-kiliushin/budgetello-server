@@ -57,7 +57,10 @@ export class BudgetCategoriesService {
     categoryId: BudgetCategoryEntity["id"]
   }): Promise<BudgetCategoryEntity> {
     const category = await this.budgetCategoriesRepository.findOne({
-      relations: { board: { admins: true, members: true, subject: true }, type: true },
+      relations: {
+        board: { admins: true, members: true, subject: true },
+        type: true,
+      },
       where: { id: categoryId },
     })
     if (category === null) throw new NotFoundException({ message: "Not found." })

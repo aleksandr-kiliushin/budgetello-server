@@ -54,7 +54,12 @@ export class BudgetRecordsService {
         id: args.orderingById ?? "ASC",
         date: args.orderingById ?? "ASC",
       },
-      relations: { category: { board: true, type: true } },
+      relations: {
+        category: {
+          board: { admins: true, members: true, subject: true },
+          type: true,
+        },
+      },
       skip: args.skip === undefined ? 0 : args.skip,
       ...(args.take !== undefined && { take: args.take }),
       where: {
