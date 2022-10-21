@@ -22,9 +22,7 @@ import { ormConfig } from "./config/ormConfig"
     TypeOrmModule.forRoot(ormConfig),
     GraphQLModule.forRoot<ApolloDriverConfig>({
       autoSchemaFile: join(process.cwd(), "src/schema.gql"),
-      cache: "bounded",
       driver: ApolloDriver,
-      persistedQueries: false,
       sortSchema: true,
     }),
     ActivityCategoriesModule,
