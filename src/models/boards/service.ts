@@ -42,7 +42,7 @@ export class BoardsService {
         return !authorizedUserAdministratedBoardsIds.includes(boardId)
       })
     }
-    const authorizedUserParticipatedBoardsIds = authorizedUser.boards.map((board) => board.id)
+    const authorizedUserParticipatedBoardsIds = authorizedUser.participatedBoards.map((board) => board.id)
     if (args.iAmMemberOf === true) {
       boardIdsToSearchBy = boardIdsToSearchBy.filter((boardId) => {
         return authorizedUserParticipatedBoardsIds.includes(boardId)
@@ -182,9 +182,9 @@ export class BoardsService {
     }
     const candidateToMembers = await this.usersService.find({
       userId: input.userId,
-      relations: { boards: true },
+      relations: { participatedBoards: true },
     })
-    if (candidateToMembers.boards.some((board) => board.id === input.boardId)) {
+    if (candidateToMembers.participatedBoards.some((board) => board.id === input.boardId)) {
       throw new BadRequestException({ message: "The user is already a member of the board." })
     }
     const board = await this.find({ boardId: input.boardId })
@@ -206,9 +206,9 @@ export class BoardsService {
     const board = await this.find({ boardId: input.boardId })
     const candidateToBeRemoved = await this.usersService.find({
       userId: input.memberId,
-      relations: { boards: true },
+      relations: { participatedBoards: true },
     })
-    if (candidateToBeRemoved.boards.every((board) => board.id !== input.boardId)) {
+    if (candidateToBeRemoved.participatedBoards.every((board) => board.id !== input.boardId)) {
       throw new BadRequestException({ message: "The user is not a member of the board." })
     }
     board.members = board.members.filter((member) => member.id !== input.memberId)

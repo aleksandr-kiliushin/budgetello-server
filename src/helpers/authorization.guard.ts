@@ -33,7 +33,7 @@ export class AuthorizationGuard implements CanActivate {
         userId: decodingResult.id,
         relations: {
           administratedBoards: { admins: true, members: true, subject: true },
-          boards: { admins: true, members: true, subject: true },
+          participatedBoards: { admins: true, members: true, subject: true },
         },
       })
     } catch {

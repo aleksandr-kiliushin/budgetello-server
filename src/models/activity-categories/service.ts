@@ -30,7 +30,7 @@ export class ActivityCategoriesService {
     const accessibleBoardsIds = [
       ...new Set([
         ...authorizedUser.administratedBoards.map((board) => board.id),
-        ...authorizedUser.boards.map((board) => board.id),
+        ...authorizedUser.participatedBoards.map((board) => board.id),
       ]),
     ]
     const boardsIdsToSearchWith =
@@ -65,7 +65,9 @@ export class ActivityCategoriesService {
     const isAuthorizedUserBoardAdmin = authorizedUser.administratedBoards.some((board) => {
       return board.id === category.board.id
     })
-    const isAuthorizedUserBoardMember = authorizedUser.boards.some((board) => board.id === category.board.id)
+    const isAuthorizedUserBoardMember = authorizedUser.participatedBoards.some((board) => {
+      return board.id === category.board.id
+    })
     const canAuthorizedUserFetchThisCategory = isAuthorizedUserBoardAdmin || isAuthorizedUserBoardMember
     if (!canAuthorizedUserFetchThisCategory) {
       throw new ForbiddenException({ message: "Access denied." })
@@ -142,7 +144,9 @@ export class ActivityCategoriesService {
     const isAuthorizedUserBoardAdmin = authorizedUser.administratedBoards.some((board) => {
       return board.id === category.board.id
     })
-    const isAuthorizedUserBoardMember = authorizedUser.boards.some((board) => board.id === category.board.id)
+    const isAuthorizedUserBoardMember = authorizedUser.participatedBoards.some((board) => {
+      return board.id === category.board.id
+    })
     const doesAuthorizedUserOwnThisCategory = category.owner.id === authorizedUser.id
     const canAuthorizedUserEditThisCategory =
       isAuthorizedUserBoardAdmin || (isAuthorizedUserBoardMember && doesAuthorizedUserOwnThisCategory)
@@ -222,7 +226,9 @@ export class ActivityCategoriesService {
     const isAuthorizedUserBoardAdmin = authorizedUser.administratedBoards.some((board) => {
       return board.id === category.board.id
     })
-    const isAuthorizedUserBoardMember = authorizedUser.boards.some((board) => board.id === category.board.id)
+    const isAuthorizedUserBoardMember = authorizedUser.participatedBoards.some((board) => {
+      return board.id === category.board.id
+    })
     const doesAuthorizedUserOwnThisCategory = category.owner.id === authorizedUser.id
     const canAuthorizedUserDeleteThisCategory =
       isAuthorizedUserBoardAdmin || (isAuthorizedUserBoardMember && doesAuthorizedUserOwnThisCategory)

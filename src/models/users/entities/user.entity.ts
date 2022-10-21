@@ -6,20 +6,20 @@ import { IUser } from "#interfaces/user"
 
 @Entity("user")
 export class UserEntity {
-  @PrimaryGeneratedColumn({ type: "int" })
-  id: IUser["id"]
-
   @ManyToMany(() => BoardEntity, (board) => board.admins, { onDelete: "CASCADE" })
   @JoinTable()
   administratedBoards: BoardEntity[]
 
-  @Column({ type: "varchar" })
-  username: IUser["username"]
+  @PrimaryGeneratedColumn({ type: "int" })
+  id: IUser["id"]
+
+  @ManyToMany(() => BoardEntity, (board) => board.members, { onDelete: "CASCADE" })
+  @JoinTable()
+  participatedBoards: BoardEntity[]
 
   @Column({ type: "varchar" })
   password: IUser["password"]
 
-  @ManyToMany(() => BoardEntity, (board) => board.members, { onDelete: "CASCADE" })
-  @JoinTable()
-  boards: BoardEntity[]
+  @Column({ type: "varchar" })
+  username: IUser["username"]
 }

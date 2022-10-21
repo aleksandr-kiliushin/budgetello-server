@@ -31,7 +31,7 @@ export class BudgetCategoriesService {
     const accessibleBoardsIds = [
       ...new Set([
         ...authorizedUser.administratedBoards.map((board) => board.id),
-        ...authorizedUser.boards.map((board) => board.id),
+        ...authorizedUser.participatedBoards.map((board) => board.id),
       ]),
     ]
     const boardsIdsToSearchWith =
@@ -68,7 +68,9 @@ export class BudgetCategoriesService {
     const isAuthorizedUserBoardAdmin = authorizedUser.administratedBoards.some((board) => {
       return board.id === category.board.id
     })
-    const isAuthorizedUserBoardMember = authorizedUser.boards.some((board) => board.id === category.board.id)
+    const isAuthorizedUserBoardMember = authorizedUser.participatedBoards.some((board) => {
+      return board.id === category.board.id
+    })
     const canAuthorizedUserEditThisCategory = isAuthorizedUserBoardAdmin || isAuthorizedUserBoardMember
     if (!canAuthorizedUserEditThisCategory) {
       throw new ForbiddenException({ message: "Access denied." })
@@ -120,7 +122,9 @@ export class BudgetCategoriesService {
     const isAuthorizedUserBoardAdmin = authorizedUser.administratedBoards.some((board) => {
       return board.id === category.board.id
     })
-    const isAuthorizedUserBoardMember = authorizedUser.boards.some((board) => board.id === category.board.id)
+    const isAuthorizedUserBoardMember = authorizedUser.participatedBoards.some((board) => {
+      return board.id === category.board.id
+    })
     const canAuthorizedUserEditThisCategory = isAuthorizedUserBoardAdmin || isAuthorizedUserBoardMember
     if (!canAuthorizedUserEditThisCategory) {
       throw new ForbiddenException({ message: "Access denied." })

@@ -28,7 +28,7 @@ export class BudgetRecordsService {
     const accessibleBoardsIds = [
       ...new Set([
         ...authorizedUser.administratedBoards.map((board) => board.id),
-        ...authorizedUser.boards.map((board) => board.id),
+        ...authorizedUser.participatedBoards.map((board) => board.id),
       ]),
     ]
 
@@ -90,7 +90,7 @@ export class BudgetRecordsService {
     const accessibleBoardsIds = [
       ...new Set([
         ...authorizedUser.administratedBoards.map((board) => board.id),
-        ...authorizedUser.boards.map((board) => board.id),
+        ...authorizedUser.participatedBoards.map((board) => board.id),
       ]),
     ]
     if (!accessibleBoardsIds.includes(record.category.board.id)) {

@@ -14,7 +14,7 @@ export class BoardEntity {
   @Column({ type: "varchar" })
   name: string
 
-  @ManyToMany(() => UserEntity, (user) => user.boards, { onDelete: "CASCADE" })
+  @ManyToMany(() => UserEntity, (user) => user.participatedBoards, { onDelete: "CASCADE" })
   members: UserEntity[]
 
   @ManyToOne(() => BoardSubjectEntity)

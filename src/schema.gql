@@ -200,7 +200,9 @@ input UpdateUserInput {
 }
 
 type User {
+  administratedBoards: [Board!]!
   id: Int!
+  participatedBoards: [Board!]!
   password: String!
   username: String!
 }
