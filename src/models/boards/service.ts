@@ -180,10 +180,7 @@ export class BoardsService {
     if (authorizedUser.administratedBoards.every((board) => board.id !== input.boardId)) {
       throw new ForbiddenException({ message: "Access denied." })
     }
-    const candidateToMembers = await this.usersService.find({
-      userId: input.userId,
-      relations: { participatedBoards: true },
-    })
+    const candidateToMembers = await this.usersService.find({ userId: input.userId })
     if (candidateToMembers.participatedBoards.some((board) => board.id === input.boardId)) {
       throw new BadRequestException({ message: "The user is already a member of the board." })
     }
@@ -204,10 +201,7 @@ export class BoardsService {
       throw new ForbiddenException({ message: "Access denied." })
     }
     const board = await this.find({ boardId: input.boardId })
-    const candidateToBeRemoved = await this.usersService.find({
-      userId: input.memberId,
-      relations: { participatedBoards: true },
-    })
+    const candidateToBeRemoved = await this.usersService.find({ userId: input.memberId })
     if (candidateToBeRemoved.participatedBoards.every((board) => board.id !== input.boardId)) {
       throw new BadRequestException({ message: "The user is not a member of the board." })
     }

@@ -29,13 +29,7 @@ export class AuthorizationGuard implements CanActivate {
       jwt.verify(authorizationToken, jwtSecret)
       const decodingResult = jwt.decode(authorizationToken, { json: true })
       if (decodingResult === null) throw new Error()
-      gqlExecutionContext.authorizedUser = await this.usersService.find({
-        userId: decodingResult.id,
-        relations: {
-          administratedBoards: { admins: true, members: true, subject: true },
-          participatedBoards: { admins: true, members: true, subject: true },
-        },
-      })
+      gqlExecutionContext.authorizedUser = await this.usersService.find({ userId: decodingResult.id })
     } catch {
       throw new UnauthorizedException("Invalid token.")
     }

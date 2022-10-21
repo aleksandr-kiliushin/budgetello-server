@@ -1,6 +1,6 @@
 import { ForbiddenException, Injectable, NotFoundException } from "@nestjs/common"
 import { InjectRepository } from "@nestjs/typeorm"
-import { FindOptionsRelations, In, Like, Repository } from "typeorm"
+import { In, Like, Repository } from "typeorm"
 
 import { encrypt } from "#utils/crypto"
 
@@ -21,32 +21,35 @@ export class UsersService {
   async find({
     authorizedUser,
     userId,
-    relations,
     userUsername,
   }: {
     authorizedUser?: UserEntity
     userId?: IUser["id"]
-    relations?: FindOptionsRelations<UserEntity>
     userUsername?: IUser["username"]
   }): Promise<UserEntity> {
     let user: UserEntity | null = null
 
+    const relations = {
+      administratedBoards: { admins: true, members: true, subject: true },
+      participatedBoards: { admins: true, members: true, subject: true },
+    }
+
     if (userId === 0 && authorizedUser !== undefined) {
       user = await this.userRepository.findOne({
+        relations,
         where: { id: authorizedUser.id },
-        ...(relations !== undefined && { relations }),
       })
     }
     if (userId !== undefined && userId !== 0) {
       user = await this.userRepository.findOne({
+        relations,
         where: { id: userId },
-        ...(relations !== undefined && { relations }),
       })
     }
     if (userUsername !== undefined) {
       user = await this.userRepository.findOne({
+        relations,
         where: { username: userUsername },
-        ...(relations !== undefined && { relations: relations }),
       })
     }
 
