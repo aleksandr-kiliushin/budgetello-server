@@ -4,8 +4,8 @@ describe("Authorization", () => {
   it("validates authorization inputs", async () => {
     const response = await fetch("http://localhost:3080/graphql", {
       body: JSON.stringify({
-        query: `mutation AUTHORIZE {
-          authorize (input: { username: "", password: "" })
+        query: `mutation CREATE_AUTHORIZATION_TOKEN {
+          createAuthorizationToken (input: { username: "", password: "" })
         }`,
       }),
       headers: { "Content-Type": "application/json", Accept: "application/json" },
@@ -20,8 +20,8 @@ describe("Authorization", () => {
   it("invalid username", async () => {
     const response = await fetch("http://localhost:3080/graphql", {
       body: JSON.stringify({
-        query: `mutation AUTHORIZE {
-          authorize (input: { username: "nonexistent-username", password: "some-password" })
+        query: `mutation CREATE_AUTHORIZATION_TOKEN {
+          createAuthorizationToken (input: { username: "nonexistent-username", password: "some-password" })
         }`,
       }),
       headers: { "Content-Type": "application/json", Accept: "application/json" },
@@ -36,8 +36,8 @@ describe("Authorization", () => {
   it("invalid password", async () => {
     const response = await fetch("http://localhost:3080/graphql", {
       body: JSON.stringify({
-        query: `mutation AUTHORIZE {
-          authorize (input: { username: "john-doe", password: "some-password" })
+        query: `mutation CREATE_AUTHORIZATION_TOKEN {
+          createAuthorizationToken (input: { username: "john-doe", password: "some-password" })
         }`,
       }),
       headers: { "Content-Type": "application/json", Accept: "application/json" },
@@ -52,14 +52,14 @@ describe("Authorization", () => {
   it("returns an authorization token on success", async () => {
     const response = await fetch("http://localhost:3080/graphql", {
       body: JSON.stringify({
-        query: `mutation AUTHORIZE {
-          authorize (input: { username: "${users.johnDoe.username}", password: "john-doe-password" })
+        query: `mutation CREATE_AUTHORIZATION_TOKEN {
+          createAuthorizationToken (input: { username: "${users.johnDoe.username}", password: "john-doe-password" })
         }`,
       }),
       headers: { "Content-Type": "application/json", Accept: "application/json" },
       method: "POST",
     })
     const responseBody = await response.json()
-    expect(responseBody).toEqual({ data: { authorize: expect.stringMatching(".+") } })
+    expect(responseBody).toEqual({ data: { createAuthorizationToken: expect.stringMatching(".+") } })
   })
 })

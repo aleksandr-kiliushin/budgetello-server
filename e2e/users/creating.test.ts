@@ -66,15 +66,15 @@ describe("Created user data and operations", () => {
   it("created user authorizes and requests their data", async () => {
     const newlyCreatedUserAuthorizationResponse = await fetch("http://localhost:3080/graphql", {
       body: JSON.stringify({
-        query: `mutation AUTHORIZE {
-          authorize(input: { username: "andrew-smith", password: "andrew-smith-password" })
+        query: `mutation CREATE_AUTHORIZATION_TOKEN {
+          createAuthorizationToken(input: { username: "andrew-smith", password: "andrew-smith-password" })
         }`,
       }),
       headers: { Accept: "application/json", "Content-Type": "application/json" },
       method: "POST",
     })
     const newlyCreatedUserAuthorizationResponseBody = await newlyCreatedUserAuthorizationResponse.json()
-    const authorizationToken = newlyCreatedUserAuthorizationResponseBody.data.authorize
+    const authorizationToken = newlyCreatedUserAuthorizationResponseBody.data.createAuthorizationToken
     const fetchAuthorizedUserDataResponse = await fetch("http://localhost:3080/graphql", {
       body: JSON.stringify({
         query: `{
