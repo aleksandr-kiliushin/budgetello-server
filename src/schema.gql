@@ -30,11 +30,6 @@ input AddMemberInput {
   userId: Int!
 }
 
-input AuthorizeInput {
-  password: String!
-  username: String!
-}
-
 type Board {
   admins: [User!]!
   id: Int!
@@ -83,6 +78,11 @@ input CreateActivityRecordInput {
   quantitativeValue: Float
 }
 
+input CreateAuthorizationTokenInput {
+  password: String!
+  username: String!
+}
+
 input CreateBoardInput {
   name: String!
   subjectId: Int!
@@ -107,9 +107,9 @@ input CreateUserInput {
 
 type Mutation {
   addBoardMember(input: AddMemberInput!): Board!
-  authorize(input: AuthorizeInput!): String!
   createActivityCategory(input: CreateActivityCategoryInput!): ActivityCategory!
   createActivityRecord(input: CreateActivityRecordInput!): ActivityRecord!
+  createAuthorizationToken(input: CreateAuthorizationTokenInput!): String!
   createBoard(input: CreateBoardInput!): Board!
   createBudgetCategory(input: CreateBudgetCategoryInput!): BudgetCategory!
   createBudgetRecord(input: CreateBudgetRecordInput!): BudgetRecord!

@@ -1,8 +1,0 @@
-### Auth ######################################################################
-POST http://localhost:3080/api/authorize
-Content-Type: application/json
-
-{
-	"username": "john-doe",
-	"password": "john-doe-password"
-}

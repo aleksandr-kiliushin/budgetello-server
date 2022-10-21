@@ -3,7 +3,7 @@ import { Field, InputType } from "@nestjs/graphql"
 import { IsNotEmpty } from "class-validator"
 
 @InputType()
-export class AuthorizeInput {
+export class CreateAuthorizationTokenInput {
   @Field()
   @IsNotEmpty({ message: ValidationError.REQUIRED })
   password: string

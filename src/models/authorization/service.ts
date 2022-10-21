@@ -5,13 +5,13 @@ import { UsersService } from "#models/users/service"
 
 import { encrypt } from "#utils/crypto"
 
-import { AuthorizeInput } from "./dto/authorize.input"
+import { CreateAuthorizationTokenInput } from "./dto/create-authorization-token.input"
 
 @Injectable()
 export class AuthorizationService {
   constructor(private readonly usersService: UsersService) {}
 
-  async createToken({ input }: { input: AuthorizeInput }): Promise<string> {
+  async createToken({ input }: { input: CreateAuthorizationTokenInput }): Promise<string> {
     const user = await this.usersService.find({ userUsername: input.username }).catch(() => {
       throw new BadRequestException({ fields: { username: "User not found." } })
     })

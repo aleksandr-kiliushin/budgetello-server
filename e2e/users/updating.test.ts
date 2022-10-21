@@ -31,8 +31,8 @@ describe("User updating", () => {
     }`)
     const response = await fetch("http://localhost:3080/graphql", {
       body: JSON.stringify({
-        query: `mutation AUTHORIZE {
-          authorize(input: { username: "john-doe-is-cool", password: "john-doe-new-password" })
+        query: `mutation CREATE_AUTHORIZATION_TOKEN {
+          createAuthorizationToken(input: { username: "john-doe-is-cool", password: "john-doe-new-password" })
         }`,
       }),
       headers: { Accept: "application/json", "Content-Type": "application/json" },
@@ -40,7 +40,7 @@ describe("User updating", () => {
     })
     expect(response.status).toEqual(200)
     const responseBody = await response.json()
-    expect(responseBody.data).toEqual({ authorize: expect.stringMatching(".+") })
+    expect(responseBody.data).toEqual({ createAuthorizationToken: expect.stringMatching(".+") })
   })
 
   it("authorization with the old credential is failed", async () => {
@@ -51,8 +51,8 @@ describe("User updating", () => {
     }`)
     const response = await fetch("http://localhost:3080/graphql", {
       body: JSON.stringify({
-        query: `mutation AUTHORIZE {
-          authorize(input: { username: "john-doe", password: "john-doe-password" })
+        query: `mutation CREATE_AUTHORIZATION_TOKEN {
+          createAuthorizationToken(input: { username: "john-doe", password: "john-doe-password" })
         }`,
       }),
       headers: { Accept: "application/json", "Content-Type": "application/json" },
