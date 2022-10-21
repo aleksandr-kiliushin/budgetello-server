@@ -27,8 +27,7 @@
       "#e2e/*": ["e2e/*"],
       "#helpers/*": ["src/helpers/*"],
       "#interfaces/*": ["src/interfaces/*"],
-      "#models/*": ["src/models/*"],
-      "#utils/*": ["src/utils/*"]
+      "#models/*": ["src/models/*"]
     },
     "target": "es6"
   },
