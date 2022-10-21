@@ -2,7 +2,7 @@ import { ForbiddenException, Injectable, NotFoundException } from "@nestjs/commo
 import { InjectRepository } from "@nestjs/typeorm"
 import { In, Like, Repository } from "typeorm"
 
-import { encrypt } from "#utils/crypto"
+import { encrypt } from "#helpers/crypto"
 
 import { IUser } from "#interfaces/user"
 
@@ -10,6 +10,11 @@ import { CreateUserInput } from "./dto/create-user.input"
 import { SearchUsersArgs } from "./dto/search-users.args"
 import { UpdateUserInput } from "./dto/update-user.input"
 import { UserEntity } from "./entities/user.entity"
+
+const userRelations = {
+  administratedBoards: { admins: true, members: true, subject: true },
+  participatedBoards: { admins: true, members: true, subject: true },
+}
 
 @Injectable()
 export class UsersService {
@@ -29,26 +34,21 @@ export class UsersService {
   }): Promise<UserEntity> {
     let user: UserEntity | null = null
 
-    const relations = {
-      administratedBoards: { admins: true, members: true, subject: true },
-      participatedBoards: { admins: true, members: true, subject: true },
-    }
-
     if (userId === 0 && authorizedUser !== undefined) {
       user = await this.userRepository.findOne({
-        relations,
+        relations: userRelations,
         where: { id: authorizedUser.id },
       })
     }
     if (userId !== undefined && userId !== 0) {
       user = await this.userRepository.findOne({
-        relations,
+        relations: userRelations,
         where: { id: userId },
       })
     }
     if (userUsername !== undefined) {
       user = await this.userRepository.findOne({
-        relations,
+        relations: userRelations,
         where: { username: userUsername },
       })
     }
@@ -58,9 +58,12 @@ export class UsersService {
   }
 
   search({ args }: { args: SearchUsersArgs }): Promise<UserEntity[]> {
-    return this.userRepository.findBy({
-      ...(args.ids !== undefined && { id: In(args.ids) }),
-      ...(args.username !== undefined && { username: Like(`%${args.username}%`) }),
+    return this.userRepository.find({
+      relations: userRelations,
+      where: {
+        ...(args.ids !== undefined && { id: In(args.ids) }),
+        ...(args.username !== undefined && { username: Like(`%${args.username}%`) }),
+      },
     })
   }
 

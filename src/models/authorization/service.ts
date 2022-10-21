@@ -3,7 +3,7 @@ import * as jwt from "jsonwebtoken"
 
 import { UsersService } from "#models/users/service"
 
-import { encrypt } from "#utils/crypto"
+import { encrypt } from "#helpers/crypto"
 
 import { CreateAuthorizationTokenInput } from "./dto/create-authorization-token.input"
 
