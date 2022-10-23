@@ -31,7 +31,7 @@ export class AuthorizationGuard implements CanActivate {
       if (decodingResult === null) throw new Error()
       gqlExecutionContext.authorizedUser = await this.usersService.find({ userId: decodingResult.id })
     } catch {
-      throw new UnauthorizedException("Invalid token.")
+      throw new UnauthorizedException({ message: "Invalid token." })
     }
 
     return true
