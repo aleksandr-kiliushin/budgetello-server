@@ -57,10 +57,7 @@ export class BudgetRecordsService {
         date: args.orderingById ?? "ASC",
       },
       relations: {
-        category: {
-          board: { admins: true, members: true, subject: true }, // TODO: Really needed such a depth?
-          type: true,
-        },
+        category: { board: true, type: true },
         currency: true,
       },
       skip: args.skip === undefined ? 0 : args.skip,
@@ -83,7 +80,10 @@ export class BudgetRecordsService {
     recordId: BudgetRecordEntity["id"]
   }): Promise<BudgetRecordEntity> {
     const record = await this.budgetRecordsRepository.findOne({
-      relations: { category: { board: true, type: true }, currency: true },
+      relations: {
+        category: { board: true, type: true },
+        currency: true,
+      },
       where: { id: recordId },
     })
     if (record === null) {
