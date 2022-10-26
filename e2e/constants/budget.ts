@@ -40,7 +40,6 @@ export const budgetCategories = {
 } as const
 
 export const budgetRecords = {
-  // TODO: Refactor `"1st": { ... }` to just `1: { ... }`.
   "1st": {
     amount: 100,
     currency: currencies.usd,
@@ -89,4 +88,4 @@ export const budgetRecords = {
     id: 6,
     isTrashed: false,
   },
-}
+} as const
