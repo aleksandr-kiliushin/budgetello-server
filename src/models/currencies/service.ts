@@ -16,6 +16,9 @@ export class CurrenciesService {
   }
 
   find({ currencySlug }: { currencySlug: CurrencyEntity["slug"] }): Promise<CurrencyEntity> {
-    return this.currenciesRepository.findOneOrFail({ where: { slug: currencySlug } })
+    return this.currenciesRepository.findOneOrFail({
+      order: { slug: "ASC" },
+      where: { slug: currencySlug },
+    })
   }
 }
