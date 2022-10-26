@@ -20,7 +20,7 @@ describe("get currencies", () => {
 
   it("responds with a currency for a given slug", async () => {
     const response = await fetchGqlApi(`{
-      currency(slug: ${currencies.usd.slug}) {
+      currency(slug: "${currencies.usd.slug}") {
         ${pickFields.currency}
       }
     }`)

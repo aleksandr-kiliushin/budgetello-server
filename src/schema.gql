@@ -105,6 +105,12 @@ input CreateUserInput {
   username: String!
 }
 
+type Currency {
+  name: String!
+  slug: String!
+  symbol: String!
+}
+
 type Mutation {
   addBoardMember(input: AddMemberInput!): Board!
   createActivityCategory(input: CreateActivityCategoryInput!): ActivityCategory!
@@ -146,6 +152,8 @@ type Query {
   budgetCategoryTypes: [BudgetCategoryType!]!
   budgetRecord(id: Int!): BudgetRecord!
   budgetRecords(amount: Float, boardsIds: [Int!], categoriesIds: [Int!], dates: [String!], ids: [Int!], isTrashed: Boolean, orderingByDate: String, orderingById: String, skip: Int, take: Int): [BudgetRecord!]!
+  currencies: [Currency!]!
+  currency(slug: String!): Currency!
   user(id: Int, username: String): User!
   users(ids: [Int!], username: String): [User!]!
 }

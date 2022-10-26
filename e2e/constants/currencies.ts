@@ -1,11 +1,11 @@
 export const currencies = {
   gel: {
-    name: "Georgian lari",
+    name: "GEL",
     slug: "gel",
     symbol: "₾",
   },
   usd: {
-    name: "United States dollar",
+    name: "USD",
     slug: "usd",
     symbol: "$",
   },

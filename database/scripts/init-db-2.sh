@@ -72,6 +72,11 @@ psql personal_app_db postgres << EOF
                                               (1       , 4        );
 EOF
 psql personal_app_db postgres << EOF
+  INSERT INTO currency ("name", "slug", "symbol")
+  VALUES               ('GEL' , 'gel' , '₾'     ),
+                       ('USD' , 'usd' , '$'     );
+EOF
+psql personal_app_db postgres << EOF
   INSERT INTO budget_category_type (name     )
   VALUES                           ('expense'),
                                    ('income' );
