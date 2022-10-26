@@ -17,6 +17,7 @@ psql personal_app_db postgres << EOF
   budget_record,
   board,
   board_subject,
+  currency,
   "user",
   user_administrated_boards_board,
   user_participated_boards_board
