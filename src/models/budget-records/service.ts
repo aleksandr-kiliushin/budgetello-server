@@ -110,21 +110,15 @@ export class BudgetRecordsService {
     authorizedUser: UserEntity
     input: CreateBudgetRecordInput
   }): Promise<BudgetRecordEntity> {
-    const category = await this.budgetCategoriesService
+    const record = this.budgetRecordsRepository.create({ amount: input.amount, date: input.date, isTrashed: false })
+    record.category = await this.budgetCategoriesService
       .find({ authorizedUser, categoryId: input.categoryId })
       .catch(() => {
         throw new BadRequestException({ fields: { categoryId: "Invalid value." } })
       })
-    const currency = await this.currenciesService.find({ currencySlug: input.currencySlug }).catch(() => {
+    record.currency = await this.currenciesService.find({ currencySlug: input.currencySlug }).catch(() => {
       throw new BadRequestException({ fields: { currencySlug: "Invalid value." } })
     })
-    // TODO: Try not to search for cateogy and currency separately.
-    // May be it is already done automatically by categoryId and currencySlug, etc.
-    // If not, pass only amount, date to create and later do:
-    // record.category = await ... .catch(); record.currency = await ... .catch().
-    const record = this.budgetRecordsRepository.create(input)
-    record.category = category
-    record.currency = currency
     return this.budgetRecordsRepository.save(record)
   }
 

@@ -22,6 +22,6 @@ export class BudgetRecordEntity {
   @PrimaryGeneratedColumn({ type: "int" })
   id: IBudgetRecord["id"]
 
-  @Column({ type: "bool", default: false })
+  @Column({ type: "bool" })
   isTrashed: IBudgetRecord["isTrashed"]
 }
