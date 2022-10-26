@@ -11,6 +11,9 @@ export class CreateBudgetRecordInput {
   categoryId: number
 
   @Field()
+  currencySlug: string
+
+  @Field()
   @Matches(/^\d\d\d\d-\d\d-\d\d$/, { message: "Should have format YYYY-MM-DD." })
   date: string
 }

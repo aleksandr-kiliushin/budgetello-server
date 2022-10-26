@@ -1,4 +1,5 @@
 import { budgetCategories } from "#e2e/constants/budget"
+import { currencies } from "#e2e/constants/currencies"
 import { users } from "#e2e/constants/users"
 import { authorize } from "#e2e/helpers/authorize"
 import { fetchGqlApi } from "#e2e/helpers/fetchGqlApi"
@@ -15,12 +16,12 @@ describe("Budget record creating", () => {
     responseError: unknown
   }>([
     {
-      queryNameAndInput: `createBudgetRecord(input: { amount: 200, categoryId: 666666, date: "2022-08-05" })`,
+      queryNameAndInput: `createBudgetRecord(input: { amount: 200, categoryId: 666666, currencySlug: "${currencies.usd.slug}", date: "2022-08-05" })`,
       createdRecord: undefined,
       responseError: { fields: { categoryId: "Invalid value." } },
     },
     {
-      queryNameAndInput: `createBudgetRecord(input: { amount: -200, categoryId: ${budgetCategories.clothesExpense.id}, date: "2022|08|05" })`,
+      queryNameAndInput: `createBudgetRecord(input: { amount: -200, categoryId: ${budgetCategories.clothesExpense.id}, currencySlug: "${currencies.usd.slug}", date: "2022|08|05" })`,
       createdRecord: undefined,
       responseError: {
         fields: {
@@ -30,10 +31,11 @@ describe("Budget record creating", () => {
       },
     },
     {
-      queryNameAndInput: `createBudgetRecord(input: { amount: 200, categoryId: ${budgetCategories.clothesExpense.id}, date: "2022-08-05" })`,
+      queryNameAndInput: `createBudgetRecord(input: { amount: 200, categoryId: ${budgetCategories.clothesExpense.id}, currencySlug: "${currencies.usd.slug}", date: "2022-08-05" })`,
       createdRecord: {
         amount: 200,
         category: budgetCategories.clothesExpense,
+        currency: currencies.usd,
         date: "2022-08-05",
         id: 7,
         isTrashed: false,
@@ -52,7 +54,7 @@ describe("Budget record creating", () => {
 
   it("created record fetched successfully", async () => {
     await fetchGqlApi(`mutation CREATE_BUDGET_RECORD {
-      createBudgetRecord(input: { amount: 200, categoryId: ${budgetCategories.clothesExpense.id}, date: "2022-08-05" }) {
+      createBudgetRecord(input: { amount: 200, categoryId: ${budgetCategories.clothesExpense.id}, currencySlug: "${currencies.usd.slug}", date: "2022-08-05" }) {
         ${pickFields.budgetRecord}
       }
     }`)
@@ -65,6 +67,7 @@ describe("Budget record creating", () => {
       budgetRecord: {
         amount: 200,
         category: budgetCategories.clothesExpense,
+        currency: currencies.usd,
         date: "2022-08-05",
         id: 7,
         isTrashed: false,

@@ -1,6 +1,7 @@
 import { Field, Float, Int, ObjectType } from "@nestjs/graphql"
 
 import { BudgetCategory } from "#models/budget-categories/models/budget-category.model"
+import { Currency } from "#models/currencies/models/currency.model"
 
 @ObjectType()
 export class BudgetRecord {
@@ -10,12 +11,15 @@ export class BudgetRecord {
   @Field((type) => BudgetCategory)
   category: BudgetCategory
 
+  @Field((type) => Currency)
+  currency: Currency
+
   @Field()
   date: string
 
-  @Field()
-  isTrashed: boolean
-
   @Field((type) => Int)
   id: number
+
+  @Field()
+  isTrashed: boolean
 }

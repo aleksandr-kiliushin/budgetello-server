@@ -1,6 +1,7 @@
 import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm"
 
 import { BudgetCategoryEntity } from "#models/budget-categories/entities/budget-category.entity"
+import { CurrencyEntity } from "#models/currencies/entities/currency.entity"
 
 import { IBudgetRecord } from "#interfaces/budget"
 
@@ -11,6 +12,9 @@ export class BudgetRecordEntity {
 
   @ManyToOne(() => BudgetCategoryEntity, { onDelete: "CASCADE" })
   category: BudgetCategoryEntity
+
+  @ManyToOne(() => CurrencyEntity, { onDelete: "CASCADE" })
+  currency: CurrencyEntity
 
   @Column({ type: "varchar" })
   date: IBudgetRecord["date"]

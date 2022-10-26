@@ -1,4 +1,5 @@
 import { budgetCategories, budgetRecords } from "#e2e/constants/budget"
+import { currencies } from "#e2e/constants/currencies"
 import { users } from "#e2e/constants/users"
 import { authorize } from "#e2e/helpers/authorize"
 import { fetchGqlApi } from "#e2e/helpers/fetchGqlApi"
@@ -40,10 +41,11 @@ describe("Budget record updating", () => {
       responseError: undefined,
     },
     {
-      queryNameAndInput: `updateBudgetRecord(input: { id: ${budgetRecords["1st"].id}, amount: 80000, categoryId: ${budgetCategories.educationExpense.id}, date: "2030-01-02", isTrashed: false })`,
+      queryNameAndInput: `updateBudgetRecord(input: { id: ${budgetRecords["1st"].id}, amount: 80000, categoryId: ${budgetCategories.educationExpense.id}, currencySlug: "${currencies.gel.slug}", date: "2030-01-02", isTrashed: false })`,
       updatedRecord: {
         amount: 80000,
         category: budgetCategories.educationExpense,
+        currency: currencies.gel,
         date: "2030-01-02",
         id: budgetRecords["1st"].id,
         isTrashed: false,

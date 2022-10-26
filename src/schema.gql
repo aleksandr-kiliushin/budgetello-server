@@ -58,6 +58,7 @@ type BudgetCategoryType {
 type BudgetRecord {
   amount: Float!
   category: BudgetCategory!
+  currency: Currency!
   date: String!
   id: Int!
   isTrashed: Boolean!
@@ -97,6 +98,7 @@ input CreateBudgetCategoryInput {
 input CreateBudgetRecordInput {
   amount: Float!
   categoryId: Int!
+  currencySlug: String!
   date: String!
 }
 
@@ -196,6 +198,7 @@ input UpdateBudgetCategoryInput {
 input UpdateBudgetRecordInput {
   amount: Float
   categoryId: Int
+  currencySlug: String
   date: String
   id: Int!
   isTrashed: Boolean

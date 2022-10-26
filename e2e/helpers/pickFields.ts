@@ -23,6 +23,7 @@ export const pickFields = {
       name
       type { id, name }
     }
+    currency { name, slug, symbol }
     date
     id
     isTrashed

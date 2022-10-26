@@ -3,6 +3,7 @@ import { InjectRepository } from "@nestjs/typeorm"
 import { Equal, In, Repository } from "typeorm"
 
 import { BudgetCategoriesService } from "#models/budget-categories/service"
+import { CurrenciesService } from "#models/currencies/service"
 import { UserEntity } from "#models/users/entities/user.entity"
 
 import { CreateBudgetRecordInput } from "./dto/create-budget-record.input"
@@ -15,7 +16,8 @@ export class BudgetRecordsService {
   constructor(
     @InjectRepository(BudgetRecordEntity)
     private budgetRecordsRepository: Repository<BudgetRecordEntity>,
-    private budgetCategoriesService: BudgetCategoriesService
+    private budgetCategoriesService: BudgetCategoriesService,
+    private currenciesService: CurrenciesService
   ) {}
 
   async search({
@@ -56,9 +58,10 @@ export class BudgetRecordsService {
       },
       relations: {
         category: {
-          board: { admins: true, members: true, subject: true },
+          board: { admins: true, members: true, subject: true }, // TODO: Really needed such a depth?
           type: true,
         },
+        currency: true,
       },
       skip: args.skip === undefined ? 0 : args.skip,
       ...(args.take !== undefined && { take: args.take }),
@@ -80,7 +83,7 @@ export class BudgetRecordsService {
     recordId: BudgetRecordEntity["id"]
   }): Promise<BudgetRecordEntity> {
     const record = await this.budgetRecordsRepository.findOne({
-      relations: { category: { board: true, type: true } },
+      relations: { category: { board: true, type: true }, currency: true },
       where: { id: recordId },
     })
     if (record === null) {
@@ -112,8 +115,16 @@ export class BudgetRecordsService {
       .catch(() => {
         throw new BadRequestException({ fields: { categoryId: "Invalid value." } })
       })
+    const currency = await this.currenciesService.find({ currencySlug: input.currencySlug }).catch(() => {
+      throw new BadRequestException({ fields: { currencySlug: "Invalid value." } })
+    })
+    // TODO: Try not to search for cateogy and currency separately.
+    // May be it is already done automatically by categoryId and currencySlug, etc.
+    // If not, pass only amount, date to create and later do:
+    // record.category = await ... .catch(); record.currency = await ... .catch().
     const record = this.budgetRecordsRepository.create(input)
     record.category = category
+    record.currency = currency
     return this.budgetRecordsRepository.save(record)
   }
 
@@ -140,6 +151,11 @@ export class BudgetRecordsService {
         .catch(() => {
           throw new BadRequestException({ fields: { categoryId: "Invalid value." } })
         })
+    }
+    if (input.currencySlug !== undefined) {
+      record.currency = await this.currenciesService.find({ currencySlug: input.currencySlug }).catch(() => {
+        throw new BadRequestException({ fields: { currencySlug: "Invalid value." } })
+      })
     }
     return this.budgetRecordsRepository.save(record)
   }

@@ -1,4 +1,5 @@
 import { boards } from "./boards"
+import { currencies } from "./currencies"
 
 export const budgetCategoryTypes = {
   expense: { id: 1, name: "expense" },
@@ -39,10 +40,53 @@ export const budgetCategories = {
 } as const
 
 export const budgetRecords = {
-  "1st": { amount: 100, category: budgetCategories.clothesExpense, date: "2022-08-01", id: 1, isTrashed: true },
-  "2nd": { amount: 400, category: budgetCategories.educationExpense, date: "2022-08-01", id: 2, isTrashed: true },
-  "3rd": { amount: 25, category: budgetCategories.educationExpense, date: "2022-08-01", id: 3, isTrashed: false },
-  "4th": { amount: 30, category: budgetCategories.giftsExpense, date: "2022-08-02", id: 4, isTrashed: false },
-  "5th": { amount: 10, category: budgetCategories.giftsExpense, date: "2022-08-02", id: 5, isTrashed: false },
-  "6th": { amount: 230, category: budgetCategories.giftsIncome, date: "2022-08-03", id: 6, isTrashed: false },
+  // TODO: Refactor `"1st": { ... }` to just `1: { ... }`.
+  "1st": {
+    amount: 100,
+    currency: currencies.usd,
+    category: budgetCategories.clothesExpense,
+    date: "2022-08-01",
+    id: 1,
+    isTrashed: true,
+  },
+  "2nd": {
+    amount: 400,
+    currency: currencies.usd,
+    category: budgetCategories.educationExpense,
+    date: "2022-08-01",
+    id: 2,
+    isTrashed: true,
+  },
+  "3rd": {
+    amount: 25,
+    currency: currencies.usd,
+    category: budgetCategories.educationExpense,
+    date: "2022-08-01",
+    id: 3,
+    isTrashed: false,
+  },
+  "4th": {
+    amount: 30,
+    currency: currencies.gel,
+    category: budgetCategories.giftsExpense,
+    date: "2022-08-02",
+    id: 4,
+    isTrashed: false,
+  },
+  "5th": {
+    amount: 10,
+    currency: currencies.gel,
+    category: budgetCategories.giftsExpense,
+    date: "2022-08-02",
+    id: 5,
+    isTrashed: false,
+  },
+  "6th": {
+    amount: 230,
+    currency: currencies.gel,
+    category: budgetCategories.giftsIncome,
+    date: "2022-08-03",
+    id: 6,
+    isTrashed: false,
+  },
 }
