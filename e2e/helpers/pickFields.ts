@@ -2,53 +2,58 @@ export const pickFields = {
   user: "id, password, username",
   boardSubject: "id, name",
   board: `
-    admins { id, password, username },
-    id,
-    members { id, password, username },
-    name,
+    admins { id, password, username }
+    id
+    members { id, password, username }
+    name
     subject { id, name }
   `,
   budgetCategoryType: "id, name",
   budgetCategory: `
-    board { id, name },
-    id,
-    name,
+    board { id, name }
+    id
+    name
     type { id, name }
   `,
   budgetRecord: `
-    amount,
+    amount
     category {
-      board { id, name },
-      id,
-      name,
+      board { id, name }
+      id
+      name
       type { id, name }
-    },
-    date,
-    id,
+    }
+    date
+    id
     isTrashed
   `,
   activityCategoryMeasurementType: "id, name",
   activityCategory: `
-    board { id, name },
-    id,
-    name,
-    measurementType { id, name },
-    owner { id, password, username },
+    board { id, name }
+    id
+    name
+    measurementType { id, name }
+    owner { id, password, username }
     unit
   `,
   activityRecord: `
-    booleanValue,
+    booleanValue
     category {
-      board { id, name },
-      id,
-      measurementType { id, name },
-      name,
-      owner { id, password, username },
+      board { id, name }
+      id
+      measurementType { id, name }
+      name
+      owner { id, password, username }
       unit
-    },
-    comment,
-    date,
-    id,
+    }
+    comment
+    date
+    id
     quantitativeValue
+  `,
+  currency: `
+    name
+    slug
+    symbol
   `,
 }
