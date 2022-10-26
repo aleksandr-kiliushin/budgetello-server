@@ -40,17 +40,17 @@ EOF
 
 # Seed database with testing data.
 psql personal_app_db postgres << EOF
-  INSERT INTO "user" (username,        password                                      )
+  INSERT INTO "user" ("username",      "password"                                    )
   VALUES             ('john-doe',      '8bd309ffba83c3db9a53142b052468007b'          ),
                      ('jessica-stark', '8bd912e2fe84cd93c457142a1d7e77136c3bc954f183');
 EOF
 psql personal_app_db postgres << EOF
-  INSERT INTO board_subject (name        )
+  INSERT INTO board_subject ("name"      )
   VALUES                    ('budget'    ),
                             ('activities');
 EOF
 psql personal_app_db postgres << EOF
-  INSERT INTO board (name                 , "subjectId")
+  INSERT INTO board ("name"               , "subjectId")
   VALUES            ('clever-budgetiers'  , 1          ),
                     ('mega-economists'    , 1          ),
                     ('beautiful-sportsmen', 2          ),
@@ -78,12 +78,12 @@ psql personal_app_db postgres << EOF
                        ('USD' , 'usd' , '$'     );
 EOF
 psql personal_app_db postgres << EOF
-  INSERT INTO budget_category_type (name     )
+  INSERT INTO budget_category_type ("name"   )
   VALUES                           ('expense'),
                                    ('income' );
 EOF
 psql personal_app_db postgres << EOF
-  INSERT INTO budget_category (name       , "typeId", "boardId")
+  INSERT INTO budget_category ("name"     , "typeId", "boardId")
   VALUES                      ('clothes'  , 1       , 1        ),
                               ('education', 1       , 1        ),
                               ('gifts'    , 1       , 2        ),
@@ -100,12 +100,12 @@ psql personal_app_db postgres << EOF
                             (230     , 4           , '2022-08-03', 'gel'         , FALSE      );
 EOF
 psql personal_app_db postgres << EOF
-  INSERT INTO activity_category_measurement_type (name          )
+  INSERT INTO activity_category_measurement_type ("name"        )
   VALUES                                         ('quantitative'),
                                                  ('boolean'     );
 EOF
 psql personal_app_db postgres << EOF
-  INSERT INTO activity_category (name       , "boardId", "measurementTypeId", "ownerId", "unit")
+  INSERT INTO activity_category ("name"     , "boardId", "measurementTypeId", "ownerId", "unit")
   VALUES                        ('running'  , 3        , 1                  , 2        , 'km'  ),
                                 ('pushups'  , 3        , 1                  , 2        , 'time'),
                                 ('no sweets', 3        , 2                  , 2        , NULL  ),
