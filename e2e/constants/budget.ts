@@ -73,7 +73,7 @@ export const budgetRecords = {
     isTrashed: false,
   },
   "5th": {
-    amount: 10,
+    amount: 10.5,
     currency: currencies.gel,
     category: budgetCategories.giftsExpense,
     date: "2022-08-02",

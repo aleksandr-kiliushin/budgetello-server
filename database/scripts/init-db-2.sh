@@ -96,7 +96,7 @@ psql personal_app_db postgres << EOF
                             (400     , 2           , '2022-08-01', 'usd'         , TRUE       ),
                             (25      , 2           , '2022-08-01', 'usd'         , FALSE      ),
                             (30      , 3           , '2022-08-02', 'gel'         , FALSE      ),
-                            (10      , 3           , '2022-08-02', 'gel'         , FALSE      ),
+                            (10.5    , 3           , '2022-08-02', 'gel'         , FALSE      ),
                             (230     , 4           , '2022-08-03', 'gel'         , FALSE      );
 EOF
 psql personal_app_db postgres << EOF

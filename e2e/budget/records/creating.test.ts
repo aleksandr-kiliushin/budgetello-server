@@ -16,12 +16,12 @@ describe("Budget record creating", () => {
     responseError: unknown
   }>([
     {
-      queryNameAndInput: `createBudgetRecord(input: { amount: 200, categoryId: 666666, currencySlug: "${currencies.usd.slug}", date: "2022-08-05" })`,
+      queryNameAndInput: `createBudgetRecord(input: { amount: 20.5, categoryId: 666666, currencySlug: "${currencies.usd.slug}", date: "2022-08-05" })`,
       createdRecord: undefined,
       responseError: { fields: { categoryId: "Invalid value." } },
     },
     {
-      queryNameAndInput: `createBudgetRecord(input: { amount: -200, categoryId: ${budgetCategories.clothesExpense.id}, currencySlug: "${currencies.usd.slug}", date: "2022|08|05" })`,
+      queryNameAndInput: `createBudgetRecord(input: { amount: -20.5, categoryId: ${budgetCategories.clothesExpense.id}, currencySlug: "${currencies.usd.slug}", date: "2022|08|05" })`,
       createdRecord: undefined,
       responseError: {
         fields: {
@@ -31,9 +31,9 @@ describe("Budget record creating", () => {
       },
     },
     {
-      queryNameAndInput: `createBudgetRecord(input: { amount: 200, categoryId: ${budgetCategories.clothesExpense.id}, currencySlug: "${currencies.usd.slug}", date: "2022-08-05" })`,
+      queryNameAndInput: `createBudgetRecord(input: { amount: 20.5, categoryId: ${budgetCategories.clothesExpense.id}, currencySlug: "${currencies.usd.slug}", date: "2022-08-05" })`,
       createdRecord: {
-        amount: 200,
+        amount: 20.5,
         category: budgetCategories.clothesExpense,
         currency: currencies.usd,
         date: "2022-08-05",
@@ -54,7 +54,7 @@ describe("Budget record creating", () => {
 
   it("created record fetched successfully", async () => {
     await fetchGqlApi(`mutation CREATE_BUDGET_RECORD {
-      createBudgetRecord(input: { amount: 200, categoryId: ${budgetCategories.clothesExpense.id}, currencySlug: "${currencies.usd.slug}", date: "2022-08-05" }) {
+      createBudgetRecord(input: { amount: 20.5, categoryId: ${budgetCategories.clothesExpense.id}, currencySlug: "${currencies.usd.slug}", date: "2022-08-05" }) {
         ${pickFields.budgetRecord}
       }
     }`)
@@ -65,7 +65,7 @@ describe("Budget record creating", () => {
     }`)
     expect(responseBody.data).toEqual({
       budgetRecord: {
-        amount: 200,
+        amount: 20.5,
         category: budgetCategories.clothesExpense,
         currency: currencies.usd,
         date: "2022-08-05",

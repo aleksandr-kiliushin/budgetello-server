@@ -7,7 +7,7 @@ import { IBudgetRecord } from "#interfaces/budget"
 
 @Entity("budget_record")
 export class BudgetRecordEntity {
-  @Column({ type: "int" })
+  @Column({ type: "real" })
   amount: IBudgetRecord["amount"]
 
   @ManyToOne(() => BudgetCategoryEntity, { onDelete: "CASCADE" })
