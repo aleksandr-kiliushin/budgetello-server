@@ -153,7 +153,7 @@ type Query {
   budgetCategoryType(id: Int!): BudgetCategoryType!
   budgetCategoryTypes: [BudgetCategoryType!]!
   budgetRecord(id: Int!): BudgetRecord!
-  budgetRecords(amount: Float, boardsIds: [Int!], categoriesIds: [Int!], dates: [String!], ids: [Int!], isTrashed: Boolean, orderingByDate: String, orderingById: String, skip: Int, take: Int): [BudgetRecord!]!
+  budgetRecords(amount: Float, boardsIds: [Int!], categoriesIds: [Int!], currenciesSlugs: [String!], dates: [String!], ids: [Int!], isTrashed: Boolean, orderingByDate: String, orderingById: String, skip: Int, take: Int): [BudgetRecord!]!
   currencies: [Currency!]!
   currency(slug: String!): Currency!
   user(id: Int, username: String): User!

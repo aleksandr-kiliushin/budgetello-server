@@ -54,7 +54,7 @@ export class BudgetRecordsService {
     return this.budgetRecordsRepository.find({
       order: {
         id: args.orderingById ?? "ASC",
-        date: args.orderingById ?? "ASC",
+        date: args.orderingByDate ?? "ASC",
       },
       relations: {
         category: { board: true, type: true },
@@ -67,6 +67,9 @@ export class BudgetRecordsService {
         ...(args.dates !== undefined && { date: In(args.dates) }),
         ...(args.ids !== undefined && { id: In(args.ids) }),
         ...(args.isTrashed !== undefined && { isTrashed: args.isTrashed }),
+        ...(args.currenciesSlugs !== undefined && {
+          currency: { slug: In(args.currenciesSlugs) },
+        }),
         category: { id: In(categoriesIdsToSearchWith) },
       },
     })

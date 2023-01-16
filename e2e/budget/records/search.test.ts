@@ -1,5 +1,6 @@
 import { boards } from "#e2e/constants/boards"
 import { budgetCategories, budgetRecords } from "#e2e/constants/budget"
+import { currencies } from "#e2e/constants/currencies"
 import { users } from "#e2e/constants/users"
 import { authorize } from "#e2e/helpers/authorize"
 import { fetchGqlApi } from "#e2e/helpers/fetchGqlApi"
@@ -73,6 +74,14 @@ describe("Search budget records", () => {
     {
       queryNameAndArgs: `budgetRecords(amount: ${budgetRecords["2nd"].amount})`,
       foundRecords: [budgetRecords["2nd"]],
+    },
+    {
+      queryNameAndArgs: `budgetRecords(currenciesSlugs: ["${currencies.usd.slug}"])`,
+      foundRecords: [budgetRecords["1st"], budgetRecords["2nd"], budgetRecords["3rd"]],
+    },
+    {
+      queryNameAndArgs: `budgetRecords(currenciesSlugs: ["${currencies.gel.slug}"])`,
+      foundRecords: [],
     },
     {
       queryNameAndArgs: `budgetRecords(orderingByDate: "ASC", orderingById: "ASC", isTrashed: true, skip: 1, take: 1)`,

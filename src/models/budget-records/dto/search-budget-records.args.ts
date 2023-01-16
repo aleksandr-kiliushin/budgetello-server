@@ -15,6 +15,9 @@ export class SearchBudgetRecordsArgs {
   categoriesIds?: number[]
 
   @Field(() => [String], { nullable: true })
+  currenciesSlugs?: string[]
+
+  @Field(() => [String], { nullable: true })
   @Matches(/^\d\d\d\d-\d\d-\d\d$/, { each: true, message: "An array of YYYY-MM-DD dates expected." })
   @IsOptional()
   dates?: string[]
