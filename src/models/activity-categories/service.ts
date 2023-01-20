@@ -104,10 +104,14 @@ export class ActivityCategoriesService {
     const similarExistingCategory = await this.activityCategoriesRepository.findOne({
       relations: { board: true, measurementType: true, owner: true },
       where: {
-        board,
+        board: {
+          id: board.id,
+        },
         measurementType,
         name: input.name,
-        owner: authorizedUser,
+        owner: {
+          id: authorizedUser.id,
+        },
         unit: input.unit === null ? IsNull() : input.unit,
       },
     })
@@ -193,10 +197,14 @@ export class ActivityCategoriesService {
     const similarExistingCategory = await this.activityCategoriesRepository.findOne({
       relations: { board: true, measurementType: true, owner: true },
       where: {
-        board: category.board,
+        board: {
+          id: category.board.id,
+        },
         measurementType: category.measurementType,
         name: category.name,
-        owner: category.owner,
+        owner: {
+          id: category.owner.id,
+        },
         unit: category.unit === null ? IsNull() : category.unit,
       },
     })

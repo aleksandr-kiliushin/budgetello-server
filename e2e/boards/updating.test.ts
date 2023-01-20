@@ -1,4 +1,5 @@
 import { boardSubjects, boards } from "#e2e/constants/boards"
+import { currencies } from "#e2e/constants/currencies"
 import { users } from "#e2e/constants/users"
 import { ITestUserId, authorize } from "#e2e/helpers/authorize"
 import { fetchGqlApi } from "#e2e/helpers/fetchGqlApi"
@@ -42,6 +43,29 @@ describe("Board updating", () => {
     },
     {
       authorizedUserId: users.johnDoe.id,
+      queryNameAndInput: `updateBoard(input: { id: ${boards.cleverBudgetiers.id}, defaultCurrencySlug: "NONEXISTENT_CURRENCY_SLUG" })`,
+      updatedBoard: undefined,
+      responseError: {
+        fields: {
+          defaultCurrencySlug: "Invalid value.",
+        },
+      },
+    },
+    {
+      authorizedUserId: users.johnDoe.id,
+      queryNameAndInput: `updateBoard(input: { id: ${boards.cleverBudgetiers.id}, defaultCurrencySlug: "${currencies.usd.slug}" })`,
+      updatedBoard: {
+        admins: boards.cleverBudgetiers.admins,
+        defaultCurrency: currencies.usd,
+        id: boards.cleverBudgetiers.id,
+        members: boards.cleverBudgetiers.members,
+        name: boards.cleverBudgetiers.name,
+        subject: boards.cleverBudgetiers.subject,
+      },
+      responseError: undefined,
+    },
+    {
+      authorizedUserId: users.johnDoe.id,
       queryNameAndInput: `updateBoard(input: { id: ${boards.cleverBudgetiers.id} })`,
       updatedBoard: boards.cleverBudgetiers,
       responseError: undefined,
@@ -50,9 +74,10 @@ describe("Board updating", () => {
       authorizedUserId: users.johnDoe.id,
       queryNameAndInput: `updateBoard(input: { id: ${boards.cleverBudgetiers.id}, name: "champions", subjectId: ${boardSubjects.activities.id} })`,
       updatedBoard: {
-        admins: [users.johnDoe],
+        admins: boards.cleverBudgetiers.admins,
+        defaultCurrency: null,
         id: boards.cleverBudgetiers.id,
-        members: [users.johnDoe, users.jessicaStark],
+        members: boards.cleverBudgetiers.members,
         name: "champions",
         subject: boardSubjects.activities,
       },
@@ -83,9 +108,10 @@ describe("Board updating", () => {
     }`)
     expect(responseBody.data).toEqual({
       board: {
-        admins: [users.johnDoe],
+        admins: boards.cleverBudgetiers.admins,
+        defaultCurrency: null,
         id: boards.cleverBudgetiers.id,
-        members: [users.johnDoe, users.jessicaStark],
+        members: boards.cleverBudgetiers.members,
         name: "champions",
         subject: boardSubjects.activities,
       },

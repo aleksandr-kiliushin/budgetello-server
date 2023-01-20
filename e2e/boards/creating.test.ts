@@ -35,7 +35,7 @@ describe("Board creating", () => {
       },
     },
     {
-      queryNameAndInput: `createBoard(input: { defaultCurrencySlug: "NONEXISTENT_CURRENCY_SLUG" name: "money-makers", subjectId: ${boardSubjects.budget.id} })`,
+      queryNameAndInput: `createBoard(input: { defaultCurrencySlug: "NONEXISTENT_CURRENCY_SLUG", name: "money-makers", subjectId: ${boardSubjects.budget.id} })`,
       createdBoard: undefined,
       responseError: {
         fields: {

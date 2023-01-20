@@ -10,7 +10,7 @@ export class Board {
   admins: User[]
 
   @Field((type) => Currency, { nullable: true })
-  defaultCurrency: Currency
+  defaultCurrency: Currency | null
 
   @Field((type) => Int)
   id: number

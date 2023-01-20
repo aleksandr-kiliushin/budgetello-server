@@ -94,7 +94,13 @@ export class BudgetCategoriesService {
     })
     const similarExistingCategory = await this.budgetCategoriesRepository.findOne({
       relations: { board: true, type: true },
-      where: { board, name: input.name, type },
+      where: {
+        board: {
+          id: board.id,
+        },
+        name: input.name,
+        type,
+      },
     })
     if (similarExistingCategory !== null) {
       throw new BadRequestException({
@@ -150,7 +156,13 @@ export class BudgetCategoriesService {
     }
     const similarExistingCategory = await this.budgetCategoriesRepository.findOne({
       relations: { board: true, type: true },
-      where: { board: category.board, name: category.name, type: category.type },
+      where: {
+        board: {
+          id: category.board.id,
+        },
+        name: category.name,
+        type: category.type,
+      },
     })
     if (similarExistingCategory !== null) {
       throw new BadRequestException({

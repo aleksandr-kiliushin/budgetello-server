@@ -10,7 +10,7 @@ export class BoardEntity {
   admins: UserEntity[]
 
   @ManyToOne(() => CurrencyEntity, { nullable: true })
-  defaultCurrency: CurrencyEntity
+  defaultCurrency: CurrencyEntity | null
 
   @PrimaryGeneratedColumn({ type: "int" })
   id: number

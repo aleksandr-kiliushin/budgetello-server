@@ -29,6 +29,7 @@ describe("Boards participating", () => {
         queryNameAndInput: `addBoardMember (input: { boardId: ${boards.beautifulSportsmen.id}, userId: ${users.johnDoe.id} })`,
         updatedBoard: {
           admins: [users.jessicaStark],
+          defaultCurrency: boards.productivePeople.defaultCurrency,
           id: boards.beautifulSportsmen.id,
           members: [users.johnDoe, users.jessicaStark],
           name: boards.beautifulSportsmen.name,
@@ -72,6 +73,7 @@ describe("Boards participating", () => {
         queryNameAndInput: `removeBoardMember (input: { boardId: ${boards.productivePeople.id}, memberId: ${users.jessicaStark.id} })`,
         updatedBoard: {
           admins: [users.johnDoe],
+          defaultCurrency: boards.productivePeople.defaultCurrency,
           id: boards.productivePeople.id,
           members: [users.johnDoe],
           name: boards.productivePeople.name,

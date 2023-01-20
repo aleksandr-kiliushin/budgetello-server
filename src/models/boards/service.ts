@@ -115,7 +115,7 @@ export class BoardsService {
       name: input.name,
       subject,
     })
-    if (input.subjectId === 1) {
+    if (board.subject.id === 1) {
       board.defaultCurrency = await this.currenciesService
         .find({ currencySlug: input.defaultCurrencySlug })
         .catch(() => {
@@ -137,7 +137,9 @@ export class BoardsService {
     if (board.admins.every((admin) => admin.id !== authorizedUser.id)) {
       throw new ForbiddenException({ message: "Access denied." })
     }
-    if (input.name === undefined && input.subjectId === undefined) return board
+    if (input.name === undefined && input.subjectId === undefined && input.defaultCurrencySlug === undefined) {
+      return board
+    }
     if (input.name !== undefined) {
       if (input.name === "") {
         throw new BadRequestException({ fields: { name: ValidationError.REQUIRED } })
@@ -153,13 +155,23 @@ export class BoardsService {
       relations: { subject: true },
       where: { name: board.name, subject: board.subject },
     })
-    if (similarExistingBoard !== null) {
+    if (similarExistingBoard !== null && similarExistingBoard.id !== board.id) {
       throw new BadRequestException({
         fields: {
           name: `"${similarExistingBoard.name}" ${similarExistingBoard.subject.name} board already exists.`,
           subjectId: `"${similarExistingBoard.name}" ${similarExistingBoard.subject.name} board already exists.`,
         },
       })
+    }
+    if (board.subject.id === 1 && input.defaultCurrencySlug !== undefined) {
+      board.defaultCurrency = await this.currenciesService
+        .find({ currencySlug: input.defaultCurrencySlug })
+        .catch(() => {
+          throw new BadRequestException({ fields: { defaultCurrencySlug: "Invalid value." } })
+        })
+    }
+    if (board.subject.id === 2) {
+      board.defaultCurrency = null
     }
     return this.boardsRepository.save(board)
   }
