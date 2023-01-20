@@ -1,4 +1,5 @@
 import { boardSubjects, boards } from "#e2e/constants/boards"
+import { currencies } from "#e2e/constants/currencies"
 import { users } from "#e2e/constants/users"
 import { authorize } from "#e2e/helpers/authorize"
 import { fetchGqlApi } from "#e2e/helpers/fetchGqlApi"
@@ -17,7 +18,11 @@ describe("Board creating", () => {
     {
       queryNameAndInput: `createBoard(input: { name: "food", subjectId: 1234123 })`,
       createdBoard: undefined,
-      responseError: { fields: { subjectId: "Invalid subject." } },
+      responseError: {
+        fields: {
+          subjectId: "Invalid subject.",
+        },
+      },
     },
     {
       queryNameAndInput: `createBoard(input: { name: "${boards.cleverBudgetiers.name}", subjectId: ${boards.cleverBudgetiers.subject.id} })`,
@@ -30,9 +35,31 @@ describe("Board creating", () => {
       },
     },
     {
+      queryNameAndInput: `createBoard(input: { defaultCurrencySlug: "NONEXISTENT_CURRENCY_SLUG" name: "money-makers", subjectId: ${boardSubjects.budget.id} })`,
+      createdBoard: undefined,
+      responseError: {
+        fields: {
+          defaultCurrencySlug: "Invalid value.",
+        },
+      },
+    },
+    {
+      queryNameAndInput: `createBoard(input: { defaultCurrencySlug: "${currencies.usd.slug}" name: "money-makers", subjectId: ${boardSubjects.budget.id} })`,
+      createdBoard: {
+        admins: [users.johnDoe],
+        defaultCurrency: currencies.usd,
+        id: 5,
+        members: [users.johnDoe],
+        name: "money-makers",
+        subject: boardSubjects.budget,
+      },
+      responseError: undefined,
+    },
+    {
       queryNameAndInput: `createBoard(input: { name: "champions", subjectId: ${boardSubjects.activities.id} })`,
       createdBoard: {
         admins: [users.johnDoe],
+        defaultCurrency: null,
         id: 5,
         members: [users.johnDoe],
         name: "champions",
@@ -64,6 +91,7 @@ describe("Board creating", () => {
     expect(fetchCreatedBoardResponseBody.data).toEqual({
       board: {
         admins: [users.johnDoe],
+        defaultCurrency: null,
         id: 5,
         members: [users.johnDoe],
         name: "champions",

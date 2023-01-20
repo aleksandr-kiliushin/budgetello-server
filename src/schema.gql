@@ -32,6 +32,7 @@ input AddMemberInput {
 
 type Board {
   admins: [User!]!
+  defaultCurrency: Currency
   id: Int!
   members: [User!]!
   name: String!
@@ -85,6 +86,7 @@ input CreateAuthorizationTokenInput {
 }
 
 input CreateBoardInput {
+  defaultCurrencySlug: String
   name: String!
   subjectId: Int!
 }
@@ -183,6 +185,7 @@ input UpdateActivityRecordInput {
 }
 
 input UpdateBoardInput {
+  defaultCurrencySlug: String
   id: Int!
   name: String
   subjectId: Int

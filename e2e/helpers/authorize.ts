@@ -1,7 +1,7 @@
 import { users } from "../constants/users"
 import { setAuthorizationToken } from "./authorization-token"
 
-type ITestUser = typeof users[keyof typeof users]
+type ITestUser = (typeof users)[keyof typeof users]
 
 export type ITestUserId = ITestUser["id"]
 

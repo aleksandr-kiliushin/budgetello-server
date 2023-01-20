@@ -10,7 +10,7 @@ import { BudgetRecordsResolver } from "./resolver"
 import { BudgetRecordsService } from "./service"
 
 @Module({
-  imports: [TypeOrmModule.forFeature([BudgetRecordEntity]), BudgetCategoriesModule, UsersModule, CurrenciesModule],
+  imports: [TypeOrmModule.forFeature([BudgetRecordEntity]), BudgetCategoriesModule, CurrenciesModule, UsersModule],
   providers: [BudgetRecordsResolver, BudgetRecordsService],
 })
 export class BudgetRecordsModule {}

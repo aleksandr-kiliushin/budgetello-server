@@ -45,16 +45,21 @@ psql personal_app_db postgres << EOF
                      ('jessica-stark', '8bd912e2fe84cd93c457142a1d7e77136c3bc954f183');
 EOF
 psql personal_app_db postgres << EOF
+  INSERT INTO currency ("name", "slug", "symbol")
+  VALUES               ('GEL' , 'gel' , '₾'     ),
+                       ('USD' , 'usd' , '$'     );
+EOF
+psql personal_app_db postgres << EOF
   INSERT INTO board_subject ("name"      )
   VALUES                    ('budget'    ),
                             ('activities');
 EOF
 psql personal_app_db postgres << EOF
-  INSERT INTO board ("name"               , "subjectId")
-  VALUES            ('clever-budgetiers'  , 1          ),
-                    ('mega-economists'    , 1          ),
-                    ('beautiful-sportsmen', 2          ),
-                    ('productive-people'  , 2          );
+  INSERT INTO board ("name"               , "subjectId", "defaultCurrencySlug")
+  VALUES            ('clever-budgetiers'  , 1          , 'gel'                ),
+                    ('mega-economists'    , 1          , 'usd'                ),
+                    ('beautiful-sportsmen', 2          , NULL                 ),
+                    ('productive-people'  , 2          , NULL                 );
 EOF
 psql personal_app_db postgres << EOF
   INSERT INTO user_participated_boards_board ("userId", "boardId")
@@ -71,11 +76,6 @@ psql personal_app_db postgres << EOF
                                               (2       , 2        ),
                                               (2       , 3        ),
                                               (1       , 4        );
-EOF
-psql personal_app_db postgres << EOF
-  INSERT INTO currency ("name", "slug", "symbol")
-  VALUES               ('GEL' , 'gel' , '₾'     ),
-                       ('USD' , 'usd' , '$'     );
 EOF
 psql personal_app_db postgres << EOF
   INSERT INTO budget_category_type ("name"   )

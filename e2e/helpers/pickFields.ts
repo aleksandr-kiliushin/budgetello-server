@@ -3,6 +3,7 @@ export const pickFields = {
   boardSubject: "id, name",
   board: `
     admins { id, password, username }
+    defaultCurrency { name, slug, symbol }
     id
     members { id, password, username }
     name

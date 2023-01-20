@@ -1,3 +1,4 @@
+import { ICurrency } from "./currencies"
 import { IUser } from "./user"
 
 export interface IBoardSubject {
@@ -7,6 +8,7 @@ export interface IBoardSubject {
 
 export interface IBoard {
   admins: IUser[]
+  defaultCurrency: ICurrency | null
   id: number
   members: IUser[]
   name: string

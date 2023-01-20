@@ -1,3 +1,4 @@
+import { currencies } from "./currencies"
 import { users } from "./users"
 
 export const boardSubjects = {
@@ -8,6 +9,7 @@ export const boardSubjects = {
 export const boards = {
   cleverBudgetiers: {
     admins: [users.johnDoe],
+    defaultCurrency: currencies.gel,
     id: 1,
     members: [users.johnDoe, users.jessicaStark],
     name: "clever-budgetiers",
@@ -15,6 +17,7 @@ export const boards = {
   },
   megaEconomists: {
     admins: [users.jessicaStark],
+    defaultCurrency: currencies.usd,
     id: 2,
     members: [users.jessicaStark],
     name: "mega-economists",
@@ -22,6 +25,7 @@ export const boards = {
   },
   beautifulSportsmen: {
     admins: [users.jessicaStark],
+    defaultCurrency: null,
     id: 3,
     members: [users.jessicaStark],
     name: "beautiful-sportsmen",
@@ -29,6 +33,7 @@ export const boards = {
   },
   productivePeople: {
     admins: [users.johnDoe],
+    defaultCurrency: null,
     id: 4,
     members: [users.johnDoe, users.jessicaStark],
     name: "productive-people",

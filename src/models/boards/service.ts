@@ -4,6 +4,7 @@ import { InjectRepository } from "@nestjs/typeorm"
 import { In, Like, Repository } from "typeorm"
 
 import { BoardSubjectsService } from "#models/board-subjects/service"
+import { CurrenciesService } from "#models/currencies/service"
 import { UserEntity } from "#models/users/entities/user.entity"
 import { UsersService } from "#models/users/service"
 
@@ -20,6 +21,7 @@ export class BoardsService {
     @InjectRepository(BoardEntity)
     private boardsRepository: Repository<BoardEntity>,
     private boardSubjectsService: BoardSubjectsService,
+    private currenciesService: CurrenciesService,
     private usersService: UsersService
   ) {}
 
@@ -63,7 +65,7 @@ export class BoardsService {
         id: "ASC",
         members: { id: "ASC" },
       },
-      relations: { admins: true, members: true, subject: true },
+      relations: { admins: true, defaultCurrency: true, members: true, subject: true },
       where: {
         id: In(boardIdsToSearchBy),
         ...(args.subjectsIds !== undefined && { subject: In(args.subjectsIds) }),
@@ -78,7 +80,7 @@ export class BoardsService {
         admins: { id: "ASC" },
         members: { id: "ASC" },
       },
-      relations: { admins: true, members: true, subject: true },
+      relations: { admins: true, defaultCurrency: true, members: true, subject: true },
       where: { id: boardId },
     })
     if (board === null) throw new NotFoundException({ message: "Not found." })
@@ -113,6 +115,13 @@ export class BoardsService {
       name: input.name,
       subject,
     })
+    if (input.subjectId === 1) {
+      board.defaultCurrency = await this.currenciesService
+        .find({ currencySlug: input.defaultCurrencySlug })
+        .catch(() => {
+          throw new BadRequestException({ fields: { defaultCurrencySlug: "Invalid value." } })
+        })
+    }
     const newlyCreatedBoard = await this.boardsRepository.save(board)
     return await this.find({ boardId: newlyCreatedBoard.id })
   }

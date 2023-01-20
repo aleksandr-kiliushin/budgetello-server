@@ -4,6 +4,9 @@ import { IsNotEmpty } from "class-validator"
 
 @InputType()
 export class CreateBoardInput {
+  @Field({ nullable: true })
+  defaultCurrencySlug: string
+
   @Field()
   @IsNotEmpty({ message: ValidationError.REQUIRED })
   name: string
