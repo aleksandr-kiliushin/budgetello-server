@@ -77,7 +77,12 @@ export class UsersService {
       })
     }
     const hashedPassword = encrypt(input.password)
-    const user = this.userRepository.create({ password: hashedPassword, username: input.username })
+    const user = this.userRepository.create({
+      administratedBoards: [],
+      password: hashedPassword,
+      username: input.username,
+      participatedBoards: [],
+    })
     return this.userRepository.save(user)
   }
 
