@@ -4,11 +4,54 @@ import { fetchGqlApi } from "#e2e/helpers/fetchGqlApi"
 import { pickFields } from "#e2e/helpers/pickFields"
 
 describe("User creating process", () => {
+  it("validates user creating input", async () => {
+    const response = await fetch("http://localhost:3080/graphql", {
+      body: JSON.stringify({
+        query: `mutation CREATE_USER {
+          createUser(input: { username: "", password: "", passwordConfirmation: "" }) {
+            ${pickFields.user}
+          }
+        }`,
+      }),
+      headers: { Accept: "application/json", "Content-Type": "application/json" },
+      method: "POST",
+    })
+    const responseBody = await response.json()
+    expect(responseBody.errors[0].extensions.exception.response).toEqual({
+      fields: {
+        username: "Required.",
+        password: "Required.",
+        passwordConfirmation: "Required.",
+      },
+    })
+  })
+
+  it("validates the passwords match", async () => {
+    const response = await fetch("http://localhost:3080/graphql", {
+      body: JSON.stringify({
+        query: `mutation CREATE_USER {
+          createUser(input: { username: "andrew-smith", password: "andrew-smith-password", passwordConfirmation: "ANOTHER_PASSWORD" }) {
+            ${pickFields.user}
+          }
+        }`,
+      }),
+      headers: { Accept: "application/json", "Content-Type": "application/json" },
+      method: "POST",
+    })
+    const responseBody = await response.json()
+    expect(responseBody.errors[0].extensions.exception.response).toEqual({
+      fields: {
+        password: "Passwords do not match.",
+        passwordConfirmation: "Passwords do not match.",
+      },
+    })
+  })
+
   it("can create and get correct data response after creating", async () => {
     const response = await fetch("http://localhost:3080/graphql", {
       body: JSON.stringify({
         query: `mutation CREATE_USER {
-          createUser(input: { username: "andrew-smith", password: "andrew-smith-password" }) {
+          createUser(input: { username: "andrew-smith", password: "andrew-smith-password", passwordConfirmation: "andrew-smith-password" }) {
             ${pickFields.user}
           }
         }`,
@@ -25,27 +68,6 @@ describe("User creating process", () => {
       },
     })
   })
-
-  it("validates user creating input", async () => {
-    const response = await fetch("http://localhost:3080/graphql", {
-      body: JSON.stringify({
-        query: `mutation CREATE_USER {
-          createUser(input: { username: "", password: "" }) {
-            ${pickFields.user}
-          }
-        }`,
-      }),
-      headers: { Accept: "application/json", "Content-Type": "application/json" },
-      method: "POST",
-    })
-    const responseBody = await response.json()
-    expect(responseBody.errors[0].extensions.exception.response).toEqual({
-      fields: {
-        username: "Required.",
-        password: "Required.",
-      },
-    })
-  })
 })
 
 describe("Created user data and operations", () => {
@@ -53,7 +75,7 @@ describe("Created user data and operations", () => {
     await fetch("http://localhost:3080/graphql", {
       body: JSON.stringify({
         query: `mutation CREATE_USER {
-          createUser(input: { username: "andrew-smith", password: "andrew-smith-password" }) {
+          createUser(input: { username: "andrew-smith", password: "andrew-smith-password", passwordConfirmation: "andrew-smith-password" }) {
             ${pickFields.user}
           }
         }`,

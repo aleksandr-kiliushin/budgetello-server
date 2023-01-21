@@ -10,5 +10,9 @@ export class CreateUserInput {
 
   @Field()
   @IsNotEmpty({ message: ValidationError.REQUIRED })
+  passwordConfirmation: string
+
+  @Field()
+  @IsNotEmpty({ message: ValidationError.REQUIRED })
   username: string
 }

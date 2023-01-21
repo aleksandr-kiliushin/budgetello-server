@@ -1,4 +1,4 @@
-import { ForbiddenException, Injectable, NotFoundException } from "@nestjs/common"
+import { BadRequestException, ForbiddenException, Injectable, NotFoundException } from "@nestjs/common"
 import { InjectRepository } from "@nestjs/typeorm"
 import { In, Like, Repository } from "typeorm"
 
@@ -68,6 +68,14 @@ export class UsersService {
   }
 
   async create({ input }: { input: CreateUserInput }): Promise<UserEntity> {
+    if (input.password !== input.passwordConfirmation) {
+      throw new BadRequestException({
+        fields: {
+          password: "Passwords do not match.",
+          passwordConfirmation: "Passwords do not match.",
+        },
+      })
+    }
     const hashedPassword = encrypt(input.password)
     const user = this.userRepository.create({ password: hashedPassword, username: input.username })
     return this.userRepository.save(user)

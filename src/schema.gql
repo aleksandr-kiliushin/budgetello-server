@@ -106,6 +106,7 @@ input CreateBudgetRecordInput {
 
 input CreateUserInput {
   password: String!
+  passwordConfirmation: String!
   username: String!
 }
 
@@ -210,6 +211,7 @@ input UpdateBudgetRecordInput {
 input UpdateUserInput {
   id: Int!
   password: String
+  passwordConfirmation: String
   username: String
 }
 
