@@ -47,6 +47,26 @@ describe("User creating process", () => {
     })
   })
 
+  it("does not allow to create a user if the username is already taken", async () => {
+    const response = await fetch("http://localhost:3080/graphql", {
+      body: JSON.stringify({
+        query: `mutation CREATE_USER {
+          createUser(input: { username: "john-doe", password: "123", passwordConfirmation: "123" }) {
+            ${pickFields.user}
+          }
+        }`,
+      }),
+      headers: { Accept: "application/json", "Content-Type": "application/json" },
+      method: "POST",
+    })
+    const responseBody = await response.json()
+    expect(responseBody.errors[0].extensions.exception.response).toEqual({
+      fields: {
+        username: "Already exists.",
+      },
+    })
+  })
+
   it("can create and get correct data response after creating", async () => {
     const response = await fetch("http://localhost:3080/graphql", {
       body: JSON.stringify({

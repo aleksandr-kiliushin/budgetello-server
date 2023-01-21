@@ -68,6 +68,14 @@ export class UsersService {
   }
 
   async create({ input }: { input: CreateUserInput }): Promise<UserEntity> {
+    const existingUserWithTheSameUsername = await this.userRepository.findOneBy({ username: input.username })
+    if (existingUserWithTheSameUsername !== null) {
+      throw new BadRequestException({
+        fields: {
+          username: "Already exists.",
+        },
+      })
+    }
     if (input.password !== input.passwordConfirmation) {
       throw new BadRequestException({
         fields: {
