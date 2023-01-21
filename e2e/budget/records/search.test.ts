@@ -65,7 +65,7 @@ describe("Search budget records", () => {
     },
     {
       queryNameAndArgs: `budgetRecords(categoriesIds: [${budgetCategories.educationExpense.id}])`,
-      foundRecords: [budgetRecords["2nd"], budgetRecords["3rd"]],
+      foundRecords: [budgetRecords["3rd"], budgetRecords["2nd"]],
     },
     {
       queryNameAndArgs: `budgetRecords(dates: ["2022-08-01"])`,
