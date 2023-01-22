@@ -52,7 +52,7 @@ describe("Search budget categories", () => {
     },
     {
       queryNameAndArgs: `budgetCategories(boardsIds: [${boards.cleverBudgetiers.id}])`,
-      foundCategories: [budgetCategories.clothesExpense, budgetCategories.educationExpense],
+      foundCategories: [budgetCategories.educationExpense, budgetCategories.clothesExpense],
     },
     {
       queryNameAndArgs: `budgetCategories(ids: [${budgetCategories.educationExpense.id}, ${budgetCategories.giftsExpense.id}])`,

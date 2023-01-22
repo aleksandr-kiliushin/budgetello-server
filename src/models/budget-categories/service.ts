@@ -40,7 +40,9 @@ export class BudgetCategoriesService {
         : args.boardsIds.filter((boardIdFromQuery) => accessibleBoardsIds.includes(boardIdFromQuery))
 
     return this.budgetCategoriesRepository.find({
-      order: { id: "ASC", name: "ASC" },
+      order: {
+        ...(args.orderingById !== undefined && { id: args.orderingById }),
+      },
       relations: { board: true, type: true },
       where: {
         ...(args.ids !== undefined && { id: In(args.ids) }),
