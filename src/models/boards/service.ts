@@ -1,4 +1,4 @@
-import { ValidationError } from "#constants/ValidationError"
+import { ErrorMessage } from "#constants/ErrorMessage"
 import { BadRequestException, ForbiddenException, Injectable, NotFoundException } from "@nestjs/common"
 import { InjectRepository } from "@nestjs/typeorm"
 import { In, Like, Repository } from "typeorm"
@@ -119,7 +119,7 @@ export class BoardsService {
       board.defaultCurrency = await this.currenciesService
         .find({ currencySlug: input.defaultCurrencySlug })
         .catch(() => {
-          throw new BadRequestException({ fields: { defaultCurrencySlug: "Invalid value." } })
+          throw new BadRequestException({ fields: { defaultCurrencySlug: ErrorMessage.INVALID_VALUE } })
         })
     }
     const newlyCreatedBoard = await this.boardsRepository.save(board)
@@ -135,14 +135,14 @@ export class BoardsService {
   }): Promise<BoardEntity> {
     const board = await this.find({ boardId: input.id })
     if (board.admins.every((admin) => admin.id !== authorizedUser.id)) {
-      throw new ForbiddenException({ message: "Access denied." })
+      throw new ForbiddenException({ message: ErrorMessage.ACCESS_DENIED })
     }
     if (input.name === undefined && input.subjectId === undefined && input.defaultCurrencySlug === undefined) {
       return board
     }
     if (input.name !== undefined) {
       if (input.name === "") {
-        throw new BadRequestException({ fields: { name: ValidationError.REQUIRED } })
+        throw new BadRequestException({ fields: { name: ErrorMessage.REQUIRED } })
       }
       board.name = input.name
     }
@@ -167,7 +167,7 @@ export class BoardsService {
       board.defaultCurrency = await this.currenciesService
         .find({ currencySlug: input.defaultCurrencySlug })
         .catch(() => {
-          throw new BadRequestException({ fields: { defaultCurrencySlug: "Invalid value." } })
+          throw new BadRequestException({ fields: { defaultCurrencySlug: ErrorMessage.INVALID_VALUE } })
         })
     }
     if (board.subject.id === 2) {
@@ -185,7 +185,7 @@ export class BoardsService {
   }): Promise<BoardEntity> {
     const board = await this.find({ boardId })
     if (board.admins.every((admin) => admin.id !== authorizedUser.id)) {
-      throw new ForbiddenException({ message: "Access denied." })
+      throw new ForbiddenException({ message: ErrorMessage.ACCESS_DENIED })
     }
     await this.boardsRepository.delete(boardId)
     return board
@@ -199,7 +199,7 @@ export class BoardsService {
     input: AddMemberInput
   }): Promise<BoardEntity> {
     if (authorizedUser.administratedBoards.every((board) => board.id !== input.boardId)) {
-      throw new ForbiddenException({ message: "Access denied." })
+      throw new ForbiddenException({ message: ErrorMessage.ACCESS_DENIED })
     }
     const candidateToMembers = await this.usersService.find({ userId: input.userId })
     if (candidateToMembers.participatedBoards.some((board) => board.id === input.boardId)) {
@@ -219,7 +219,7 @@ export class BoardsService {
     input: RemoveMemberInput
   }): Promise<BoardEntity> {
     if (authorizedUser.administratedBoards.every((board) => board.id !== input.boardId)) {
-      throw new ForbiddenException({ message: "Access denied." })
+      throw new ForbiddenException({ message: ErrorMessage.ACCESS_DENIED })
     }
     const board = await this.find({ boardId: input.boardId })
     const candidateToBeRemoved = await this.usersService.find({ userId: input.memberId })

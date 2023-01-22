@@ -1,4 +1,4 @@
-import { ValidationError } from "#constants/ValidationError"
+import { ErrorMessage } from "#constants/ErrorMessage"
 import { Field, InputType, Int } from "@nestjs/graphql"
 import { IsNotEmpty } from "class-validator"
 
@@ -11,7 +11,7 @@ export class CreateActivityCategoryInput {
   measurementTypeId: number
 
   @Field()
-  @IsNotEmpty({ message: ValidationError.REQUIRED })
+  @IsNotEmpty({ message: ErrorMessage.REQUIRED })
   name: string
 
   @Field((type) => String, { nullable: true })

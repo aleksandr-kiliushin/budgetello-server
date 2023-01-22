@@ -1,3 +1,4 @@
+import { ErrorMessage } from "#constants/ErrorMessage"
 import { BadRequestException, ForbiddenException, Injectable, NotFoundException } from "@nestjs/common"
 import { InjectRepository } from "@nestjs/typeorm"
 import { Equal, In, Repository } from "typeorm"
@@ -100,7 +101,7 @@ export class BudgetRecordsService {
       ]),
     ]
     if (!accessibleBoardsIds.includes(record.category.board.id)) {
-      throw new ForbiddenException({ message: "Access denied." })
+      throw new ForbiddenException({ message: ErrorMessage.ACCESS_DENIED })
     }
 
     return record
@@ -117,10 +118,10 @@ export class BudgetRecordsService {
     record.category = await this.budgetCategoriesService
       .find({ authorizedUser, categoryId: input.categoryId })
       .catch(() => {
-        throw new BadRequestException({ fields: { categoryId: "Invalid value." } })
+        throw new BadRequestException({ fields: { categoryId: ErrorMessage.INVALID_VALUE } })
       })
     record.currency = await this.currenciesService.find({ currencySlug: input.currencySlug }).catch(() => {
-      throw new BadRequestException({ fields: { currencySlug: "Invalid value." } })
+      throw new BadRequestException({ fields: { currencySlug: ErrorMessage.INVALID_VALUE } })
     })
     return this.budgetRecordsRepository.save(record)
   }
@@ -146,12 +147,12 @@ export class BudgetRecordsService {
       record.category = await this.budgetCategoriesService
         .find({ authorizedUser, categoryId: input.categoryId })
         .catch(() => {
-          throw new BadRequestException({ fields: { categoryId: "Invalid value." } })
+          throw new BadRequestException({ fields: { categoryId: ErrorMessage.INVALID_VALUE } })
         })
     }
     if (input.currencySlug !== undefined) {
       record.currency = await this.currenciesService.find({ currencySlug: input.currencySlug }).catch(() => {
-        throw new BadRequestException({ fields: { currencySlug: "Invalid value." } })
+        throw new BadRequestException({ fields: { currencySlug: ErrorMessage.INVALID_VALUE } })
       })
     }
     return this.budgetRecordsRepository.save(record)

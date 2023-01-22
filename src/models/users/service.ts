@@ -1,3 +1,4 @@
+import { ErrorMessage } from "#constants/ErrorMessage"
 import { BadRequestException, ForbiddenException, Injectable, NotFoundException } from "@nestjs/common"
 import { InjectRepository } from "@nestjs/typeorm"
 import { In, Like, Repository } from "typeorm"
@@ -96,7 +97,7 @@ export class UsersService {
 
   async update({ authorizedUser, input }: { authorizedUser: UserEntity; input: UpdateUserInput }): Promise<UserEntity> {
     if (authorizedUser.id !== input.id) {
-      throw new ForbiddenException({ message: "Access denied." })
+      throw new ForbiddenException({ message: ErrorMessage.ACCESS_DENIED })
     }
     const newUserData = { ...(await this.find({ userId: input.id })) }
     if (input.username !== undefined) {
@@ -116,7 +117,7 @@ export class UsersService {
     userId: UserEntity["id"]
   }): Promise<UserEntity> {
     if (authorizedUser.id !== userId) {
-      throw new ForbiddenException({ message: "Access denied." })
+      throw new ForbiddenException({ message: ErrorMessage.ACCESS_DENIED })
     }
     const user = await this.find({ userId })
     await this.userRepository.delete(userId)

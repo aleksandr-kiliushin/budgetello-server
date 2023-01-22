@@ -1,3 +1,4 @@
+import { ErrorMessage } from "#constants/ErrorMessage"
 import { BadRequestException, ForbiddenException, Injectable, NotFoundException } from "@nestjs/common"
 import { InjectRepository } from "@nestjs/typeorm"
 import { In, IsNull, Repository } from "typeorm"
@@ -70,7 +71,7 @@ export class ActivityCategoriesService {
     })
     const canAuthorizedUserFetchThisCategory = isAuthorizedUserBoardAdmin || isAuthorizedUserBoardMember
     if (!canAuthorizedUserFetchThisCategory) {
-      throw new ForbiddenException({ message: "Access denied." })
+      throw new ForbiddenException({ message: ErrorMessage.ACCESS_DENIED })
     }
 
     return category
@@ -96,10 +97,10 @@ export class ActivityCategoriesService {
     const measurementType = await this.activityCategoryMeasurementTypesService
       .find({ typeId: input.measurementTypeId })
       .catch(() => {
-        throw new BadRequestException({ fields: { measurementTypeId: "Invalid value." } })
+        throw new BadRequestException({ fields: { measurementTypeId: ErrorMessage.INVALID_VALUE } })
       })
     const board = await this.boardsService.find({ boardId: input.boardId }).catch(() => {
-      throw new BadRequestException({ fields: { boardId: "Invalid value." } })
+      throw new BadRequestException({ fields: { boardId: ErrorMessage.INVALID_VALUE } })
     })
     const similarExistingCategory = await this.activityCategoriesRepository.findOne({
       relations: { board: true, measurementType: true, owner: true },
@@ -155,7 +156,7 @@ export class ActivityCategoriesService {
     const canAuthorizedUserEditThisCategory =
       isAuthorizedUserBoardAdmin || (isAuthorizedUserBoardMember && doesAuthorizedUserOwnThisCategory)
     if (!canAuthorizedUserEditThisCategory) {
-      throw new ForbiddenException({ message: "Access denied." })
+      throw new ForbiddenException({ message: ErrorMessage.ACCESS_DENIED })
     }
     if (
       input.boardId === undefined &&
@@ -170,12 +171,12 @@ export class ActivityCategoriesService {
       category.measurementType = await this.activityCategoryMeasurementTypesService
         .find({ typeId: input.measurementTypeId })
         .catch(() => {
-          throw new BadRequestException({ fields: { measurementTypeId: "Invalid value." } })
+          throw new BadRequestException({ fields: { measurementTypeId: ErrorMessage.INVALID_VALUE } })
         })
     }
     if (input.boardId !== undefined) {
       category.board = await this.boardsService.find({ boardId: input.boardId }).catch(() => {
-        throw new BadRequestException({ fields: { boardId: "Invalid value." } })
+        throw new BadRequestException({ fields: { boardId: ErrorMessage.INVALID_VALUE } })
       })
     }
     if (input.name !== undefined) {
@@ -241,7 +242,7 @@ export class ActivityCategoriesService {
     const canAuthorizedUserDeleteThisCategory =
       isAuthorizedUserBoardAdmin || (isAuthorizedUserBoardMember && doesAuthorizedUserOwnThisCategory)
     if (!canAuthorizedUserDeleteThisCategory) {
-      throw new ForbiddenException({ message: "Access denied." })
+      throw new ForbiddenException({ message: ErrorMessage.ACCESS_DENIED })
     }
 
     await this.activityCategoriesRepository.delete(categoryId)
