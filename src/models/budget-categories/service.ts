@@ -70,7 +70,11 @@ export class BudgetCategoriesService {
     const isAuthorizedUserBoardAdmin = authorizedUser.administratedBoards.some((board) => {
       return board.id === category.board.id
     })
-    if (!isAuthorizedUserBoardAdmin) {
+    const isAuthorizedUserBoardMember = authorizedUser.participatedBoards.some((board) => {
+      return board.id === category.board.id
+    })
+    const canAuthorizedUserFindThisBoard = isAuthorizedUserBoardAdmin || isAuthorizedUserBoardMember
+    if (!canAuthorizedUserFindThisBoard) {
       throw new ForbiddenException({ message: ErrorMessage.ACCESS_DENIED })
     }
 

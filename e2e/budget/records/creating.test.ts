@@ -1,26 +1,25 @@
 import { budgetCategories } from "#e2e/constants/budget"
 import { currencies } from "#e2e/constants/currencies"
 import { users } from "#e2e/constants/users"
-import { authorize } from "#e2e/helpers/authorize"
+import { ITestUserId, authorize } from "#e2e/helpers/authorize"
 import { fetchGqlApi } from "#e2e/helpers/fetchGqlApi"
 import { pickFields } from "#e2e/helpers/pickFields"
 
-beforeEach(async () => {
-  await authorize(users.johnDoe.id)
-})
-
 describe("Budget record creating", () => {
   test.each<{
+    authorizedUserId: ITestUserId
     queryNameAndInput: string
     createdRecord: unknown
     responseError: unknown
   }>([
     {
+      authorizedUserId: users.johnDoe.id,
       queryNameAndInput: `createBudgetRecord(input: { amount: 20.5, categoryId: 666666, currencySlug: "${currencies.usd.slug}", date: "2022-08-05" })`,
       createdRecord: undefined,
       responseError: { fields: { categoryId: "Invalid value." } },
     },
     {
+      authorizedUserId: users.johnDoe.id,
       queryNameAndInput: `createBudgetRecord(input: { amount: -20.5, categoryId: ${budgetCategories.clothesExpense.id}, currencySlug: "${currencies.usd.slug}", date: "2022|08|05" })`,
       createdRecord: undefined,
       responseError: {
@@ -31,6 +30,7 @@ describe("Budget record creating", () => {
       },
     },
     {
+      authorizedUserId: users.johnDoe.id,
       queryNameAndInput: `createBudgetRecord(input: { amount: 20.5, categoryId: ${budgetCategories.clothesExpense.id}, currencySlug: "${currencies.usd.slug}", date: "2022-08-05" })`,
       createdRecord: {
         amount: 20.5,
@@ -42,7 +42,21 @@ describe("Budget record creating", () => {
       },
       responseError: undefined,
     },
-  ])("$queryNameAndInput", async ({ queryNameAndInput, createdRecord, responseError }) => {
+    {
+      authorizedUserId: users.jessicaStark.id,
+      queryNameAndInput: `createBudgetRecord(input: { amount: 20.5, categoryId: ${budgetCategories.clothesExpense.id}, currencySlug: "${currencies.usd.slug}", date: "2022-08-05" })`,
+      createdRecord: {
+        amount: 20.5,
+        category: budgetCategories.clothesExpense,
+        currency: currencies.usd,
+        date: "2022-08-05",
+        id: 7,
+        isTrashed: false,
+      },
+      responseError: undefined,
+    },
+  ])("$queryNameAndInput", async ({ authorizedUserId, queryNameAndInput, createdRecord, responseError }) => {
+    await authorize(authorizedUserId)
     const responseBody = await fetchGqlApi(`mutation CREATE_BUDGET_RECORD {
       ${queryNameAndInput} {
         ${pickFields.budgetRecord}
@@ -53,6 +67,7 @@ describe("Budget record creating", () => {
   })
 
   it("created record fetched successfully", async () => {
+    await authorize(users.johnDoe.id)
     await fetchGqlApi(`mutation CREATE_BUDGET_RECORD {
       createBudgetRecord(input: { amount: 20.5, categoryId: ${budgetCategories.clothesExpense.id}, currencySlug: "${currencies.usd.slug}", date: "2022-08-05" }) {
         ${pickFields.budgetRecord}
