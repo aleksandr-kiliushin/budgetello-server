@@ -42,6 +42,7 @@ export class BudgetCategoriesService {
     return this.budgetCategoriesRepository.find({
       order: {
         ...(args.orderingById !== undefined && { id: args.orderingById }),
+        ...(args.orderingByType !== undefined && { type: { id: args.orderingByType } }),
       },
       relations: { board: true, type: true },
       where: {

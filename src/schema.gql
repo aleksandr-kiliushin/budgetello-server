@@ -151,7 +151,7 @@ type Query {
   boardSubject(id: Int!): BoardSubject!
   boardSubjects: [BoardSubject!]!
   boards(iAmAdminOf: Boolean, iAmMemberOf: Boolean, ids: [Int!], name: String, subjectsIds: [Int!]): [Board!]!
-  budgetCategories(boardsIds: [Int!], ids: [Int!], orderingById: String): [BudgetCategory!]!
+  budgetCategories(boardsIds: [Int!], ids: [Int!], orderingById: String, orderingByType: String): [BudgetCategory!]!
   budgetCategory(id: Int!): BudgetCategory!
   budgetCategoryType(id: Int!): BudgetCategoryType!
   budgetCategoryTypes: [BudgetCategoryType!]!

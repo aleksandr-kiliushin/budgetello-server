@@ -12,4 +12,7 @@ export class SearchBudgetCategoriesArgs {
 
   @Field({ nullable: true })
   orderingById?: IOrdering
+
+  @Field({ nullable: true })
+  orderingByType?: IOrdering
 }
