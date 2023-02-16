@@ -18,6 +18,7 @@ export const pickFields = {
   `,
   budgetRecord: `
     amount
+    author { id, password, username }
     category {
       board { id, name }
       id

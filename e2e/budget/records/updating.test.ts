@@ -44,6 +44,7 @@ describe("Budget record updating", () => {
       queryNameAndInput: `updateBudgetRecord(input: { id: ${budgetRecords["1st"].id}, amount: 80000, categoryId: ${budgetCategories.educationExpense.id}, currencySlug: "${currencies.gel.slug}", date: "2030-01-02", isTrashed: false })`,
       updatedRecord: {
         amount: 80000,
+        author: users.johnDoe,
         category: budgetCategories.educationExpense,
         currency: currencies.gel,
         date: "2030-01-02",

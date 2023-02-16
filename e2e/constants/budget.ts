@@ -1,5 +1,6 @@
 import { boards } from "./boards"
 import { currencies } from "./currencies"
+import { users } from "./users"
 
 export const budgetCategoryTypes = {
   expense: { id: 1, name: "expense" },
@@ -42,6 +43,7 @@ export const budgetCategories = {
 export const budgetRecords = {
   "1st": {
     amount: 100,
+    author: users.johnDoe,
     currency: currencies.usd,
     category: budgetCategories.clothesExpense,
     date: "2022-08-01",
@@ -50,6 +52,7 @@ export const budgetRecords = {
   },
   "2nd": {
     amount: 400,
+    author: users.jessicaStark,
     currency: currencies.usd,
     category: budgetCategories.educationExpense,
     date: "2022-08-01",
@@ -58,6 +61,7 @@ export const budgetRecords = {
   },
   "3rd": {
     amount: 25,
+    author: users.johnDoe,
     currency: currencies.usd,
     category: budgetCategories.educationExpense,
     date: "2022-08-01",
@@ -66,6 +70,7 @@ export const budgetRecords = {
   },
   "4th": {
     amount: 30,
+    author: users.jessicaStark,
     currency: currencies.gel,
     category: budgetCategories.giftsExpense,
     date: "2022-08-02",
@@ -74,6 +79,7 @@ export const budgetRecords = {
   },
   "5th": {
     amount: 10.5,
+    author: users.jessicaStark,
     currency: currencies.gel,
     category: budgetCategories.giftsExpense,
     date: "2022-08-02",
@@ -82,6 +88,7 @@ export const budgetRecords = {
   },
   "6th": {
     amount: 230,
+    author: users.jessicaStark,
     currency: currencies.gel,
     category: budgetCategories.giftsIncome,
     date: "2022-08-03",

@@ -34,6 +34,7 @@ describe("Budget record creating", () => {
       queryNameAndInput: `createBudgetRecord(input: { amount: 20.5, categoryId: ${budgetCategories.clothesExpense.id}, currencySlug: "${currencies.usd.slug}", date: "2022-08-05" })`,
       createdRecord: {
         amount: 20.5,
+        author: users.johnDoe,
         category: budgetCategories.clothesExpense,
         currency: currencies.usd,
         date: "2022-08-05",
@@ -47,6 +48,7 @@ describe("Budget record creating", () => {
       queryNameAndInput: `createBudgetRecord(input: { amount: 20.5, categoryId: ${budgetCategories.clothesExpense.id}, currencySlug: "${currencies.usd.slug}", date: "2022-08-05" })`,
       createdRecord: {
         amount: 20.5,
+        author: users.jessicaStark,
         category: budgetCategories.clothesExpense,
         currency: currencies.usd,
         date: "2022-08-05",
@@ -81,6 +83,7 @@ describe("Budget record creating", () => {
     expect(responseBody.data).toEqual({
       budgetRecord: {
         amount: 20.5,
+        author: users.johnDoe,
         category: budgetCategories.clothesExpense,
         currency: currencies.usd,
         date: "2022-08-05",
