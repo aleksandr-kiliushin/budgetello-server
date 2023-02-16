@@ -25,6 +25,7 @@ export const pickFields = {
       name
       type { id, name }
     }
+    comment
     currency { name, slug, symbol }
     date
     id

@@ -118,6 +118,7 @@ export class BudgetRecordsService {
   }): Promise<BudgetRecordEntity> {
     const record = this.budgetRecordsRepository.create({
       amount: input.amount,
+      comment: input.comment,
       author: authorizedUser,
       date: input.date,
       isTrashed: false,
@@ -144,7 +145,10 @@ export class BudgetRecordsService {
     if (input.amount !== undefined) {
       record.amount = input.amount
     }
-    if (typeof input.isTrashed === "boolean") {
+    if (input.comment !== undefined) {
+      record.comment = input.comment
+    }
+    if (input.isTrashed !== undefined) {
       record.isTrashed = input.isTrashed
     }
     if (input.date !== undefined) {

@@ -1,4 +1,5 @@
 import { IBoard } from "./boards"
+import { IUser } from "./user"
 
 export interface IBudgetCategory {
   board: {
@@ -17,7 +18,9 @@ export interface IBudgetCategoryType {
 
 export interface IBudgetRecord {
   amount: number
+  author: IUser
   category: IBudgetCategory
+  comment: string
   date: string
   id: number
   isTrashed: boolean

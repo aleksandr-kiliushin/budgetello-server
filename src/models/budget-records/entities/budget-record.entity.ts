@@ -17,6 +17,9 @@ export class BudgetRecordEntity {
   @ManyToOne(() => BudgetCategoryEntity, { onDelete: "CASCADE" })
   category: BudgetCategoryEntity
 
+  @Column({ type: "varchar", nullable: true }) // TODO: 1. Fill all records in prod DB with "" comment. 2. Remove nullable: true. 3. Migrate.
+  comment: IBudgetRecord["comment"]
+
   @ManyToOne(() => CurrencyEntity, { onDelete: "CASCADE" })
   currency: CurrencyEntity
 

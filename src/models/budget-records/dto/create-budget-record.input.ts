@@ -11,6 +11,9 @@ export class CreateBudgetRecordInput {
   categoryId: number
 
   @Field()
+  comment: string
+
+  @Field()
   currencySlug: string
 
   @Field()

@@ -60,6 +60,7 @@ type BudgetRecord {
   amount: Float!
   author: User!
   category: BudgetCategory!
+  comment: String!
   currency: Currency!
   date: String!
   id: Int!
@@ -101,6 +102,7 @@ input CreateBudgetCategoryInput {
 input CreateBudgetRecordInput {
   amount: Float!
   categoryId: Int!
+  comment: String!
   currencySlug: String!
   date: String!
 }
@@ -203,6 +205,7 @@ input UpdateBudgetCategoryInput {
 input UpdateBudgetRecordInput {
   amount: Float
   categoryId: Int
+  comment: String
   currencySlug: String
   date: String
   id: Int!

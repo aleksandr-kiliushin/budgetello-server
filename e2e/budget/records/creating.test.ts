@@ -14,13 +14,13 @@ describe("Budget record creating", () => {
   }>([
     {
       authorizedUserId: users.johnDoe.id,
-      queryNameAndInput: `createBudgetRecord(input: { amount: 20.5, categoryId: 666666, currencySlug: "${currencies.usd.slug}", date: "2022-08-05" })`,
+      queryNameAndInput: `createBudgetRecord(input: { amount: 20.5, categoryId: 666666, comment: "", currencySlug: "${currencies.usd.slug}", date: "2022-08-05" })`,
       createdRecord: undefined,
       responseError: { fields: { categoryId: "Invalid value." } },
     },
     {
       authorizedUserId: users.johnDoe.id,
-      queryNameAndInput: `createBudgetRecord(input: { amount: -20.5, categoryId: ${budgetCategories.clothesExpense.id}, currencySlug: "${currencies.usd.slug}", date: "2022|08|05" })`,
+      queryNameAndInput: `createBudgetRecord(input: { amount: -20.5, categoryId: ${budgetCategories.clothesExpense.id}, comment: "", currencySlug: "${currencies.usd.slug}", date: "2022|08|05" })`,
       createdRecord: undefined,
       responseError: {
         fields: {
@@ -31,11 +31,12 @@ describe("Budget record creating", () => {
     },
     {
       authorizedUserId: users.johnDoe.id,
-      queryNameAndInput: `createBudgetRecord(input: { amount: 20.5, categoryId: ${budgetCategories.clothesExpense.id}, currencySlug: "${currencies.usd.slug}", date: "2022-08-05" })`,
+      queryNameAndInput: `createBudgetRecord(input: { amount: 20.5, categoryId: ${budgetCategories.clothesExpense.id}, comment: "It was my dream!", currencySlug: "${currencies.usd.slug}", date: "2022-08-05" })`,
       createdRecord: {
         amount: 20.5,
         author: users.johnDoe,
         category: budgetCategories.clothesExpense,
+        comment: "It was my dream!",
         currency: currencies.usd,
         date: "2022-08-05",
         id: 7,
@@ -45,11 +46,12 @@ describe("Budget record creating", () => {
     },
     {
       authorizedUserId: users.jessicaStark.id,
-      queryNameAndInput: `createBudgetRecord(input: { amount: 20.5, categoryId: ${budgetCategories.clothesExpense.id}, currencySlug: "${currencies.usd.slug}", date: "2022-08-05" })`,
+      queryNameAndInput: `createBudgetRecord(input: { amount: 20.5, categoryId: ${budgetCategories.clothesExpense.id}, comment: "", currencySlug: "${currencies.usd.slug}", date: "2022-08-05" })`,
       createdRecord: {
         amount: 20.5,
         author: users.jessicaStark,
         category: budgetCategories.clothesExpense,
+        comment: "",
         currency: currencies.usd,
         date: "2022-08-05",
         id: 7,
@@ -71,7 +73,7 @@ describe("Budget record creating", () => {
   it("created record fetched successfully", async () => {
     await authorize(users.johnDoe.id)
     await fetchGqlApi(`mutation CREATE_BUDGET_RECORD {
-      createBudgetRecord(input: { amount: 20.5, categoryId: ${budgetCategories.clothesExpense.id}, currencySlug: "${currencies.usd.slug}", date: "2022-08-05" }) {
+      createBudgetRecord(input: { amount: 20.5, categoryId: ${budgetCategories.clothesExpense.id}, comment: "", currencySlug: "${currencies.usd.slug}", date: "2022-08-05" }) {
         ${pickFields.budgetRecord}
       }
     }`)
@@ -85,6 +87,7 @@ describe("Budget record creating", () => {
         amount: 20.5,
         author: users.johnDoe,
         category: budgetCategories.clothesExpense,
+        comment: "",
         currency: currencies.usd,
         date: "2022-08-05",
         id: 7,

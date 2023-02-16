@@ -15,6 +15,9 @@ export class BudgetRecord {
   @Field((type) => BudgetCategory)
   category: BudgetCategory
 
+  @Field()
+  comment: string
+
   @Field((type) => Currency)
   currency: Currency
 
