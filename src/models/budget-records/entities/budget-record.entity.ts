@@ -17,7 +17,7 @@ export class BudgetRecordEntity {
   @ManyToOne(() => BudgetCategoryEntity, { onDelete: "CASCADE" })
   category: BudgetCategoryEntity
 
-  @Column({ type: "varchar" })
+  @Column({ type: "varchar", nullable: true })
   comment: IBudgetRecord["comment"]
 
   @ManyToOne(() => CurrencyEntity, { onDelete: "CASCADE" })
