@@ -58,6 +58,7 @@ export class BudgetRecordsService {
         ...(args.orderingById !== undefined && { id: args.orderingById }),
       },
       relations: {
+        author: true,
         category: { board: true, type: true },
         currency: true,
       },
@@ -85,6 +86,7 @@ export class BudgetRecordsService {
   }): Promise<BudgetRecordEntity> {
     const record = await this.budgetRecordsRepository.findOne({
       relations: {
+        author: true,
         category: { board: true, type: true },
         currency: true,
       },
@@ -114,7 +116,12 @@ export class BudgetRecordsService {
     authorizedUser: UserEntity
     input: CreateBudgetRecordInput
   }): Promise<BudgetRecordEntity> {
-    const record = this.budgetRecordsRepository.create({ amount: input.amount, date: input.date, isTrashed: false })
+    const record = this.budgetRecordsRepository.create({
+      amount: input.amount,
+      author: authorizedUser,
+      date: input.date,
+      isTrashed: false,
+    })
     record.category = await this.budgetCategoriesService
       .find({ authorizedUser, categoryId: input.categoryId })
       .catch(() => {

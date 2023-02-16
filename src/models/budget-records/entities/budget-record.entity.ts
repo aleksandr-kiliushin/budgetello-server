@@ -2,6 +2,7 @@ import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm"
 
 import { BudgetCategoryEntity } from "#models/budget-categories/entities/budget-category.entity"
 import { CurrencyEntity } from "#models/currencies/entities/currency.entity"
+import { UserEntity } from "#models/users/entities/user.entity"
 
 import { IBudgetRecord } from "#interfaces/budget"
 
@@ -9,6 +10,9 @@ import { IBudgetRecord } from "#interfaces/budget"
 export class BudgetRecordEntity {
   @Column({ type: "real" })
   amount: IBudgetRecord["amount"]
+
+  @ManyToOne(() => UserEntity, { onDelete: "CASCADE" })
+  author: UserEntity
 
   @ManyToOne(() => BudgetCategoryEntity, { onDelete: "CASCADE" })
   category: BudgetCategoryEntity

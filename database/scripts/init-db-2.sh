@@ -91,13 +91,13 @@ psql personal_app_db postgres << EOF
                               ('salary'   , 2       , 2        );
 EOF
 psql personal_app_db postgres << EOF
-  INSERT INTO budget_record ("amount", "categoryId", "date"      , "currencySlug", "isTrashed")
-  VALUES                    (100     , 1           , '2022-08-01', 'usd'         , TRUE       ),
-                            (400     , 2           , '2022-08-01', 'usd'         , TRUE       ),
-                            (25      , 2           , '2022-08-01', 'usd'         , FALSE      ),
-                            (30      , 3           , '2022-08-02', 'gel'         , FALSE      ),
-                            (10.5    , 3           , '2022-08-02', 'gel'         , FALSE      ),
-                            (230     , 4           , '2022-08-03', 'gel'         , FALSE      );
+  INSERT INTO budget_record ("amount", "authorId", "categoryId", "date"      , "currencySlug", "isTrashed")
+  VALUES                    (100     , 1         , 1           , '2022-08-01', 'usd'         , TRUE       ),
+                            (400     , 2         , 2           , '2022-08-01', 'usd'         , TRUE       ),
+                            (25      , 1         , 2           , '2022-08-01', 'usd'         , FALSE      ),
+                            (30      , 2         , 3           , '2022-08-02', 'gel'         , FALSE      ),
+                            (10.5    , 2         , 3           , '2022-08-02', 'gel'         , FALSE      ),
+                            (230     , 2         , 4           , '2022-08-03', 'gel'         , FALSE      );
 EOF
 psql personal_app_db postgres << EOF
   INSERT INTO activity_category_measurement_type ("name"        )

@@ -58,6 +58,7 @@ type BudgetCategoryType {
 
 type BudgetRecord {
   amount: Float!
+  author: User!
   category: BudgetCategory!
   currency: Currency!
   date: String!
