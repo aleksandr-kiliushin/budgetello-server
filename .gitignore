@@ -4,3 +4,4 @@
 /dist
 /node_modules
 /database/dump.sql
+/.db-visualizer/dump.sql

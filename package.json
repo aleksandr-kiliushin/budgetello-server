@@ -29,6 +29,7 @@
     "@types/node": "18.13.0",
     "@typescript-eslint/eslint-plugin": "5.52.0",
     "@typescript-eslint/parser": "5.52.0",
+    "db-visualizer": "1.0.6",
     "eslint": "8.34.0",
     "eslint-config-prettier": "8.6.0",
     "eslint-plugin-prettier": "4.2.1",
@@ -73,7 +74,8 @@
     "start:debug": "nest start --debug --watch",
     "start:prod": "node ./dist/main.js",
     "test": "jest --runInBand",
-    "typeorm": "typeorm-ts-node-esm -d ./src/config/ormConfig.ts"
+    "typeorm": "typeorm-ts-node-esm -d ./src/config/ormConfig.ts",
+    "visualize-db": "ts-node ./node_modules/db-visualizer/bin/index.js && npm --prefix ./node_modules/db-visualizer run dev:client"
   },
   "version": "1.0.0"
 }
