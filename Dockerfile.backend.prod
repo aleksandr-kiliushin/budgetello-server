@@ -10,8 +10,7 @@ COPY ./ ./
 
 RUN npm install
 RUN npm run build
-RUN npm run migration:up
 
 EXPOSE 3080
 
-CMD npm run start:prod
+CMD npm run migration:up && npm run start:prod
