@@ -1,6 +1,7 @@
-import { ErrorMessage } from "#constants/ErrorMessage"
 import { Field, InputType } from "@nestjs/graphql"
 import { IsNotEmpty } from "class-validator"
+
+import { ErrorMessage } from "#constants"
 
 @InputType()
 export class CreateUserInput {

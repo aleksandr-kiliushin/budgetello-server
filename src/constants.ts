@@ -1,4 +1,9 @@
-// TODO: Put all constants in src/constants.ts.
+export enum ErrorMessage {
+  ACCESS_DENIED = "Access denied.",
+  INVALID_VALUE = "Invalid value.",
+  REQUIRED = "Required.",
+  NOT_FOUND = "Not found.",
+}
 
 export enum GqlErrorCode {
   BAD_REQUEST = "BAD_REQUEST",

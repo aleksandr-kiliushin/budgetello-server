@@ -1,6 +1,7 @@
 // I have no idea how it works.
-import { GqlErrorCode } from "#constants/GqlErrorCode"
 import * as crypto from "node:crypto"
+
+import { GqlErrorCode } from "#constants"
 
 import { GqlError } from "./GqlError"
 

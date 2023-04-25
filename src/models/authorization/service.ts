@@ -1,4 +1,3 @@
-import { GqlErrorCode } from "#constants/GqlErrorCode"
 import { Injectable } from "@nestjs/common"
 import * as jwt from "jsonwebtoken"
 
@@ -6,6 +5,8 @@ import { UsersService } from "#models/users/service"
 
 import { GqlError } from "#helpers/GqlError"
 import { encrypt } from "#helpers/crypto"
+
+import { GqlErrorCode } from "#constants"
 
 import { CreateAuthorizationTokenInput } from "./dto/create-authorization-token.input"
 

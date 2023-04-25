@@ -1,10 +1,11 @@
 /* eslint-disable @typescript-eslint/ban-types */
-import { GqlErrorCode } from "#constants/GqlErrorCode"
 import { ArgumentMetadata, Injectable, PipeTransform } from "@nestjs/common"
 import { plainToInstance } from "class-transformer"
 import { validate } from "class-validator"
 
 import { GqlError } from "#helpers/GqlError"
+
+import { GqlErrorCode } from "#constants"
 
 @Injectable()
 export class ValidationPipe implements PipeTransform<unknown> {

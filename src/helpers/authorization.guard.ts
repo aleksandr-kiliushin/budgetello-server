@@ -1,4 +1,3 @@
-import { GqlErrorCode } from "#constants/GqlErrorCode"
 import { CanActivate, ExecutionContext, Injectable } from "@nestjs/common"
 import { GqlExecutionContext } from "@nestjs/graphql"
 import * as jwt from "jsonwebtoken"
@@ -6,6 +5,8 @@ import * as jwt from "jsonwebtoken"
 import { UsersService } from "#models/users/service"
 
 import { GqlError } from "#helpers/GqlError"
+
+import { GqlErrorCode } from "#constants"
 
 @Injectable()
 export class AuthorizationGuard implements CanActivate {

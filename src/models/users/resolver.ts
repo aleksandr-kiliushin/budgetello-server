@@ -1,4 +1,3 @@
-import { GqlErrorCode } from "#constants/GqlErrorCode"
 import { UseGuards } from "@nestjs/common"
 import { Args, Int, Mutation, Query, Resolver } from "@nestjs/graphql"
 
@@ -6,6 +5,8 @@ import { GqlError } from "#helpers/GqlError"
 import { AuthorizationGuard } from "#helpers/authorization.guard"
 import { AuthorizedUser } from "#helpers/authorized-user.decorator"
 import { ValidationPipe } from "#helpers/validation.pipe"
+
+import { GqlErrorCode } from "#constants"
 
 import { CreateUserInput } from "./dto/create-user.input"
 import { FindUserArgs } from "./dto/find-user.args"

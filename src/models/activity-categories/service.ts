@@ -1,5 +1,3 @@
-import { ErrorMessage } from "#constants/ErrorMessage"
-import { GqlErrorCode } from "#constants/GqlErrorCode"
 import { Injectable } from "@nestjs/common"
 import { InjectRepository } from "@nestjs/typeorm"
 import { In, IsNull, Repository } from "typeorm"
@@ -9,6 +7,8 @@ import { BoardsService } from "#models/boards/service"
 import { UserEntity } from "#models/users/entities/user.entity"
 
 import { GqlError } from "#helpers/GqlError"
+
+import { ErrorMessage, GqlErrorCode } from "#constants"
 
 import { CreateActivityCategoryInput } from "./dto/create-activity-category.input"
 import { SearchActivityCategoriesArgs } from "./dto/search-activity-categories.args"

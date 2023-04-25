@@ -1,5 +1,3 @@
-import { ErrorMessage } from "#constants/ErrorMessage"
-import { GqlErrorCode } from "#constants/GqlErrorCode"
 import { Injectable } from "@nestjs/common"
 import { InjectRepository } from "@nestjs/typeorm"
 import { In, Like, Repository } from "typeorm"
@@ -10,6 +8,8 @@ import { UserEntity } from "#models/users/entities/user.entity"
 import { UsersService } from "#models/users/service"
 
 import { GqlError } from "#helpers/GqlError"
+
+import { ErrorMessage, GqlErrorCode } from "#constants"
 
 import { AddMemberInput } from "./dto/add-member.input"
 import { CreateBoardInput } from "./dto/create-board.input"
