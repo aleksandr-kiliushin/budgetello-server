@@ -1,11 +1,14 @@
 import { ErrorMessage } from "#constants/ErrorMessage"
-import { BadRequestException, ForbiddenException, Injectable, NotFoundException } from "@nestjs/common"
+import { GqlErrorCode } from "#constants/GqlErrorCode"
+import { Injectable } from "@nestjs/common"
 import { InjectRepository } from "@nestjs/typeorm"
 import { In, IsNull, Repository } from "typeorm"
 
 import { ActivityCategoryMeasurementTypesService } from "#models/activity-category-measurement-types/service"
 import { BoardsService } from "#models/boards/service"
 import { UserEntity } from "#models/users/entities/user.entity"
+
+import { GqlError } from "#helpers/GqlError"
 
 import { CreateActivityCategoryInput } from "./dto/create-activity-category.input"
 import { SearchActivityCategoriesArgs } from "./dto/search-activity-categories.args"
@@ -61,7 +64,7 @@ export class ActivityCategoriesService {
       relations: { board: true, measurementType: true, owner: true },
       where: { id: categoryId },
     })
-    if (category === null) throw new NotFoundException({ message: "Not found." })
+    if (category === null) throw new GqlError(GqlErrorCode.BAD_REQUEST, { message: "Not found." })
 
     const isAuthorizedUserBoardAdmin = authorizedUser.administratedBoards.some((board) => {
       return board.id === category.board.id
@@ -71,7 +74,7 @@ export class ActivityCategoriesService {
     })
     const canAuthorizedUserFetchThisCategory = isAuthorizedUserBoardAdmin || isAuthorizedUserBoardMember
     if (!canAuthorizedUserFetchThisCategory) {
-      throw new ForbiddenException({ message: ErrorMessage.ACCESS_DENIED })
+      throw new GqlError(GqlErrorCode.FORBIDDEN, { message: ErrorMessage.ACCESS_DENIED })
     }
 
     return category
@@ -86,7 +89,7 @@ export class ActivityCategoriesService {
   }): Promise<ActivityCategoryEntity> {
     if (input.measurementTypeId === 1) {
       if (input.unit === null || input.unit.length === 0) {
-        throw new BadRequestException({
+        throw new GqlError(GqlErrorCode.BAD_REQUEST, {
           fields: {
             measurementTypeId: "Unit is required for «Quantitative» activities.",
             unit: "Unit is required for «Quantitative» activities.",
@@ -97,10 +100,10 @@ export class ActivityCategoriesService {
     const measurementType = await this.activityCategoryMeasurementTypesService
       .find({ typeId: input.measurementTypeId })
       .catch(() => {
-        throw new BadRequestException({ fields: { measurementTypeId: ErrorMessage.INVALID_VALUE } })
+        throw new GqlError(GqlErrorCode.BAD_REQUEST, { fields: { measurementTypeId: ErrorMessage.INVALID_VALUE } })
       })
     const board = await this.boardsService.find({ boardId: input.boardId }).catch(() => {
-      throw new BadRequestException({ fields: { boardId: ErrorMessage.INVALID_VALUE } })
+      throw new GqlError(GqlErrorCode.BAD_REQUEST, { fields: { boardId: ErrorMessage.INVALID_VALUE } })
     })
     const similarExistingCategory = await this.activityCategoriesRepository.findOne({
       relations: { board: true, measurementType: true, owner: true },
@@ -117,7 +120,7 @@ export class ActivityCategoriesService {
       },
     })
     if (similarExistingCategory !== null) {
-      throw new BadRequestException({
+      throw new GqlError(GqlErrorCode.BAD_REQUEST, {
         fields: {
           boardId: `Similar «${similarExistingCategory.name}» category already exists in this board.`,
           measurementType: `Similar «${similarExistingCategory.name}» category already exists in this board.`,
@@ -156,7 +159,7 @@ export class ActivityCategoriesService {
     const canAuthorizedUserEditThisCategory =
       isAuthorizedUserBoardAdmin || (isAuthorizedUserBoardMember && doesAuthorizedUserOwnThisCategory)
     if (!canAuthorizedUserEditThisCategory) {
-      throw new ForbiddenException({ message: ErrorMessage.ACCESS_DENIED })
+      throw new GqlError(GqlErrorCode.FORBIDDEN, { message: ErrorMessage.ACCESS_DENIED })
     }
     if (
       input.boardId === undefined &&
@@ -171,12 +174,12 @@ export class ActivityCategoriesService {
       category.measurementType = await this.activityCategoryMeasurementTypesService
         .find({ typeId: input.measurementTypeId })
         .catch(() => {
-          throw new BadRequestException({ fields: { measurementTypeId: ErrorMessage.INVALID_VALUE } })
+          throw new GqlError(GqlErrorCode.BAD_REQUEST, { fields: { measurementTypeId: ErrorMessage.INVALID_VALUE } })
         })
     }
     if (input.boardId !== undefined) {
       category.board = await this.boardsService.find({ boardId: input.boardId }).catch(() => {
-        throw new BadRequestException({ fields: { boardId: ErrorMessage.INVALID_VALUE } })
+        throw new GqlError(GqlErrorCode.BAD_REQUEST, { fields: { boardId: ErrorMessage.INVALID_VALUE } })
       })
     }
     if (input.name !== undefined) {
@@ -187,7 +190,7 @@ export class ActivityCategoriesService {
     }
     if (category.measurementType.id === 1) {
       if (typeof category.unit !== "string" || category.unit === "") {
-        throw new BadRequestException({
+        throw new GqlError(GqlErrorCode.BAD_REQUEST, {
           fields: {
             measurementTypeId: "Unit is required for «Quantitative» activities.",
             unit: "Unit is required for «Quantitative» activities.",
@@ -210,7 +213,7 @@ export class ActivityCategoriesService {
       },
     })
     if (similarExistingCategory !== null) {
-      throw new BadRequestException({
+      throw new GqlError(GqlErrorCode.BAD_REQUEST, {
         fields: {
           boardId: `Similar «${similarExistingCategory.name}» category already exists in this board.`,
           measurementType: `Similar «${similarExistingCategory.name}» category already exists in this board.`,
@@ -242,7 +245,7 @@ export class ActivityCategoriesService {
     const canAuthorizedUserDeleteThisCategory =
       isAuthorizedUserBoardAdmin || (isAuthorizedUserBoardMember && doesAuthorizedUserOwnThisCategory)
     if (!canAuthorizedUserDeleteThisCategory) {
-      throw new ForbiddenException({ message: ErrorMessage.ACCESS_DENIED })
+      throw new GqlError(GqlErrorCode.FORBIDDEN, { message: ErrorMessage.ACCESS_DENIED })
     }
 
     await this.activityCategoriesRepository.delete(categoryId)

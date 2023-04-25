@@ -1,5 +1,6 @@
 import { ErrorMessage } from "#constants/ErrorMessage"
-import { BadRequestException, ForbiddenException, Injectable, NotFoundException } from "@nestjs/common"
+import { GqlErrorCode } from "#constants/GqlErrorCode"
+import { Injectable } from "@nestjs/common"
 import { InjectRepository } from "@nestjs/typeorm"
 import { In, Like, Repository } from "typeorm"
 
@@ -7,6 +8,8 @@ import { BoardSubjectsService } from "#models/board-subjects/service"
 import { CurrenciesService } from "#models/currencies/service"
 import { UserEntity } from "#models/users/entities/user.entity"
 import { UsersService } from "#models/users/service"
+
+import { GqlError } from "#helpers/GqlError"
 
 import { AddMemberInput } from "./dto/add-member.input"
 import { CreateBoardInput } from "./dto/create-board.input"
@@ -83,7 +86,7 @@ export class BoardsService {
       relations: { admins: true, defaultCurrency: true, members: true, subject: true },
       where: { id: boardId },
     })
-    if (board === null) throw new NotFoundException({ message: "Not found." })
+    if (board === null) throw new GqlError(GqlErrorCode.BAD_REQUEST, { message: "Not found." })
     return board
   }
 
@@ -95,14 +98,14 @@ export class BoardsService {
     input: CreateBoardInput
   }): Promise<BoardEntity> {
     const subject = await this.boardSubjectsService.find({ subjectId: input.subjectId }).catch(() => {
-      throw new BadRequestException({ fields: { subjectId: "Invalid subject." } })
+      throw new GqlError(GqlErrorCode.BAD_REQUEST, { fields: { subjectId: "Invalid subject." } })
     })
     const similarExistingBoard = await this.boardsRepository.findOne({
       relations: { subject: true },
       where: { name: input.name, subject },
     })
     if (similarExistingBoard !== null) {
-      throw new BadRequestException({
+      throw new GqlError(GqlErrorCode.BAD_REQUEST, {
         fields: {
           name: `"${similarExistingBoard.name}" ${similarExistingBoard.subject.name} board already exists.`,
           subjectId: `"${similarExistingBoard.name}" ${similarExistingBoard.subject.name} board already exists.`,
@@ -119,7 +122,7 @@ export class BoardsService {
       board.defaultCurrency = await this.currenciesService
         .find({ currencySlug: input.defaultCurrencySlug })
         .catch(() => {
-          throw new BadRequestException({ fields: { defaultCurrencySlug: ErrorMessage.INVALID_VALUE } })
+          throw new GqlError(GqlErrorCode.BAD_REQUEST, { fields: { defaultCurrencySlug: ErrorMessage.INVALID_VALUE } })
         })
     }
     const newlyCreatedBoard = await this.boardsRepository.save(board)
@@ -135,20 +138,20 @@ export class BoardsService {
   }): Promise<BoardEntity> {
     const board = await this.find({ boardId: input.id })
     if (board.admins.every((admin) => admin.id !== authorizedUser.id)) {
-      throw new ForbiddenException({ message: ErrorMessage.ACCESS_DENIED })
+      throw new GqlError(GqlErrorCode.FORBIDDEN, { message: ErrorMessage.ACCESS_DENIED })
     }
     if (input.name === undefined && input.subjectId === undefined && input.defaultCurrencySlug === undefined) {
       return board
     }
     if (input.name !== undefined) {
       if (input.name === "") {
-        throw new BadRequestException({ fields: { name: ErrorMessage.REQUIRED } })
+        throw new GqlError(GqlErrorCode.BAD_REQUEST, { fields: { name: ErrorMessage.REQUIRED } })
       }
       board.name = input.name
     }
     if (input.subjectId !== undefined) {
       board.subject = await this.boardSubjectsService.find({ subjectId: input.subjectId }).catch(() => {
-        throw new BadRequestException({ fields: { subjectId: "Invalid board subject." } })
+        throw new GqlError(GqlErrorCode.BAD_REQUEST, { fields: { subjectId: "Invalid board subject." } })
       })
     }
     const similarExistingBoard = await this.boardsRepository.findOne({
@@ -156,7 +159,7 @@ export class BoardsService {
       where: { name: board.name, subject: board.subject },
     })
     if (similarExistingBoard !== null && similarExistingBoard.id !== board.id) {
-      throw new BadRequestException({
+      throw new GqlError(GqlErrorCode.BAD_REQUEST, {
         fields: {
           name: `"${similarExistingBoard.name}" ${similarExistingBoard.subject.name} board already exists.`,
           subjectId: `"${similarExistingBoard.name}" ${similarExistingBoard.subject.name} board already exists.`,
@@ -167,7 +170,7 @@ export class BoardsService {
       board.defaultCurrency = await this.currenciesService
         .find({ currencySlug: input.defaultCurrencySlug })
         .catch(() => {
-          throw new BadRequestException({ fields: { defaultCurrencySlug: ErrorMessage.INVALID_VALUE } })
+          throw new GqlError(GqlErrorCode.BAD_REQUEST, { fields: { defaultCurrencySlug: ErrorMessage.INVALID_VALUE } })
         })
     }
     if (board.subject.id === 2) {
@@ -185,7 +188,7 @@ export class BoardsService {
   }): Promise<BoardEntity> {
     const board = await this.find({ boardId })
     if (board.admins.every((admin) => admin.id !== authorizedUser.id)) {
-      throw new ForbiddenException({ message: ErrorMessage.ACCESS_DENIED })
+      throw new GqlError(GqlErrorCode.FORBIDDEN, { message: ErrorMessage.ACCESS_DENIED })
     }
     await this.boardsRepository.delete(boardId)
     return board
@@ -199,11 +202,11 @@ export class BoardsService {
     input: AddMemberInput
   }): Promise<BoardEntity> {
     if (authorizedUser.administratedBoards.every((board) => board.id !== input.boardId)) {
-      throw new ForbiddenException({ message: ErrorMessage.ACCESS_DENIED })
+      throw new GqlError(GqlErrorCode.FORBIDDEN, { message: ErrorMessage.ACCESS_DENIED })
     }
     const candidateToMembers = await this.usersService.find({ userId: input.userId })
     if (candidateToMembers.participatedBoards.some((board) => board.id === input.boardId)) {
-      throw new BadRequestException({ message: "The user is already a member of the board." })
+      throw new GqlError(GqlErrorCode.BAD_REQUEST, { message: "The user is already a member of the board." })
     }
     const board = await this.find({ boardId: input.boardId })
     board.members = [...board.members, candidateToMembers]
@@ -219,12 +222,12 @@ export class BoardsService {
     input: RemoveMemberInput
   }): Promise<BoardEntity> {
     if (authorizedUser.administratedBoards.every((board) => board.id !== input.boardId)) {
-      throw new ForbiddenException({ message: ErrorMessage.ACCESS_DENIED })
+      throw new GqlError(GqlErrorCode.FORBIDDEN, { message: ErrorMessage.ACCESS_DENIED })
     }
     const board = await this.find({ boardId: input.boardId })
     const candidateToBeRemoved = await this.usersService.find({ userId: input.memberId })
     if (candidateToBeRemoved.participatedBoards.every((board) => board.id !== input.boardId)) {
-      throw new BadRequestException({ message: "The user is not a member of the board." })
+      throw new GqlError(GqlErrorCode.BAD_REQUEST, { message: "The user is not a member of the board." })
     }
     board.members = board.members.filter((member) => member.id !== input.memberId)
     await this.boardsRepository.save(board)

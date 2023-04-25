@@ -1,11 +1,14 @@
 import { ErrorMessage } from "#constants/ErrorMessage"
-import { BadRequestException, ForbiddenException, Injectable, NotFoundException } from "@nestjs/common"
+import { GqlErrorCode } from "#constants/GqlErrorCode"
+import { Injectable } from "@nestjs/common"
 import { InjectRepository } from "@nestjs/typeorm"
 import { Equal, In, Repository } from "typeorm"
 
 import { BudgetCategoriesService } from "#models/budget-categories/service"
 import { CurrenciesService } from "#models/currencies/service"
 import { UserEntity } from "#models/users/entities/user.entity"
+
+import { GqlError } from "#helpers/GqlError"
 
 import { CreateBudgetRecordInput } from "./dto/create-budget-record.input"
 import { SearchBudgetRecordsArgs } from "./dto/search-budget-records.args"
@@ -93,7 +96,7 @@ export class BudgetRecordsService {
       where: { id: recordId },
     })
     if (record === null) {
-      throw new NotFoundException({ message: "Not found." })
+      throw new GqlError(GqlErrorCode.BAD_REQUEST, { message: "Not found." })
     }
 
     const accessibleBoardsIds = [
@@ -103,7 +106,7 @@ export class BudgetRecordsService {
       ]),
     ]
     if (!accessibleBoardsIds.includes(record.category.board.id)) {
-      throw new ForbiddenException({ message: ErrorMessage.ACCESS_DENIED })
+      throw new GqlError(GqlErrorCode.FORBIDDEN, { message: ErrorMessage.ACCESS_DENIED })
     }
 
     return record
@@ -126,10 +129,10 @@ export class BudgetRecordsService {
     record.category = await this.budgetCategoriesService
       .find({ authorizedUser, categoryId: input.categoryId })
       .catch(() => {
-        throw new BadRequestException({ fields: { categoryId: ErrorMessage.INVALID_VALUE } })
+        throw new GqlError(GqlErrorCode.BAD_REQUEST, { fields: { categoryId: ErrorMessage.INVALID_VALUE } })
       })
     record.currency = await this.currenciesService.find({ currencySlug: input.currencySlug }).catch(() => {
-      throw new BadRequestException({ fields: { currencySlug: ErrorMessage.INVALID_VALUE } })
+      throw new GqlError(GqlErrorCode.BAD_REQUEST, { fields: { currencySlug: ErrorMessage.INVALID_VALUE } })
     })
     return this.budgetRecordsRepository.save(record)
   }
@@ -158,12 +161,12 @@ export class BudgetRecordsService {
       record.category = await this.budgetCategoriesService
         .find({ authorizedUser, categoryId: input.categoryId })
         .catch(() => {
-          throw new BadRequestException({ fields: { categoryId: ErrorMessage.INVALID_VALUE } })
+          throw new GqlError(GqlErrorCode.BAD_REQUEST, { fields: { categoryId: ErrorMessage.INVALID_VALUE } })
         })
     }
     if (input.currencySlug !== undefined) {
       record.currency = await this.currenciesService.find({ currencySlug: input.currencySlug }).catch(() => {
-        throw new BadRequestException({ fields: { currencySlug: ErrorMessage.INVALID_VALUE } })
+        throw new GqlError(GqlErrorCode.BAD_REQUEST, { fields: { currencySlug: ErrorMessage.INVALID_VALUE } })
       })
     }
     return this.budgetRecordsRepository.save(record)

@@ -1,6 +1,8 @@
 // I have no idea how it works.
-import { ServiceUnavailableException } from "@nestjs/common"
+import { GqlErrorCode } from "#constants/GqlErrorCode"
 import * as crypto from "node:crypto"
+
+import { GqlError } from "./GqlError"
 
 const algorithm = "aes-256-ctr"
 const USER_PASSWORD_ENCRYPTION_INITIALIZION_VECTOR_STRINGIFIED =
@@ -9,13 +11,13 @@ const USER_PASSWORD_ENCRYPTION_SECRET_PHRASE = process.env.USER_PASSWORD_ENCRYPT
 
 export const encrypt = (text: string) => {
   if (USER_PASSWORD_ENCRYPTION_INITIALIZION_VECTOR_STRINGIFIED === undefined) {
-    throw new ServiceUnavailableException({
+    throw new GqlError(GqlErrorCode.INTERNAL_SERVER_ERROR, {
       message: "Server has no USER_PASSWORD_ENCRYPTION_INITIALIZION_VECTOR_STRINGIFIED set.",
     })
   }
 
   if (USER_PASSWORD_ENCRYPTION_SECRET_PHRASE === undefined) {
-    throw new ServiceUnavailableException({
+    throw new GqlError(GqlErrorCode.INTERNAL_SERVER_ERROR, {
       message: "Server has no USER_PASSWORD_ENCRYPTION_SECRET_PHRASE set.",
     })
   }

@@ -1,6 +1,8 @@
-import { BadRequestException, UseGuards } from "@nestjs/common"
+import { GqlErrorCode } from "#constants/GqlErrorCode"
+import { UseGuards } from "@nestjs/common"
 import { Args, Int, Mutation, Query, Resolver } from "@nestjs/graphql"
 
+import { GqlError } from "#helpers/GqlError"
 import { AuthorizationGuard } from "#helpers/authorization.guard"
 import { AuthorizedUser } from "#helpers/authorized-user.decorator"
 import { ValidationPipe } from "#helpers/validation.pipe"
@@ -40,7 +42,7 @@ export class UsersResolver {
     if (args.username !== undefined) {
       return this.usersService.find({ authorizedUser, userUsername: args.username })
     }
-    throw new BadRequestException({
+    throw new GqlError(GqlErrorCode.BAD_REQUEST, {
       query: {
         id: "Provide either 'id' or 'username'.",
         username: "Provide either 'id' or 'username'.",

@@ -1,7 +1,10 @@
 /* eslint-disable @typescript-eslint/ban-types */
-import { ArgumentMetadata, BadRequestException, Injectable, PipeTransform } from "@nestjs/common"
+import { GqlErrorCode } from "#constants/GqlErrorCode"
+import { ArgumentMetadata, Injectable, PipeTransform } from "@nestjs/common"
 import { plainToInstance } from "class-transformer"
 import { validate } from "class-validator"
+
+import { GqlError } from "#helpers/GqlError"
 
 @Injectable()
 export class ValidationPipe implements PipeTransform<unknown> {
@@ -29,7 +32,7 @@ export class ValidationPipe implements PipeTransform<unknown> {
       responseBody.fields[error.property] = Object.values(error.constraints)[0]
     })
 
-    throw new BadRequestException(responseBody)
+    throw new GqlError(GqlErrorCode.BAD_REQUEST, responseBody)
   }
 
   private toValidate(metatype: Function): boolean {

@@ -1,14 +1,11 @@
-import {
-  CanActivate,
-  ExecutionContext,
-  Injectable,
-  ServiceUnavailableException,
-  UnauthorizedException,
-} from "@nestjs/common"
+import { GqlErrorCode } from "#constants/GqlErrorCode"
+import { CanActivate, ExecutionContext, Injectable } from "@nestjs/common"
 import { GqlExecutionContext } from "@nestjs/graphql"
 import * as jwt from "jsonwebtoken"
 
 import { UsersService } from "#models/users/service"
+
+import { GqlError } from "#helpers/GqlError"
 
 @Injectable()
 export class AuthorizationGuard implements CanActivate {
@@ -22,7 +19,7 @@ export class AuthorizationGuard implements CanActivate {
 
     const jwtSecret = process.env.JWT_SECRET
     if (jwtSecret === undefined) {
-      throw new ServiceUnavailableException({ message: "Server has no JWT secret." })
+      throw new GqlError(GqlErrorCode.INTERNAL_SERVER_ERROR, { message: "Server has no JWT secret." })
     }
 
     try {
@@ -31,7 +28,7 @@ export class AuthorizationGuard implements CanActivate {
       if (decodingResult === null) throw new Error()
       gqlExecutionContext.authorizedUser = await this.usersService.find({ userId: decodingResult.id })
     } catch {
-      throw new UnauthorizedException({ message: "Invalid token." })
+      throw new GqlError(GqlErrorCode.UNAUTHORIZED, { message: "Invalid token." })
     }
 
     return true

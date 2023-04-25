@@ -1,10 +1,13 @@
 import { ErrorMessage } from "#constants/ErrorMessage"
-import { BadRequestException, ForbiddenException, Injectable, NotFoundException } from "@nestjs/common"
+import { GqlErrorCode } from "#constants/GqlErrorCode"
+import { Injectable } from "@nestjs/common"
 import { InjectRepository } from "@nestjs/typeorm"
 import { In, Repository } from "typeorm"
 
 import { ActivityCategoriesService } from "#models/activity-categories/service"
 import { UserEntity } from "#models/users/entities/user.entity"
+
+import { GqlError } from "#helpers/GqlError"
 
 import { CreateActivityRecordInput } from "./dto/create-activity-record.input"
 import { SearchActivityRecordsArgs } from "./dto/search-budget-records.args"
@@ -78,7 +81,7 @@ export class ActivityRecordsService {
       where: { id: recordId },
     })
     if (record === null) {
-      throw new NotFoundException({ message: "Not found." })
+      throw new GqlError(GqlErrorCode.BAD_REQUEST, { message: "Not found." })
     }
 
     const accessibleBoardsIds = [
@@ -88,7 +91,7 @@ export class ActivityRecordsService {
       ]),
     ]
     if (!accessibleBoardsIds.includes(record.category.board.id)) {
-      throw new ForbiddenException({ message: ErrorMessage.ACCESS_DENIED })
+      throw new GqlError(GqlErrorCode.FORBIDDEN, { message: ErrorMessage.ACCESS_DENIED })
     }
 
     return record
@@ -104,13 +107,13 @@ export class ActivityRecordsService {
     const category = await this.activityCategoriesService
       .find({ authorizedUser, categoryId: input.categoryId })
       .catch(() => {
-        throw new BadRequestException({ fields: { categoryId: ErrorMessage.INVALID_VALUE } })
+        throw new GqlError(GqlErrorCode.BAD_REQUEST, { fields: { categoryId: ErrorMessage.INVALID_VALUE } })
       })
     if (category.owner.id !== authorizedUser.id) {
-      throw new ForbiddenException({ message: ErrorMessage.ACCESS_DENIED })
+      throw new GqlError(GqlErrorCode.FORBIDDEN, { message: ErrorMessage.ACCESS_DENIED })
     }
     if (category.measurementType.id === 1 && typeof input.quantitativeValue !== "number") {
-      throw new BadRequestException({
+      throw new GqlError(GqlErrorCode.BAD_REQUEST, {
         fields: {
           categoryId: "Amount should be filled for «Quantitative» activity.",
           quantitativeValue: "Amount should be filled for «Quantitative» activity.",
@@ -118,7 +121,7 @@ export class ActivityRecordsService {
       })
     }
     if (category.measurementType.id === 2 && typeof input.booleanValue !== "boolean") {
-      throw new BadRequestException({
+      throw new GqlError(GqlErrorCode.BAD_REQUEST, {
         fields: {
           categoryId: "Yes-no option should be filled for «Yes / no» activity.",
           booleanValue: "Yes-no option should be filled for «Yes / no» activity.",
@@ -140,7 +143,7 @@ export class ActivityRecordsService {
   }): Promise<ActivityRecordEntity> {
     const record = await this.find({ authorizedUser, recordId: input.id })
     if (record.category.owner.id !== authorizedUser.id) {
-      throw new ForbiddenException({ message: ErrorMessage.ACCESS_DENIED })
+      throw new GqlError(GqlErrorCode.FORBIDDEN, { message: ErrorMessage.ACCESS_DENIED })
     }
     if (Object.keys(input).length === 0) return record
     if (input.booleanValue !== undefined) {
@@ -159,11 +162,11 @@ export class ActivityRecordsService {
       record.category = await this.activityCategoriesService
         .find({ authorizedUser, categoryId: input.categoryId })
         .catch(() => {
-          throw new BadRequestException({ fields: { categoryId: ErrorMessage.INVALID_VALUE } })
+          throw new GqlError(GqlErrorCode.BAD_REQUEST, { fields: { categoryId: ErrorMessage.INVALID_VALUE } })
         })
     }
     if (record.category.measurementType.id === 1 && typeof record.quantitativeValue !== "number") {
-      throw new BadRequestException({
+      throw new GqlError(GqlErrorCode.BAD_REQUEST, {
         fields: {
           categoryId: "Amount should be filled for «Quantitative» activity.",
           quantitativeValue: "Amount should be filled for «Quantitative» activity.",
@@ -171,7 +174,7 @@ export class ActivityRecordsService {
       })
     }
     if (record.category.measurementType.id === 2 && typeof record.booleanValue !== "boolean") {
-      throw new BadRequestException({
+      throw new GqlError(GqlErrorCode.BAD_REQUEST, {
         fields: {
           categoryId: "Yes-no option should be filled for «Yes / no» activity.",
           booleanValue: "Yes-no option should be filled for «Yes / no» activity.",
@@ -190,7 +193,7 @@ export class ActivityRecordsService {
   }): Promise<ActivityRecordEntity> {
     const record = await this.find({ authorizedUser, recordId })
     if (record.category.owner.id !== authorizedUser.id) {
-      throw new ForbiddenException({ message: ErrorMessage.ACCESS_DENIED })
+      throw new GqlError(GqlErrorCode.FORBIDDEN, { message: ErrorMessage.ACCESS_DENIED })
     }
     await this.activityRecordsRepository.delete(recordId)
     return record

@@ -1,11 +1,14 @@
 import { ErrorMessage } from "#constants/ErrorMessage"
-import { BadRequestException, ForbiddenException, Injectable, NotFoundException } from "@nestjs/common"
+import { GqlErrorCode } from "#constants/GqlErrorCode"
+import { Injectable } from "@nestjs/common"
 import { InjectRepository } from "@nestjs/typeorm"
 import { In, Repository } from "typeorm"
 
 import { BoardsService } from "#models/boards/service"
 import { BudgetCategoryTypesService } from "#models/budget-category-types/service"
 import { UserEntity } from "#models/users/entities/user.entity"
+
+import { GqlError } from "#helpers/GqlError"
 
 import { CreateBudgetCategoryInput } from "./dto/create-budget-category.input"
 import { SearchBudgetCategoriesArgs } from "./dto/search-budget-categories.args"
@@ -66,7 +69,7 @@ export class BudgetCategoriesService {
       },
       where: { id: categoryId },
     })
-    if (category === null) throw new NotFoundException({ message: "Not found." })
+    if (category === null) throw new GqlError(GqlErrorCode.BAD_REQUEST, { message: "Not found." })
 
     const isAuthorizedUserBoardAdmin = authorizedUser.administratedBoards.some((board) => {
       return board.id === category.board.id
@@ -76,7 +79,7 @@ export class BudgetCategoriesService {
     })
     const canAuthorizedUserFindThisBoard = isAuthorizedUserBoardAdmin || isAuthorizedUserBoardMember
     if (!canAuthorizedUserFindThisBoard) {
-      throw new ForbiddenException({ message: ErrorMessage.ACCESS_DENIED })
+      throw new GqlError(GqlErrorCode.FORBIDDEN, { message: ErrorMessage.ACCESS_DENIED })
     }
 
     return category
@@ -90,10 +93,10 @@ export class BudgetCategoriesService {
     input: CreateBudgetCategoryInput
   }): Promise<BudgetCategoryEntity> {
     const type = await this.budgetCategoryTypesService.find({ typeId: input.typeId }).catch(() => {
-      throw new BadRequestException({ fields: { typeId: ErrorMessage.INVALID_VALUE } })
+      throw new GqlError(GqlErrorCode.BAD_REQUEST, { fields: { typeId: ErrorMessage.INVALID_VALUE } })
     })
     const board = await this.boardsService.find({ boardId: input.boardId }).catch(() => {
-      throw new BadRequestException({ fields: { boardId: ErrorMessage.INVALID_VALUE } })
+      throw new GqlError(GqlErrorCode.BAD_REQUEST, { fields: { boardId: ErrorMessage.INVALID_VALUE } })
     })
     const similarExistingCategory = await this.budgetCategoriesRepository.findOne({
       relations: { board: true, type: true },
@@ -106,7 +109,7 @@ export class BudgetCategoriesService {
       },
     })
     if (similarExistingCategory !== null) {
-      throw new BadRequestException({
+      throw new GqlError(GqlErrorCode.BAD_REQUEST, {
         fields: {
           boardId: `"${similarExistingCategory.name}" ${similarExistingCategory.type.name} category already exists in this board.`,
           name: `"${similarExistingCategory.name}" ${similarExistingCategory.type.name} category already exists in this board.`,
@@ -136,24 +139,24 @@ export class BudgetCategoriesService {
     })
     const canAuthorizedUserEditThisCategory = isAuthorizedUserBoardAdmin || isAuthorizedUserBoardMember
     if (!canAuthorizedUserEditThisCategory) {
-      throw new ForbiddenException({ message: ErrorMessage.ACCESS_DENIED })
+      throw new GqlError(GqlErrorCode.FORBIDDEN, { message: ErrorMessage.ACCESS_DENIED })
     }
 
     if (input.boardId === undefined && input.name === undefined && input.typeId === undefined) return category
 
     if (input.typeId !== undefined) {
       category.type = await this.budgetCategoryTypesService.find({ typeId: input.typeId }).catch(() => {
-        throw new BadRequestException({ fields: { typeId: ErrorMessage.INVALID_VALUE } })
+        throw new GqlError(GqlErrorCode.BAD_REQUEST, { fields: { typeId: ErrorMessage.INVALID_VALUE } })
       })
     }
     if (input.boardId !== undefined) {
       category.board = await this.boardsService.find({ boardId: input.boardId }).catch(() => {
-        throw new BadRequestException({ fields: { boardId: ErrorMessage.INVALID_VALUE } })
+        throw new GqlError(GqlErrorCode.BAD_REQUEST, { fields: { boardId: ErrorMessage.INVALID_VALUE } })
       })
     }
     if (input.name !== undefined) {
       if (input.name === "") {
-        throw new BadRequestException({ fields: { name: ErrorMessage.REQUIRED } })
+        throw new GqlError(GqlErrorCode.BAD_REQUEST, { fields: { name: ErrorMessage.REQUIRED } })
       }
       category.name = input.name
     }
@@ -168,7 +171,7 @@ export class BudgetCategoriesService {
       },
     })
     if (similarExistingCategory !== null) {
-      throw new BadRequestException({
+      throw new GqlError(GqlErrorCode.BAD_REQUEST, {
         fields: {
           boardId: `"${similarExistingCategory.name}" ${similarExistingCategory.type.name} category already exists in this board.`,
           name: `"${similarExistingCategory.name}" ${similarExistingCategory.type.name} category already exists in this board.`,
@@ -189,7 +192,7 @@ export class BudgetCategoriesService {
   }): Promise<BudgetCategoryEntity> {
     const category = await this.find({ authorizedUser, categoryId })
     if (category.board.admins.every((admin) => admin.id !== authorizedUser.id)) {
-      throw new ForbiddenException({ message: ErrorMessage.ACCESS_DENIED })
+      throw new GqlError(GqlErrorCode.FORBIDDEN, { message: ErrorMessage.ACCESS_DENIED })
     }
     await this.budgetCategoriesRepository.delete(categoryId)
     return category
