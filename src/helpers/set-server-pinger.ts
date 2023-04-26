@@ -1,5 +1,5 @@
 export const setServerPinger = () => {
   setInterval(() => {
-    fetch("https://personal-app-server.onrender.com")
-  }, 15 * 60 * 1000)
+    fetch("https://personal-app-backend.onrender.com")
+  }, 10 * 60 * 1000)
 }
