@@ -13,5 +13,5 @@ jobs:
         run: echo "${{ secrets.DEV_ENV_FILE }}" > ./dev.env
       - name: Installing node modules
         run: npm install
-      - name: Running DB and API
-        run: npm run dev:db-and-api
+      - name: Building app
+        run: npm run build
