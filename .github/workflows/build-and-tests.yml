@@ -10,3 +10,4 @@ jobs:
         with:
           node-version: "18.13.0"
       - run: echo "🎉 The job was automatically triggered by a ${{ github.event_name }} event."
+      - run: npm install
