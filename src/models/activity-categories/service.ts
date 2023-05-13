@@ -230,7 +230,7 @@ export class ActivityCategoriesService {
     authorizedUser,
     categoryId,
   }: {
-    authorizedUser: UserEntity
+    authorizedUser: number
     categoryId: ActivityCategoryEntity["id"]
   }): Promise<ActivityCategoryEntity> {
     const category = await this.find({ authorizedUser, categoryId })
