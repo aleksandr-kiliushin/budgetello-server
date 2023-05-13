@@ -1,4 +1,4 @@
-name: Build and tests
+name: TypeScript checks and build
 on: [push]
 jobs:
   build:
