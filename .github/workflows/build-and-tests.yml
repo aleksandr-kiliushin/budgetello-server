@@ -13,7 +13,7 @@ jobs:
         run: echo "${{ secrets.DEV_ENV_FILE }}" > ./dev.env
       - name: Installing node modules
         run: npm install
-      - name: Building app
-        run: npm run build
       - name: Checking for TypeScript errors
         run: npm run check-types
+      - name: Building app
+        run: npm run build
