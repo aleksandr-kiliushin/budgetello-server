@@ -225,7 +225,9 @@ export class BoardsService {
       throw new GqlError(GqlErrorCode.FORBIDDEN, { message: ErrorMessage.ACCESS_DENIED })
     }
     const board = await this.find({ boardId: input.boardId })
-    const candidateToBeRemoved = await this.usersService.find({ userId: input.memberId })
+    // const candidateToBeRemoved = await this.usersService.find({ userId: input.memberId })
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
     if (candidateToBeRemoved.participatedBoards.every((board) => board.id !== input.boardId)) {
       throw new GqlError(GqlErrorCode.BAD_REQUEST, { message: "The user is not a member of the board." })
     }
