@@ -9,7 +9,9 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: "18.13.0"
-      - name: "Creating DEV_ENV_FILE"
+      - name: Creating DEV_ENV_FILE
         run: echo "${{ secrets.DEV_ENV_FILE }}" > ./dev.env
-      - run: npm install
-      - run: npm run dev:db-and-api
+      - name: Installing node modules
+        run: npm install
+      - name: Running DB and API
+        run: npm run dev:db-and-api
