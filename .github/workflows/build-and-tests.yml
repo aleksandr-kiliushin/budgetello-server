@@ -15,3 +15,4 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
       - run: echo "🎉 The job was automatically triggered by a ${{ github.event_name }} event."
+      - run: echo "🐝 Engines.node is – ${{ engines.node }}."
