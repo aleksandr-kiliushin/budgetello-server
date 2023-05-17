@@ -1,13 +1,12 @@
 FROM ubuntu:22.04
 
+WORKDIR /var/app
+COPY ./ ./
+
 RUN apt-get update
 RUN apt-get upgrade -y
 RUN apt-get install curl -y
 RUN curl -fsSL https://deb.nodesource.com/setup_18.x | bash - && apt-get install -y nodejs
-
-WORKDIR /var/app
-COPY ./ ./
-
 RUN npm install
 RUN npm run build
 

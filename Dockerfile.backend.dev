@@ -7,7 +7,6 @@ RUN apt-get upgrade -y
 RUN apt-get install curl -y
 RUN curl -fsSL https://deb.nodesource.com/setup_18.x | bash - && apt-get install -y nodejs
 
-
-CMD ["npm", "run", "dev"]
-
 EXPOSE 3080
+
+CMD npm run dev
