@@ -89,8 +89,8 @@ export class BudgetRecordsService {
   }): Promise<BudgetRecordEntity> {
     const record = await this.budgetRecordsRepository.findOne({
       relations: {
-        author: true,
-        category: { board: true, type: true },
+        // author: true,
+        // category: { board: true, type: true },
         currency: true,
       },
       where: { id: recordId },
