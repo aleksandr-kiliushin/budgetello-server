@@ -17,3 +17,9 @@ jobs:
         run: npm run check-types
       - name: Building app
         run: npm run build
+      - name: Starting app for tests
+        run: npm run dev:db-and-api -- --detach
+      - name: Wait for DB to be initialized
+        run: sleep 30s
+      - name: Executing e2e tests
+        run: npm run test
