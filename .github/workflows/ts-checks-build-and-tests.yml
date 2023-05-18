@@ -10,7 +10,7 @@ jobs:
         with:
           node-version: "18.13.0"
       - name: Creating dev.env
-        run: echo ./dev.env.example > ./dev.env
+        run: cp ./dev.env.example > ./dev.env
       - name: Installing node modules
         run: npm install
       - name: Checking for TypeScript errors
