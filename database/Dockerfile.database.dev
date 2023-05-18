@@ -1,7 +1,7 @@
 FROM postgres:15.3
 
 RUN apt-get update && apt-get upgrade -y
-RUN apt-get install -y curl jq lzop
+RUN apt-get install -y curl
 RUN curl -fsSL https://deb.nodesource.com/setup_18.x | bash - && apt-get install -y nodejs
 
 EXPOSE 5432
