@@ -9,8 +9,8 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: "18.13.0"
-      - name: Creating DEV_ENV_FILE
-        run: echo "${{ secrets.DEV_ENV_FILE }}" > ./dev.env
+      - name: Creating dev.env
+        run: echo ./dev.env.example > ./dev.env
       - name: Installing node modules
         run: npm install
       - name: Checking for TypeScript errors
