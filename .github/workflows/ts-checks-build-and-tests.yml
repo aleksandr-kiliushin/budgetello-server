@@ -1,7 +1,7 @@
-name: TypeScript checks and build
+name: TypeScript checks, build and tests
 on: [push]
 jobs:
-  ts-checks-and-build:
+  ts-checks-build-and-tests:
     runs-on: ubuntu-22.04
     steps:
       - uses: actions/checkout@v3
