@@ -9,8 +9,8 @@ npm --prefix /var/app run migration:up;
 # Seed database with testing data.
 psql personal_app_db postgres << EOF
   INSERT INTO "user" ("username",      "password"                                    )
-  VALUES             ('john-doe',      '8bd309ffba83c3db9a53142b052468007b'          ),
-                     ('jessica-stark', '8bd912e2fe84cd93c457142a1d7e77136c3bc954f183');
+  VALUES             ('john-doe',      '92e2f84ba541757bdc4e1cfcf113aa4b38'          ),
+                     ('jessica-stark', '92e8e356e1467b33824a1cfde949b5582fef65e04fb9');
 EOF
 psql personal_app_db postgres << EOF
   INSERT INTO currency ("name", "slug", "symbol")
