@@ -2,11 +2,11 @@
 
 Personal App is an open-source budget tracking application that allows users to manage their incomes and expenses, track their budget, and analyze their financial statistics. The application supports multiple users and provides features such as custom expense and income categories, different currencies, and shared budget boards for collaborative budget tracking.
 
-### Backend
+## Backend
 
 The backend of the Personal App handles the data management and business logic of the application. It is built using Node.js and the NestJS framework, with the Apollo GraphQL server for efficient and flexible API development. The backend uses a PostgreSQL database to store and manage user data.
 
-### Running the backend locally
+## Running the backend locally
 
 To run the backend locally, follow these steps:
 
@@ -16,7 +16,7 @@ To run the backend locally, follow these steps:
 1. `npm run dev:db-and-api`
 1. `npm run test`
 
-### Frontend
+## Frontend
 
 The frontend code for the Personal App is maintained in a separate repository. You can find the frontend code and more information about it in the [Personal App Frontend repository](https://github.com/aleksandr-kiliushin/personal-app-frontend).
 
