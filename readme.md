@@ -8,8 +8,6 @@ The backend of the Personal App handles the data management and business logic o
 
 ## Running the backend locally
 
-To run the backend locally, follow these steps:
-
 1. `git clone https://github.com/aleksandr-kiliushin/personal-app-server.git`
 1. `cd personal-app-server`
 1. `npm install`
