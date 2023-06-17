@@ -1,4 +1,4 @@
-# Personal App
+# Personal App &middot; <img src="https://github.com/aleksandr-kiliushin/personal-app-server/workflows/TypeScript checks, build and tests/badge.svg?branch=master" />
 
 Personal App is an open-source budget tracking application that allows users to manage their incomes and expenses, track their budget, and analyze their financial statistics. The application supports multiple users and provides features such as custom expense and income categories, different currencies, and shared budget boards for collaborative budget tracking.
 
