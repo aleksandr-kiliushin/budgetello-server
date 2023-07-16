@@ -1,4 +1,4 @@
-# Budgetello &middot; <img src="https://github.com/aleksandr-kiliushin/personal-app-server/workflows/TypeScript checks, build and tests/badge.svg?branch=master" />
+# Budgetello Backend &middot; <img src="https://github.com/aleksandr-kiliushin/personal-app-server/workflows/TypeScript checks, build and tests/badge.svg?branch=master" />
 
 Budgetello is an open-source budget tracking application that allows users to manage their incomes and expenses, track their budget, and analyze their financial statistics. The application provides features such as custom expense and income categories, different currencies, and shared budget boards for collaborative budget tracking.
 
