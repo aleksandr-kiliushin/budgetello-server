@@ -4,9 +4,6 @@ import { GraphQLModule } from "@nestjs/graphql"
 import { TypeOrmModule } from "@nestjs/typeorm"
 import { join } from "node:path"
 
-import { ActivityCategoriesModule } from "#models/activity-categories/module"
-import { ActivityCategoryMeasurementTypesModule } from "#models/activity-category-measurement-types/module"
-import { ActivityRecordsModule } from "#models/activity-records/module"
 import { AuthorizationModule } from "#models/authorization/module"
 import { BoardSubjectsModule } from "#models/board-subjects/module"
 import { BoardsModule } from "#models/boards/module"
@@ -26,9 +23,6 @@ import { ormConfig } from "./config/ormConfig"
       driver: ApolloDriver,
       sortSchema: true,
     }),
-    ActivityCategoriesModule,
-    ActivityCategoryMeasurementTypesModule,
-    ActivityRecordsModule,
     AuthorizationModule,
     BoardsModule,
     BoardSubjectsModule,

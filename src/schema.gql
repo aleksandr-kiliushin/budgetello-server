@@ -2,29 +2,6 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
-type ActivityCategory {
-  board: Board!
-  id: Int!
-  measurementType: ActivityCategoryMeasurementType!
-  name: String!
-  owner: User!
-  unit: String
-}
-
-type ActivityCategoryMeasurementType {
-  id: Int!
-  name: String!
-}
-
-type ActivityRecord {
-  booleanValue: Boolean
-  category: ActivityCategory!
-  comment: String!
-  date: String!
-  id: Int!
-  quantitativeValue: Float
-}
-
 input AddMemberInput {
   boardId: Int!
   userId: Int!
@@ -67,21 +44,6 @@ type BudgetRecord {
   isTrashed: Boolean!
 }
 
-input CreateActivityCategoryInput {
-  boardId: Int!
-  measurementTypeId: Int!
-  name: String!
-  unit: String
-}
-
-input CreateActivityRecordInput {
-  booleanValue: Boolean
-  categoryId: Int!
-  comment: String!
-  date: String!
-  quantitativeValue: Float
-}
-
 input CreateAuthorizationTokenInput {
   password: String!
   username: String!
@@ -121,22 +83,16 @@ type Currency {
 
 type Mutation {
   addBoardMember(input: AddMemberInput!): Board!
-  createActivityCategory(input: CreateActivityCategoryInput!): ActivityCategory!
-  createActivityRecord(input: CreateActivityRecordInput!): ActivityRecord!
   createAuthorizationToken(input: CreateAuthorizationTokenInput!): String!
   createBoard(input: CreateBoardInput!): Board!
   createBudgetCategory(input: CreateBudgetCategoryInput!): BudgetCategory!
   createBudgetRecord(input: CreateBudgetRecordInput!): BudgetRecord!
   createUser(input: CreateUserInput!): User!
-  deleteActivityCategory(id: Int!): ActivityCategory!
-  deleteActivityRecord(id: Int!): ActivityRecord!
   deleteBoard(id: Int!): Board!
   deleteBudgetCategory(id: Int!): BudgetCategory!
   deleteBudgetRecord(id: Int!): BudgetRecord!
   deleteUser(id: Int!): User!
   removeBoardMember(input: RemoveMemberInput!): Board!
-  updateActivityCategory(input: UpdateActivityCategoryInput!): ActivityCategory!
-  updateActivityRecord(input: UpdateActivityRecordInput!): ActivityRecord!
   updateBoard(input: UpdateBoardInput!): Board!
   updateBudgetCategory(input: UpdateBudgetCategoryInput!): BudgetCategory!
   updateBudgetRecord(input: UpdateBudgetRecordInput!): BudgetRecord!
@@ -144,12 +100,6 @@ type Mutation {
 }
 
 type Query {
-  activityCategories(boardsIds: [Int!], ids: [Int!], ownersIds: [Int!]): [ActivityCategory!]!
-  activityCategory(id: Int!): ActivityCategory!
-  activityCategoryMeasurementType(id: Int!): ActivityCategoryMeasurementType!
-  activityCategoryMeasurementTypes: [ActivityCategoryMeasurementType!]!
-  activityRecord(id: Int!): ActivityRecord!
-  activityRecords(boardsIds: [Int!], categoriesIds: [Int!], dates: [String!], ids: [Int!], orderingByDate: String, orderingById: String, skip: Int, take: Int): [ActivityRecord!]!
   board(id: Int!): Board!
   boardSubject(id: Int!): BoardSubject!
   boardSubjects: [BoardSubject!]!
@@ -169,23 +119,6 @@ type Query {
 input RemoveMemberInput {
   boardId: Int!
   memberId: Int!
-}
-
-input UpdateActivityCategoryInput {
-  boardId: Int
-  id: Int!
-  measurementTypeId: Int
-  name: String
-  unit: String
-}
-
-input UpdateActivityRecordInput {
-  booleanValue: Boolean
-  categoryId: Int
-  comment: String
-  date: String
-  id: Int!
-  quantitativeValue: Float
 }
 
 input UpdateBoardInput {

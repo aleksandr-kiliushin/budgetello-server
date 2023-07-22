@@ -67,30 +67,6 @@ psql personal_app_db postgres << EOF
                             (10.5    , 2         , 3           , '2022-08-02', 'I did not plan to buy that.', 'gel'         , FALSE      ),
                             (230     , 2         , 4           , '2022-08-03', 'I bought it with 40% off.'  , 'gel'         , FALSE      );
 EOF
-psql personal_app_db postgres << EOF
-  INSERT INTO activity_category_measurement_type ("name"        )
-  VALUES                                         ('quantitative'),
-                                                 ('boolean'     );
-EOF
-psql personal_app_db postgres << EOF
-  INSERT INTO activity_category ("name"     , "boardId", "measurementTypeId", "ownerId", "unit")
-  VALUES                        ('running'  , 3        , 1                  , 2        , 'km'  ),
-                                ('pushups'  , 3        , 1                  , 2        , 'time'),
-                                ('no sweets', 3        , 2                  , 2        , NULL  ),
-                                ('sleep'    , 3        , 1                  , 2        , 'hour'),
-                                ('reading'  , 4        , 1                  , 1        , 'page'),
-                                ('meditate' , 4        , 1                  , 2        , 'min' );
-EOF
-psql personal_app_db postgres << EOF
-  INSERT INTO activity_record ("booleanValue", "comment"              , "date"      , "quantitativeValue", "categoryId")
-  VALUES                      (NULL          , ''                     , '2022-08-01', 3.5                , 1           ),
-                              (NULL          , ''                     , '2022-08-01', 50                 , 2           ),
-                              (true          , 'it was easy today'    , '2022-08-01', NULL               , 3           ),
-                              (NULL          , ''                     , '2022-08-02', 7.25               , 4           ),
-                              (NULL          , 'Read chapter about DB', '2022-08-02', 6                  , 5           ),
-                              (NULL          , 'running in hills'     , '2022-08-03', 4                  , 1           ),
-                              (NULL          , ''                     , '2022-08-03', 10                 , 6           );
-EOF
 
 # Create testing database template.
 psql -U postgres -c "DROP DATABASE IF EXISTS personal_app_testing_template WITH (FORCE);";
