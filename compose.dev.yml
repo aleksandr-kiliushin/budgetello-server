@@ -5,7 +5,7 @@ services:
     build:
       context: ./
       dockerfile: ./Dockerfile.backend.dev
-    container_name: personal-app-api
+    container_name: budgetello-api
     depends_on:
       - database
     env_file:
@@ -21,7 +21,7 @@ services:
     build:
       context: ./
       dockerfile: ./database/Dockerfile.database.dev
-    container_name: personal-app-database
+    container_name: budgetello-database
     env_file:
       - ./dev.env
     ports:

@@ -14,4 +14,4 @@ RUN usermod -aG docker root
 
 EXPOSE 3080
 
-CMD echo "bash /var/app/database/scripts/init-db.sh" | docker exec -i personal-app-database bash && npm run dev
+CMD echo "bash /var/app/database/scripts/init-db.sh" | docker exec -i budgetello-database bash && npm run dev

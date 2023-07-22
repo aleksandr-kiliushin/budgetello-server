@@ -2,7 +2,7 @@ import { TypeOrmModuleOptions } from "@nestjs/typeorm"
 import { DataSource } from "typeorm"
 
 export const ormConfig: TypeOrmModuleOptions = {
-  database: process.env.DATABASE_NAME ?? "personal_app_db",
+  database: process.env.DATABASE_NAME ?? "budgetello_db",
   entities: ["dist/**/*.entity.js"],
   host: process.env.DATABASE_HOST ?? "localhost", // Name of database service in compose.dev.yml.
   migrations: ["dist/migrations/*.js"],

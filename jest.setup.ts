@@ -4,7 +4,7 @@ const { execSync } = require("child_process")
 
 beforeEach(async () => {
   execSync(
-    'echo "bash /var/app/database/scripts/restore-db-from-testing-template.sh" | docker exec -i personal-app-database bash;'
+    'echo "bash /var/app/database/scripts/restore-db-from-testing-template.sh" | docker exec -i budgetello-database bash;'
   )
 })
 
@@ -14,6 +14,6 @@ afterEach(() => {
 
 afterAll(() => {
   execSync(
-    'echo "bash /var/app/database/scripts/restore-db-from-testing-template.sh" | docker exec -i personal-app-database bash;'
+    'echo "bash /var/app/database/scripts/restore-db-from-testing-template.sh" | docker exec -i budgetello-database bash;'
   )
 })
