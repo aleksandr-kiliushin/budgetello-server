@@ -60,6 +60,7 @@
     "generate-testing-db-dump": "(npm run restore-db-from-testing-template) && (echo \"pg_dump -U postgres budgetello_db > /var/app/database/dump.sql\" | docker exec -i budgetello-database bash;)",
     "lint": "eslint \"**/!(migrations)/*.{js,ts}\" --max-warnings=0",
     "lint-staged": "lint-staged",
+    "migration:create": "npm run build && node --loader ts-node/esm ./node_modules/.bin/typeorm migration:create",
     "migration:generate": "npm run build && node --loader ts-node/esm ./node_modules/.bin/typeorm migration:generate -d ./src/config/ormConfig.ts",
     "migration:up": "node --loader ts-node/esm ./node_modules/.bin/typeorm migration:run -d ./src/config/ormConfig.ts",
     "migration:down": "node --loader ts-node/esm ./node_modules/.bin/typeorm migration:revert -d ./src/config/ormConfig.ts",
