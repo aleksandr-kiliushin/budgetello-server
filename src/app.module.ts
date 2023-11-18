@@ -25,7 +25,7 @@ import { ormConfig } from "./config/ormConfig"
     }),
     AuthorizationModule,
     BoardsModule,
-    BoardSubjectsModule,
+    BoardSubjectsModule, // TODO: Remove.
     BudgetCategoriesModule,
     BudgetCategoryTypesModule,
     BudgetRecordsModule,
